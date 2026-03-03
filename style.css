@@ -1,0 +1,65 @@
+/* Modern Minimalist & Mystery Styles for Sarath G Portfolio */
+/* Most styles are handled by Tailwind CSS directly in HTML */
+
+body {
+    cursor: default;
+    overflow-x: hidden;
+    /* Prevent horizontal scroll */
+}
+
+/* Scrollbar customization */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #050505;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #ef4444;
+    /* red-500 */
+    border: 2px solid #050505;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #dc2626;
+    /* red-600 */
+}
+
+/* Additional specific overrides if needed */
+.jsvectormap-container {
+    border-radius: 1.5rem;
+}
+
+.jsvectormap-zoom-btn {
+    display: none !important;
+}
+
+/* Image Proximity Hover Effects */
+.proximity-active img {
+    filter: grayscale(0) !important;
+    opacity: 1 !important;
+}
+
+#gallery .proximity-active img,
+#footprint .proximity-active img {
+    transform: scale(1.1) !important;
+}
+
+#gallery .proximity-active .bg-gradient-to-t,
+#footprint .proximity-active span {
+    opacity: 1 !important;
+}
+
+#certifications .proximity-active {
+    filter: grayscale(0) !important;
+    transform: scale(1.05) !important;
+}
+
+/* Prevent animation jumps on initial load */
+.fade-in-scroll {
+    visibility: hidden;
+    opacity: 0;
+}

@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Start Your Journey | Sarath G</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Fira+Code:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: '#0a192f',
+                        lightNavy: '#112240',
+                        lightestNavy: '#233554',
+                        slate: '#8892b0',
+                        lightSlate: '#a8b2d1',
+                        white: '#e6f1ff',
+                        green: '#64ffda',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Tab Styles */
+        .tab-btn {
+            border-bottom: 2px solid transparent;
+            opacity: 0.6;
+        }
+        .tab-btn:hover {
+            color: #64ffda;
+            opacity: 1;
+        }
+        .tab-btn.active {
+            border-bottom: 2px solid #64ffda;
+            color: #64ffda;
+            opacity: 1;
+            background: rgba(100, 255, 218, 0.05);
+        }
+        .content-section {
+            display: none; /* Hidden by default */
+            animation: fadeIn 0.5s ease;
+        }
+        .content-section.active {
+            display: block; /* Show when active */
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-navy text-slate font-sans antialiased selection:bg-green selection:text-navy">
+
+    <nav class="fixed w-full top-0 z-50 bg-navy/95 backdrop-blur-sm border-b border-lightestNavy">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center relative">
+            
+            <a href="index.html" class="text-green font-mono font-bold text-xl">SG.</a>
+            
+            <div class="hidden md:flex gap-8 font-mono text-xs items-center">
+                <a href="index.html#about" class="hover:text-green transition-colors"><span class="text-green">01.</span> About</a>
+                <a href="index.html#footprint" class="hover:text-green transition-colors"><span class="text-green">02.</span> Footprint</a>
+                <a href="index.html#skills" class="hover:text-green transition-colors"><span class="text-green">03.</span> Skills</a>
+                <a href="start.html" class="hover:text-green transition-colors"><span class="text-green">04.</span> Start in Cybersec</a>
+                <a href="index.html#contact" class="px-4 py-2 border border-green text-green rounded hover:bg-green/10 transition-colors">Contact</a>
+            </div>
+
+            <button class="md:hidden text-green focus:outline-none p-2 border border-green/30 rounded hover:bg-green/10 transition-colors" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden bg-navy border-b border-lightestNavy absolute w-full left-0 top-full shadow-xl">
+            <div class="flex flex-col px-6 py-4 space-y-4 font-mono text-sm">
+                <a href="index.html#about" class="block text-lightSlate hover:text-green py-2" onclick="document.getElementById('mobile-menu').classList.add('hidden')"><span class="text-green">01.</span> About</a>
+                <a href="index.html#footprint" class="block text-lightSlate hover:text-green py-2" onclick="document.getElementById('mobile-menu').classList.add('hidden')"><span class="text-green">02.</span> Footprint</a>
+                <a href="index.html#skills" class="block text-lightSlate hover:text-green py-2" onclick="document.getElementById('mobile-menu').classList.add('hidden')"><span class="text-green">03.</span> Skills</a>
+                <a href="start.html" class="block text-lightSlate hover:text-green py-2" onclick="document.getElementById('mobile-menu').classList.add('hidden')"><span class="text-green">04.</span> Start in Cybersec</a>
+                <a href="index.html#contact" class="inline-block w-fit px-4 py-2 border border-green text-green rounded hover:bg-green/10 transition-colors" onclick="document.getElementById('mobile-menu').classList.add('hidden')">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-32 pb-24 px-6 max-w-6xl mx-auto min-h-screen">
+        
+        <header class="mb-12 text-center">
+            <p class="text-green font-mono text-sm mb-4">The Ultimate Guide</p>
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-6">Start Your Cybersecurity Journey</h1>
+            <p class="max-w-2xl mx-auto text-lg text-lightSlate">
+                Everything has a first day. Select your current status below to reveal your complete, step-by-step roadmap.
+            </p>
+        </header>
+
+        <div class="flex flex-wrap justify-center border-b border-lightestNavy mb-12">
+            <button onclick="switchTab('beginner')" id="btn-beginner" class="tab-btn active px-8 py-4 text-sm font-mono transition-colors w-full md:w-auto text-center">
+                01. Beginner
+            </button>
+            <button onclick="switchTab('career')" id="btn-career" class="tab-btn px-8 py-4 text-sm font-mono transition-colors w-full md:w-auto text-center">
+                02. Career Changer
+            </button>
+            <button onclick="switchTab('jobseeker')" id="btn-jobseeker" class="tab-btn px-8 py-4 text-sm font-mono transition-colors w-full md:w-auto text-center">
+                03. Job Seeker
+            </button>
+        </div>
+
+        <div id="content-beginner" class="content-section active">
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="md:col-span-2 space-y-8">
+                    
+                    <div class="bg-lightNavy p-8 rounded border border-lightestNavy">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="bg-green text-navy font-bold px-3 py-1 rounded text-xs">MONTH 1</span>
+                            <h3 class="text-xl font-bold text-white">The Fundamentals (Tech Literacy)</h3>
+                        </div>
+                        <p class="text-sm mb-4">You cannot hack a network if you don't know how data moves. You cannot secure a server if you can't use the command line.</p>
+                        <div class="space-y-4">
+                            <div class="p-4 bg-navy rounded border border-lightestNavy">
+                                <strong class="text-white block mb-2">1. Networking Core</strong>
+                                <p class="text-xs text-lightSlate mb-2"><strong>Goal:</strong> Explain how I can see `google.com` when I type it.</p>
+                                <ul class="list-disc pl-4 text-xs text-green font-mono">
+                                    <li>IP Addresses (IPv4 vs IPv6)</li>
+                                    <li>DNS (The phonebook of the internet)</li>
+                                    <li>Ports (80, 443, 22, 21)</li>
+                                    <li>OSI Model (Layers 1-7)</li>
+                                </ul>
+                                <a href="https://tryhackme.com/room/networkservices" target="_blank" class="block mt-3 text-xs text-green hover:underline">resource: TryHackMe Network Basics Room &rarr;</a>
+                            </div>
+                            <div class="p-4 bg-navy rounded border border-lightestNavy">
+                                <strong class="text-white block mb-2">2. Operating Systems</strong>
+                                <p class="text-xs text-lightSlate mb-2"><strong>Goal:</strong> Install Ubuntu Linux on a Virtual Machine (<a href="https://www.virtualbox.org/" target="_blank" class="hover:text-green underline">VirtualBox</a>).</p>
+                                <ul class="list-disc pl-4 text-xs text-green font-mono">
+                                    <li>File System Hierarchy (/etc, /var, /home)</li>
+                                    <li>Basic Commands (cd, ls, grep, chmod, chown, sudo)</li>
+                                </ul>
+                                <a href="https://linuxjourney.com/" target="_blank" class="block mt-3 text-xs text-green hover:underline">resource: Linux Journey &rarr;</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-lightNavy p-8 rounded border border-lightestNavy">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="bg-green text-navy font-bold px-3 py-1 rounded text-xs">MONTH 2</span>
+                            <h3 class="text-xl font-bold text-white">Security Concepts</h3>
+                        </div>
+                        <p class="text-sm mb-4">Now that you understand the technology, learn how it breaks.</p>
+                        <div class="space-y-4">
+                            <div class="p-4 bg-navy rounded border border-lightestNavy">
+                                <strong class="text-white block mb-2">1. The CIA Triad</strong>
+                                <p class="text-xs text-lightSlate">Confidentiality, Integrity, Availability. Memorize this.</p>
+                            </div>
+                            <div class="p-4 bg-navy rounded border border-lightestNavy">
+                                <strong class="text-white block mb-2">2. Intro to Hacking (Theory)</strong>
+                                <p class="text-xs text-lightSlate mb-2"><strong>Goal:</strong> Understand common threats.</p>
+                                <ul class="list-disc pl-4 text-xs text-green font-mono">
+                                    <li>Phishing & Social Engineering</li>
+                                    <li>Malware types (Ransomware, Trojans)</li>
+                                    <li><a href="https://owasp.org/www-project-top-ten/" target="_blank" class="hover:text-green underline">OWASP Top 10</a> (Web vulnerabilities)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-lightNavy p-8 rounded border border-lightestNavy">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="bg-green text-navy font-bold px-3 py-1 rounded text-xs">MONTH 3</span>
+                            <h3 class="text-xl font-bold text-white">First Hands-On Labs</h3>
+                        </div>
+                        <p class="text-sm mb-4">Stop reading. Start typing.</p>
+                        <ul class="space-y-3 text-sm">
+                            <li class="flex items-start gap-3">
+                                <i class="fas fa-check-circle text-green mt-1"></i>
+                                <span>Complete the <a href="https://tryhackme.com/path/outline/presecurity" target="_blank" class="text-green hover:underline">"Pre-Security" path</a> on TryHackMe.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fas fa-check-circle text-green mt-1"></i>
+                                <span>Complete Levels 0-10 on <a href="https://overthewire.org/wargames/bandit/" target="_blank" class="text-green hover:underline">OverTheWire (Bandit)</a>.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fas fa-check-circle text-green mt-1"></i>
+                                <span>Get your first certification: <a href="https://www.isc2.org/Certifications/CC" target="_blank" class="text-green hover:underline">ISC2 CC (Certified in Cybersecurity)</a> - It's Free!</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="md:col-span-1 space-y-6">
+                    <div class="bg-navy p-6 rounded border border-green/30">
+                        <h4 class="text-green font-bold mb-4">Free Starter Pack</h4>
+                        <ul class="space-y-4 text-sm text-lightSlate">
+                            <li class="group">
+                                <strong class="text-white group-hover:text-green transition-colors">Course:</strong>
+                                <a href="https://www.coursera.org/google-certificates/cybersecurity-certificate" target="_blank" class="block text-xs underline">Google Cybersecurity Cert</a>
+                            </li>
+                            <li class="group">
+                                <strong class="text-white group-hover:text-green transition-colors">Video:</strong>
+                                <a href="https://www.youtube.com/watch?v=3Kq1MIfTWCE" target="_blank" class="block text-xs underline">NetworkChuck: Linux for Hackers</a>
+                            </li>
+                            <li class="group">
+                                <strong class="text-white group-hover:text-green transition-colors">Lab:</strong>
+                                <a href="https://tryhackme.com/" target="_blank" class="block text-xs underline">TryHackMe (Free Tier)</a>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-navy p-6 rounded border border-lightestNavy">
+                        <h4 class="text-white font-bold mb-4">Anti-Patterns (Do NOT do this):</h4>
+                        <ul class="space-y-3 text-xs text-red-400">
+                            <li>&times; Don't install Kali Linux immediately. Learn Ubuntu first.</li>
+                            <li>&times; Don't pay for expensive bootcamps yet.</li>
+                            <li>&times; Don't try to hack your neighbor's WiFi. It is illegal.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-green/5 p-6 rounded border border-green/20 relative group">
+                        <div class="absolute -top-3 left-3 bg-navy border border-green text-green text-[10px] px-2 py-0.5 rounded">CTCO PROMPT</div>
+                        <strong class="text-white text-sm block mb-2">🤖 Ask Ethan: Explain Concepts</strong>
+                        <p class="text-[10px] font-mono text-lightSlate mb-3 p-2 bg-navy rounded border border-lightestNavy">
+                            "Act as a Cyber Tutor. Explain the concept of [Topic, e.g., DNS] using a real-world analogy (like a phonebook). Keep it simple for a non-tech person. Output the explanation followed by one key takeaway."
+                        </p>
+                        <a href="https://chatgpt.com/g/g-688c937222c88191b1735af3a8aea4aa-ethan-your-cybersecurity-mentor" target="_blank" class="block text-center px-4 py-2 bg-green text-navy font-bold text-xs rounded hover:bg-white transition-colors">Copy to Ethan</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="content-career" class="content-section">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-white mb-4">The Pivot Strategy</h2>
+                <p class="text-lightSlate max-w-2xl mx-auto">You are not a beginner. You are a professional changing domains. Your strategy is "Translation," not "Re-learning."</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                
+                <div class="bg-lightNavy p-8 rounded border border-lightestNavy hover:border-green transition-colors flex flex-col">
+                    <div class="flex items-center gap-3 mb-6">
+                        <i class="fas fa-server text-green text-2xl"></i>
+                        <h3 class="text-2xl font-bold text-white">From IT Background</h3>
+                    </div>
+                    <p class="text-xs font-mono text-green mb-6">&lt;Developers, SysAdmins, QA, Network Engineers&gt;</p>
+                    
+                    <div class="space-y-6 flex-grow">
+                        <div class="bg-navy p-4 rounded border-l-2 border-green">
+                            <strong class="text-white block mb-1">Developer &rarr; AppSec / DevSecOps</strong>
+                            <p class="text-sm text-lightSlate mb-2">You know how to build. Now learn how to break and patch.</p>
+                            <ul class="text-xs text-green font-mono list-disc pl-4">
+                                <li><strong>Learn:</strong> SAST/DAST tools (<a href="https://snyk.io/" target="_blank" class="underline">Snyk</a>), CI/CD Security.</li>
+                                <li><strong>Labs:</strong> TryHackMe rooms (Snyk, CI/CD, DevSecOps).</li>
+                                <li><strong>Must-Read:</strong> <a href="https://owasp.org/www-project-top-ten/" target="_blank" class="underline">OWASP Top 10</a>.</li>
+                                <li><strong>Project:</strong> Build a simple app, hack it (SQLi/XSS), then patch it.</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-navy p-4 rounded border-l-2 border-green">
+                            <strong class="text-white block mb-1">SysAdmin &rarr; Cloud Security / Blue Team</strong>
+                            <p class="text-sm text-lightSlate mb-2">You know permissions and logs. That is 50% of defense.</p>
+                            <ul class="text-xs text-green font-mono list-disc pl-4">
+                                <li><strong>Learn:</strong> Hardening (<a href="https://www.cisecurity.org/cis-benchmarks/" target="_blank" class="underline">CIS Benchmarks</a>), SIEM (Splunk/Wazuh), IAM.</li>
+                                <li><strong>Cert Goal:</strong> CompTIA Security+ or AWS Security Specialty.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="bg-green/5 p-4 rounded border border-green/20 mt-6 relative">
+                        <div class="absolute -top-3 left-3 bg-navy border border-green text-green text-[10px] px-2 py-0.5 rounded">CTCO PROMPT</div>
+                        <strong class="text-white text-xs block mb-2">🤖 Ask Ethan: Skill Translation</strong>
+                        <p class="text-[10px] font-mono text-lightSlate mb-3 p-2 bg-navy rounded">
+                            "Act as a Technical Recruiter. I am a [Developer/SysAdmin]. Analyze my background and list 5 specific security-relevant skills I likely already possess. Format this as a 'Skills' section for a Cybersecurity Resume."
+                        </p>
+                        <a href="https://chatgpt.com/g/g-688c937222c88191b1735af3a8aea4aa-ethan-your-cybersecurity-mentor" target="_blank" class="block text-center px-4 py-2 bg-green text-navy font-bold text-[10px] rounded hover:bg-white transition-colors">Copy to Ethan</a>
+                    </div>
+                </div>
+
+                <div class="bg-lightNavy p-8 rounded border border-lightestNavy hover:border-green transition-colors flex flex-col">
+                    <div class="flex items-center gap-3 mb-6">
+                        <i class="fas fa-briefcase text-green text-2xl"></i>
+                        <h3 class="text-2xl font-bold text-white">From Non-IT Background</h3>
+                    </div>
+                    <p class="text-xs font-mono text-green mb-6">&lt;Sales, HR, Finance, Medical, Arts&gt;</p>
+                    
+                    <div class="space-y-6 flex-grow">
+                        <div class="bg-navy p-4 rounded">
+                            <p class="text-sm text-white mb-2"><strong>Your Advantage:</strong> Soft Skills.</p>
+                            <p class="text-xs text-lightSlate">Tech can be taught. Crisis communication, report writing, and stakeholder management are harder to learn. You have these.</p>
+                        </div>
+
+                        <div class="bg-navy p-4 rounded">
+                            <strong class="text-white block mb-2">Strategy 1: The GRC Route (Low Code)</strong>
+                            <p class="text-xs text-lightSlate mb-2">Governance, Risk, and Compliance. Auditing, policy writing, and risk management.</p>
+                            <ul class="text-xs text-green font-mono list-disc pl-4">
+                                <li><strong>Read:</strong> <a href="https://www.iso.org/isoiec-27001-information-security.html" target="_blank" class="underline">ISO 27001</a>, NIST Frameworks, GDPR basics.</li>
+                                <li><strong>Target Role:</strong> Jr. GRC Analyst, Third-Party Risk Analyst.</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-navy p-4 rounded">
+                            <strong class="text-white block mb-2">Strategy 2: The Tech Sprint (High Effort)</strong>
+                            <p class="text-xs text-lightSlate mb-2">If you want to be technical, you must catch up fast.</p>
+                            <ul class="text-xs text-green font-mono list-disc pl-4">
+                                <li><strong>Month 1-2:</strong> CompTIA A+ (Hardware/OS) - Do not skip.</li>
+                                <li><strong>Month 3:</strong> CompTIA Network+ (Crucial).</li>
+                                <li><strong>Month 4:</strong> Security+, CEH, eJPT, or PNPT.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="bg-green/5 p-4 rounded border border-green/20 mt-6 relative">
+                        <div class="absolute -top-3 left-3 bg-navy border border-green text-green text-[10px] px-2 py-0.5 rounded">CTCO PROMPT</div>
+                        <strong class="text-white text-xs block mb-2">🤖 Ask Ethan: Soft Skills</strong>
+                        <p class="text-[10px] font-mono text-lightSlate mb-3 p-2 bg-navy rounded">
+                            "Act as a Career Coach. I come from [Sales/HR]. Explain how 'Crisis Management' and 'Reporting' apply to a Cyber GRC role. Write 3 bullet points for my cover letter highlighting these transferable traits."
+                        </p>
+                        <a href="https://chatgpt.com/g/g-688c937222c88191b1735af3a8aea4aa-ethan-your-cybersecurity-mentor" target="_blank" class="block text-center px-4 py-2 bg-green text-navy font-bold text-[10px] rounded hover:bg-white transition-colors">Copy to Ethan</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="content-jobseeker" class="content-section">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-white mb-4">The Final Mile</h2>
+                <p class="text-lightSlate max-w-2xl mx-auto">Certifications get you past HR filters. <strong>Projects get you the job.</strong> Choose your specialization.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                
+                <div class="bg-lightNavy p-8 rounded border border-red-500/30 hover:border-red-500 transition-colors relative overflow-hidden flex flex-col">
+                    <div class="absolute top-0 right-0 bg-red-500/10 text-red-500 text-xs font-bold px-3 py-1">RED TEAM</div>
+                    <h3 class="text-2xl font-bold text-white mb-2">The Pentester</h3>
+                    <p class="text-sm text-lightSlate mb-6">Role: Find vulnerabilities before criminals do.</p>
+                    
+                    <h4 class="text-white font-bold mb-3 border-b border-lightestNavy pb-2">The Portfolio Checklist</h4>
+                    <ul class="space-y-4 mb-8 flex-grow">
+                        <li class="flex gap-3 text-sm text-lightSlate">
+                            <i class="fas fa-check text-red-400 mt-1"></i>
+                            <div>
+                                <strong class="text-white block">Documentation (Crucial)</strong>
+                                <span>Don't just say "I hacked a box." Write a report: <em>Executive Summary, Technical Walkthrough, Remediation Steps.</em> Publish it on Medium.</span>
+                            </div>
+                        </li>
+                        <li class="flex gap-3 text-sm text-lightSlate">
+                            <i class="fas fa-check text-red-400 mt-1"></i>
+                            <div>
+                                <strong class="text-white block">GitHub Scripting</strong>
+                                <span>Write a simple Python script (e.g., "Subdomain Enumerator" or "Port Scanner") and host it on GitHub.</span>
+                            </div>
+                        </li>
+                    </ul>
+
+                    <div class="bg-red-500/5 p-4 rounded border border-red-500/20 mt-4 relative">
+                        <div class="absolute -top-3 left-3 bg-navy border border-red-500 text-red-400 text-[10px] px-2 py-0.5 rounded">CTCO PROMPT</div>
+                        <strong class="text-white text-xs block mb-2">🤖 Ask Ethan: Technical Interview</strong>
+                        <p class="text-[10px] font-mono text-lightSlate mb-3 p-2 bg-navy rounded">
+                            "Act as a Senior Penetration Tester. Simulate a technical interview. Ask me one hard question about [Topic, e.g., Active Directory or SQLi] and critique my answer for accuracy and depth."
+                        </p>
+                        <a href="https://chatgpt.com/g/g-688c937222c88191b1735af3a8aea4aa-ethan-your-cybersecurity-mentor" target="_blank" class="block text-center px-4 py-2 bg-red-500/10 text-red-400 font-bold text-[10px] rounded hover:bg-white transition-colors">Copy to Ethan</a>
+                    </div>
+                </div>
+
+                <div class="bg-lightNavy p-8 rounded border border-blue-500/30 hover:border-blue-500 transition-colors relative overflow-hidden flex flex-col">
+                    <div class="absolute top-0 right-0 bg-blue-500/10 text-blue-500 text-xs font-bold px-3 py-1">BLUE TEAM</div>
+                    <h3 class="text-2xl font-bold text-white mb-2">The SOC Analyst</h3>
+                    <p class="text-sm text-lightSlate mb-6">Role: Monitor, Detect, Respond.</p>
+                    
+                    <h4 class="text-white font-bold mb-3 border-b border-lightestNavy pb-2">The Portfolio Checklist</h4>
+                    <ul class="space-y-4 mb-8 flex-grow">
+                        <li class="flex gap-3 text-sm text-lightSlate">
+                            <i class="fas fa-check text-blue-400 mt-1"></i>
+                            <div>
+                                <strong class="text-white block">The Home Lab Blueprint</strong>
+                                <span>Install <a href="https://www.virtualbox.org/" target="_blank" class="underline">VirtualBox</a>. Setup an Ubuntu Server with <a href="https://wazuh.com/" target="_blank" class="underline">Wazuh (SIEM)</a>. Attack it with a Kali VM. Detect the attack. Screenshot the logs.</span>
+                            </div>
+                        </li>
+                        <li class="flex gap-3 text-sm text-lightSlate">
+                            <i class="fas fa-check text-blue-400 mt-1"></i>
+                            <div>
+                                <strong class="text-white block">Malware Analysis</strong>
+                                <span>Analyze a sample in a sandbox (<a href="https://app.any.run/" target="_blank" class="underline">Any.Run</a>). Write a report on what IP addresses it contacted.</span>
+                            </div>
+                        </li>
+                    </ul>
+
+                    <div class="bg-blue-500/5 p-4 rounded border border-blue-500/20 mt-4 relative">
+                        <div class="absolute -top-3 left-3 bg-navy border border-blue-500 text-blue-400 text-[10px] px-2 py-0.5 rounded">CTCO PROMPT</div>
+                        <strong class="text-white text-xs block mb-2">🤖 Ask Ethan: Scenario Analysis</strong>
+                        <p class="text-[10px] font-mono text-lightSlate mb-3 p-2 bg-navy rounded">
+                            "Act as a SOC Manager. Present a 'Ransomware Infection' scenario. Ask me to walk through the Containment and Eradication steps using the NIST Incident Response framework."
+                        </p>
+                        <a href="https://chatgpt.com/g/g-688c937222c88191b1735af3a8aea4aa-ethan-your-cybersecurity-mentor" target="_blank" class="block text-center px-4 py-2 bg-blue-500/10 text-blue-400 font-bold text-[10px] rounded hover:bg-white transition-colors">Copy to Ethan</a>
+                    </div>
+                </div>
+            </div>
+
+             <div class="grid md:grid-cols-2 gap-6 mt-8">
+                 <div class="bg-navy p-6 rounded border border-lightestNavy">
+                    <h4 class="text-white font-bold mb-2">The Golden Rule for Resumes</h4>
+                    <p class="text-xs text-lightSlate">Do not list "Watching YouTube" as a skill. List <strong>Projects</strong>. <br>
+                    <em>"Built a Home Lab SIEM"</em> beats <em>"Enthusiastic Learner"</em> every time.</p>
+                 </div>
+                 
+                 <div class="bg-navy p-6 rounded border border-lightestNavy">
+                    <h4 class="text-white font-bold mb-2">Why Juniors Get Rejected</h4>
+                    <ul class="list-disc pl-4 text-xs text-red-400">
+                        <li><strong>Tool Monkey Syndrome:</strong> Knowing Nmap but not TCP handshake.</li>
+                        <li><strong>Poor Communication:</strong> If you can't explain the risk, you are useless.</li>
+                        <li><strong>Isolation:</strong> Join communities (Discord, LinkedIn). Build in Public.</li>
+                    </ul>
+                 </div>
+            </div>
+        </div>
+
+        <section class="mt-20 border-t border-lightestNavy pt-10 mb-20">
+            <div class="flex items-center gap-4 mb-8">
+                <span class="text-green font-mono text-xl">02.</span>
+                <h2 class="text-2xl font-bold text-white">How to Learn (Resources)</h2>
+                <div class="h-[1px] bg-lightestNavy flex-grow max-w-xs"></div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h4 class="text-white font-bold mb-4 flex items-center gap-2"><i class="fab fa-youtube text-red-500"></i> YouTube Channels</h4>
+                    <div class="space-y-3">
+                        <a href="https://www.youtube.com/@BrototypeMalayalam" target="_blank" class="block p-4 bg-lightNavy rounded border border-lightestNavy hover:translate-x-2 transition-transform">
+                            <h5 class="text-white font-bold">Brototype (Malayalam)</h5>
+                            <p class="text-xs text-lightSlate">Best for native Malayalam speakers starting tech careers.</p>
+                        </a>
+                        <a href="https://www.youtube.com/@HackerSploit" target="_blank" class="block p-4 bg-lightNavy rounded border border-lightestNavy hover:translate-x-2 transition-transform">
+                            <h5 class="text-white font-bold">HackerSploit</h5>
+                            <p class="text-xs text-lightSlate">Deep dives into tools and attack methodologies.</p>
+                        </a>
+                        <a href="https://www.youtube.com/@NetworkChuck" target="_blank" class="block p-4 bg-lightNavy rounded border border-lightestNavy hover:translate-x-2 transition-transform">
+                            <h5 class="text-white font-bold">NetworkChuck</h5>
+                            <p class="text-xs text-lightSlate">High-energy networking and Linux basics.</p>
+                        </a>
+                        <a href="https://www.youtube.com/@TheCyberMentor" target="_blank" class="block p-4 bg-lightNavy rounded border border-lightestNavy hover:translate-x-2 transition-transform">
+                            <h5 class="text-white font-bold">The Cyber Mentor</h5>
+                            <p class="text-xs text-lightSlate">The gold standard for Ethical Hacking courses.</p>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-bold mb-4 flex items-center gap-2"><i class="fas fa-laptop-code text-green"></i> Hands-on Labs</h4>
+                    <div class="space-y-3">
+                        <div class="p-4 bg-lightNavy rounded border border-lightestNavy">
+                            <div class="flex justify-between items-center mb-1">
+                                <h5 class="text-white font-bold">TryHackMe</h5>
+                                <span class="text-xs bg-green/10 text-green px-2 py-1 rounded">Beginner Friendly</span>
+                            </div>
+                            <p class="text-xs text-lightSlate">Gamified learning. Start with the "Pre-Security" path.</p>
+                        </div>
+                        <div class="p-4 bg-lightNavy rounded border border-lightestNavy">
+                            <div class="flex justify-between items-center mb-1">
+                                <h5 class="text-white font-bold">Hack The Box</h5>
+                                <span class="text-xs bg-red-500/10 text-red-400 px-2 py-1 rounded">Intermediate</span>
+                            </div>
+                            <p class="text-xs text-lightSlate">Real-world machines. Start with "Starting Point" tier.</p>
+                        </div>
+                        <div class="p-4 bg-lightNavy rounded border border-lightestNavy">
+                            <div class="flex justify-between items-center mb-1">
+                                <h5 class="text-white font-bold">OverTheWire (Bandit)</h5>
+                                <span class="text-xs bg-blue-500/10 text-blue-400 px-2 py-1 rounded">Linux Basics</span>
+                            </div>
+                            <p class="text-xs text-lightSlate">The best way to learn Linux command line via wargames.</p>
+                        </div>
+                        <div class="p-4 bg-lightNavy rounded border border-lightestNavy">
+                            <div class="flex justify-between items-center mb-1">
+                                <h5 class="text-white font-bold">PortSwigger Academy</h5>
+                                <span class="text-xs bg-orange-500/10 text-orange-400 px-2 py-1 rounded">Web Security</span>
+                            </div>
+                            <p class="text-xs text-lightSlate">Free, world-class training for Web Application hacking.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-20">
+            <div class="flex items-center gap-4 mb-8">
+                <span class="text-green font-mono text-xl">03.</span>
+                <h2 class="text-2xl font-bold text-white">Certification Roadmap</h2>
+                <div class="h-[1px] bg-lightestNavy flex-grow max-w-xs"></div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6 text-center">
+                <div class="p-6 rounded border border-lightestNavy bg-navy/50">
+                    <div class="inline-block p-3 rounded-full bg-green/10 text-green mb-4 text-xl">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="text-white font-bold mb-2">Level 1: Entry</h3>
+                    <p class="text-xs text-lightSlate mb-4">Prove you understand the vocabulary and basics.</p>
+                    <ul class="text-sm font-mono text-white space-y-2">
+                        <li><a href="https://www.comptia.org/certifications/security" target="_blank" class="block bg-lightNavy py-2 rounded hover:bg-green/10 hover:text-green transition-colors">CompTIA Security+</a></li>
+                        <li><a href="https://www.isc2.org/Certifications/CC" target="_blank" class="block bg-lightNavy py-2 rounded hover:bg-green/10 hover:text-green transition-colors">ISC2 CC (Free)</a></li>
+                        <li><a href="https://www.coursera.org/google-certificates/cybersecurity-certificate" target="_blank" class="block bg-lightNavy py-2 rounded hover:bg-green/10 hover:text-green transition-colors">Google Cyber Cert</a></li>
+                    </ul>
+                </div>
+
+                <div class="p-6 rounded border border-lightestNavy bg-navy/50">
+                    <div class="inline-block p-3 rounded-full bg-green/10 text-green mb-4 text-xl">
+                        <i class="fas fa-bug"></i>
+                    </div>
+                    <h3 class="text-white font-bold mb-2">Level 2: Skill</h3>
+                    <p class="text-xs text-lightSlate mb-4">Prove you can actually use the tools.</p>
+                    <ul class="text-sm font-mono text-white space-y-2">
+                        <li><a href="https://www.eccouncil.org/train-certify/certified-ethical-hacker-ceh-practical/" target="_blank" class="block bg-lightNavy py-2 rounded hover:bg-green/10 hover:text-green transition-colors">CEH (Practical)</a></li>
+                        <li><a href="https://security.ine.com/certifications/ejpt-certification/" target="_blank" class="block bg-lightNavy py-2 rounded hover:bg-green/10 hover:text-green transition-colors">eJPT (Junior Pentester)</a></li>
+                        <li><a href="https://certifications.tcm-sec.com/pnpt/" target="_blank" class="block bg-lightNavy py-2 rounded hover:bg-green/10 hover:text-green transition-colors">PNPT</a></li>
+                        <li><a href="https://blueteamlabs.online/btl1" target="_blank" class="block bg-lightNavy py-2 rounded hover:bg-green/10 hover:text-green transition-colors">BTL1 (Blue Team)</a></li>
+                    </ul>
+                </div>
+
+                <div class="p-6 rounded border border-lightestNavy bg-navy/50">
+                    <div class="inline-block p-3 rounded-full bg-green/10 text-green mb-4 text-xl">
+                        <i class="fas fa-dragon"></i>
+                    </div>
+                    <h3 class="text-white font-bold mb-2">Level 3: Pro</h3>
+                    <p class="text-xs text-lightSlate mb-4">The gold standards for hiring.</p>
+                    <ul class="text-sm font-mono text-white space-y-2">
+                        <li><a href="https://www.offsec.com/courses/pen-200/" target="_blank" class="block bg-lightNavy py-2 rounded hover:bg-green/10 hover:text-green transition-colors">OSCP (Offensive)</a></li>
+                        <li><a href="https://www.isc2.org/Certifications/CISSP" target="_blank" class="block bg-lightNavy py-2 rounded hover:bg-green/10 hover:text-green transition-colors">CISSP (Management)</a></li>
+                        <li><a href="https://www.eccouncil.org/train-certify/certified-penetration-testing-professional-cpent/" target="_blank" class="block bg-lightNavy py-2 rounded hover:bg-green/10 hover:text-green transition-colors">CPENT (Advanced)</a></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <div class="my-20 bg-gradient-to-r from-lightNavy to-navy border border-green/30 p-8 rounded-xl text-center relative overflow-hidden group">
+            <div class="relative z-10">
+                <h3 class="text-2xl font-bold text-white mb-2">Feeling Stuck? Ask Ethan.</h3>
+                <p class="text-green font-mono text-sm mb-4">Your Personal Cybersecurity Learning Assistant</p>
+                <p class="text-sm text-lightSlate mb-6 max-w-lg mx-auto">
+                    Ethan is my custom AI mentor trained to answer your questions, suggest labs, and unblock you when you are stuck.
+                </p>
+                <a href="https://chatgpt.com/g/g-688c937222c88191b1735af3a8aea4aa-ethan-your-cybersecurity-mentor" target="_blank" class="inline-block px-8 py-3 bg-green/10 text-green border border-green rounded font-mono text-sm hover:bg-green hover:text-navy transition-all">
+                    Chat with Ethan &rarr;
+                </a>
+            </div>
+            <div class="absolute inset-0 bg-green/5 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500"></div>
+        </div>
+
+        <section class="mb-10 mt-20">
+            <h3 class="text-2xl font-bold text-white mb-6 text-center">The Daily Habit (Stay Updated)</h3>
+            
+            <div class="bg-navy p-8 rounded-lg border border-lightestNavy max-w-5xl mx-auto relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-green/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+
+                <div class="text-center mb-8 relative z-10">
+                    <p class="text-lightSlate text-sm">
+                        Cybersecurity changes every hour. You cannot survive if you stop reading. <br>
+                        <span class="text-green">Commit to reading 1 article per day from these sources:</span>
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-4 gap-4 relative z-10">
+                    
+                    <a href="https://thehackernews.com/" target="_blank" class="group bg-lightNavy p-6 rounded border border-lightestNavy hover:border-green hover:-translate-y-1 transition-all text-center">
+                        <div class="h-12 w-12 mx-auto bg-navy rounded-full flex items-center justify-center border border-lightestNavy group-hover:border-green group-hover:text-green transition-colors mb-4 text-slate-400">
+                            <i class="fas fa-newspaper text-xl"></i>
+                        </div>
+                        <h4 class="text-white font-bold text-sm mb-2">The Hacker News</h4>
+                        <p class="text-[10px] text-lightSlate">Best for breaking news & latest vulnerabilities.</p>
+                    </a>
+
+                    <a href="https://www.bleepingcomputer.com/" target="_blank" class="group bg-lightNavy p-6 rounded border border-lightestNavy hover:border-green hover:-translate-y-1 transition-all text-center">
+                        <div class="h-12 w-12 mx-auto bg-navy rounded-full flex items-center justify-center border border-lightestNavy group-hover:border-green group-hover:text-green transition-colors mb-4 text-slate-400">
+                            <i class="fas fa-laptop-medical text-xl"></i>
+                        </div>
+                        <h4 class="text-white font-bold text-sm mb-2">BleepingComputer</h4>
+                        <p class="text-[10px] text-lightSlate">Deep technical analysis of ransomware & malware.</p>
+                    </a>
+
+                    <a href="https://krebsonsecurity.com/" target="_blank" class="group bg-lightNavy p-6 rounded border border-lightestNavy hover:border-green hover:-translate-y-1 transition-all text-center">
+                        <div class="h-12 w-12 mx-auto bg-navy rounded-full flex items-center justify-center border border-lightestNavy group-hover:border-green group-hover:text-green transition-colors mb-4 text-slate-400">
+                            <i class="fas fa-user-secret text-xl"></i>
+                        </div>
+                        <h4 class="text-white font-bold text-sm mb-2">Krebs on Security</h4>
+                        <p class="text-[10px] text-lightSlate">Investigative journalism on cybercrime gangs.</p>
+                    </a>
+
+                    <a href="https://www.darkreading.com/" target="_blank" class="group bg-lightNavy p-6 rounded border border-lightestNavy hover:border-green hover:-translate-y-1 transition-all text-center">
+                        <div class="h-12 w-12 mx-auto bg-navy rounded-full flex items-center justify-center border border-lightestNavy group-hover:border-green group-hover:text-green transition-colors mb-4 text-slate-400">
+                            <i class="fas fa-chart-line text-xl"></i>
+                        </div>
+                        <h4 class="text-white font-bold text-sm mb-2">Dark Reading</h4>
+                        <p class="text-[10px] text-lightSlate">Enterprise security trends & CISO level insights.</p>
+                    </a>
+
+                </div>
+            </div>
+        </section>
+
+        <div class="mt-20 pt-10 border-t border-lightestNavy text-center">
+            <a href="index.html" class="inline-flex items-center gap-2 text-green font-mono text-sm hover:underline">
+                <i class="fas fa-arrow-left"></i> Back to Main Terminal
+            </a>
+        </div>
+
+    </main>
+
+    <footer class="text-center py-6 text-xs font-mono text-lightSlate bg-navy border-t border-lightestNavy">
+        <p>&copy; 2025 by Sarath G | Built for the Community</p>
+    </footer>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <script>
+        function switchTab(tabName) {
+            // 1. Hide all content
+            document.querySelectorAll('.content-section').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            // 2. Deactivate all buttons
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('active');
+            });
+
+            // 3. Show selected content
+            document.getElementById('content-' + tabName).classList.add('active');
+            
+            // 4. Activate selected button
+            document.getElementById('btn-' + tabName).classList.add('active');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1257 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sarath G | Cybersecurity Consultant</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
+    <link rel="manifest" href="site.webmanifest" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+
+    <!-- Font Styles matching reference design -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500&display=swap"
+        rel="stylesheet" />
+
+    <meta name="description"
+        content="Portfolio of Sarath G - Cybersecurity Consultant, Forensics Expert, and Global Corporate Trainer." />
+
+    <!-- Tailwind CSS with custom config -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        red: {
+                            500: '#ef4444',
+                            600: '#dc2626',
+                            900: '#7f1d1d',
+                        },
+                        neutral: {
+                            900: '#171717',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Prevent animation jumps directly in head to bypass CSS cache -->
+    <style>
+        .fade-in-scroll {
+            visibility: hidden;
+            opacity: 0;
+        }
+    </style>
+
+    <!-- Custom CSS for specialized effects not easily done in Tailwind -->
+    <link rel="stylesheet" href="style.css?v=2">
+
+    <!-- jsVectorMap (Keeping from original, since it was specifically used for the globe footprint) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap/dist/css/jsvectormap.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/jsvectormap/dist/js/jsvectormap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsvectormap/dist/maps/world.js"></script>
+
+    <!-- GSAP for animations like reference -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+</head>
+
+<body class="bg-[#050505] text-[#ffffffde] font-sans antialiased selection:bg-red-500 selection:text-white">
+
+    <!-- Intro Sequence Overlay -->
+    <div id="intro-overlay" class="fixed inset-0 z-[100] bg-[#050505] flex items-center justify-center">
+        <div class="flex items-center gap-3 intro-text">
+            <span class="relative flex h-4 w-4">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-4 w-4 bg-red-600"></span>
+            </span>
+            <h1 class="text-2xl md:text-4xl font-display font-bold text-white tracking-widest uppercase">Hello.</h1>
+        </div>
+    </div>
+
+    <!-- Spotlight Element -->
+    <div id="spotlight" class="pointer-events-none fixed inset-0 z-30 transition-opacity duration-300 mix-blend-screen">
+    </div>
+
+    <!-- Navbar -->
+    <nav id="navbar"
+        class="fixed w-full top-0 z-50 bg-transparent border-b border-transparent transition-all duration-500">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center relative">
+
+            <a href="index.html" class="font-display font-bold text-2xl tracking-tight flex items-center gap-2 group">
+                <span class="text-white group-hover:text-red-500 transition-colors duration-300">Sarath</span>
+                <span class="text-red-500 group-hover:text-white transition-colors duration-300">G.</span>
+            </a>
+
+            <div class="hidden md:flex gap-8 font-sans text-sm font-medium items-center">
+                <a href="#about" class="text-white/70 hover:text-white transition-colors">About</a>
+                <a href="#gallery" class="text-white/70 hover:text-white transition-colors">Gallery</a>
+                <a href="#projects" class="text-white/70 hover:text-white transition-colors">Projects</a>
+                <a href="#skills" class="text-white/70 hover:text-white transition-colors">Skills</a>
+                <a href="#footprint" class="text-white/70 hover:text-white transition-colors">Footprint</a>
+                <a href="start.html" class="text-white/70 hover:text-white transition-colors">Start in Cybersec</a>
+                <a href="#contact"
+                    class="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-full transition-colors flex items-center gap-2 font-medium">
+                    Contact Me
+                </a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden text-white/70 hover:text-white focus:outline-none"
+                onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu"
+            class="hidden md:hidden bg-[#0a0a0a] border-b border-white/5 absolute w-full left-0 top-full shadow-2xl">
+            <div class="flex flex-col px-6 py-4 space-y-4 font-sans text-sm">
+                <a href="#about" class="block text-white/70 hover:text-white py-2"
+                    onclick="document.getElementById('mobile-menu').classList.add('hidden')">About</a>
+                <a href="#gallery" class="block text-white/70 hover:text-white py-2"
+                    onclick="document.getElementById('mobile-menu').classList.add('hidden')">Gallery</a>
+                <a href="#projects" class="block text-white/70 hover:text-white py-2"
+                    onclick="document.getElementById('mobile-menu').classList.add('hidden')">Projects</a>
+                <a href="#skills" class="block text-white/70 hover:text-white py-2"
+                    onclick="document.getElementById('mobile-menu').classList.add('hidden')">Skills</a>
+                <a href="#footprint" class="block text-white/70 hover:text-white py-2"
+                    onclick="document.getElementById('mobile-menu').classList.add('hidden')">Footprint</a>
+                <a href="start.html" class="block text-white/70 hover:text-white py-2"
+                    onclick="document.getElementById('mobile-menu').classList.add('hidden')">Start in Cybersec</a>
+                <a href="#contact"
+                    class="inline-block w-fit px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-full transition-colors font-medium mt-2"
+                    onclick="document.getElementById('mobile-menu').classList.add('hidden')">Contact Me</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="relative min-h-screen flex flex-col justify-center overflow-hidden pt-20">
+        <!-- Background elements mimicking the reference's dynamic feel -->
+        <div class="absolute inset-0 z-0 pointer-events-none">
+            <div
+                class="absolute top-[20%] left-[10%] w-[30vw] h-[30vw] min-w-[300px] rounded-full bg-red-600/10 blur-[100px] animate-pulse">
+            </div>
+            <div
+                class="absolute bottom-[20%] right-[10%] w-[40vw] h-[40vw] min-w-[400px] rounded-full bg-blue-500/10 blur-[120px]">
+            </div>
+
+            <!-- Grid pattern similar to reference css -->
+            <div
+                class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4xNSkiLz48L3N2Zz4=')] bg-[length:40px_40px] opacity-60">
+            </div>
+        </div>
+
+        <div class="container mx-auto px-6 relative z-10 grid md:grid-cols-2 gap-12 items-center max-w-7xl">
+            <div class="space-y-6">
+                <!-- Eyebrow removed as requested -->
+
+                <h1
+                    class="text-5xl md:text-7xl lg:text-8xl font-display font-bold leading-[0.9] tracking-tight text-white fade-up-hero">
+                    Hi, I'm <br />
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-700">Sarath
+                        G.</span>
+                </h1>
+
+                <h2
+                    class="text-2xl md:text-3xl lg:text-4xl font-serif-elegant font-medium text-white/80 leading-snug fade-up-hero">
+                    Cybersecurity Consultant &<br />Global Corporate Trainer
+                </h2>
+
+                <p class="text-lg md:text-xl text-white/60 max-w-lg leading-relaxed fade-up-hero">
+                    Defending digital infrastructures against advanced threats. Expert in offensive security
+                    assessments, incident response, and global capacity building.
+                </p>
+
+                <div class="flex flex-wrap gap-4 pt-4 fade-up-hero">
+                    <a href="#contact"
+                        class="px-8 py-4 bg-white text-black hover:bg-gray-100 rounded-full font-medium transition-all hover:scale-105 shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+                        Secure Your Future
+                    </a>
+                    <a href="#about"
+                        class="px-8 py-4 bg-transparent border border-white/20 text-white hover:border-white/40 hover:bg-white/5 rounded-full font-medium transition-all">
+                        Learn More
+                    </a>
+                </div>
+            </div>
+
+            <!-- Profile Image Area - mimicking the large dynamic visual from reference -->
+            <div class="relative w-full aspect-square md:aspect-[4/5] max-w-md mx-auto fade-up-hero">
+                <!-- Background decorative elements for image -->
+                <div
+                    class="absolute inset-0 bg-gradient-to-tr from-red-600/20 to-transparent rounded-3xl transform rotate-3 scale-105 border border-red-500/10 backdrop-blur-sm -z-10">
+                </div>
+                <div
+                    class="absolute inset-0 bg-[#111] rounded-3xl overflow-hidden border border-white/10 shadow-2xl group">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10 opacity-60 group-hover:opacity-40 transition-opacity duration-500">
+                    </div>
+                    <img src="assets/sarath-profile.jpg" alt="Sarath G Profile"
+                        class="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-700 grayscale hover:grayscale-0"
+                        onerror="this.src='https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'">
+                </div>
+
+                <!-- Floating badge like reference -->
+                <div class="absolute -bottom-6 -left-6 bg-white/10 backdrop-blur-md border border-white/20 p-4 rounded-2xl shadow-xl flex items-center gap-4 z-20 animate-bounce"
+                    style="animation-duration: 3s;">
+                    <div class="w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center text-red-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-white font-bold text-lg">8+</p>
+                        <p class="text-white/60 text-xs">Years Experience</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats/Numbers Banner (like the ticker or simple stats section in modern sites) -->
+    <section class="border-y border-white/5 bg-white/[0.02] py-12 backdrop-blur-sm">
+        <div class="container mx-auto max-w-7xl px-6">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-white/5">
+                <div class="text-center px-4 fade-in-scroll">
+                    <div class="text-4xl md:text-5xl font-display font-bold text-white mb-2">10+</div>
+                    <div class="text-sm font-medium text-white/50 uppercase tracking-widest">Countries</div>
+                </div>
+                <div class="text-center px-4 fade-in-scroll">
+                    <div class="text-4xl md:text-5xl font-display font-bold text-white mb-2">30K+</div>
+                    <div class="text-sm font-medium text-white/50 uppercase tracking-widest">Participants</div>
+                </div>
+                <div class="text-center px-4 fade-in-scroll">
+                    <div class="text-4xl md:text-5xl font-display font-bold text-white mb-2">20+</div>
+                    <div class="text-sm font-medium text-white/50 uppercase tracking-widest">Organizations</div>
+                </div>
+                <div class="text-center px-4 fade-in-scroll">
+                    <div class="text-4xl md:text-5xl font-display font-bold text-white mb-2">10+</div>
+                    <div class="text-sm font-medium text-white/50 uppercase tracking-widest">Certifications</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 md:py-32 relative">
+        <div class="container mx-auto px-6 max-w-7xl">
+            <div class="grid lg:grid-cols-12 gap-16 items-center">
+
+                <div class="lg:col-span-5 relative fade-in-scroll">
+                    <div
+                        class="aspect-[4/5] rounded-3xl overflow-hidden border border-white/10 bg-[#111] relative group">
+                        <!-- Abstract placeholder/visual if profile not heavily used twice, or we use a techy image -->
+                        <div
+                            class="absolute inset-0 bg-[url('assets/gallery/google_wow-2.jpg')] bg-cover bg-center opacity-30 group-hover:opacity-50 transition-opacity duration-700">
+                        </div>
+
+                        <div class="absolute inset-0 flex flex-col justify-end p-8 z-10">
+                            <h3 class="font-display text-3xl font-bold text-white mb-2">My Journey</h3>
+                            <p class="text-white/80">Turning curiosity about fragile digital systems into a career
+                                dedicated to protection and education.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-7 space-y-8 fade-in-scroll">
+                    <div>
+                        <p class="text-red-500 font-medium tracking-widest text-sm uppercase mb-3">About Me</p>
+                        <h2 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white leading-tight">
+                            Securing the <br /><span
+                                class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-700 italic">Digital
+                                Frontier.</span>
+                        </h2>
+                    </div>
+
+                    <div class="prose prose-invert prose-lg max-w-none text-white/70">
+                        <p>
+                            Hello! My name is Sarath and I enjoy diving deep into the world of bits and bytes. My
+                            interest in cybersecurity started when I realized the fragility of digital systems, turning
+                            a curiosity into a career dedicated to protection and education.
+                        </p>
+                        <p>
+                            Fast-forward to today, and I’ve had the privilege of working with <strong
+                                class="text-white">government agencies</strong>, <strong class="text-white">financial
+                                institutions</strong>, and <strong class="text-white">fortune 500 organisation</strong>.
+                        </p>
+                    </div>
+
+                    <div class="pt-6">
+                        <a href="start.html" class="inline-flex items-center gap-2 group text-white font-medium">
+                            <span class="border-b border-red-500 pb-1">Start in Cybersecurity</span>
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                class="w-5 h-5 transform group-hover:translate-x-1 transition-transform text-red-500"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section mapped to "Core Competencies" -->
+    <section id="skills" class="py-24 md:py-32 bg-[#0a0a0a] border-y border-white/5 relative">
+        <div
+            class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.08)_1px,transparent_1px)] bg-[size:64px_64px]">
+        </div>
+
+        <div class="container mx-auto px-6 max-w-7xl relative z-10">
+            <div class="text-center max-w-2xl mx-auto mb-16 fade-in-scroll">
+                <p class="text-red-500 font-medium tracking-widest text-sm uppercase mb-3">Expertise</p>
+                <h2 class="text-4xl md:text-5xl font-display font-bold text-white mb-6">Core Competencies</h2>
+                <p class="text-white/60 text-lg">Specialized skills developed through years of active engagement in
+                    securing global infrastructures.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Skill 1 -->
+                <div
+                    class="group p-8 rounded-3xl bg-white/10 backdrop-blur-md border border-white/10 hover:bg-white/20 transition-all duration-300 shadow-xl fade-in-scroll">
+                    <div
+                        class="w-14 h-14 rounded-2xl bg-red-500/20 flex items-center justify-center text-red-500 mb-6 group-hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-display font-bold text-white mb-3">Forensics & IR</h3>
+                    <p class="text-white/80 leading-relaxed">Digital evidence recovery and incident response strategies
+                        for complex, high-stakes breaches.</p>
+                </div>
+
+                <!-- Skill 2 -->
+                <div
+                    class="group p-8 rounded-3xl bg-white/10 backdrop-blur-md border border-white/10 hover:bg-white/20 transition-all duration-300 shadow-xl fade-in-scroll">
+                    <div
+                        class="w-14 h-14 rounded-2xl bg-red-500/20 flex items-center justify-center text-red-500 mb-6 group-hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4">
+                            </path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-display font-bold text-white mb-3">Penetration Testing</h3>
+                    <p class="text-white/80 leading-relaxed">Offensive security assessments to identify and patch
+                        vulnerabilities before they are exploited.</p>
+                </div>
+
+                <!-- Skill 3 -->
+                <div
+                    class="group p-8 rounded-3xl bg-white/10 backdrop-blur-md border border-white/10 hover:bg-white/20 transition-all duration-300 shadow-xl fade-in-scroll">
+                    <div
+                        class="w-14 h-14 rounded-2xl bg-red-500/20 flex items-center justify-center text-red-500 mb-6 group-hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 20h9"></path>
+                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-display font-bold text-white mb-3">Corporate Training</h3>
+                    <p class="text-white/80 leading-relaxed">Delivering high-impact cybersecurity workshops and
+                        structured certification training globally.</p>
+                </div>
+
+                <!-- Skill 4 -->
+                <div
+                    class="group p-8 rounded-3xl bg-white/10 backdrop-blur-md border border-white/10 hover:bg-white/20 transition-all duration-300 shadow-xl fade-in-scroll">
+                    <div
+                        class="w-14 h-14 rounded-2xl bg-red-500/20 flex items-center justify-center text-red-500 mb-6 group-hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-display font-bold text-white mb-3">OSINT</h3>
+                    <p class="text-white/80 leading-relaxed">Open Source Intelligence gathering for comprehensive threat
+                        landscape analysis and profiling.</p>
+                </div>
+
+                <!-- Skill 5 -->
+                <div
+                    class="group p-8 rounded-3xl bg-white/10 backdrop-blur-md border border-white/10 hover:bg-white/20 transition-all duration-300 shadow-xl fade-in-scroll">
+                    <div
+                        class="w-14 h-14 rounded-2xl bg-red-500/20 flex items-center justify-center text-red-500 mb-6 group-hover:scale-110 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+                            <rect x="9" y="9" width="6" height="6"></rect>
+                            <line x1="9" y1="1" x2="9" y2="4"></line>
+                            <line x1="15" y1="1" x2="15" y2="4"></line>
+                            <line x1="9" y1="20" x2="9" y2="23"></line>
+                            <line x1="15" y1="20" x2="15" y2="23"></line>
+                            <line x1="20" y1="9" x2="23" y2="9"></line>
+                            <line x1="20" y1="14" x2="23" y2="14"></line>
+                            <line x1="1" y1="9" x2="4" y2="9"></line>
+                            <line x1="1" y1="14" x2="4" y2="14"></line>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-display font-bold text-white mb-3">Malware Analysis</h3>
+                    <p class="text-white/80 leading-relaxed">Dissecting malicious software to understand behavior,
+                        pinpoint origin, and mitigate impact.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-24 bg-[#0a0a0a] border-y border-white/5 relative">
+        <div class="container mx-auto px-6 max-w-7xl relative z-10">
+            <div class="text-center max-w-2xl mx-auto mb-16 fade-in-scroll">
+                <p class="text-red-500 font-medium tracking-widest text-sm uppercase mb-3">Moments</p>
+                <h2 class="text-4xl md:text-5xl font-display font-bold text-white mb-6">Special moments</h2>
+                <p class="text-white/60 text-lg">A glimpse into corporate workshops and on-site consultations across the
+                    globe.</p>
+            </div>
+
+            <div class="columns-1 md:columns-2 lg:columns-3 gap-4 space-y-4 fade-in-scroll">
+                <!-- Gallery Item  -->
+                <div class="relative group overflow-hidden rounded-2xl bg-[#111] break-inside-avoid">
+                    <img src="assets/gallery/cbn_2.jpg" alt="Training Session"
+                        class="w-full h-auto object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-110">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-6 pointer-events-none">
+                        <span class="text-white font-medium text-lg">CEH Training</span>
+                        <span class="text-red-400 text-sm">CBN, Lagos, Nigeria</span>
+                    </div>
+                </div>
+
+                <div class="relative group overflow-hidden rounded-2xl bg-[#111] break-inside-avoid">
+                    <img src="assets/gallery/cbn_2_1.jpg" alt="Seminar"
+                        class="w-full h-auto object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-110">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-6 pointer-events-none">
+                        <span class="text-white font-medium text-lg">CEH Training</span>
+                        <span class="text-red-400 text-sm">CBN, Lagos, Nigeria</span>
+                    </div>
+                </div>
+
+                <div class="relative group overflow-hidden rounded-2xl bg-[#111] break-inside-avoid">
+                    <img src="assets/gallery/siemens_2.jpg" alt="Client Interaction"
+                        class="w-full h-auto object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-110">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-6 pointer-events-none">
+                        <span class="text-white font-medium text-lg">Thickclient Pentesting</span>
+                        <span class="text-red-400 text-sm">Siemens Healthineers, Bangalore</span>
+                    </div>
+                </div>
+                <div class="relative group overflow-hidden rounded-2xl bg-[#111] break-inside-avoid">
+                    <img src="assets/gallery/siemens_1.jpg" alt="Client Interaction"
+                        class="w-full h-auto object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-110">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-6 pointer-events-none">
+                        <span class="text-white font-medium text-lg">Thickclient Pentesting</span>
+                        <span class="text-red-400 text-sm">Siemens Healthineers, Bangalore</span>
+                    </div>
+                </div>
+
+                <div class="relative group overflow-hidden rounded-2xl bg-[#111] break-inside-avoid">
+                    <img src="assets/gallery/koenig_dubai.jpg" alt="Team Session"
+                        class="w-full h-auto object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-110">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-6 pointer-events-none">
+                        <span class="text-white font-medium text-lg">CEH Training</span>
+                        <span class="text-red-400 text-sm">Dubai, UAE</span>
+                    </div>
+                </div>
+                <div class="relative group overflow-hidden rounded-2xl bg-[#111] break-inside-avoid">
+                    <img src="assets/gallery/koenig_dubai_1.jpg" alt="Team Session"
+                        class="w-full h-auto object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-110">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-6 pointer-events-none">
+                        <span class="text-white font-medium text-lg">Offensive Security Attacks Training</span>
+                        <span class="text-red-400 text-sm">Dubai, UAE</span>
+                    </div>
+                </div>
+                <div class="relative group overflow-hidden rounded-2xl bg-[#111] break-inside-avoid">
+                    <img src="assets/gallery/bia.jpg" alt="Large Audience"
+                        class="w-full h-auto object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-110">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-6 pointer-events-none">
+                        <span class="text-white font-medium text-lg">ISO 20022 and International Payments
+                            training</span>
+                        <span class="text-red-400 text-sm">Brunei Investment Agency, Brunei</span>
+                    </div>
+                </div>
+
+                <div class="relative group overflow-hidden rounded-2xl bg-[#111] break-inside-avoid">
+                    <img src="assets/gallery/timor_leste.jpg" alt="Large Audience"
+                        class="w-full h-auto object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-110">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-6 pointer-events-none">
+                        <span class="text-white font-medium text-lg">Web Application Pentesting</span>
+                        <span class="text-red-400 text-sm">ANM, Timor-Leste</span>
+                    </div>
+                </div>
+
+                <div class="relative group overflow-hidden rounded-2xl bg-[#111] break-inside-avoid">
+                    <img src="assets/gallery/google_wow-1.jpg" alt="Large Audience"
+                        class="w-full h-auto object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-110">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-6 pointer-events-none">
+                        <span class="text-white font-medium text-lg">Speaker</span>
+                        <span class="text-red-400 text-sm">Google WoW</span>
+                    </div>
+                </div>
+                <div class="relative group overflow-hidden rounded-2xl bg-[#111] break-inside-avoid">
+                    <img src="assets/gallery/google_wow-2.jpg" alt="Large Audience"
+                        class="w-full h-auto object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-110">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-6 pointer-events-none">
+                        <span class="text-white font-medium text-lg">Speaker</span>
+                        <span class="text-red-400 text-sm">Google WoW</span>
+                    </div>
+                </div>
+                <div class="relative group overflow-hidden rounded-2xl bg-[#111] break-inside-avoid">
+                    <img src="assets/gallery/ust_1.jpg" alt="Large Audience"
+                        class="w-full h-auto object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-110">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-6 pointer-events-none">
+                        <span class="text-white font-medium text-lg">AI Security</span>
+                        <span class="text-red-400 text-sm">UST Campus, Kochi</span>
+                    </div>
+
+                </div>
+                <div class="relative group overflow-hidden rounded-2xl bg-[#111] break-inside-avoid">
+                    <img src="assets/gallery/ust.jpg" alt="Large Audience"
+                        class="w-full h-auto object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-110">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-6 pointer-events-none">
+                        <span class="text-white font-medium text-lg">AI Security</span>
+                        <span class="text-red-400 text-sm">UST Campus, Kochi</span>
+                    </div>
+
+                </div>
+                <div class="relative group overflow-hidden rounded-2xl bg-[#111] break-inside-avoid">
+                    <img src="assets/gallery/cusat_1.jpg" alt="Large Audience"
+                        class="w-full h-auto object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-110">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-6 pointer-events-none">
+                        <span class="text-white font-medium text-lg">AI and ML Security</span>
+                        <span class="text-red-400 text-sm">CUSAT Campus, Kochi</span>
+                    </div>
+
+                </div>
+
+                <div class="relative group overflow-hidden rounded-2xl bg-[#111] break-inside-avoid">
+                    <img src="assets/gallery/samsung_1.jpg" alt="Large Audience"
+                        class="w-full h-auto object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-110">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-6 pointer-events-none">
+                        <span class="text-white font-medium text-lg">AI and LLM Pentesting</span>
+                        <span class="text-red-400 text-sm">Samsung R&D, Gurgaon</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-24 bg-[#050505]">
+        <div class="container mx-auto px-6 max-w-7xl">
+            <div class="text-center max-w-2xl mx-auto mb-16 fade-in-scroll">
+                <p class="text-red-500 font-medium tracking-widest text-sm uppercase mb-3">Open Source</p>
+                <h2 class="text-4xl md:text-5xl font-display font-bold text-white mb-6">Featured Projects</h2>
+                <p class="text-white/60 text-lg">Tools and research published on my Github repository.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Project 1 -->
+                <a href="https://github.com/secretguard/web-recon" target="_blank"
+                    class="group p-8 rounded-3xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] hover:border-white/10 transition-all duration-300 flex flex-col h-full shadow-xl fade-in-scroll">
+                    <div class="flex justify-between items-center mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-red-500" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path
+                                d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+                            </path>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            class="w-5 h-5 text-white/40 group-hover:text-white transition-colors" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <line x1="10" y1="14" x2="21" y2="3"></line>
+                        </svg>
+                    </div>
+                    <h3
+                        class="text-xl font-display font-bold text-white mb-3 group-hover:text-red-400 transition-colors">
+                        Web Recon</h3>
+                    <p class="text-white/60 leading-relaxed flex-grow">Automated vulnerability analysis framework to
+                        streamline the reconnaissance phase of penetration testing. Reduced manual recon time by ~30% by
+                        automating asset discovery and scanning into a centralized dashboard.</p>
+                    <div class="mt-6 flex flex-wrap gap-2 text-xs font-mono text-white/40">
+                        <span>Shell</span>
+                        <span>Python</span>
+                        <span>Nmap</span>
+                    </div>
+                </a>
+
+                <!-- Project 2 -->
+                <a href="https://pdf.sarathg.me" target="_blank"
+                    class="group p-8 rounded-3xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] hover:border-white/10 transition-all duration-300 flex flex-col h-full shadow-xl fade-in-scroll">
+                    <div class="flex justify-between items-center mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-red-500" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M12 20h9"></path>
+                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            class="w-5 h-5 text-white/40 group-hover:text-white transition-colors" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <line x1="10" y1="14" x2="21" y2="3"></line>
+                        </svg>
+                    </div>
+                    <h3
+                        class="text-xl font-display font-bold text-white mb-3 group-hover:text-red-400 transition-colors">
+                        Chameleon (Tabnabbing PoC)</h3>
+                    <p class="text-white/60 leading-relaxed flex-grow">A web-based Proof of Concept tool explicitly
+                        demonstrating the risks of Tabnabbing and reverse-tabnabbing attacks. Used as a training aid in
+                        corporate security sessions to illustrate credential harvesting from hijacked inactive tabs.</p>
+                    <div class="mt-6 flex flex-wrap gap-2 text-xs font-mono text-white/40">
+                        <span>HTML/JS</span>
+                        <span>Phishing PoC</span>
+                    </div>
+                </a>
+
+                <!-- Project 3 -->
+                <a href="https://freeticket.sarathg.me" target="_blank"
+                    class="group p-8 rounded-3xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] hover:border-white/10 transition-all duration-300 flex flex-col h-full shadow-xl fade-in-scroll">
+                    <div class="flex justify-between items-center mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-red-500" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            class="w-5 h-5 text-white/40 group-hover:text-white transition-colors" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <line x1="10" y1="14" x2="21" y2="3"></line>
+                        </svg>
+                    </div>
+                    <h3
+                        class="text-xl font-display font-bold text-white mb-3 group-hover:text-red-400 transition-colors">
+                        Free Movie Ticket</h3>
+                    <p class="text-white/60 leading-relaxed flex-grow">Designed and deployed a simulated phishing
+                        environment to emphasize the importance of user awareness. Demonstrates how psychological
+                        triggers can bypass technical controls during corporate training awareness drills.</p>
+                    <div class="mt-6 flex flex-wrap gap-2 text-xs font-mono text-white/40">
+                        <span>Social Engineering</span>
+                    </div>
+                </a>
+
+                <!-- Project 4 -->
+                <a href="https://tv.sarathg.me/" target="_blank"
+                    class="group p-8 rounded-3xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] hover:border-white/10 transition-all duration-300 flex flex-col h-full shadow-xl fade-in-scroll">
+                    <div class="flex justify-between items-center mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-red-500" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect>
+                            <polyline points="17 2 12 7 7 2"></polyline>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            class="w-5 h-5 text-white/40 group-hover:text-white transition-colors" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <line x1="10" y1="14" x2="21" y2="3"></line>
+                        </svg>
+                    </div>
+                    <h3
+                        class="text-xl font-display font-bold text-white mb-3 group-hover:text-red-400 transition-colors">
+                        vyu</h3>
+                    <p class="text-white/60 leading-relaxed flex-grow">Designed and deployed live TV streaming for
+                        channels across the globe, featuring advanced content filtering and rapid auto-switching
+                        capabilities.</p>
+                    <div class="mt-6 flex flex-wrap gap-2 text-xs font-mono text-white/40">
+                        <span>Streaming</span>
+                        <span>Web Interface</span>
+                    </div>
+                </a>
+
+                <!-- Project 5 -->
+                <a href="https://secretguard.github.io/blockchainlab/" target="_blank"
+                    class="group p-8 rounded-3xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] hover:border-white/10 transition-all duration-300 flex flex-col h-full shadow-xl fade-in-scroll lg:col-span-2">
+                    <div class="flex justify-between items-center mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-red-500" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            class="w-5 h-5 text-white/40 group-hover:text-white transition-colors" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <line x1="10" y1="14" x2="21" y2="3"></line>
+                        </svg>
+                    </div>
+                    <h3
+                        class="text-xl font-display font-bold text-white mb-3 group-hover:text-red-400 transition-colors">
+                        Blockchain Learning Lab</h3>
+                    <p class="text-white/60 leading-relaxed flex-grow">A visual representation of blockchain logic
+                        empowering audiences to understand the core concepts intuitively. It features live hash
+                        calculation and realistic modification of blocks, simulating how blockchain tampering works in
+                        real-time scenarios.</p>
+                    <div class="mt-6 flex flex-wrap gap-2 text-xs font-mono text-white/40">
+                        <span>Cryptography</span>
+                        <span>Interactive UI</span>
+                    </div>
+                </a>
+            </div>
+
+            <div class="mt-12 text-center fade-in-scroll">
+                <a href="https://github.com/secretguard" target="_blank"
+                    class="inline-flex items-center gap-2 px-8 py-4 bg-white/5 border border-white/20 text-white hover:border-white/40 hover:bg-white/10 rounded-full font-medium transition-all">
+                    View full Github Profile
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Certifications Section / Credentials (modern horizontal scrolling or grid) -->
+    <section id="certifications" class="py-24 bg-[#0a0a0a] border-y border-white/5">
+        <div class="container mx-auto px-6 max-w-7xl">
+            <h3 class="text-2xl md:text-3xl font-display font-bold text-white text-center mb-12 fade-in-scroll">
+                Professional Credentials</h3>
+
+            <div
+                class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-6 items-center justify-center opacity-70 hover:opacity-100 transition-opacity fade-in-scroll">
+                <!-- Cert 1 -->
+                <div
+                    class="flex flex-col items-center gap-4 grayscale hover:grayscale-0 transition-all duration-300 hover:scale-105">
+                    <img src="assets/cert_logos/ceh-master.png" alt="CEH Master"
+                        class="h-20 md:h-24 w-auto object-contain">
+                    <span class="text-[10px] font-sans text-white/50 text-center uppercase tracking-wider">CEH
+                        Master</span>
+                </div>
+                <!-- Cert 2 -->
+                <div
+                    class="flex flex-col items-center gap-4 grayscale hover:grayscale-0 transition-all duration-300 hover:scale-105">
+                    <img src="assets/cert_logos/cpent.png" alt="CPENT" class="h-20 md:h-24 w-auto object-contain">
+                    <span class="text-[10px] font-sans text-white/50 text-center uppercase tracking-wider">CPENT</span>
+                </div>
+                <!-- Cert 3 -->
+                <div
+                    class="flex flex-col items-center gap-4 grayscale hover:grayscale-0 transition-all duration-300 hover:scale-105">
+                    <img src="assets/cert_logos/lpt-master.png" alt="LPT Master"
+                        class="h-20 md:h-24 w-auto object-contain">
+                    <span class="text-[10px] font-sans text-white/50 text-center uppercase tracking-wider">LPT
+                        Master</span>
+                </div>
+                <!-- Cert 4 -->
+                <div
+                    class="flex flex-col items-center gap-4 grayscale hover:grayscale-0 transition-all duration-300 hover:scale-105">
+                    <img src="assets/cert_logos/chfi.png" alt="CHFI" class="h-20 md:h-24 w-auto object-contain">
+                    <span class="text-[10px] font-sans text-white/50 text-center uppercase tracking-wider">CHFI</span>
+                </div>
+                <!-- Cert 5 -->
+                <div
+                    class="flex flex-col items-center gap-4 grayscale hover:grayscale-0 transition-all duration-300 hover:scale-105">
+                    <img src="assets/cert_logos/cei.png" alt="CEI" class="h-20 md:h-24 w-auto object-contain">
+                    <span class="text-[10px] font-sans text-white/50 text-center uppercase tracking-wider">CEI</span>
+                </div>
+                <!-- Cert 6 -->
+                <div
+                    class="flex flex-col items-center gap-4 grayscale hover:grayscale-0 transition-all duration-300 hover:scale-105">
+                    <img src="assets/cert_logos/isc2-cc.png" alt="ISC2 CC" class="h-20 md:h-24 w-auto object-contain">
+                    <span class="text-[10px] font-sans text-white/50 text-center uppercase tracking-wider">ISC2
+                        CC</span>
+                </div>
+                <!-- Cert 7 -->
+                <div
+                    class="flex flex-col items-center gap-4 grayscale hover:grayscale-0 transition-all duration-300 hover:scale-105">
+                    <img src="assets/cert_logos/wahs.png" alt="WAHS" class="h-20 md:h-24 w-auto object-contain">
+                    <span class="text-[10px] font-sans text-white/50 text-center uppercase tracking-wider">WAHS</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Global Footprint Section -->
+    <section id="footprint" class="py-24 md:py-32 relative">
+        <div class="container mx-auto px-6 max-w-7xl">
+            <div class="text-center max-w-2xl mx-auto mb-16 fade-in-scroll">
+                <p class="text-red-500 font-medium tracking-widest text-sm uppercase mb-3">Reach</p>
+                <h2 class="text-4xl md:text-5xl font-display font-bold text-white mb-6">Global Footprint</h2>
+                <p class="text-white/60 text-lg">Delivering security excellence across borders.</p>
+            </div>
+
+            <!-- Map Container -->
+            <div
+                class="bg-[#111] p-2 md:p-6 rounded-3xl border border-white/5 shadow-2xl relative h-[300px] md:h-[500px] fade-in-scroll">
+                <div id="world-map" class="w-full h-full"></div>
+            </div>
+
+            <div
+                class="flex flex-wrap justify-center gap-2 md:gap-4 mt-8 font-mono text-xs text-white/40 mb-20 fade-in-scroll">
+                <span class="px-3 py-1 rounded-full border border-white/10">INDIA</span>
+                <span class="px-3 py-1 rounded-full border border-white/10">QATAR</span>
+                <span class="px-3 py-1 rounded-full border border-white/10">KUWAIT</span>
+                <span class="px-3 py-1 rounded-full border border-white/10">UK</span>
+                <span class="px-3 py-1 rounded-full border border-white/10">UAE</span>
+                <span class="px-3 py-1 rounded-full border border-white/10">SAUDI ARABIA</span>
+                <span class="px-3 py-1 rounded-full border border-white/10">DR CONGO</span>
+                <span class="px-3 py-1 rounded-full border border-white/10">ETHIOPIA</span>
+                <span class="px-3 py-1 rounded-full border border-white/10">TANZANIA</span>
+                <span class="px-3 py-1 rounded-full border border-white/10">TIMOR LESTE</span>
+                <span class="px-3 py-1 rounded-full border border-white/10">THAILAND</span>
+                <span class="px-3 py-1 rounded-full border border-white/10">NIGERIA</span>
+            </div>
+
+            <!-- Clients/Partners -->
+            <div class="border-t border-white/10 pt-16">
+                <h3 class="text-xl font-display font-medium text-white/80 text-center mb-12 fade-in-scroll">Trusted By
+                    Industry Leaders</h3>
+
+                <div class="relative max-w-6xl mx-auto">
+                    <!-- Faded edges wrapper for the grid -->
+                    <div
+                        class="[mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_80%)] pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:calc(100%/3)_160px] md:bg-[size:calc(100%/4)_180px] lg:bg-[size:calc(100%/6)_200px]">
+                    </div>
+
+                    <div
+                        class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 items-center justify-items-center opacity-80 hover:opacity-100 transition-opacity">
+                        <!-- Iterating key clients with matching style -->
+                        <div
+                            class="group flex flex-col justify-center items-center text-center w-full h-[160px] md:h-[180px] lg:h-[200px] border border-white/[0.02] -mt-[1px] -ml-[1px] relative">
+                            <img src="assets/logos/african-union.jpg" alt="African Union"
+                                class="h-16 md:h-20 lg:h-24 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110">
+                            <span
+                                class="absolute bottom-4 text-[10px] font-medium text-white/30 tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300">African
+                                Union</span>
+                        </div>
+                        <div
+                            class="group flex flex-col justify-center items-center text-center w-full h-[160px] md:h-[180px] lg:h-[200px] border border-white/[0.02] -mt-[1px] -ml-[1px] relative">
+                            <img src="assets/logos/abk.jpg" alt="Al Ahli Bank"
+                                class="h-16 md:h-20 lg:h-24 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110">
+                            <span
+                                class="absolute bottom-4 text-[10px] font-medium text-white/30 tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300">Al
+                                Ahli Bank</span>
+                        </div>
+                        <div
+                            class="group flex flex-col justify-center items-center text-center w-full h-[160px] md:h-[180px] lg:h-[200px] border border-white/[0.02] -mt-[1px] -ml-[1px] relative">
+                            <img src="assets/logos/ashghal.jpg" alt="Ashghal"
+                                class="h-16 md:h-20 lg:h-24 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110">
+                            <span
+                                class="absolute bottom-4 text-[10px] font-medium text-white/30 tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300">Ashghal</span>
+                        </div>
+                        <div
+                            class="group flex flex-col justify-center items-center text-center w-full h-[160px] md:h-[180px] lg:h-[200px] border border-white/[0.02] -mt-[1px] -ml-[1px] relative">
+                            <img src="assets/logos/cbn.jpg" alt="Central Bank of Nigeria"
+                                class="h-16 md:h-20 lg:h-24 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110">
+                            <span
+                                class="absolute bottom-4 text-[10px] font-medium text-white/30 tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300">Central
+                                Bank of Nigeria</span>
+                        </div>
+                        <div
+                            class="group flex flex-col justify-center items-center text-center w-full h-[160px] md:h-[180px] lg:h-[200px] border border-white/[0.02] -mt-[1px] -ml-[1px] relative">
+                            <img src="assets/logos/navy.jpg" alt="Indian Navy"
+                                class="h-16 md:h-20 lg:h-24 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110">
+                            <span
+                                class="absolute bottom-4 text-[10px] font-medium text-white/30 tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300">Indian
+                                Navy</span>
+                        </div>
+                        <div
+                            class="group flex flex-col justify-center items-center text-center w-full h-[160px] md:h-[180px] lg:h-[200px] border border-white/[0.02] -mt-[1px] -ml-[1px] relative">
+                            <img src="assets/logos/samsung.jpg" alt="Samsung"
+                                class="h-16 md:h-20 lg:h-24 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110">
+                            <span
+                                class="absolute bottom-4 text-[10px] font-medium text-white/30 tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300">Samsung</span>
+                        </div>
+
+                        <div
+                            class="group flex flex-col justify-center items-center text-center w-full h-[160px] md:h-[180px] lg:h-[200px] border border-white/[0.02] -mt-[1px] -ml-[1px] relative">
+                            <img src="assets/logos/bank-of-tanzania.jpg" alt="Bank of Tanzania"
+                                class="h-16 md:h-20 lg:h-24 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110">
+                            <span
+                                class="absolute bottom-4 text-[10px] font-medium text-white/30 tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300">Bank
+                                of Tanzania</span>
+                        </div>
+                        <div
+                            class="group flex flex-col justify-center items-center text-center w-full h-[160px] md:h-[180px] lg:h-[200px] border border-white/[0.02] -mt-[1px] -ml-[1px] relative">
+                            <img src="assets/logos/iit.jpg" alt="IIT Madras"
+                                class="h-16 md:h-20 lg:h-24 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110">
+                            <span
+                                class="absolute bottom-4 text-[10px] font-medium text-white/30 tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300">IIT
+                                Madras</span>
+                        </div>
+                        <div
+                            class="group flex flex-col justify-center items-center text-center w-full h-[160px] md:h-[180px] lg:h-[200px] border border-white/[0.02] -mt-[1px] -ml-[1px] relative">
+                            <img src="assets/logos/ust.jpg" alt="UST"
+                                class="h-16 md:h-20 lg:h-24 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110">
+                            <span
+                                class="absolute bottom-4 text-[10px] font-medium text-white/30 tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300">UST</span>
+                        </div>
+                        <div
+                            class="group flex flex-col justify-center items-center text-center w-full h-[160px] md:h-[180px] lg:h-[200px] border border-white/[0.02] -mt-[1px] -ml-[1px] relative">
+                            <img src="assets/logos/oil-india.jpg" alt="Oil India"
+                                class="h-16 md:h-20 lg:h-24 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110">
+                            <span
+                                class="absolute bottom-4 text-[10px] font-medium text-white/30 tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300">Oil
+                                India</span>
+                        </div>
+                        <div
+                            class="group flex flex-col justify-center items-center text-center w-full h-[160px] md:h-[180px] lg:h-[200px] border border-white/[0.02] -mt-[1px] -ml-[1px] relative">
+                            <img src="assets/logos/bank-of-baroda.jpg" alt="Bank of Baroda"
+                                class="h-16 md:h-20 lg:h-24 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110">
+                            <span
+                                class="absolute bottom-4 text-[10px] font-medium text-white/30 tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300">Bank
+                                of Baroda</span>
+                        </div>
+                        <div
+                            class="group flex flex-col justify-center items-center text-center w-full h-[160px] md:h-[180px] lg:h-[200px] border border-white/[0.02] -mt-[1px] -ml-[1px] relative">
+                            <img src="assets/logos/vit.jpg" alt="VIT"
+                                class="h-16 md:h-20 lg:h-24 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110">
+                            <span
+                                class="absolute bottom-4 text-[10px] font-medium text-white/30 tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300">VIT</span>
+                        </div>
+
+                        <div
+                            class="group flex flex-col justify-center items-center text-center w-full h-[160px] md:h-[180px] lg:h-[200px] border border-white/[0.02] -mt-[1px] -ml-[1px] relative">
+                            <img src="assets/logos/anm.jpg" alt="ANM"
+                                class="h-16 md:h-20 lg:h-24 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110">
+                            <span
+                                class="absolute bottom-4 text-[10px] font-medium text-white/30 tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300">ANM</span>
+                        </div>
+                        <div
+                            class="group flex flex-col justify-center items-center text-center w-full h-[160px] md:h-[180px] lg:h-[200px] border border-white/[0.02] -mt-[1px] -ml-[1px] relative">
+                            <img src="assets/logos/bakkavor.jpg" alt="Bakkavor"
+                                class="h-16 md:h-20 lg:h-24 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110">
+                            <span
+                                class="absolute bottom-4 text-[10px] font-medium text-white/30 tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300">Bakkavor</span>
+                        </div>
+                        <div
+                            class="group flex flex-col justify-center items-center text-center w-full h-[160px] md:h-[180px] lg:h-[200px] border border-white/[0.02] -mt-[1px] -ml-[1px] relative">
+                            <img src="assets/logos/bia.png" alt="Brunei Investment Agency"
+                                class="h-16 md:h-20 lg:h-24 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110">
+                            <span
+                                class="absolute bottom-4 text-[10px] font-medium text-white/30 tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300">Brunei
+                                Investment Agency</span>
+                        </div>
+                        <div
+                            class="group flex flex-col justify-center items-center text-center w-full h-[160px] md:h-[180px] lg:h-[200px] border border-white/[0.02] -mt-[1px] -ml-[1px] relative">
+                            <img src="assets/logos/canara-bank.jpg" alt="Canara Bank"
+                                class="h-16 md:h-20 lg:h-24 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110">
+                            <span
+                                class="absolute bottom-4 text-[10px] font-medium text-white/30 tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300">Canara
+                                Bank</span>
+                        </div>
+                        <div
+                            class="group flex flex-col justify-center items-center text-center w-full h-[160px] md:h-[180px] lg:h-[200px] border border-white/[0.02] -mt-[1px] -ml-[1px] relative">
+                            <img src="assets/logos/ewura.jpg" alt="EWURA"
+                                class="h-16 md:h-20 lg:h-24 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110">
+                            <span
+                                class="absolute bottom-4 text-[10px] font-medium text-white/30 tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300">EWURA</span>
+                        </div>
+                        <div
+                            class="group flex flex-col justify-center items-center text-center w-full h-[160px] md:h-[180px] lg:h-[200px] border border-white/[0.02] -mt-[1px] -ml-[1px] relative">
+                            <img src="assets/logos/mumi.jpg" alt="Mutanda Mining"
+                                class="h-16 md:h-20 lg:h-24 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110">
+                            <span
+                                class="absolute bottom-4 text-[10px] font-medium text-white/30 tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300">Mutanda
+                                Mining</span>
+                        </div>
+
+                        <div
+                            class="group flex flex-col justify-center items-center text-center w-full h-[160px] md:h-[180px] lg:h-[200px] border border-white/[0.02] -mt-[1px] -ml-[1px] relative">
+                            <img src="assets/logos/siemens.png" alt="Siemens"
+                                class="h-16 md:h-20 lg:h-24 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110">
+                            <span
+                                class="absolute bottom-4 text-[10px] font-medium text-white/30 tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300">Siemens</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA / Contact Section -->
+    <section id="contact" class="py-24 md:py-32 bg-[#120404] relative overflow-hidden">
+        <!-- Abstract BG in CTA -->
+        <div
+            class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4xNSkiLz48L3N2Zz4=')] bg-[length:20px_20px] opacity-30">
+        </div>
+        <div
+            class="absolute top-0 right-0 w-[60vw] h-[60vw] bg-red-900 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3 opacity-30 mix-blend-screen">
+        </div>
+
+        <div class="container mx-auto px-6 max-w-4xl relative z-10">
+            <div class="bg-[#0a0a0a] rounded-3xl p-8 md:p-12 shadow-2xl border border-white/10 fade-in-scroll">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl md:text-5xl font-display font-bold text-white mb-4">Let's Secure the Future</h2>
+                    <p class="text-white/60 text-lg">My inbox is always open. Whether you have a question or just want
+                        to explore a partnership, I'll try my best to get back to you!</p>
+                </div>
+
+                <form id="contact-form" class="space-y-6">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label class="text-sm font-medium text-white/80 px-1">Name</label>
+                            <input type="text" name="name" required
+                                class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white focus:border-red-500 focus:bg-white/10 outline-none transition-all placeholder-white/20"
+                                placeholder="John Doe">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-medium text-white/80 px-1">Email</label>
+                            <input type="email" name="email" required
+                                class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white focus:border-red-500 focus:bg-white/10 outline-none transition-all placeholder-white/20"
+                                placeholder="john@company.com">
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium text-white/80 px-1">Message</label>
+                        <textarea name="message" rows="4" required
+                            class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white focus:border-red-500 focus:bg-white/10 outline-none transition-all resize-none placeholder-white/20"
+                            placeholder="How can I help you?"></textarea>
+                    </div>
+                    <button type="submit"
+                        class="w-full py-4 bg-red-900/80 hover:bg-red-800 border border-red-500/20 text-white rounded-xl font-medium text-lg transition-colors shadow-lg shadow-red-900/20">
+                        Send Message
+                    </button>
+                    <div id="form-status" class="text-center text-sm mt-4 hidden"></div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 bg-[#050505] border-t border-white/5">
+        <div
+            class="container mx-auto px-6 text-center text-white/40 text-sm flex flex-col md:flex-row justify-between items-center gap-4">
+            <p>&copy; <span id="year"></span> Sarath G. All rights reserved.</p>
+            <div class="flex items-center gap-4">
+                <a href="#" class="hover:text-white transition-colors">LinkedIn</a>
+                <a href="#" class="hover:text-white transition-colors">Twitter</a>
+                <a href="start.html" class="hover:text-white transition-colors">Ethan</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Animation & Logic Script -->
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Dynamic Spotlight Effect (Re-introduced)
+        const spotlight = document.getElementById('spotlight');
+        let currentSize = 300;
+        const minSize = 250;
+        const maxSize = 600;
+        let lastX = 0, lastY = 0, lastTime = Date.now();
+
+        window.addEventListener('mousemove', (e) => {
+            const now = Date.now();
+            const dt = now - lastTime;
+            if (dt > 0) {
+                const distance = Math.sqrt((e.clientX - lastX) ** 2 + (e.clientY - lastY) ** 2);
+                const velocity = distance / dt;
+                const targetSize = Math.min(maxSize, Math.max(minSize, minSize + (velocity * 100)));
+                currentSize += (targetSize - currentSize) * 0.1;
+
+                spotlight.style.background = `radial-gradient(circle ${currentSize}px at ${e.clientX}px ${e.clientY}px, rgba(239, 68, 68, 0.07) 0%, transparent 80%)`;
+
+                lastX = e.clientX;
+                lastY = e.clientY;
+                lastTime = now;
+            }
+        });
+
+        // Initialize Proximity Sensors for Images
+        const proximityThreshold = 250; // Radius in pixels
+        const interactiveElements = document.querySelectorAll('#gallery .group, #certifications .grayscale, #footprint .group');
+
+        window.addEventListener('mousemove', (e) => {
+            if (interactiveElements.length > 0) {
+                interactiveElements.forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    // Distance to the closest point of bounding box
+                    const dx = Math.max(rect.left - e.clientX, 0, e.clientX - rect.right);
+                    const dy = Math.max(rect.top - e.clientY, 0, e.clientY - rect.bottom);
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist <= proximityThreshold) {
+                        el.classList.add('proximity-active');
+                    } else {
+                        el.classList.remove('proximity-active');
+                    }
+                });
+            }
+        });
+
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('bg-[#050505]/80', 'backdrop-blur-md', 'border-white/5', 'shadow-lg');
+                nav.classList.remove('bg-transparent', 'border-transparent');
+            } else {
+                nav.classList.remove('bg-[#050505]/80', 'backdrop-blur-md', 'border-white/5', 'shadow-lg');
+                nav.classList.add('bg-transparent', 'border-transparent');
+            }
+        });
+
+        // Initialize GSAP Animations
+        document.addEventListener("DOMContentLoaded", (event) => {
+            gsap.registerPlugin(ScrollTrigger);
+
+            // Cinematic Intro Sequence
+            const introOverlay = document.getElementById('intro-overlay');
+            const introText = introOverlay.querySelector('.intro-text');
+
+            const tlIntro = gsap.timeline();
+            tlIntro.to(introText, { opacity: 0, duration: 0.6, delay: 0.8, ease: "power2.inOut" })
+                .to(introOverlay, {
+                    opacity: 0,
+                    duration: 1.2,
+                    ease: "power2.inOut",
+                    onComplete: () => {
+                        introOverlay.style.display = 'none';
+                        // Trigger Hero Animation Sequence AFTER intro finishes
+                        gsap.fromTo(".fade-up-hero",
+                            { y: 50, opacity: 0 },
+                            { y: 0, opacity: 1, duration: 1, stagger: 0.15, ease: "power3.out" }
+                        );
+                    }
+                });
+
+            // Generic Scroll Animations
+            gsap.utils.toArray('.fade-in-scroll').forEach(el => {
+                gsap.fromTo(el,
+                    { y: 40, autoAlpha: 0 },
+                    {
+                        y: 0,
+                        autoAlpha: 1,
+                        duration: 1,
+                        ease: "power2.out",
+                        scrollTrigger: {
+                            trigger: el,
+                            start: "top 85%",
+                            toggleActions: "play none none none"
+                        }
+                    }
+                );
+            });
+
+            // Re-initialize Vector Map
+            if (typeof jsVectorMap !== 'undefined') {
+                new jsVectorMap({
+                    selector: '#world-map',
+                    map: 'world',
+                    backgroundColor: 'transparent',
+                    zoomButtons: false,
+                    zoomOnScroll: false,
+                    regionStyle: {
+                        initial: { fill: '#333', fillOpacity: 1, stroke: 'none' },
+                        hover: { fill: '#ef4444', fillOpacity: 1, cursor: 'pointer' }
+                    },
+                    markers: [
+                        { name: 'India', coords: [20.5937, 78.9629] },
+                        { name: 'Qatar', coords: [25.3548, 51.1839] },
+                        { name: 'Kuwait', coords: [29.3759, 47.9774] },
+                        { name: 'UAE', coords: [25.2048, 55.2708] },
+                        { name: 'UK', coords: [55.3781, -3.4360] },
+                        { name: 'Thailand', coords: [15.8700, 100.9925] },
+                        { name: 'Saudi Arabia', coords: [23.8859, 45.0792] },
+                        { name: 'DR Congo', coords: [-4.0383, 21.7587] },
+                        { name: 'Ethiopia', coords: [9.1450, 40.4897] },
+                        { name: 'Tanzania', coords: [-6.3690, 34.8888] },
+                        { name: 'Timor Leste', coords: [-8.8742, 125.7275] },
+                        { name: 'Nigeria', coords: [9.0820, 8.6753] }
+                    ],
+                    markerStyle: {
+                        initial: { fill: '#ef4444', stroke: '#ef4444', r: 4 },
+                        hover: { fill: '#fff', stroke: '#fff', r: 6 }
+                    }
+                });
+            }
+
+            // Contact Form Script Logic copy over
+            const form = document.getElementById('contact-form');
+            const statusDiv = document.getElementById('form-status');
+            const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyzeqIiP7mi4ZdSisV7705YO2ENxnBEY9ylg780eYKYCVXW6m7JPCFMkmg6KWyEfC4sZQ/exec';
+
+            if (form) {
+                form.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const submitBtn = form.querySelector('button');
+                    const originalBtnText = submitBtn.innerHTML;
+
+                    submitBtn.innerHTML = 'Sending...';
+                    submitBtn.disabled = true;
+
+                    const formData = new FormData(form);
+                    const data = Object.fromEntries(formData.entries());
+
+                    try {
+                        if (SCRIPT_URL === 'YOUR_APPS_SCRIPT_URL_HERE') {
+                            throw new Error('Backend URL not configured');
+                        }
+
+                        await fetch(SCRIPT_URL, {
+                            method: 'POST',
+                            mode: 'no-cors',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(data)
+                        });
+
+                        statusDiv.textContent = 'Message sent successfully!';
+                        statusDiv.className = 'text-center text-sm mt-4 text-green-500 block';
+                        form.reset();
+                    } catch (error) {
+                        console.error('Error:', error);
+                        statusDiv.textContent = 'Error sending message.';
+                        statusDiv.className = 'text-center text-sm mt-4 text-red-500 block';
+                    } finally {
+                        submitBtn.innerHTML = originalBtnText;
+                        submitBtn.disabled = false;
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
