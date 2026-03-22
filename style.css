@@ -1,65 +1,143 @@
-/* Modern Minimalist & Mystery Styles for Sarath G Portfolio */
-/* Most styles are handled by Tailwind CSS directly in HTML */
+/* ═══════════════════════════════════════════════════════════════
+   Sarath G Portfolio — style.css
+   Companion to index.html (Tailwind-first).
+   All heavy lifting lives in <style> inside the HTML; this file
+   handles a handful of browser-level overrides and vendor quirks.
+═══════════════════════════════════════════════════════════════ */
 
+/* ── Smooth scroll with offset for fixed navbar ── */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
+/* ── Body defaults ── */
 body {
-    cursor: default;
-    overflow-x: hidden;
-    /* Prevent horizontal scroll */
+  cursor: default;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
-/* Scrollbar customization */
-::-webkit-scrollbar {
-    width: 10px;
-}
-
-::-webkit-scrollbar-track {
-    background: #050505;
-}
-
+/* ── Custom scrollbar ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #050505; }
 ::-webkit-scrollbar-thumb {
-    background-color: #ef4444;
-    /* red-500 */
-    border: 2px solid #050505;
-    border-radius: 10px;
+  background: #ef4444;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover { background: #dc2626; }
+
+/* ── Selection ── */
+::selection {
+  background: #ef4444;
+  color: #fff;
 }
 
-::-webkit-scrollbar-thumb:hover {
-    background-color: #dc2626;
-    /* red-600 */
+/* ── jsVectorMap overrides ── */
+.jsvectormap-container { border-radius: 1.5rem; }
+.jsvectormap-zoom-btn { display: none !important; }
+.jsvectormap-tip {
+  background: #1a1a1a !important;
+  border: 1px solid rgba(239,68,68,0.3) !important;
+  color: #fff !important;
+  border-radius: 8px !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 11px !important;
+  padding: 4px 10px !important;
 }
 
-/* Additional specific overrides if needed */
-.jsvectormap-container {
-    border-radius: 1.5rem;
-}
-
-.jsvectormap-zoom-btn {
-    display: none !important;
-}
-
-/* Image Proximity Hover Effects */
+/* ── Image proximity hover effects ── */
 .proximity-active img {
-    filter: grayscale(0) !important;
-    opacity: 1 !important;
+  filter: grayscale(0) !important;
+  opacity: 1 !important;
 }
-
 #gallery .proximity-active img,
 #footprint .proximity-active img {
-    transform: scale(1.1) !important;
+  transform: scale(1.1) !important;
 }
-
 #gallery .proximity-active .bg-gradient-to-t,
 #footprint .proximity-active span {
-    opacity: 1 !important;
+  opacity: 1 !important;
 }
-
 #certifications .proximity-active {
-    filter: grayscale(0) !important;
-    transform: scale(1.05) !important;
+  filter: grayscale(0) !important;
+  transform: scale(1.05) !important;
 }
 
-/* Prevent animation jumps on initial load */
+/* ── GSAP pre-animation state ── */
 .fade-in-scroll {
-    visibility: hidden;
-    opacity: 0;
+  visibility: hidden;
+  opacity: 0;
+}
+
+/* ── Input focus ring (accessibility) ── */
+input:focus-visible,
+textarea:focus-visible,
+button:focus-visible {
+  outline: 2px solid #ef4444;
+  outline-offset: 2px;
+}
+
+/* ── Lazy image fade-in ── */
+img[loading="lazy"] {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+img[loading="lazy"].loaded,
+img[loading="lazy"]:not([src=""]) {
+  opacity: 1;
+}
+
+/* ── Magnetic button micro-interaction ── */
+.magnetic {
+  will-change: transform;
+  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* ── Skill bar container ── */
+.h-1\.5 {
+  overflow: hidden;
+}
+
+/* ── Timeline left border clip ── */
+.timeline-item { position: relative; }
+
+/* ── Blog card image overlay ── */
+.blog-card-img {
+  position: relative;
+  overflow: hidden;
+}
+.blog-card-img::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/* ── Testimonial quote pseudo-element ── */
+.testimonial-card {
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Print styles (basic) ── */
+@media print {
+  #intro-overlay,
+  #spotlight,
+  nav,
+  .cursor-blink { display: none !important; }
+  body { background: #fff !important; color: #000 !important; }
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .skill-bar-fill { transform: scaleX(1) !important; }
 }
