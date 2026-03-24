@@ -5,90 +5,242 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Start Your Cybersecurity Journey | Sarath G</title>
-    <meta name="description"
-        content="Your complete guide to starting in cybersecurity — beginner, career changer, or job seeker." />
-    <link rel="icon" type="image/x-icon" href="../favicon.ico" />
+    <meta name="description" content="Your complete guide to starting in cybersecurity — beginner, career changer, or job seeker." />
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
+    <link rel="manifest" href="site.webmanifest" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@1,400&display=swap"
-        rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+
+    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'], display: ['Outfit', 'sans-serif'] },
-                    colors: { red: { 500: '#ef4444', 600: '#dc2626' } }
+                    colors: {
+                        red: { 500: '#ef4444', 600: '#dc2626', 900: '#7f1d1d' },
+                        neutral: { 900: '#171717' }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
                 }
             }
         }
     </script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
     <style>
-        .fade-up {
-            opacity: 0;
-            transform: translateY(40px);
+        /* ── THEME SYSTEM ── */
+        :root {
+            --red:           #ef4444;
+            --red-dark:      #dc2626;
+            --bg-page:       #050505;
+            --bg-section:    #0a0a0a;
+            --bg-card:       rgba(255,255,255,0.035);
+            --bg-card-solid: #111111;
+            --t-primary:     rgba(255,255,255,0.92);
+            --t-secondary:   rgba(255,255,255,0.65);
+            --t-muted:       rgba(255,255,255,0.44);
+            --t-faint:       rgba(255,255,255,0.22);
+            --b-subtle:      rgba(255,255,255,0.06);
+            --b-card:        rgba(255,255,255,0.09);
+            --b-medium:      rgba(255,255,255,0.15);
+            --dot-opacity:   0.5;
+            --transition:    0.3s cubic-bezier(0.4,0,0.2,1);
         }
+        html.light {
+            --bg-page:       #f2f0ec;
+            --bg-section:    #e8e5df;
+            --bg-card:       rgba(255,255,255,0.90);
+            --bg-card-solid: #ffffff;
+            --t-primary:     #1a1a1a;
+            --t-secondary:   rgba(0,0,0,0.62);
+            --t-muted:       rgba(0,0,0,0.44);
+            --t-faint:       rgba(0,0,0,0.24);
+            --b-subtle:      rgba(0,0,0,0.07);
+            --b-card:        rgba(0,0,0,0.10);
+            --b-medium:      rgba(0,0,0,0.16);
+            --dot-opacity:   0;
+        }
+        body {
+            background: var(--bg-page);
+            color: var(--t-primary);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            transition: background 0.4s ease, color 0.4s ease;
+        }
+        .t-primary   { color: var(--t-primary)   !important; }
+        .t-secondary { color: var(--t-secondary) !important; }
+        .t-muted     { color: var(--t-muted)     !important; }
+        .t-faint     { color: var(--t-faint)     !important; }
+        .bg-page    { background: var(--bg-page)    !important; transition: background 0.4s ease; }
+        .bg-section { background: var(--bg-section) !important; transition: background 0.4s ease; }
+        .bg-card    { background: var(--bg-card)    !important; transition: background 0.4s ease; }
+        .b-subtle   { border-color: var(--b-subtle) !important; }
+        .b-card     { border-color: var(--b-card)   !important; }
+        .b-medium   { border-color: var(--b-medium) !important; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-page); }
+        ::-webkit-scrollbar-thumb { background: var(--red); border-radius: 10px; }
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9998;
+            opacity: 0.35;
+        }
+        /* ── Navbar ── */
+        #navbar { transition: background 0.4s ease, border-color 0.3s, backdrop-filter 0.3s, box-shadow 0.3s; }
+        #navbar.scrolled {
+            background: color-mix(in srgb, var(--bg-page) 85%, transparent) !important;
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--b-subtle) !important;
+            box-shadow: 0 4px 32px rgba(0,0,0,0.12);
+        }
+        .nav-link { color: var(--t-muted); transition: color var(--transition); position: relative; }
+        .nav-link::after { content: ''; position: absolute; bottom: -2px; left: 0; height: 1px; width: 0; background: var(--red); transition: width var(--transition); }
+        .nav-link:hover { color: var(--t-primary); }
+        .nav-link:hover::after { width: 100%; }
+        .nav-link.active-page { color: var(--red); }
+        .nav-link.active-page::after { width: 100%; }
+        #mobile-menu { background: var(--bg-section); border-bottom: 1px solid var(--b-subtle); transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s; max-height: 0; overflow: hidden; opacity: 0; }
+        #mobile-menu.open { max-height: 600px; opacity: 1; }
+        .mobile-link { color: var(--t-muted); border-bottom: 1px solid var(--b-subtle); transition: color var(--transition); }
+        .mobile-link:hover { color: var(--t-primary); }
+        .mode-toggle { position: relative; width: 48px; height: 26px; background: var(--b-medium); border-radius: 999px; border: 1px solid var(--b-medium); cursor: pointer; flex-shrink: 0; transition: background 0.3s; }
+        .mode-toggle::after { content: ''; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: var(--t-primary); transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); }
+        html.light .mode-toggle::after { transform: translateX(22px); }
+        /* ── Footer ── */
+        .theme-footer { background: var(--bg-section); border-top: 1px solid var(--b-subtle); transition: background 0.4s ease; }
+        .footer-link { color: var(--t-muted); transition: color var(--transition); }
+        .footer-link:hover { color: var(--t-primary); }
+        /* ── Line grid (auto-hides in light mode via --dot-opacity) ── */
+        .line-grid {
+            background-image: linear-gradient(rgba(128,128,128,0.12) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(128,128,128,0.12) 1px, transparent 1px);
+            background-size: 64px 64px;
+            opacity: var(--dot-opacity, 0.5);
+        }
+        /* ── Page-specific ── */
+        .fade-up { opacity: 0; transform: translateY(40px); }
+        .tab-pane { display: none; opacity: 0; }
+        .tab-pane.active { display: block; opacity: 1; }
+        .tab-btn.active { background-color: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.4); color: var(--t-primary); box-shadow: 0 0 20px rgba(239, 68, 68, 0.15); }
+        .tab-btn.active i { color: #ef4444; }
 
-        .tab-pane {
-            display: none;
-            opacity: 0;
-        }
+        /* ════════════════════════════════════════════════
+           LIGHT MODE OVERRIDES
+           Remaps Tailwind's hardcoded white/* classes to
+           dark equivalents so every element reads cleanly
+           on the warm light background.
+        ════════════════════════════════════════════════ */
 
-        .tab-pane.active {
-            display: block;
-            opacity: 1;
-        }
+        /* Text */
+        html.light .text-white                    { color: var(--t-primary)   !important; }
+        html.light .text-white\/60                { color: var(--t-secondary) !important; }
+        html.light .text-white\/50                { color: var(--t-muted)     !important; }
+        html.light .text-white\/40                { color: var(--t-muted)     !important; }
+        html.light .text-white\/30                { color: var(--t-faint)     !important; }
+        html.light .text-white\/20                { color: var(--t-faint)     !important; }
+        html.light .text-white\/15                { color: var(--t-faint)     !important; }
+        html.light .hover\:text-white\/60:hover   { color: var(--t-secondary) !important; }
+        html.light .hover\:text-white:hover       { color: var(--t-primary)   !important; }
 
-        .tab-btn.active {
-            background-color: rgba(239, 68, 68, 0.1);
-            border-color: rgba(239, 68, 68, 0.4);
-            color: white;
-            box-shadow: 0 0 20px rgba(239, 68, 68, 0.15);
-        }
+        /* Card / surface backgrounds */
+        html.light .bg-white\/\[0\.03\]           { background: rgba(0,0,0,0.03) !important; }
+        html.light .bg-white\/\[0\.04\]           { background: rgba(0,0,0,0.05) !important; }
+        html.light .bg-white\/5                   { background: rgba(0,0,0,0.04) !important; }
+        html.light .bg-white\/15                  { background: rgba(0,0,0,0.08) !important; }
+        html.light .hover\:bg-white\/\[0\.06\]:hover { background: rgba(0,0,0,0.06) !important; }
+        html.light .hover\:bg-white\/\[0\.08\]:hover { background: rgba(0,0,0,0.07) !important; }
+        html.light .hover\:bg-white\/15:hover     { background: rgba(0,0,0,0.08) !important; }
 
-        .tab-btn.active i {
-            color: #ef4444;
-        }
+        /* Borders */
+        html.light .border-white\/5               { border-color: var(--b-subtle) !important; }
+        html.light .border-white\/10              { border-color: var(--b-card)   !important; }
+        html.light .border-white\/15              { border-color: var(--b-medium) !important; }
+        html.light .border-white\/30              { border-color: rgba(0,0,0,0.22) !important; }
+        html.light .hover\:border-white\/30:hover { border-color: rgba(0,0,0,0.22) !important; }
 
-        html {
-            scroll-behavior: smooth;
-        }
+        /* Hero CTA scroll-indicator */
+        html.light a[href="#paths"] { color: rgba(0,0,0,0.30) !important; }
+        html.light a[href="#paths"]:hover { color: rgba(0,0,0,0.55) !important; }
+
+        /* Hero dot-grid overlay — white dots vanish on light bg, darken them */
+        html.light .hero-dot-grid { filter: invert(1) opacity(0.25); }
+
+        /* Section line-grid — handled by --dot-opacity: 0 in light theme */
+
+        /* Jobseeker Red/Blue team cards use a solid very-dark bg */
+        html.light .bg-\[\#070707\]               { background: var(--bg-card-solid) !important; }
+
+        /* CTA "Start with Ethan" button — white bg + black text stays fine, just shadow tweak */
+        html.light .shadow-\[0_0_40px_rgba\(255\,255\,255\,0\.1\)\] { box-shadow: 0 0 30px rgba(0,0,0,0.08) !important; }
     </style>
 </head>
 
-<body class="bg-[#050505] text-white font-sans antialiased selection:bg-red-500 selection:text-white overflow-x-hidden">
+<body class="font-sans antialiased selection:bg-red-500 selection:text-white overflow-x-hidden">
 
     <!-- ============================================================ -->
     <!-- NAVBAR -->
     <!-- ============================================================ -->
-    <nav id="navbar"
-        class="fixed w-full top-0 z-50 transition-all duration-500 bg-[#050505]/70 backdrop-blur-xl border-b border-white/5">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="../" class="font-display font-bold text-2xl flex items-center gap-1 group">
-                <span class="text-white group-hover:text-red-500 transition-colors">Sarath</span>
-                <span class="text-red-500 group-hover:text-white transition-colors">G.</span>
+    <nav id="navbar" class="fixed w-full top-0 z-50 bg-transparent border-b border-transparent transition-all duration-500">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <a href="./" class="font-display font-bold text-2xl tracking-tight flex items-center gap-1 group">
+                <span class="t-primary group-hover:text-red-500 transition-colors duration-300">Sarath</span>
+                <span class="text-red-500 group-hover:text-[var(--t-primary)] transition-colors duration-300">G.</span>
             </a>
-            <div class="hidden md:flex items-center gap-8 text-sm font-medium">
-                <a href="../#about" class="text-white/60 hover:text-white transition-colors">About</a>
-                <a href="../#gallery" class="text-white/60 hover:text-white transition-colors">Gallery</a>
-                <a href="../#projects" class="text-white/60 hover:text-white transition-colors">Projects</a>
-                <a href="../#skills" class="text-white/60 hover:text-white transition-colors">Skills</a>
-                <a href="../#footprint" class="text-white/60 hover:text-white transition-colors">Footprint</a>
-                <a href="../#contact"
-                    class="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-full transition-colors font-medium">Contact
-                    Me</a>
+            <div class="hidden lg:flex gap-6 font-sans text-sm font-medium items-center">
+                <a href="./#about" class="nav-link">About</a>
+                <a href="./#experience" class="nav-link">Experience</a>
+                <a href="./#gallery" class="nav-link">Gallery</a>
+                <a href="./#projects" class="nav-link">Projects</a>
+                <a href="./#skills" class="nav-link">Skills</a>
+                <a href="./#blog" class="nav-link">Blog</a>
+                <a href="./#footprint" class="nav-link">Footprint</a>
+                <a href="start.html" class="nav-link active-page">Cybersec Guide</a>
+                <button onclick="toggleMode()" class="mode-toggle" aria-label="Toggle dark/light mode" title="Toggle theme"></button>
+                <a href="./#contact" class="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-full transition-all font-medium hover:scale-105">Contact Me</a>
             </div>
-            <button class="md:hidden text-white/60" onclick="document.getElementById('mob').classList.toggle('hidden')">
-                <i class="fas fa-bars text-xl"></i>
-            </button>
+            <div class="lg:hidden flex items-center gap-3">
+                <button onclick="toggleMode()" class="mode-toggle" aria-label="Toggle theme"></button>
+                <button id="menu-btn" aria-label="Open menu" onclick="toggleMobileMenu()" class="t-secondary hover:text-[var(--t-primary)] focus:outline-none p-1">
+                    <svg id="menu-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
         </div>
-        <div id="mob" class="hidden md:hidden bg-[#0a0a0a] border-b border-white/5 px-6 py-4 space-y-3 text-sm">
-            <a href="../#about" class="block text-white/60 hover:text-white py-1">About</a>
-            <a href="../#projects" class="block text-white/60 hover:text-white py-1">Projects</a>
-            <a href="../#contact" class="inline-block px-5 py-2 bg-red-600 text-white rounded-full mt-1">Contact Me</a>
+        <div id="mobile-menu" class="lg:hidden backdrop-blur-xl border-b absolute w-full left-0 top-full shadow-2xl">
+            <div class="flex flex-col px-6 py-5 space-y-1 font-sans text-sm">
+                <a href="./#about" class="mobile-link block py-2.5" onclick="toggleMobileMenu()">About</a>
+                <a href="./#experience" class="mobile-link block py-2.5" onclick="toggleMobileMenu()">Experience</a>
+                <a href="./#gallery" class="mobile-link block py-2.5" onclick="toggleMobileMenu()">Gallery</a>
+                <a href="./#projects" class="mobile-link block py-2.5" onclick="toggleMobileMenu()">Projects</a>
+                <a href="./#skills" class="mobile-link block py-2.5" onclick="toggleMobileMenu()">Skills</a>
+                <a href="./#blog" class="mobile-link block py-2.5" onclick="toggleMobileMenu()">Blog</a>
+                <a href="./#footprint" class="mobile-link block py-2.5" onclick="toggleMobileMenu()">Footprint</a>
+                <a href="start.html" class="mobile-link block py-2.5 text-red-400" onclick="toggleMobileMenu()">Cybersec Guide</a>
+                <a href="./#contact" class="inline-block w-fit px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-full transition-colors font-medium mt-3" onclick="toggleMobileMenu()">Contact Me</a>
+            </div>
         </div>
     </nav>
 
@@ -105,13 +257,13 @@
                 class="absolute bottom-[10%] right-[5%] w-[35vw] h-[35vw] min-w-[220px] rounded-full bg-blue-500/8 blur-[100px]">
             </div>
             <div
-                class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4xNSkiLz48L3N2Zz4=')] bg-[length:40px_40px] opacity-40">
+                class="hero-dot-grid absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4xNSkiLz48L3N2Zz4=')] bg-[length:40px_40px] opacity-40">
             </div>
         </div>
         <div class="relative z-10 text-center max-w-5xl mx-auto px-6">
             <p class="text-red-500 font-medium tracking-widest text-sm uppercase mb-6 fade-up">The Ultimate Guide</p>
             <h1
-                class="text-5xl md:text-7xl lg:text-8xl font-display font-bold leading-[0.9] tracking-tight text-white mb-8 fade-up">
+                class="text-5xl md:text-7xl lg:text-8xl font-display font-bold leading-[0.9] tracking-tight t-primary mb-8 fade-up">
                 Start Your<br />
                 <span
                     class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-700 italic">Cybersecurity</span><br />
@@ -146,10 +298,8 @@
     <!-- ============================================================ -->
     <!-- PATHS: ACCORDIONS -->
     <!-- ============================================================ -->
-    <section id="paths" class="py-24 md:py-32 bg-[#0a0a0a] border-y border-white/5 relative">
-        <div
-            class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.04)_1px,transparent_1px)] bg-[size:64px_64px] pointer-events-none">
-        </div>
+    <section id="paths" class="py-24 md:py-32 bg-section border-y b-subtle relative">
+        <div class="line-grid absolute inset-0 pointer-events-none"></div>
         <div class="max-w-4xl mx-auto px-6 relative z-10">
             <div class="text-center mb-12 fade-up">
                 <p class="text-red-500 font-medium tracking-widest text-sm uppercase mb-4">Where do you stand?</p>
@@ -488,7 +638,7 @@
                                 <div
                                     class="absolute -inset-px bg-gradient-to-br from-red-500/20 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                                 </div>
-                                <div class="relative p-6 rounded-2xl bg-[#070707] border border-white/10 h-full">
+                                <div class="relative p-6 rounded-2xl bg-card-s border border-white/10 h-full">
                                     <div class="flex items-center gap-2 mb-5">
                                         <div
                                             class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-red-500 text-[10px] font-mono">
@@ -540,7 +690,7 @@
                                 <div
                                     class="absolute -inset-px bg-gradient-to-br from-blue-500/20 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                                 </div>
-                                <div class="relative p-6 rounded-2xl bg-[#070707] border border-white/10 h-full">
+                                <div class="relative p-6 rounded-2xl bg-card-s border border-white/10 h-full">
                                     <div class="flex items-center gap-2 mb-5">
                                         <div
                                             class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-mono">
@@ -794,10 +944,8 @@
     <!-- RESOURCES -->
     <!-- ============================================================ -->
     <!-- SECTION:RESOURCES -->
-    <section class="py-24 md:py-32 bg-[#0a0a0a] border-y border-white/5 relative">
-        <div
-            class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.04)_1px,transparent_1px)] bg-[size:64px_64px] pointer-events-none">
-        </div>
+    <section class="py-24 md:py-32 bg-section border-y b-subtle relative">
+        <div class="line-grid absolute inset-0 pointer-events-none"></div>
         <div class="max-w-7xl mx-auto px-6 relative z-10">
             <div class="text-center mb-14 fade-up">
                 <p class="text-red-500 font-medium tracking-widest text-sm uppercase mb-4">Learn Every Day</p>
@@ -915,14 +1063,25 @@
         </div>
     </section>
 
-    <footer class="py-8 bg-[#050505] border-t border-white/5">
-        <div
-            class="container mx-auto px-6 text-center text-white/40 text-sm flex flex-col md:flex-row justify-between items-center gap-4">
-            <p>&copy; <span id="yr"></span> Sarath G. All rights reserved.</p>
-            <div class="flex items-center gap-4">
-                <a href="#" class="hover:text-white transition-colors">LinkedIn</a>
-                <a href="#" class="hover:text-white transition-colors">Twitter</a>
-                <a href="../" class="hover:text-white transition-colors">Portfolio</a>
+    <footer class="theme-footer py-10 sm:py-14">
+        <div class="container mx-auto px-4 sm:px-6 max-w-7xl">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="flex items-center gap-2">
+                    <span class="font-display font-bold text-xl t-primary">Sarath</span>
+                    <span class="font-display font-bold text-xl text-red-500">G.</span>
+                    <span class="t-faint text-sm ml-2">© <span id="year"></span></span>
+                </div>
+                <div class="flex items-center gap-5 sm:gap-6 text-sm">
+                    <a href="https://www.linkedin.com/in/sarathcybersec/" target="_blank" rel="noopener" class="footer-link transition-colors">LinkedIn</a>
+                    <a href="https://github.com/secretguard" target="_blank" rel="noopener" class="footer-link transition-colors">GitHub</a>
+                    <a href="https://www.instagram.com/i.sarathg/" target="_blank" rel="noopener" class="footer-link transition-colors">Instagram</a>
+                    <a href="https://sarathg.medium.com/" target="_blank" rel="noopener" class="footer-link transition-colors">Medium</a>
+                    <a href="https://chatgpt.com/g/g-688c937222c88191b1735af3a8aea4aa-ethan-your-cybersecurity-mentor" target="_blank" rel="noopener" class="t-muted hover:text-red-400 transition-colors">Ethan AI</a>
+                    <a href="./" class="footer-link transition-colors">Portfolio</a>
+                </div>
+            </div>
+            <div class="mt-8 pt-8 border-t b-subtle text-center t-faint text-xs font-mono">
+                Built with precision. Secured by design.
             </div>
         </div>
     </footer>
@@ -932,7 +1091,19 @@
     <!-- ============================================================ -->
     <script>
         // Year
-        document.getElementById('yr').textContent = new Date().getFullYear();
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Dark / Light Mode
+        function toggleMode() {
+            document.documentElement.classList.toggle('light');
+            localStorage.setItem('theme', document.documentElement.classList.contains('light') ? 'light' : 'dark');
+        }
+        if (localStorage.getItem('theme') === 'light') document.documentElement.classList.add('light');
+
+        // Mobile menu
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('open');
+        }
 
         // GSAP Initialization
         gsap.registerPlugin(ScrollTrigger);
@@ -1031,11 +1202,10 @@
         window.addEventListener('scroll', () => {
             const nav = document.getElementById('navbar');
             if (window.scrollY > 50) {
-                nav.classList.add('py-2', 'bg-[#050505]/95', 'border-white/10');
-                nav.classList.remove('py-4', 'bg-[#050505]/70', 'border-white/5');
+                nav.classList.add('scrolled');
+                nav.classList.remove('bg-transparent', 'border-transparent');
             } else {
-                nav.classList.remove('py-2', 'bg-[#050505]/95', 'border-white/10');
-                nav.classList.add('py-4', 'bg-[#050505]/70', 'border-white/5');
+                nav.classList.remove('scrolled');
             }
         }, { passive: true });
     </script>

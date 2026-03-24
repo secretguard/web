@@ -1136,7 +1136,17 @@
           <div class="mt-5 flex flex-wrap gap-2 text-xs font-mono t-faint"><span>Streaming</span><span>·</span><span>Web Interface</span></div>
         </a>
 
-        <a href="https://secretguard.github.io/blockchainlab/" target="_blank" rel="noopener" class="group p-6 sm:p-8 rounded-3xl bg-card border b-subtle theme-card flex flex-col h-full fade-in-scroll sm:col-span-2">
+        <a href="https://parallax.sarathg.me/" target="_blank" rel="noopener" class="group p-6 sm:p-8 rounded-3xl bg-card border b-subtle theme-card flex flex-col h-full fade-in-scroll">
+          <div class="flex justify-between items-center mb-5">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-9 h-9 sm:w-10 sm:h-10 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 t-faint group-hover:text-[var(--t-primary)] transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+          </div>
+          <h3 class="text-lg sm:text-xl font-display font-bold t-primary mb-2.5 group-hover:text-red-400 transition-colors">Parallax</h3>
+          <p class="t-muted text-sm leading-relaxed flex-grow">Browser-based cybersecurity training platform with dual-role simulations — experience the same breach as both attacker and SOC defender across six real-world scenarios.</p>
+          <div class="mt-5 flex flex-wrap gap-2 text-xs font-mono t-faint"><span>Blue Team</span><span>·</span><span>Red Team</span><span>·</span><span>Simulation</span></div>
+        </a>
+
+        <a href="https://secretguard.github.io/blockchainlab/" target="_blank" rel="noopener" class="group p-6 sm:p-8 rounded-3xl bg-card border b-subtle theme-card flex flex-col h-full fade-in-scroll">
           <div class="flex justify-between items-center mb-5">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-9 h-9 sm:w-10 sm:h-10 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 t-faint group-hover:text-[var(--t-primary)] transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
@@ -1637,21 +1647,31 @@
 
       const overlay = document.getElementById('intro-overlay');
 
-      // Run intro timeline, call revealPage when done (or on error)
-      try {
-        gsap.timeline({
-          onComplete: () => {
-            overlay.style.display = 'none';
-            gsap.fromTo('.fade-up-hero',
-              { y: 50, opacity: 0 },
-              { y: 0, opacity: 1, duration: 1, stagger: 0.12, ease: 'power3.out' }
-            );
-          }
-        })
-          .to('.intro-text', { opacity: 0, duration: 0.5, delay: 0.9, ease: 'power2.in' })
-          .to(overlay, { opacity: 0, duration: 1.0, ease: 'power2.inOut' });
-      } catch(e) {
+      // Skip intro if already shown this session
+      if (sessionStorage.getItem('introShown')) {
         revealPage();
+        gsap.fromTo('.fade-up-hero',
+          { y: 50, opacity: 0 },
+          { y: 0, opacity: 1, duration: 1, stagger: 0.12, ease: 'power3.out' }
+        );
+      } else {
+        // Run intro timeline, call revealPage when done (or on error)
+        try {
+          gsap.timeline({
+            onComplete: () => {
+              overlay.style.display = 'none';
+              sessionStorage.setItem('introShown', '1');
+              gsap.fromTo('.fade-up-hero',
+                { y: 50, opacity: 0 },
+                { y: 0, opacity: 1, duration: 1, stagger: 0.12, ease: 'power3.out' }
+              );
+            }
+          })
+            .to('.intro-text', { opacity: 0, duration: 0.5, delay: 0.9, ease: 'power2.in' })
+            .to(overlay, { opacity: 0, duration: 1.0, ease: 'power2.inOut' });
+        } catch(e) {
+          revealPage();
+        }
       }
 
       // Scroll fade-in
