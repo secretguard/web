@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topic 24 — SOC Lab Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#0b0f15;--card:#111722;--card2:#161d28;--border:#1e2a3a;--border2:#263040;
+  --blue:#4d9ef7;--green:#3ecf6f;--orange:#f5a623;--red:#f07070;--cyan:#44d4d4;--purple:#b48bff;
+  --text:#dce8f5;--text2:#7a93b0;--text3:#3d5470;
+  --mono:'JetBrains Mono',monospace;--sans:'DM Sans',sans-serif;--display:'Syne',sans-serif;
+}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.7;font-size:15px;}
+
+/* HERO */
+.hero{background:var(--card);border-bottom:1px solid var(--border);padding:52px 0 44px;position:relative;overflow:hidden;}
+.hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 5% 50%,rgba(77,158,247,.07) 0%,transparent 70%),radial-gradient(ellipse 40% 60% at 95% 20%,rgba(62,207,111,.05) 0%,transparent 60%);pointer-events:none;}
+.wrap{max-width:860px;margin:0 auto;padding:0 28px;position:relative;z-index:1;}
+.topic-tag{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11px;font-weight:700;color:var(--blue);letter-spacing:.08em;background:rgba(77,158,247,.1);border:1px solid rgba(77,158,247,.25);padding:4px 12px;border-radius:20px;margin-bottom:18px;}
+.topic-tag::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--blue);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+h1{font-family:var(--display);font-size:clamp(30px,5vw,46px);font-weight:800;line-height:1.1;color:var(--text);margin-bottom:14px;}
+h1 em{font-style:normal;color:var(--blue);}
+.hero-sub{font-size:15px;color:var(--text2);max-width:600px;margin-bottom:28px;}
+.env-pills{display:flex;gap:10px;flex-wrap:wrap;}
+.pill{font-family:var(--mono);font-size:11px;font-weight:500;padding:4px 12px;border-radius:6px;display:flex;align-items:center;gap:6px;}
+.pill-b{background:rgba(77,158,247,.1);color:var(--blue);border:1px solid rgba(77,158,247,.2);}
+.pill-o{background:rgba(245,166,35,.1);color:var(--orange);border:1px solid rgba(245,166,35,.2);}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;background:rgba(11,15,21,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);}
+.nav-inner{max-width:860px;margin:0 auto;padding:0 28px;display:flex;overflow-x:auto;scrollbar-width:none;}
+.nav-inner::-webkit-scrollbar{display:none;}
+.nav-btn{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--text3);padding:13px 16px;cursor:pointer;white-space:nowrap;user-select:none;border-bottom:2px solid transparent;border-left:none;border-right:none;border-top:none;background:none;transition:color .15s,border-color .15s;}
+.nav-btn:hover{color:var(--text2);}
+.nav-btn.on{color:var(--blue);border-bottom-color:var(--blue);}
+
+/* LAYOUT */
+.content{max-width:860px;margin:0 auto;padding:50px 28px 80px;}
+.sec{margin-bottom:72px;scroll-margin-top:58px;}
+.sec-label{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px;}
+.sec-title{font-family:var(--display);font-size:24px;font-weight:700;color:var(--text);margin-bottom:6px;display:flex;align-items:center;gap:12px;}
+.sec-num{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--blue);background:rgba(77,158,247,.1);border:1px solid rgba(77,158,247,.25);width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sec-divider{height:1px;background:var(--border);margin:16px 0 26px;}
+p{color:var(--text2);margin-bottom:12px;}
+p strong{color:var(--text);font-weight:600;}
+ul{padding-left:20px;color:var(--text2);margin-bottom:14px;}
+ul li{margin-bottom:5px;}
+ul li::marker{color:var(--blue);}
+
+/* ARCH */
+.arch{background:var(--card);border:1px solid var(--border2);border-radius:12px;padding:28px;margin:20px 0;}
+.arch-single{background:var(--card2);border:2px solid rgba(77,158,247,.4);border-radius:12px;padding:24px;text-align:center;position:relative;}
+.arch-single .machine-icon{font-size:42px;margin-bottom:12px;}
+.arch-single .machine-title{font-family:var(--display);font-size:20px;font-weight:800;color:var(--text);margin-bottom:6px;}
+.arch-single .machine-sub{font-family:var(--mono);font-size:11px;color:var(--text3);margin-bottom:20px;}
+.services-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;}
+.svc{background:var(--card);border:1px solid var(--border2);border-radius:8px;padding:10px 16px;text-align:center;min-width:130px;}
+.svc .svc-icon{font-size:18px;margin-bottom:4px;}
+.svc .svc-name{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--text);margin-bottom:2px;}
+.svc .svc-desc{font-family:var(--mono);font-size:9px;color:var(--text3);}
+.svc.hi-blue{border-color:rgba(77,158,247,.4);background:rgba(77,158,247,.06);}
+.svc.hi-green{border-color:rgba(62,207,111,.4);background:rgba(62,207,111,.06);}
+.svc.hi-orange{border-color:rgba(245,166,35,.4);background:rgba(245,166,35,.06);}
+.svc.hi-red{border-color:rgba(240,112,112,.4);background:rgba(240,112,112,.06);}
+.arch-flow{border-top:1px solid var(--border);padding-top:16px;margin-top:4px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:center;}
+.afl{font-family:var(--mono);font-size:10px;font-weight:700;padding:3px 9px;border-radius:5px;white-space:nowrap;}
+.arr-lbl{font-family:var(--mono);font-size:10px;color:var(--text3);}
+
+/* TOOLS */
+.tools-grid{display:flex;flex-direction:column;gap:10px;margin:20px 0;}
+.tool-row{display:grid;grid-template-columns:180px 1fr auto;gap:16px;align-items:center;background:var(--card);border:1px solid var(--border2);border-radius:10px;padding:14px 18px;}
+.tool-name{font-weight:600;color:var(--text);font-size:14px;}
+.tool-name small{display:block;font-family:var(--mono);font-size:10px;color:var(--text3);font-weight:400;margin-top:2px;}
+.tool-desc{font-size:13px;color:var(--text2);}
+.tool-badge{font-family:var(--mono);font-size:10px;font-weight:700;padding:3px 9px;border-radius:5px;white-space:nowrap;}
+.tb-w{background:rgba(77,158,247,.1);color:var(--blue);border:1px solid rgba(77,158,247,.25);}
+.tb-k{background:rgba(240,112,112,.1);color:var(--red);border:1px solid rgba(240,112,112,.25);}
+
+/* STEPS */
+.step{margin:28px 0;}
+.step-hd{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.step-n{font-family:var(--mono);font-size:11px;font-weight:700;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sn-b{background:rgba(77,158,247,.15);color:var(--blue);border:1px solid rgba(77,158,247,.3);}
+.sn-r{background:rgba(240,112,112,.15);color:var(--red);border:1px solid rgba(240,112,112,.3);}
+.step-title{font-weight:600;color:var(--text);font-size:15px;}
+
+/* CODE BLOCKS */
+.cb{border-radius:10px;overflow:hidden;margin:10px 0;border:1px solid var(--border2);}
+.cb-top{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:var(--card2);border-bottom:1px solid var(--border);}
+.cb-lang{font-family:var(--mono);font-size:10px;font-weight:700;display:flex;align-items:center;gap:7px;letter-spacing:.04em;}
+.dot{width:7px;height:7px;border-radius:50%;}
+.d-ps{background:#b48bff;}.d-kali{background:#f07070;}.d-splunk{background:#f5c842;}.d-file{background:#44d4d4;}.d-url{background:#4d9ef7;}
+.cp-btn{font-family:var(--mono);font-size:10px;font-weight:600;background:none;border:1px solid var(--border2);color:var(--text3);padding:3px 10px;border-radius:5px;cursor:pointer;transition:all .15s;}
+.cp-btn:hover{background:var(--border);color:var(--text2);}
+.cp-btn.ok{color:var(--green);border-color:rgba(62,207,111,.4);}
+pre{background:#060b11;font-family:var(--mono);font-size:12.5px;line-height:1.85;padding:16px 18px;overflow-x:auto;color:var(--text);}
+.cm{color:var(--text3);font-style:italic;}
+
+/* NOTES */
+.note{display:flex;gap:12px;padding:13px 16px;border-radius:8px;margin:12px 0;border-left:3px solid;}
+.note-icon{font-size:15px;flex-shrink:0;margin-top:1px;}
+.note-body{flex:1;}
+.note-title{font-size:12px;font-weight:700;margin-bottom:3px;}
+.note p{font-size:13px;margin:0;}
+.n-info{background:rgba(77,158,247,.07);border-color:var(--blue);}.n-info .note-title{color:var(--blue);}
+.n-ok{background:rgba(62,207,111,.07);border-color:var(--green);}.n-ok .note-title{color:var(--green);}
+.n-warn{background:rgba(245,166,35,.07);border-color:var(--orange);}.n-warn .note-title{color:var(--orange);}
+.n-crit{background:rgba(240,112,112,.07);border-color:var(--red);}.n-crit .note-title{color:var(--red);}
+
+/* EXERCISES */
+.ex{background:var(--card);border:1px solid var(--border2);border-radius:12px;margin:20px 0;overflow:hidden;}
+.ex-hd{background:var(--card2);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;gap:12px;}
+.ex-tag{font-family:var(--mono);font-size:10px;font-weight:700;padding:3px 9px;border-radius:5px;background:rgba(77,158,247,.1);color:var(--blue);border:1px solid rgba(77,158,247,.25);}
+.ex-name{font-family:var(--display);font-size:15px;font-weight:700;color:var(--text);}
+.ex-body{padding:20px;}
+.obj-badge{display:inline-flex;align-items:center;font-family:var(--mono);font-size:10px;font-weight:700;color:var(--orange);background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.2);padding:3px 9px;border-radius:5px;margin-bottom:14px;}
+.phase-tag{display:inline-block;font-family:var(--mono);font-size:10px;font-weight:700;padding:3px 10px;border-radius:5px;margin:14px 0 8px;}
+.ph-atk{background:rgba(240,112,112,.1);color:var(--red);border:1px solid rgba(240,112,112,.25);}
+.ph-det{background:rgba(77,158,247,.1);color:var(--blue);border:1px solid rgba(77,158,247,.25);}
+.ph-alr{background:rgba(62,207,111,.1);color:var(--green);border:1px solid rgba(62,207,111,.25);}
+
+code{font-family:var(--mono);font-size:11px;background:rgba(77,158,247,.1);color:var(--blue);padding:1px 5px;border-radius:4px;}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:14px 0;}
+th{background:var(--card2);color:var(--text);font-size:11px;text-transform:uppercase;letter-spacing:.05em;font-weight:700;padding:9px 14px;border:1px solid var(--border2);text-align:left;}
+td{padding:9px 14px;border:1px solid var(--border2);color:var(--text2);vertical-align:top;}
+tr:nth-child(even) td{background:rgba(255,255,255,.015);}
+.eid{font-family:var(--mono);color:var(--cyan);font-weight:600;font-size:12px;}
+.part-label{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin:44px 0 16px;display:flex;align-items:center;gap:8px;}
+.part-label::before{content:'';flex:1;height:1px;background:var(--border);}
+.footer{border-top:1px solid var(--border);padding:28px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--text3);}
+@media(max-width:600px){.tool-row{grid-template-columns:1fr;}.services-row{flex-direction:column;align-items:center;}}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="wrap">
+    <div class="topic-tag">TOPIC 24 · MODULE 11 · DEFENSIVE SECURITY</div>
+    <h1>Security Operations<br><em>Center Lab</em></h1>
+    <p class="hero-sub">One Windows machine. Splunk collects Windows Security Event Logs. Kali (WSL2) attacks. You detect everything using SPL queries.</p>
+    <div class="env-pills">
+      <span class="pill pill-b">📊 Splunk Enterprise — Windows</span>
+      <span class="pill pill-o">🐉 Kali Linux — WSL2</span>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <button class="nav-btn on"  onclick="gotoSec(this,'s1')">01 · Lab Overview</button>
+    <button class="nav-btn"     onclick="gotoSec(this,'s2')">02 · Required Tools</button>
+    <button class="nav-btn"     onclick="gotoSec(this,'s3')">03 · Installation</button>
+    <button class="nav-btn"     onclick="gotoSec(this,'s4')">04 · Attack &amp; Detect</button>
+  </div>
+</nav>
+
+<div class="content">
+
+<!-- ══════════════════════════════════════════
+     SECTION 1 — LAB OVERVIEW
+══════════════════════════════════════════ -->
+<div class="sec" id="s1">
+  <div class="sec-label">Section 01</div>
+  <div class="sec-title"><span class="sec-num">01</span>Lab Overview</div>
+  <div class="sec-divider"></div>
+
+  <p>Everything in this lab runs on <strong>one Windows machine</strong>. That same machine is the <strong>monitored victim</strong> and also runs <strong>Splunk</strong> as the SIEM. Kali Linux (WSL2) is the attacker — it already lives inside the same Windows machine. No extra hardware required.</p>
+
+  <!-- Single machine diagram -->
+  <div class="arch">
+    <div class="arch-single">
+      <div class="machine-icon">🖥️</div>
+      <div class="machine-title">Your Windows Machine</div>
+      <div class="machine-sub">One machine — plays both roles: monitored endpoint + SIEM</div>
+      <div class="services-row">
+        <div class="svc hi-green">
+          <div class="svc-icon">📊</div>
+          <div class="svc-name">Splunk Enterprise</div>
+          <div class="svc-desc">SIEM · localhost:8000</div>
+        </div>
+        <div class="svc hi-blue">
+          <div class="svc-icon">🔭</div>
+          <div class="svc-name">Universal Forwarder</div>
+          <div class="svc-desc">ships logs → port 9997</div>
+        </div>
+        <div class="svc hi-orange">
+          <div class="svc-icon">📋</div>
+          <div class="svc-name">Windows Event Logs</div>
+          <div class="svc-desc">Security · System · App</div>
+        </div>
+        <div class="svc hi-red">
+          <div class="svc-icon">🐉</div>
+          <div class="svc-name">Kali Linux</div>
+          <div class="svc-desc">WSL2 · attacker</div>
+        </div>
+      </div>
+      <div class="arch-flow">
+        <span class="afl" style="background:rgba(240,112,112,.1);color:#f07070;border:1px solid rgba(240,112,112,.25)">Kali WSL2 runs attacks</span>
+        <span class="arr-lbl">→</span>
+        <span class="afl" style="background:rgba(245,166,35,.1);color:#f5a623;border:1px solid rgba(245,166,35,.25)">Windows generates Security Events</span>
+        <span class="arr-lbl">→</span>
+        <span class="afl" style="background:rgba(77,158,247,.1);color:#4d9ef7;border:1px solid rgba(77,158,247,.25)">Forwarder ships to Splunk :9997</span>
+        <span class="arr-lbl">→</span>
+        <span class="afl" style="background:rgba(62,207,111,.1);color:#3ecf6f;border:1px solid rgba(62,207,111,.25)">You detect in Splunk :8000</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- What we are monitoring -->
+  <div class="note n-info">
+    <div class="note-icon">🎯</div>
+    <div class="note-body">
+      <div class="note-title">What we are monitoring</div>
+      <p>We are monitoring the <strong>Windows machine itself</strong> — specifically its <strong>Windows Security Event Logs</strong>. These logs record every login attempt, account change, and privilege use on the Windows OS. Splunk collects and searches these logs so you can detect attacks happening on that machine.</p>
+    </div>
+  </div>
+
+  <table>
+    <tr><th>Component</th><th>What it does in this lab</th></tr>
+    <tr><td><strong>Windows Security Event Logs</strong></td><td>The source of truth — records every logon, failure, account change, service install on the OS. This is what we monitor.</td></tr>
+    <tr><td><strong>Splunk Universal Forwarder</strong></td><td>Reads the Windows Event Log channels and ships them into Splunk in real time.</td></tr>
+    <tr><td><strong>Splunk Enterprise</strong></td><td>The SIEM — indexes those logs, lets you search with SPL, create dashboards and alerts.</td></tr>
+    <tr><td><strong>Kali Linux (WSL2)</strong></td><td>The attacker — runs brute force, scan, and exploitation tools that create detectable events on the Windows machine.</td></tr>
+  </table>
+
+  <div class="note n-warn">
+    <div class="note-icon">⚙️</div>
+    <div class="note-body">
+      <div class="note-title">System Requirements</div>
+      <p><strong>RAM:</strong> 8 GB minimum (4 GB for Splunk + 2 GB WSL2 + 2 GB Windows) &nbsp;·&nbsp; <strong>Disk:</strong> 10 GB free &nbsp;·&nbsp; <strong>OS:</strong> Windows 10 or 11, 64-bit &nbsp;·&nbsp; WSL2 with Kali already installed</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SECTION 2 — REQUIRED TOOLS
+══════════════════════════════════════════ -->
+<div class="sec" id="s2">
+  <div class="sec-label">Section 02</div>
+  <div class="sec-title"><span class="sec-num">02</span>Required Tools</div>
+  <div class="sec-divider"></div>
+
+  <p>Only <strong>4 things</strong> needed. Everything is free. A Splunk account (free to create) is required to download the first two.</p>
+
+  <div class="tools-grid">
+
+    <div class="tool-row">
+      <div><div class="tool-name">Splunk Enterprise<small>Windows 64-bit .msi</small></div></div>
+      <div class="tool-desc">The SIEM. Indexes all logs, provides the search UI at port 8000, runs SPL queries and fires alerts. Free 60-day trial or 500 MB/day permanent developer licence.</div>
+      <span class="tool-badge tb-w">WINDOWS MACHINE</span>
+    </div>
+
+    <div class="tool-row">
+      <div><div class="tool-name">Splunk Universal Forwarder<small>Windows 64-bit .msi</small></div></div>
+      <div class="tool-desc">A lightweight background agent. Watches Windows Event Log channels and ships every new event to Splunk on port 9997. No UI — runs silently as a Windows service.</div>
+      <span class="tool-badge tb-w">WINDOWS MACHINE</span>
+    </div>
+
+    <div class="tool-row">
+      <div><div class="tool-name">nmap<small>apt package · Kali</small></div></div>
+      <div class="tool-desc">Network port scanner. Used to simulate reconnaissance against the Windows machine and generate detectable network activity in the event logs.</div>
+      <span class="tool-badge tb-k">KALI (WSL2)</span>
+    </div>
+
+    <div class="tool-row">
+      <div><div class="tool-name">hydra<small>apt package · Kali</small></div></div>
+      <div class="tool-desc">Login brute-force tool. Hammers a service with many wrong passwords — generating a burst of Windows EventID 4625 (failed logon) entries that Splunk can detect.</div>
+      <span class="tool-badge tb-k">KALI (WSL2)</span>
+    </div>
+
+  </div>
+
+  <div class="note n-info">
+    <div class="note-icon">📥</div>
+    <div class="note-body">
+      <div class="note-title">Download Links — open in browser</div>
+      <p>
+        Splunk Enterprise &nbsp;→&nbsp; <code>https://www.splunk.com/en_us/download/splunk-enterprise.html</code><br>
+        Universal Forwarder &nbsp;→&nbsp; <code>https://www.splunk.com/en_us/download/universal-forwarder.html</code>
+      </p>
+      <p style="margin-top:6px;">nmap and hydra are installed via <code>apt</code> on Kali — no manual download needed.</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SECTION 3 — INSTALLATION
+══════════════════════════════════════════ -->
+<div class="sec" id="s3">
+  <div class="sec-label">Section 03</div>
+  <div class="sec-title"><span class="sec-num">03</span>Installation Instructions</div>
+  <div class="sec-divider"></div>
+
+  <!-- ─── PART A: WINDOWS ─── -->
+  <div class="part-label" style="color:var(--blue)">Part A &nbsp;—&nbsp; Windows Machine</div>
+
+  <!-- STEP 1 -->
+  <div class="step">
+    <div class="step-hd"><span class="step-n sn-b">1</span><span class="step-title">Install Splunk Enterprise</span></div>
+    <p>Run the downloaded <code>.msi</code> file. Use these settings during installation:</p>
+    <ul>
+      <li>Install path: <code>C:\Program Files\Splunk</code></li>
+      <li>Admin username: <code>admin</code></li>
+      <li>Password: choose one and remember it</li>
+      <li>Select <strong>"Local System"</strong> when asked how to run the service</li>
+      <li>Allow the installer to start Splunk as a Windows service</li>
+    </ul>
+    <p>After installation, open your browser and go to:</p>
+    <div class="cb">
+      <div class="cb-top"><span class="cb-lang"><span class="dot d-url"></span>Browser — open this URL</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+      <pre>http://localhost:8000</pre>
+    </div>
+    <p>Login with <code>admin</code> and your password. Click through the licence screen.</p>
+    <p>Confirm Splunk is running:</p>
+    <div class="cb">
+      <div class="cb-top"><span class="cb-lang"><span class="dot d-ps"></span>PowerShell — Run as Administrator</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+      <pre>Get-Service Splunkd</pre>
+    </div>
+    <div class="note n-ok">
+      <div class="note-icon">✅</div>
+      <div class="note-body"><div class="note-title">Expected result</div><p>Status should show <strong>Running</strong>. If it shows Stopped, run: <code>Start-Service Splunkd</code></p></div>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step">
+    <div class="step-hd"><span class="step-n sn-b">2</span><span class="step-title">Enable Receiving Port 9997 in Splunk</span></div>
+    <p>Splunk must listen on port 9997 to accept data coming from the Universal Forwarder.</p>
+    <div class="note n-info">
+      <div class="note-icon">🖱️</div>
+      <div class="note-body"><div class="note-title">Do this in Splunk Web UI</div>
+        <p><strong>Settings &nbsp;→&nbsp; Forwarding and Receiving &nbsp;→&nbsp; Configure Receiving &nbsp;→&nbsp; New Receiving Port &nbsp;→&nbsp; Type: <code>9997</code> &nbsp;→&nbsp; Save</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step">
+    <div class="step-hd"><span class="step-n sn-b">3</span><span class="step-title">Create the "windows" Index</span></div>
+    <p>All logs will be stored in an index called <code>windows</code>. Create it now.</p>
+    <div class="note n-info">
+      <div class="note-icon">🖱️</div>
+      <div class="note-body"><div class="note-title">Do this in Splunk Web UI</div>
+        <p><strong>Settings &nbsp;→&nbsp; Indexes &nbsp;→&nbsp; New Index &nbsp;→&nbsp; Index Name: <code>windows</code> &nbsp;→&nbsp; Max Size: <code>5000</code> MB &nbsp;→&nbsp; Save</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step">
+    <div class="step-hd"><span class="step-n sn-b">4</span><span class="step-title">Install Splunk Universal Forwarder</span></div>
+    <p>Run the Universal Forwarder <code>.msi</code> installer. When asked during setup:</p>
+    <ul>
+      <li><strong>Receiving Indexer Hostname:</strong> <code>127.0.0.1</code></li>
+      <li><strong>Port:</strong> <code>9997</code></li>
+      <li>Set admin credentials (same as Splunk is fine)</li>
+      <li>Complete the installation</li>
+    </ul>
+    <p>Verify it is running:</p>
+    <div class="cb">
+      <div class="cb-top"><span class="cb-lang"><span class="dot d-ps"></span>PowerShell — Run as Administrator</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+      <pre>Get-Service SplunkForwarder</pre>
+    </div>
+  </div>
+
+  <!-- STEP 5 -->
+  <div class="step">
+    <div class="step-hd"><span class="step-n sn-b">5</span><span class="step-title">Create inputs.conf — Tell the Forwarder What to Collect</span></div>
+    <p>This is the most important configuration file. It tells the forwarder <strong>which Windows Event Log channels to read</strong>.</p>
+    <p>Open <strong>Notepad as Administrator</strong> (right-click Notepad → Run as administrator). Create a new file at exactly this path:</p>
+    <div class="cb">
+      <div class="cb-top"><span class="cb-lang"><span class="dot d-file"></span>File path — save here</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+      <pre>C:\Program Files\SplunkUniversalForwarder\etc\system\local\inputs.conf</pre>
+    </div>
+    <p>Paste this as the <strong>entire contents</strong> of the file, then save:</p>
+    <div class="cb">
+      <div class="cb-top"><span class="cb-lang"><span class="dot d-file"></span>inputs.conf — complete file contents</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+      <pre><span class="cm"># Security Events — logins, failures, privilege use, account changes</span>
+[WinEventLog://Security]
+disabled = 0
+index = windows
+renderXml = true
+
+<span class="cm"># System Events — services installed, system errors</span>
+[WinEventLog://System]
+disabled = 0
+index = windows
+renderXml = true
+
+<span class="cm"># Application Events</span>
+[WinEventLog://Application]
+disabled = 0
+index = windows
+renderXml = true</pre>
+    </div>
+
+    <p>Now restart the forwarder to apply the configuration:</p>
+    <div class="cb">
+      <div class="cb-top"><span class="cb-lang"><span class="dot d-ps"></span>PowerShell — Run as Administrator</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+      <pre>Restart-Service SplunkForwarder</pre>
+    </div>
+
+    <div class="note n-ok">
+      <div class="note-icon">✅</div>
+      <div class="note-body"><div class="note-title">Verify data is flowing into Splunk</div>
+        <p>Wait 60 seconds. Go to <strong>Splunk Web → Search &amp; Reporting</strong>. Run this query — you should see Windows events appear:</p>
+        <p><code>index=windows | head 20</code></p>
+        <p>Also check what sourcetypes are coming in: <code>index=windows | stats count by sourcetype</code></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── PART B: KALI ─── -->
+  <div class="part-label" style="color:var(--red)">Part B &nbsp;—&nbsp; Attacker Machine (Kali WSL2)</div>
+
+  <!-- STEP 6 -->
+  <div class="step">
+    <div class="step-hd"><span class="step-n sn-r">6</span><span class="step-title">Install Attack Tools on Kali</span></div>
+    <p>Open your Kali WSL2 terminal and run:</p>
+    <div class="cb">
+      <div class="cb-top"><span class="cb-lang"><span class="dot d-kali"></span>Kali Linux — WSL2 Terminal</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+      <pre>sudo apt update && sudo apt install -y nmap hydra</pre>
+    </div>
+  </div>
+
+  <!-- STEP 7 -->
+  <div class="step">
+    <div class="step-hd"><span class="step-n sn-r">7</span><span class="step-title">Find Your Windows Host IP from Kali</span></div>
+    <p>Inside WSL2, your Windows machine has a separate internal IP address. You need this for every attack command.</p>
+    <div class="cb">
+      <div class="cb-top"><span class="cb-lang"><span class="dot d-kali"></span>Kali Linux — WSL2 Terminal</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+      <pre>cat /etc/resolv.conf | grep nameserver</pre>
+    </div>
+    <p>The IP shown (usually <code>172.x.x.x</code>) is your Windows host from Kali's perspective. <strong>Write it down — you will use it in every attack command below.</strong></p>
+    <div class="note n-warn">
+      <div class="note-icon">📝</div>
+      <div class="note-body"><div class="note-title">This IP changes on every WSL2 restart</div>
+        <p>Each time you restart WSL2 or reboot Windows, this IP may change. Re-run the command above if attacks seem to fail.</p>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end s3 -->
+
+
+<!-- ══════════════════════════════════════════
+     SECTION 4 — ATTACK & DETECT
+══════════════════════════════════════════ -->
+<div class="sec" id="s4">
+  <div class="sec-label">Section 04</div>
+  <div class="sec-title"><span class="sec-num">04</span>Attack &amp; Detect</div>
+  <div class="sec-divider"></div>
+
+  <p>Each exercise has two phases. Run the <strong style="color:var(--red)">ATTACK</strong> commands first, then immediately go to Splunk and run the <strong style="color:var(--blue)">DETECT</strong> queries to find what was generated.</p>
+
+  <div class="note n-warn">
+    <div class="note-icon">⚠️</div>
+    <div class="note-body"><div class="note-title">Before every exercise</div>
+      <p>Replace <code>172.x.x.x</code> in all Kali commands with your actual Windows host IP from Step 7 of the installation.</p>
+    </div>
+  </div>
+
+
+  <!-- ── EX 1 ── -->
+  <div class="ex">
+    <div class="ex-hd"><span class="ex-tag">EX-01</span><span class="ex-name">Brute Force — Password Spraying Detection</span></div>
+    <div class="ex-body">
+      <div class="obj-badge">OBJECTIVE — Generate failed login events (EventID 4625) and detect the brute force burst in Splunk</div>
+
+      <div class="phase-tag ph-atk">⚔ ATTACK — Run on Kali WSL2</div>
+      <p>First, make sure the rockyou wordlist is extracted:</p>
+      <div class="cb">
+        <div class="cb-top"><span class="cb-lang"><span class="dot d-kali"></span>Kali Linux — WSL2 Terminal</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+        <pre><span class="cm"># Extract rockyou wordlist if not already done</span>
+sudo gunzip -k /usr/share/wordlists/rockyou.txt.gz 2>/dev/null; echo "ready"</pre>
+      </div>
+      <p>Now run the brute force. Replace <code>172.x.x.x</code> with your Windows host IP:</p>
+      <div class="cb">
+        <div class="cb-top"><span class="cb-lang"><span class="dot d-kali"></span>Kali Linux — WSL2 Terminal</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+        <pre><span class="cm"># Brute force SMB (Windows file sharing service)</span>
+<span class="cm"># -l : target username   -P : password wordlist   -t : threads   -V : verbose</span>
+hydra -l administrator -P /usr/share/wordlists/rockyou.txt smb://172.x.x.x -t 4 -V</pre>
+      </div>
+      <div class="note n-info">
+        <div class="note-icon">💡</div>
+        <div class="note-body"><div class="note-title">SMB not responding? Use RDP instead</div>
+          <p>If SMB is blocked or filtered, brute-force RDP (Remote Desktop): <code>hydra -l administrator -P /usr/share/wordlists/rockyou.txt rdp://172.x.x.x -t 4 -V</code></p>
+          <p style="margin-top:6px;">Or simply lock Windows (<strong>Win+L</strong>) and manually type wrong passwords 10 times on the login screen — this also generates EventID 4625.</p>
+        </div>
+      </div>
+
+      <div class="phase-tag ph-det">🔍 DETECT — Run in Splunk Search &amp; Reporting</div>
+      <div class="cb">
+        <div class="cb-top"><span class="cb-lang"><span class="dot d-splunk"></span>Splunk SPL — see all failed logins</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+        <pre>index=windows EventCode=4625
+| table _time, Account_Name, IpAddress, Logon_Type, Failure_Reason
+| sort -_time</pre>
+      </div>
+      <div class="cb">
+        <div class="cb-top"><span class="cb-lang"><span class="dot d-splunk"></span>Splunk SPL — count failures grouped by account and source IP</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+        <pre>index=windows EventCode=4625
+| stats count by Account_Name, IpAddress
+| sort -count</pre>
+      </div>
+      <div class="cb">
+        <div class="cb-top"><span class="cb-lang"><span class="dot d-splunk"></span>Splunk SPL — plot the failure burst over time</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+        <pre>index=windows EventCode=4625
+| timechart count by Account_Name</pre>
+      </div>
+      <div class="cb">
+        <div class="cb-top"><span class="cb-lang"><span class="dot d-splunk"></span>Splunk SPL — brute force correlation rule (5+ failures in 5 min)</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+        <pre>index=windows EventCode=4625
+| bucket _time span=5m
+| stats count by _time, Account_Name, IpAddress
+| where count >= 5</pre>
+      </div>
+
+      <div class="phase-tag ph-alr">🔔 CREATE ALERT</div>
+      <p>Run the correlation rule above → click <strong>Save As → Alert</strong></p>
+      <table>
+        <tr><th>Setting</th><th>Value</th></tr>
+        <tr><td>Title</td><td><code>BRUTE_FORCE_DETECTED</code></td></tr>
+        <tr><td>Alert type</td><td>Real-time</td></tr>
+        <tr><td>Trigger condition</td><td>Number of Results is greater than 0</td></tr>
+        <tr><td>Throttle</td><td>Once every 15 minutes</td></tr>
+        <tr><td>Action</td><td>Add to Triggered Alerts</td></tr>
+      </table>
+    </div>
+  </div>
+
+
+  <!-- ── EX 2 ── -->
+  <div class="ex">
+    <div class="ex-hd"><span class="ex-tag">EX-02</span><span class="ex-name">Successful Login After Brute Force</span></div>
+    <div class="ex-body">
+      <div class="obj-badge">OBJECTIVE — Detect the pattern: many failures (4625) followed by a successful login (4624) from the same IP</div>
+
+      <div class="phase-tag ph-atk">⚔ ATTACK — Run on Windows</div>
+      <p>After running hydra in EX-01, now log into Windows normally (correct password). This creates EventID 4624.</p>
+      <div class="note n-info">
+        <div class="note-icon">💡</div>
+        <div class="note-body"><div class="note-title">What this simulates</div>
+          <p>A brute force that eventually succeeds — the attacker got in. The pattern of many 4625s followed by a 4624 from the same source is a critical indicator of compromise.</p>
+        </div>
+      </div>
+
+      <div class="phase-tag ph-det">🔍 DETECT — Run in Splunk Search &amp; Reporting</div>
+      <div class="cb">
+        <div class="cb-top"><span class="cb-lang"><span class="dot d-splunk"></span>Splunk SPL — see successful logins</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+        <pre>index=windows EventCode=4624
+| table _time, Account_Name, IpAddress, Logon_Type
+| sort -_time</pre>
+      </div>
+      <div class="cb">
+        <div class="cb-top"><span class="cb-lang"><span class="dot d-splunk"></span>Splunk SPL — failures AND successes side by side</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+        <pre>index=windows (EventCode=4624 OR EventCode=4625)
+| eval Event=if(EventCode="4624","SUCCESS","FAILURE")
+| timechart count by Event</pre>
+      </div>
+      <div class="cb">
+        <div class="cb-top"><span class="cb-lang"><span class="dot d-splunk"></span>Splunk SPL — find IPs that had failures then a success</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+        <pre>index=windows (EventCode=4624 OR EventCode=4625)
+| eval Event=if(EventCode="4624","SUCCESS","FAILURE")
+| stats count(eval(Event="FAILURE")) as failures,
+        count(eval(Event="SUCCESS")) as successes by IpAddress
+| where failures > 3 AND successes > 0
+| sort -failures</pre>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── EX 3 ── -->
+  <div class="ex">
+    <div class="ex-hd"><span class="ex-tag">EX-03</span><span class="ex-name">New User Account Created</span></div>
+    <div class="ex-body">
+      <div class="obj-badge">OBJECTIVE — Simulate attacker creating a backdoor account. Detect EventID 4720.</div>
+
+      <div class="phase-tag ph-atk">⚔ ATTACK — Run on Windows (PowerShell Admin)</div>
+      <div class="cb">
+        <div class="cb-top"><span class="cb-lang"><span class="dot d-ps"></span>PowerShell — Run as Administrator</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+        <pre><span class="cm"># Create a backdoor user account — simulates attacker persistence</span>
+net user backdoor P@ssword123 /add
+
+<span class="cm"># Add that user to Administrators group — privilege escalation</span>
+net localgroup administrators backdoor /add</pre>
+      </div>
+
+      <div class="phase-tag ph-det">🔍 DETECT — Run in Splunk Search &amp; Reporting</div>
+      <div class="cb">
+        <div class="cb-top"><span class="cb-lang"><span class="dot d-splunk"></span>Splunk SPL — detect new account creation (EventID 4720)</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+        <pre>index=windows EventCode=4720
+| table _time, TargetUserName, SubjectUserName, Computer</pre>
+      </div>
+      <div class="cb">
+        <div class="cb-top"><span class="cb-lang"><span class="dot d-splunk"></span>Splunk SPL — detect user added to Administrators group (EventID 4732)</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+        <pre>index=windows EventCode=4732
+| table _time, MemberName, TargetUserName, SubjectUserName</pre>
+      </div>
+      <div class="cb">
+        <div class="cb-top"><span class="cb-lang"><span class="dot d-splunk"></span>Splunk SPL — combined: account created AND added to admin group</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+        <pre>index=windows (EventCode=4720 OR EventCode=4732)
+| eval Action=case(EventCode="4720","Account Created", EventCode="4732","Added to Admin Group")
+| table _time, Action, TargetUserName, SubjectUserName, Computer
+| sort _time</pre>
+      </div>
+
+      <div class="phase-tag ph-atk" style="margin-top:20px">🧹 CLEANUP — Remove the test account after the exercise</div>
+      <div class="cb">
+        <div class="cb-top"><span class="cb-lang"><span class="dot d-ps"></span>PowerShell — Run as Administrator</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+        <pre>net user backdoor /delete</pre>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── EX 4 ── -->
+  <div class="ex">
+    <div class="ex-hd"><span class="ex-tag">EX-04</span><span class="ex-name">New Service Installed — Persistence</span></div>
+    <div class="ex-body">
+      <div class="obj-badge">OBJECTIVE — Simulate malware installing itself as a service. Detect EventID 7045.</div>
+
+      <div class="phase-tag ph-atk">⚔ ATTACK — Run on Windows (PowerShell Admin)</div>
+      <div class="cb">
+        <div class="cb-top"><span class="cb-lang"><span class="dot d-ps"></span>PowerShell — Run as Administrator</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+        <pre><span class="cm"># Create a fake service — simulates malware establishing persistence</span>
+sc.exe create "WindowsUpdateHelper" binPath= "C:\Windows\Temp\update.exe" start= auto
+
+<span class="cm"># Also try via New-Service cmdlet</span>
+New-Service -Name "TotallyLegitService" -BinaryPathName "C:\Temp\notmalware.exe" -StartupType Automatic</pre>
+      </div>
+
+      <div class="phase-tag ph-det">🔍 DETECT — Run in Splunk Search &amp; Reporting</div>
+      <div class="cb">
+        <div class="cb-top"><span class="cb-lang"><span class="dot d-splunk"></span>Splunk SPL — detect new service installs (EventID 7045)</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+        <pre>index=windows EventCode=7045
+| table _time, ServiceName, ServiceFileName, ServiceType, ServiceStartType, ServiceAccount</pre>
+      </div>
+      <div class="cb">
+        <div class="cb-top"><span class="cb-lang"><span class="dot d-splunk"></span>Splunk SPL — flag services with suspicious binary paths</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+        <pre>index=windows EventCode=7045
+| search ServiceFileName="*Temp*" OR ServiceFileName="*AppData*" OR ServiceFileName="*Downloads*"
+| table _time, ServiceName, ServiceFileName</pre>
+      </div>
+
+      <div class="phase-tag ph-atk" style="margin-top:20px">🧹 CLEANUP — Remove the test services</div>
+      <div class="cb">
+        <div class="cb-top"><span class="cb-lang"><span class="dot d-ps"></span>PowerShell — Run as Administrator</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+        <pre>sc.exe delete "WindowsUpdateHelper"
+sc.exe delete "TotallyLegitService"</pre>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── EX 5 ── -->
+  <div class="ex">
+    <div class="ex-hd"><span class="ex-tag">EX-05</span><span class="ex-name">Log Clearing — Anti-Forensics</span></div>
+    <div class="ex-body">
+      <div class="obj-badge">OBJECTIVE — Simulate an attacker wiping evidence. Detect EventID 1102 in Splunk.</div>
+
+      <div class="note n-crit">
+        <div class="note-icon">🚨</div>
+        <div class="note-body"><div class="note-title">Why this matters</div>
+          <p>Attackers clear Windows Event Logs to destroy evidence of what they did. But Splunk has already indexed those events — the clearing action itself (EventID 1102) becomes the evidence. This should always be a P1 alert in any real SOC.</p>
+        </div>
+      </div>
+
+      <div class="phase-tag ph-atk">⚔ ATTACK — Run on Windows (PowerShell Admin)</div>
+      <div class="cb">
+        <div class="cb-top"><span class="cb-lang"><span class="dot d-ps"></span>PowerShell — Run as Administrator</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+        <pre><span class="cm"># Clear the Security event log — generates EventID 1102</span>
+wevtutil cl Security
+
+<span class="cm"># Clear the System event log — generates EventID 104</span>
+wevtutil cl System</pre>
+      </div>
+
+      <div class="phase-tag ph-det">🔍 DETECT — Run in Splunk Search &amp; Reporting</div>
+      <div class="cb">
+        <div class="cb-top"><span class="cb-lang"><span class="dot d-splunk"></span>Splunk SPL — detect log clearing</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+        <pre><span class="cm"># EventID 1102 = Security log cleared   EventID 104 = System log cleared</span>
+index=windows (EventCode=1102 OR EventCode=104)
+| table _time, EventCode, SubjectUserName, Computer</pre>
+      </div>
+
+      <div class="phase-tag ph-alr">🔔 CREATE ALERT</div>
+      <p>Run the query above → <strong>Save As → Alert</strong> · Title: <code>LOG_CLEARED_CRITICAL</code> · Trigger when results &gt; 0 · <strong>No throttle</strong> · Action: Add to Triggered Alerts → Save</p>
+    </div>
+  </div>
+
+
+  <!-- ── EX 6 ── -->
+  <div class="ex">
+    <div class="ex-hd"><span class="ex-tag">EX-06</span><span class="ex-name">Build a Live SOC Dashboard</span></div>
+    <div class="ex-body">
+      <div class="obj-badge">OBJECTIVE — Create a 5-panel real-time monitoring dashboard in Splunk</div>
+
+      <p>In Splunk Web: <strong>Dashboards → Create New Dashboard → Classic Dashboards → Name: <code>SOC Monitor</code> → Save</strong></p>
+      <p>Add 5 panels using <strong>Add Panel → New from Search Query</strong>. Use each query below as a separate panel:</p>
+
+      <div class="cb">
+        <div class="cb-top"><span class="cb-lang"><span class="dot d-splunk"></span>Panel 1 — Failed Login Timeline &nbsp;(Visualization: Line Chart)</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+        <pre>index=windows EventCode=4625 | timechart count span=1h</pre>
+      </div>
+
+      <div class="cb">
+        <div class="cb-top"><span class="cb-lang"><span class="dot d-splunk"></span>Panel 2 — Top Accounts with Login Failures &nbsp;(Visualization: Bar Chart)</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+        <pre>index=windows EventCode=4625
+| stats count by Account_Name
+| sort -count | head 10</pre>
+      </div>
+
+      <div class="cb">
+        <div class="cb-top"><span class="cb-lang"><span class="dot d-splunk"></span>Panel 3 — New Services Installed &nbsp;(Visualization: Table)</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+        <pre>index=windows EventCode=7045
+| table _time, ServiceName, ServiceFileName, ServiceAccount</pre>
+      </div>
+
+      <div class="cb">
+        <div class="cb-top"><span class="cb-lang"><span class="dot d-splunk"></span>Panel 4 — New Accounts Created &nbsp;(Visualization: Table)</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+        <pre>index=windows (EventCode=4720 OR EventCode=4732)
+| eval Action=case(EventCode="4720","Account Created",EventCode="4732","Added to Admin")
+| table _time, Action, TargetUserName, SubjectUserName</pre>
+      </div>
+
+      <div class="cb">
+        <div class="cb-top"><span class="cb-lang"><span class="dot d-splunk"></span>Panel 5 — Total Log Volume Last 1hr &nbsp;(Visualization: Area Chart)</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+        <pre>index=windows earliest=-1h | timechart count by sourcetype span=10m</pre>
+      </div>
+
+      <div class="note n-info">
+        <div class="note-icon">⏱️</div>
+        <div class="note-body"><div class="note-title">Set Auto-Refresh</div>
+          <p>After saving the dashboard: <strong>Edit → Set Auto Refresh → Every 60 seconds</strong>. The dashboard now updates live every minute.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Quick SPL Reference -->
+  <div class="part-label" style="color:var(--blue)">Quick SPL Reference</div>
+  <table>
+    <tr><th>What you want to find</th><th>SPL Query</th></tr>
+    <tr><td>All events (last 10 min)</td><td><code>index=windows earliest=-10m | timechart count span=1m</code></td></tr>
+    <tr><td>Failed logins</td><td><code>index=windows EventCode=4625 | stats count by Account_Name, IpAddress</code></td></tr>
+    <tr><td>Successful logins</td><td><code>index=windows EventCode=4624 | stats count by Account_Name, IpAddress</code></td></tr>
+    <tr><td>New user created</td><td><code>index=windows EventCode=4720 | table _time, TargetUserName, SubjectUserName</code></td></tr>
+    <tr><td>User added to admin group</td><td><code>index=windows EventCode=4732 | table _time, MemberName, TargetUserName</code></td></tr>
+    <tr><td>New service installed</td><td><code>index=windows EventCode=7045 | table _time, ServiceName, ServiceFileName</code></td></tr>
+    <tr><td>Log cleared (critical)</td><td><code>index=windows (EventCode=1102 OR EventCode=104)</code></td></tr>
+    <tr><td>All events by source type</td><td><code>index=windows | stats count by sourcetype | sort -count</code></td></tr>
+    <tr><td>Search by keyword</td><td><code>index=windows "keyword here" | table _time, _raw</code></td></tr>
+  </table>
+
+  <!-- Event ID Reference -->
+  <div class="part-label" style="color:var(--blue)">Windows Security Event ID Reference</div>
+  <table>
+    <tr><th>Event ID</th><th>Log</th><th>Meaning</th><th>Detects</th></tr>
+    <tr><td><span class="eid">4624</span></td><td>Security</td><td>Successful logon</td><td>Normal logins, lateral movement baseline</td></tr>
+    <tr><td><span class="eid">4625</span></td><td>Security</td><td>Failed logon</td><td>Brute force, password spraying</td></tr>
+    <tr><td><span class="eid">4648</span></td><td>Security</td><td>Logon using explicit credentials</td><td>Pass-the-Hash attacks</td></tr>
+    <tr><td><span class="eid">4720</span></td><td>Security</td><td>User account created</td><td>Backdoor accounts, rogue users</td></tr>
+    <tr><td><span class="eid">4722</span></td><td>Security</td><td>User account enabled</td><td>Re-enabling disabled accounts</td></tr>
+    <tr><td><span class="eid">4732</span></td><td>Security</td><td>User added to local security group</td><td>Privilege escalation</td></tr>
+    <tr><td><span class="eid">4672</span></td><td>Security</td><td>Admin privileges assigned at logon</td><td>Admin account usage monitoring</td></tr>
+    <tr><td><span class="eid">4698</span></td><td>Security</td><td>Scheduled task created</td><td>Persistence via scheduled tasks</td></tr>
+    <tr><td><span class="eid">7045</span></td><td>System</td><td>New service installed on the system</td><td>Malware persistence via services</td></tr>
+    <tr><td><span class="eid">1102</span></td><td>Security</td><td>Security audit log was cleared</td><td>🚨 Anti-forensics — always P1</td></tr>
+    <tr><td><span class="eid">104</span></td><td>System</td><td>System event log was cleared</td><td>🚨 Anti-forensics — always P1</td></tr>
+  </table>
+
+</div><!-- end s4 -->
+
+</div><!-- end content -->
+
+<div class="footer">
+  Topic 24 &nbsp;·&nbsp; Security Operations Center &nbsp;·&nbsp; Module 11: Defensive Security &nbsp;·&nbsp; Brototype Cybersecurity Program
+</div>
+
+<script>
+function cp(btn) {
+  const pre = btn.closest('.cb').querySelector('pre');
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    btn.textContent = '✅ Copied';
+    btn.classList.add('ok');
+    setTimeout(() => { btn.textContent = '📋 Copy'; btn.classList.remove('ok'); }, 2000);
+  });
+}
+function gotoSec(btn, id) {
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+const ids = ['s1','s2','s3','s4'];
+const btns = document.querySelectorAll('.nav-btn');
+window.addEventListener('scroll', () => {
+  let cur = 's1';
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && window.scrollY >= el.offsetTop - 80) cur = id;
+  });
+  btns.forEach((b, i) => b.classList.toggle('on', ids[i] === cur));
+}, { passive: true });
+</script>
+</body>
+</html>
