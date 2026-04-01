@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOC Lab Guide — Monitoring Logs in Wazuh</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Fraunces:ital,wght@0,300;0,600;0,700;1,300;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:#0e1117; --surface:#141920; --surface2:#1a2230;
+  --border:#222d3d; --border2:#2a3a50;
+  --blue:#5b9cf6; --green:#42d97a; --amber:#f5b942;
+  --red:#f47068; --teal:#3ecfcf; --purple:#a78bfa;
+  --text:#e2ecf8; --text2:#7d98b8; --text3:#3f5470;
+  --mono:'IBM Plex Mono',monospace; --serif:'Fraunces',serif; --sans:'Plus Jakarta Sans',sans-serif;
+}
+body { font-family:var(--sans); background:var(--bg); color:var(--text); line-height:1.75; font-size:16px; }
+
+.hero { background:var(--surface); border-bottom:1px solid var(--border); padding:80px 0 64px; position:relative; overflow:hidden; }
+.hero::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 55% 70% at 0% 50%,rgba(91,156,246,.09) 0%,transparent 65%),radial-gradient(ellipse 35% 50% at 100% 20%,rgba(66,217,122,.06) 0%,transparent 55%); pointer-events:none; }
+.wrap { max-width:900px; margin:0 auto; padding:0 40px; position:relative; z-index:1; }
+.hero-eyebrow { font-family:var(--mono); font-size:12px; font-weight:500; color:var(--blue); letter-spacing:.1em; text-transform:uppercase; margin-bottom:22px; display:flex; align-items:center; gap:10px; }
+.hero-eyebrow::before { content:''; width:24px; height:1px; background:var(--blue); }
+h1.hero-title { font-family:var(--serif); font-size:clamp(38px,6vw,62px); font-weight:700; line-height:1.08; color:var(--text); margin-bottom:20px; letter-spacing:-.02em; }
+h1.hero-title em { font-style:italic; color:var(--blue); font-weight:300; }
+.hero-desc { font-size:17px; color:var(--text2); max-width:580px; line-height:1.7; margin-bottom:36px; }
+.hero-tags { display:flex; gap:10px; flex-wrap:wrap; }
+.hero-tag { font-family:var(--mono); font-size:11px; font-weight:500; padding:5px 14px; border-radius:6px; display:flex; align-items:center; gap:7px; }
+.ht-b { background:rgba(91,156,246,.1); color:var(--blue); border:1px solid rgba(91,156,246,.2); }
+.ht-o { background:rgba(245,185,66,.1); color:var(--amber); border:1px solid rgba(245,185,66,.2); }
+.ht-g { background:rgba(66,217,122,.1); color:var(--green); border:1px solid rgba(66,217,122,.2); }
+.ht-r { background:rgba(244,112,104,.1); color:var(--red); border:1px solid rgba(244,112,104,.2); }
+
+.nav { position:sticky; top:0; z-index:200; background:rgba(14,17,23,.95); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); }
+.nav-inner { max-width:900px; margin:0 auto; padding:0 40px; display:flex; overflow-x:auto; scrollbar-width:none; gap:2px; }
+.nav-inner::-webkit-scrollbar { display:none; }
+.nav-btn { font-family:var(--mono); font-size:11px; font-weight:600; color:var(--text3); padding:15px 18px; cursor:pointer; white-space:nowrap; user-select:none; border:none; border-bottom:2px solid transparent; background:none; transition:color .15s,border-color .15s; letter-spacing:.04em; }
+.nav-btn:hover { color:var(--text2); }
+.nav-btn.on { color:var(--blue); border-bottom-color:var(--blue); }
+
+.content { max-width:900px; margin:0 auto; padding:64px 40px 100px; }
+.sec { margin-bottom:88px; scroll-margin-top:64px; }
+.sec-eyebrow { font-family:var(--mono); font-size:11px; font-weight:600; color:var(--text3); letter-spacing:.14em; text-transform:uppercase; margin-bottom:10px; }
+h2.sec-title { font-family:var(--serif); font-size:34px; font-weight:700; color:var(--text); letter-spacing:-.02em; line-height:1.15; margin-bottom:8px; display:flex; align-items:center; gap:16px; }
+.sec-num { font-family:var(--mono); font-size:13px; font-weight:600; color:var(--blue); background:rgba(91,156,246,.1); border:1px solid rgba(91,156,246,.2); width:36px; height:36px; border-radius:10px; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
+.sec-divider { height:1px; background:var(--border); margin:20px 0 32px; }
+p { color:var(--text2); margin-bottom:14px; font-size:15.5px; }
+p strong { color:var(--text); font-weight:600; }
+ul { padding-left:22px; color:var(--text2); margin-bottom:16px; font-size:15.5px; }
+ul li { margin-bottom:7px; }
+ul li::marker { color:var(--blue); }
+
+/* ARCH */
+.arch { background:var(--surface); border:1px solid var(--border2); border-radius:16px; padding:32px; margin:24px 0; }
+.arch-cols { display:flex; gap:16px; align-items:stretch; flex-wrap:wrap; margin-bottom:20px; }
+.arch-machine { flex:1; min-width:200px; background:var(--surface2); border-radius:12px; padding:20px; text-align:center; }
+.arch-machine.hi-b { border:2px solid rgba(91,156,246,.35); }
+.arch-machine.hi-g { border:2px solid rgba(66,217,122,.35); }
+.arch-machine.hi-r { border:2px solid rgba(244,112,104,.35); }
+.arch-machine .ico { font-size:32px; margin-bottom:10px; display:block; }
+.arch-machine .nm { font-family:var(--serif); font-size:16px; font-weight:700; color:var(--text); margin-bottom:4px; }
+.arch-machine .sub { font-family:var(--mono); font-size:10px; color:var(--text3); line-height:1.6; }
+.arch-conn { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; padding:0 4px; flex-shrink:0; }
+.arch-conn .arr { font-size:20px; color:var(--text3); }
+.arch-conn .lbl { font-family:var(--mono); font-size:9px; color:var(--text3); white-space:nowrap; }
+.arch-flow { border-top:1px solid var(--border); padding-top:20px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:center; }
+.afl { font-family:var(--mono); font-size:11px; font-weight:600; padding:5px 12px; border-radius:6px; white-space:nowrap; }
+.arr-sm { font-size:14px; color:var(--text3); }
+
+/* TOOLS */
+.tools-grid { display:flex; flex-direction:column; gap:12px; margin:24px 0; }
+.tool-row { display:grid; grid-template-columns:200px 1fr auto; gap:20px; align-items:center; background:var(--surface); border:1px solid var(--border2); border-radius:12px; padding:18px 22px; }
+.tool-name { font-weight:700; color:var(--text); font-size:15px; }
+.tool-name small { display:block; font-family:var(--mono); font-size:10px; color:var(--text3); font-weight:400; margin-top:3px; }
+.tool-desc { font-size:14px; color:var(--text2); line-height:1.6; }
+.tool-badge { font-family:var(--mono); font-size:10px; font-weight:600; padding:4px 11px; border-radius:6px; white-space:nowrap; }
+.tb-vb { background:rgba(167,139,250,.1); color:var(--purple); border:1px solid rgba(167,139,250,.25); }
+.tb-w  { background:rgba(66,217,122,.1);  color:var(--green);  border:1px solid rgba(66,217,122,.25); }
+.tb-wa { background:rgba(91,156,246,.1);  color:var(--blue);   border:1px solid rgba(91,156,246,.25); }
+.tb-k  { background:rgba(244,112,104,.1); color:var(--red);    border:1px solid rgba(244,112,104,.25); }
+
+/* STEPS */
+.step { margin:36px 0; }
+.step-hd { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+.step-n { font-family:var(--mono); font-size:11px; font-weight:700; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.sn-b { background:rgba(91,156,246,.15); color:var(--blue); border:1px solid rgba(91,156,246,.3); }
+.sn-g { background:rgba(66,217,122,.15); color:var(--green); border:1px solid rgba(66,217,122,.3); }
+.sn-r { background:rgba(244,112,104,.15); color:var(--red); border:1px solid rgba(244,112,104,.3); }
+.step-title { font-family:var(--sans); font-weight:700; color:var(--text); font-size:16.5px; }
+
+/* CODE BLOCKS */
+.cb { border-radius:12px; overflow:hidden; margin:14px 0; border:1px solid var(--border2); }
+.cb-top { display:flex; align-items:center; justify-content:space-between; padding:10px 16px; background:var(--surface2); border-bottom:1px solid var(--border); }
+.cb-lang { font-family:var(--mono); font-size:10px; font-weight:600; display:flex; align-items:center; gap:8px; letter-spacing:.04em; color:var(--text2); }
+.dot { width:7px; height:7px; border-radius:50%; }
+.d-ps    { background:#a78bfa; }
+.d-kali  { background:#f47068; }
+.d-wazuh { background:#42d97a; }
+.d-url   { background:#5b9cf6; }
+.d-vm    { background:#f5b942; }
+.cp-btn { font-family:var(--mono); font-size:10px; font-weight:600; background:none; border:1px solid var(--border2); color:var(--text3); padding:4px 12px; border-radius:6px; cursor:pointer; transition:all .15s; }
+.cp-btn:hover { background:var(--border); color:var(--text2); }
+.cp-btn.ok { color:var(--green); border-color:rgba(66,217,122,.4); }
+pre { background:#070c12; font-family:var(--mono); font-size:13px; line-height:1.9; padding:20px 22px; overflow-x:auto; color:var(--text); }
+.cm { color:var(--text3); font-style:italic; }
+
+/* NOTES */
+.note { display:flex; gap:14px; padding:16px 18px; border-radius:10px; margin:16px 0; border-left:3px solid; }
+.note-icon { font-size:16px; flex-shrink:0; margin-top:2px; }
+.note-body { flex:1; }
+.note-title { font-size:13px; font-weight:700; margin-bottom:4px; }
+.note p { font-size:13.5px; margin:0; line-height:1.65; }
+.note p+p { margin-top:6px; }
+.n-info { background:rgba(91,156,246,.07); border-color:var(--blue); } .n-info .note-title { color:var(--blue); }
+.n-ok   { background:rgba(66,217,122,.07); border-color:var(--green); } .n-ok .note-title   { color:var(--green); }
+.n-warn { background:rgba(245,185,66,.07); border-color:var(--amber); } .n-warn .note-title { color:var(--amber); }
+.n-crit { background:rgba(244,112,104,.07); border-color:var(--red); }  .n-crit .note-title { color:var(--red); }
+
+/* EXERCISES */
+.ex { background:var(--surface); border:1px solid var(--border2); border-radius:16px; margin:24px 0; overflow:hidden; }
+.ex-hd { background:var(--surface2); border-bottom:1px solid var(--border); padding:18px 24px; display:flex; align-items:center; gap:14px; }
+.ex-tag { font-family:var(--mono); font-size:11px; font-weight:700; padding:4px 11px; border-radius:6px; background:rgba(91,156,246,.1); color:var(--blue); border:1px solid rgba(91,156,246,.25); }
+.ex-name { font-family:var(--serif); font-size:18px; font-weight:700; color:var(--text); letter-spacing:-.01em; }
+.ex-body { padding:26px 24px; }
+.obj-badge { display:inline-flex; align-items:center; font-family:var(--mono); font-size:10px; font-weight:600; color:var(--amber); background:rgba(245,185,66,.08); border:1px solid rgba(245,185,66,.2); padding:4px 11px; border-radius:6px; margin-bottom:16px; }
+.phase-tag { display:inline-block; font-family:var(--mono); font-size:10px; font-weight:700; padding:4px 11px; border-radius:6px; margin:16px 0 10px; letter-spacing:.04em; }
+.ph-atk { background:rgba(244,112,104,.1); color:var(--red); border:1px solid rgba(244,112,104,.25); }
+.ph-det { background:rgba(91,156,246,.1); color:var(--blue); border:1px solid rgba(91,156,246,.25); }
+.ph-alr { background:rgba(66,217,122,.1); color:var(--green); border:1px solid rgba(66,217,122,.25); }
+
+code { font-family:var(--mono); font-size:12px; background:rgba(91,156,246,.1); color:var(--blue); padding:2px 6px; border-radius:4px; }
+table { width:100%; border-collapse:collapse; font-size:14px; margin:18px 0; }
+th { background:var(--surface2); color:var(--text); font-size:11px; text-transform:uppercase; letter-spacing:.05em; font-weight:700; padding:11px 16px; border:1px solid var(--border2); text-align:left; }
+td { padding:11px 16px; border:1px solid var(--border2); color:var(--text2); vertical-align:top; }
+tr:nth-child(even) td { background:rgba(255,255,255,.015); }
+.eid { font-family:var(--mono); color:var(--teal); font-weight:600; font-size:12px; }
+.part-label { font-family:var(--mono); font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; display:flex; align-items:center; gap:14px; margin:52px 0 20px; }
+.part-label::after { content:''; flex:1; height:1px; background:var(--border); }
+.footer { border-top:1px solid var(--border); padding:36px 40px; text-align:center; font-family:var(--mono); font-size:11px; color:var(--text3); letter-spacing:.04em; }
+@media(max-width:640px) { .wrap,.content{padding-left:20px;padding-right:20px;} .tool-row{grid-template-columns:1fr;} .arch-cols{flex-direction:column;} .arch-conn{flex-direction:row;} }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="hero-eyebrow">Defensive Security Lab</div>
+    <h1 class="hero-title">Security Operations<br><em>Center</em></h1>
+    <p class="hero-desc">Wazuh runs inside a pre-built virtual machine (OVA) on VirtualBox. A Windows agent ships Security Event Logs to it automatically. Kali (WSL2) is the attacker. You detect everything in the Wazuh dashboard — free, open source, no licence required.</p>
+    <div class="hero-tags">
+      <span class="hero-tag ht-g">🛡️ Wazuh OVA — VirtualBox</span>
+      <span class="hero-tag ht-b">📡 Wazuh Agent — Windows</span>
+      <span class="hero-tag ht-o">🐉 Kali WSL2 — Attacker Only</span>
+    </div>
+  </div>
+</div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <button class="nav-btn on" onclick="gotoSec(this,'s1')">01 · Lab Overview</button>
+    <button class="nav-btn"    onclick="gotoSec(this,'s2')">02 · Required Tools</button>
+    <button class="nav-btn"    onclick="gotoSec(this,'s3')">03 · Installation</button>
+    <button class="nav-btn"    onclick="gotoSec(this,'s4')">04 · Attack &amp; Detect</button>
+    <button class="nav-btn"    onclick="gotoSec(this,'s5')">05 · Uninstall</button>
+  </div>
+</nav>
+
+<div class="content">
+
+<!-- ═══════════════════════ S1 ═══════════════════════ -->
+<div class="sec" id="s1">
+  <div class="sec-eyebrow">Section 01</div>
+  <h2 class="sec-title"><span class="sec-num">01</span> Lab Overview</h2>
+  <div class="sec-divider"></div>
+
+  <p>The Wazuh server runs inside a <strong>pre-built virtual machine (OVA)</strong> on VirtualBox — no Linux setup, no installation commands, just import and start. A Wazuh Agent installed on Windows automatically ships Security Event Logs to it. Kali (WSL2) runs attacks against Windows. You detect everything in the Wazuh web dashboard.</p>
+
+  <div class="arch">
+    <div class="arch-cols">
+      <div class="arch-machine hi-b">
+        <span class="ico">🖥️</span>
+        <div class="nm">Windows Host</div>
+        <div class="sub">Wazuh Agent installed<br>monitored endpoint<br>VirtualBox runs here</div>
+      </div>
+      <div class="arch-conn">
+        <span class="arr">⇅</span>
+        <span class="lbl">agent<br>:1514</span>
+      </div>
+      <div class="arch-machine hi-g">
+        <span class="ico">🛡️</span>
+        <div class="nm">Wazuh VM</div>
+        <div class="sub">VirtualBox OVA<br>Manager + Indexer<br>Dashboard :443</div>
+      </div>
+      <div class="arch-conn">
+        <span class="arr">←</span>
+        <span class="lbl">attacks</span>
+      </div>
+      <div class="arch-machine hi-r">
+        <span class="ico">🐉</span>
+        <div class="nm">Kali Linux</div>
+        <div class="sub">WSL2 — attacker only<br>nmap · hydra<br>no Wazuh here</div>
+      </div>
+    </div>
+    <div class="arch-flow">
+      <span class="afl" style="background:rgba(244,112,104,.1);color:#f47068;border:1px solid rgba(244,112,104,.25)">Kali runs attacks</span>
+      <span class="arr-sm">→</span>
+      <span class="afl" style="background:rgba(245,185,66,.1);color:#f5b942;border:1px solid rgba(245,185,66,.25)">Windows generates Security Events</span>
+      <span class="arr-sm">→</span>
+      <span class="afl" style="background:rgba(91,156,246,.1);color:#5b9cf6;border:1px solid rgba(91,156,246,.25)">Agent ships to Wazuh VM :1514</span>
+      <span class="arr-sm">→</span>
+      <span class="afl" style="background:rgba(66,217,122,.1);color:#42d97a;border:1px solid rgba(66,217,122,.25)">Detect in dashboard :443</span>
+    </div>
+  </div>
+
+  <div class="note n-info">
+    <div class="note-icon">🎯</div>
+    <div class="note-body">
+      <div class="note-title">What we are monitoring</div>
+      <p>We monitor the <strong>Windows machine</strong> — specifically its <strong>Windows Security Event Logs</strong>. The Wazuh Agent reads these automatically and ships them to the Wazuh VM. Wazuh has hundreds of built-in detection rules so alerts fire without writing any rule logic.</p>
+    </div>
+  </div>
+
+  <table>
+    <tr><th>Component</th><th>Where it runs</th><th>What it does</th></tr>
+    <tr><td><strong>Wazuh OVA (VM)</strong></td><td>VirtualBox on Windows</td><td>The SIEM — Manager + Indexer + Dashboard all pre-installed. Access dashboard at <code>https://&lt;VM-IP&gt;</code></td></tr>
+    <tr><td><strong>Wazuh Agent</strong></td><td>Windows (native service)</td><td>Collects Security, System, and App event logs automatically and ships them to the VM on port 1514</td></tr>
+    <tr><td><strong>Kali Linux (WSL2)</strong></td><td>WSL2 only</td><td>The attacker — runs nmap and hydra only. Nothing else installed here.</td></tr>
+  </table>
+
+  <div class="note n-warn">
+    <div class="note-icon">⚙️</div>
+    <div class="note-body">
+      <div class="note-title">System Requirements</div>
+      <p><strong>RAM:</strong> 8 GB minimum — 4 GB allocated to Wazuh VM, rest for Windows + WSL2 &nbsp;·&nbsp; <strong>Disk:</strong> 50 GB free (OVA is ~4 GB, expands to ~20 GB) &nbsp;·&nbsp; <strong>OS:</strong> Windows 10/11 64-bit &nbsp;·&nbsp; <strong>CPU:</strong> Hardware virtualisation enabled in BIOS (Intel VT-x or AMD-V) &nbsp;·&nbsp; WSL2 with Kali installed</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════ S2 ═══════════════════════ -->
+<div class="sec" id="s2">
+  <div class="sec-eyebrow">Section 02</div>
+  <h2 class="sec-title"><span class="sec-num">02</span> Required Tools</h2>
+  <div class="sec-divider"></div>
+
+  <p>Everything is <strong>free</strong>. No accounts or licences required.</p>
+
+  <div class="tools-grid">
+    <div class="tool-row">
+      <div><div class="tool-name">VirtualBox<small>Windows installer · free</small></div></div>
+      <div class="tool-desc">Virtualisation platform that runs the Wazuh OVA. Free and open source by Oracle. Required before importing the OVA.</div>
+      <span class="tool-badge tb-vb">WINDOWS — INSTALL FIRST</span>
+    </div>
+    <div class="tool-row">
+      <div><div class="tool-name">Wazuh OVA<small>~4 GB · pre-built VM image</small></div></div>
+      <div class="tool-desc">Pre-built virtual machine containing Wazuh Manager, Indexer, and Dashboard — all configured and ready. Import into VirtualBox and start. No Linux setup required.</div>
+      <span class="tool-badge tb-w">VIRTUALBOX — IMPORT</span>
+    </div>
+    <div class="tool-row">
+      <div><div class="tool-name">Wazuh Agent<small>Windows .msi installer</small></div></div>
+      <div class="tool-desc">Windows service that automatically collects Security, System, and Application event logs and ships them to the Wazuh VM. No manual log configuration required. Download the <code>wazuh-agent-4.9.2-1.msi</code> file from the link in Section 02.</div>
+      <span class="tool-badge tb-wa">WINDOWS — INSTALL</span>
+    </div>
+    <div class="tool-row">
+      <div><div class="tool-name">nmap<small>apt · Kali only</small></div></div>
+      <div class="tool-desc">Port scanner — used to simulate reconnaissance against the Windows machine.</div>
+      <span class="tool-badge tb-k">KALI (WSL2)</span>
+    </div>
+    <div class="tool-row">
+      <div><div class="tool-name">hydra<small>apt · Kali only</small></div></div>
+      <div class="tool-desc">Login brute-force tool — hammers Windows login services with wrong passwords, generating EventID 4625 bursts that Wazuh detects automatically.</div>
+      <span class="tool-badge tb-k">KALI (WSL2)</span>
+    </div>
+  </div>
+
+  <div class="note n-info">
+    <div class="note-icon">📥</div>
+    <div class="note-body">
+      <div class="note-title">Download Links — direct links, click or paste into browser</div>
+      <p><strong>Wazuh OVA</strong> &nbsp;→&nbsp; <a href="https://packages.wazuh.com/4.x/vm/wazuh-4.14.4.ova" style="color:var(--blue)">wazuh-4.14.4.ova</a> <span style="color:var(--text3);font-size:13px;">(~4 GB)</span></p>
+      <p><strong>VirtualBox — Windows</strong> &nbsp;→&nbsp; <a href="https://download.virtualbox.org/virtualbox/7.2.6/VirtualBox-7.2.6a-172322-Win.exe" style="color:var(--blue)">VirtualBox-7.2.6a-Win.exe</a></p>
+      <p><strong>VirtualBox — macOS Intel</strong> &nbsp;→&nbsp; <a href="https://download.virtualbox.org/virtualbox/7.2.6/VirtualBox-7.2.6-172322-OSX.dmg" style="color:var(--blue)">VirtualBox-7.2.6-OSX.dmg</a></p>
+      <p><strong>VirtualBox — macOS Apple Silicon</strong> &nbsp;→&nbsp; <a href="https://download.virtualbox.org/virtualbox/7.2.6/VirtualBox-7.2.6-172322-macOSArm64.dmg" style="color:var(--blue)">VirtualBox-7.2.6-macOSArm64.dmg</a></p>
+      <p><strong>Wazuh Agent (Windows)</strong> &nbsp;→&nbsp; <a href="https://packages.wazuh.com/4.x/windows/wazuh-agent-4.9.2-1.msi" style="color:var(--blue)">wazuh-agent-4.9.2-1.msi</a></p>
+      <p><strong>nmap and hydra</strong> &nbsp;→&nbsp; installed via <code>apt</code> on Kali, no download needed</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════ S3 ═══════════════════════ -->
+<div class="sec" id="s3">
+  <div class="sec-eyebrow">Section 03</div>
+  <h2 class="sec-title"><span class="sec-num">03</span> Installation Instructions</h2>
+  <div class="sec-divider"></div>
+
+  <div class="part-label" style="color:var(--green)">Part A — Wazuh Server (VirtualBox OVA)</div>
+
+  <div class="step">
+    <div class="step-hd"><span class="step-n sn-g">1</span><span class="step-title">Install VirtualBox</span></div>
+    <p>Download and run the VirtualBox installer for Windows hosts. Accept all defaults during installation. Restart Windows if prompted.</p>
+    <div class="note n-warn">
+      <div class="note-icon">⚠️</div>
+      <div class="note-body"><div class="note-title">Enable hardware virtualisation first</div>
+        <p>If VirtualBox shows an error about virtualisation not being enabled, restart your PC, enter BIOS/UEFI settings, and enable <strong>Intel VT-x</strong> or <strong>AMD-V</strong>. The option is usually under Advanced CPU settings.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-hd"><span class="step-n sn-g">2</span><span class="step-title">Download and Import the Wazuh OVA</span></div>
+    <p>Download the OVA file from the link in Section 02. It is approximately 4 GB — this will take a few minutes.</p>
+    <p>Once downloaded, import it into VirtualBox:</p>
+    <div class="note n-info">
+      <div class="note-icon">🖱️</div>
+      <div class="note-body"><div class="note-title">Import steps in VirtualBox</div>
+        <p><strong>File → Import Appliance → browse to the downloaded <code>wazuh-4.14.4.ova</code> file → Next → Import</strong></p>
+        <p>The import takes 2–5 minutes. Leave all settings at their defaults during import.</p>
+      </div>
+    </div>
+    <div class="note n-warn">
+      <div class="note-icon">⚠️</div>
+      <div class="note-body"><div class="note-title">Critical VirtualBox setting — set this before starting the VM</div>
+        <p>After import, select the VM → <strong>Settings → Display → Graphics Controller → change to VMSVGA</strong>. Using any other controller will freeze the VM window.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-hd"><span class="step-n sn-g">3</span><span class="step-title">Configure VM Network — Bridged Adapter</span></div>
+    <p>The Wazuh VM must be on the same network as your Windows machine so the agent can reach it. Set the network adapter to Bridged:</p>
+    <div class="note n-info">
+      <div class="note-icon">🖱️</div>
+      <div class="note-body"><div class="note-title">In VirtualBox</div>
+        <p>Select the Wazuh VM → <strong>Settings → Network → Adapter 1 → Attached to: Bridged Adapter → Name: select your active Windows network adapter → OK</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-hd"><span class="step-n sn-g">4</span><span class="step-title">Start the VM and Get Its IP Address</span></div>
+    <p>Click <strong>Start</strong> in VirtualBox to boot the Wazuh VM. Wait for the boot to complete (1–2 minutes) until you see the login prompt.</p>
+    <p>Log in to the VM console with these credentials:</p>
+    <div class="cb">
+      <div class="cb-top"><span class="cb-lang"><span class="dot d-vm"></span>Wazuh VM — console login credentials</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+      <pre>Username: wazuh-user
+Password: wazuh</pre>
+    </div>
+    <p>Once logged in, get the VM's IP address — you need this for the agent and the dashboard:</p>
+    <div class="cb">
+      <div class="cb-top"><span class="cb-lang"><span class="dot d-vm"></span>Wazuh VM — console</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+      <pre>ip addr show | grep "inet " | grep -v 127.0.0.1</pre>
+    </div>
+    <p>Note the IP shown (e.g. <code>192.168.x.x</code>). <strong>This is your Wazuh Server IP — write it down.</strong> You will use it in the agent installation and to access the dashboard.</p>
+  </div>
+
+  <div class="step">
+    <div class="step-hd"><span class="step-n sn-g">5</span><span class="step-title">Open the Wazuh Dashboard</span></div>
+    <p>On your Windows machine, open a browser and navigate to the Wazuh VM's IP address:</p>
+    <div class="cb">
+      <div class="cb-top"><span class="cb-lang"><span class="dot d-url"></span>Browser — replace with your Wazuh VM IP</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+      <pre>https://192.168.x.x</pre>
+    </div>
+    <p>Your browser will show a certificate warning — click <strong>Advanced → Proceed</strong>. This is expected for the self-signed lab certificate.</p>
+    <div class="cb">
+      <div class="cb-top"><span class="cb-lang"><span class="dot d-wazuh"></span>Wazuh Dashboard — default login credentials</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+      <pre>Username: admin
+Password: admin</pre>
+    </div>
+    <div class="note n-ok">
+      <div class="note-icon">✅</div>
+      <div class="note-body"><div class="note-title">Wazuh dashboard is working when</div>
+        <p>You see the Wazuh home screen with the Overview panel. It will show 0 agents connected — that is correct at this stage. The agent comes next.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="part-label" style="color:var(--blue)">Part B — Wazuh Agent (Windows)</div>
+
+  <div class="step">
+    <div class="step-hd"><span class="step-n sn-b">6</span><span class="step-title">Install the Wazuh Agent on Windows</span></div>
+    <p>Open <strong>PowerShell as Administrator</strong> and run the silent install. Replace <code>192.168.x.x</code> with your Wazuh VM IP from Step 4:</p>
+    <div class="cb">
+      <div class="cb-top"><span class="cb-lang"><span class="dot d-ps"></span>PowerShell — Run as Administrator</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+      <pre><span class="cm"># Install the agent — replace 192.168.x.x with your Wazuh VM IP</span>
+msiexec.exe /i wazuh-agent-4.9.2-1.msi /q `
+  WAZUH_MANAGER="192.168.x.x" `
+  WAZUH_AGENT_NAME="Windows-Lab"</pre>
+    </div>
+    <p>Start the agent service:</p>
+    <div class="cb">
+      <div class="cb-top"><span class="cb-lang"><span class="dot d-ps"></span>PowerShell — Run as Administrator</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+      <pre>NET START WazuhSvc</pre>
+    </div>
+    <p>Verify it is running:</p>
+    <div class="cb">
+      <div class="cb-top"><span class="cb-lang"><span class="dot d-ps"></span>PowerShell — Verify</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+      <pre>Get-Service WazuhSvc</pre>
+    </div>
+    <div class="note n-ok">
+      <div class="note-icon">✅</div>
+      <div class="note-body"><div class="note-title">Verify the agent appears in the dashboard</div>
+        <p>Go to <strong>Wazuh Dashboard → Agents</strong>. You should see <strong>Windows-Lab</strong> listed with status <strong>Active</strong> within 1–2 minutes. Windows Security Events will begin flowing immediately once the agent connects.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="part-label" style="color:var(--red)">Part C — Attacker Machine (Kali WSL2)</div>
+
+  <div class="step">
+    <div class="step-hd"><span class="step-n sn-r">7</span><span class="step-title">Install Attack Tools on Kali</span></div>
+    <p>Open your Kali WSL2 terminal. This is the only thing installed on Kali for this lab:</p>
+    <div class="cb">
+      <div class="cb-top"><span class="cb-lang"><span class="dot d-kali"></span>Kali Linux — WSL2 Terminal</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+      <pre>sudo apt update && sudo apt install -y nmap hydra</pre>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-hd"><span class="step-n sn-r">8</span><span class="step-title">Find Your Windows Host IP from Kali</span></div>
+    <p>Every attack command targets the Windows machine IP. Get it from Kali:</p>
+    <div class="cb">
+      <div class="cb-top"><span class="cb-lang"><span class="dot d-kali"></span>Kali Linux — WSL2 Terminal</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+      <pre>cat /etc/resolv.conf | grep nameserver</pre>
+    </div>
+    <p>The IP shown (usually <code>172.x.x.x</code>) is your Windows host. <strong>Write it down — every attack command uses this IP.</strong></p>
+    <div class="note n-warn">
+      <div class="note-icon">📝</div>
+      <div class="note-body"><div class="note-title">Two different IPs in this lab</div>
+        <p><strong>Wazuh VM IP</strong> (Step 4, e.g. <code>192.168.x.x</code>) — used when installing the agent and accessing the dashboard.</p>
+        <p><strong>Windows host IP</strong> (Step 8, e.g. <code>172.x.x.x</code>) — used as the attack target in hydra and nmap commands.</p>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end s3 -->
+
+
+<!-- ═══════════════════════ S4 ═══════════════════════ -->
+<!-- ═══════════════════════ S4 ═══════════════════════ -->
+<div class="sec" id="s4">
+  <div class="sec-eyebrow">Section 04</div>
+  <h2 class="sec-title"><span class="sec-num">04</span> Attack & Detect</h2>
+  <div class="sec-divider"></div>
+
+  <p>This lab simulates real attacker behaviour instead of brute force noise. Each exercise represents a stage of an attack lifecycle.</p>
+
+  <!-- EX 1 -->
+  <div class="ex">
+    <div class="ex-hd"><span class="ex-tag">EX-01</span><span class="ex-name">Suspicious Process Execution</span></div>
+    <div class="ex-body">
+      <div class="obj-badge">Detect PowerShell abuse (EventID 4688)</div>
+
+      <div class="phase-tag ph-atk">ATTACK</div>
+      <div class="cb"><pre>powershell -ExecutionPolicy Bypass -Command "Start-Process cmd"</pre></div>
+
+      <div class="phase-tag ph-det">DETECT</div>
+      <div class="cb"><pre>data.win.system.eventID: 4688</pre></div>
+    </div>
+  </div>
+
+  <!-- EX 2 -->
+  <div class="ex">
+    <div class="ex-hd"><span class="ex-tag">EX-02</span><span class="ex-name">Scheduled Task Persistence</span></div>
+    <div class="ex-body">
+      <div class="obj-badge">Detect scheduled task creation (EventID 4698)</div>
+
+      <div class="phase-tag ph-atk">ATTACK</div>
+      <div class="cb"><pre>schtasks /create /tn "Updater" /tr "cmd.exe" /sc minute /mo 5</pre></div>
+
+      <div class="phase-tag ph-det">DETECT</div>
+      <div class="cb"><pre>data.win.system.eventID: 4698</pre></div>
+    </div>
+  </div>
+
+  <!-- EX 3 -->
+  <div class="ex">
+    <div class="ex-hd"><span class="ex-tag">EX-03</span><span class="ex-name">User Creation + Privilege Escalation</span></div>
+    <div class="ex-body">
+      <div class="obj-badge">Detect account creation (4720) and admin escalation (4732)</div>
+
+      <div class="phase-tag ph-atk">ATTACK</div>
+      <div class="cb"><pre>net user backdoor P@ssword123 /add
+net localgroup administrators backdoor /add</pre></div>
+
+      <div class="phase-tag ph-det">DETECT</div>
+      <div class="cb"><pre>data.win.system.eventID: 4720 OR data.win.system.eventID: 4732</pre></div>
+    </div>
+  </div>
+
+  <!-- EX 4 -->
+  <div class="ex">
+    <div class="ex-hd"><span class="ex-tag">EX-04</span><span class="ex-name">Service Persistence</span></div>
+    <div class="ex-body">
+      <div class="obj-badge">Detect malicious service creation (EventID 7045)</div>
+
+      <div class="phase-tag ph-atk">ATTACK</div>
+      <div class="cb"><pre>sc.exe create "WindowsUpdateHelper" binPath= "C:\Windows\Temp\update.exe" start= auto</pre></div>
+
+      <div class="phase-tag ph-det">DETECT</div>
+      <div class="cb"><pre>data.win.system.eventID: 7045</pre></div>
+    </div>
+  </div>
+
+  <!-- EX 5 -->
+  <div class="ex">
+    <div class="ex-hd"><span class="ex-tag">EX-05</span><span class="ex-name">Log Clearing</span></div>
+    <div class="ex-body">
+      <div class="obj-badge">Detect log tampering (EventID 1102)</div>
+
+      <div class="phase-tag ph-atk">ATTACK</div>
+      <div class="cb"><pre>wevtutil cl Security</pre></div>
+
+      <div class="phase-tag ph-det">DETECT</div>
+      <div class="cb"><pre>data.win.system.eventID: 1102</pre></div>
+    </div>
+  </div>
+
+</div>
+<!-- end s4 -->
+
+
+<!-- ═══════════════════════ S5 ═══════════════════════ -->
+<div class="sec" id="s5">
+  <div class="sec-eyebrow">Section 05</div>
+  <h2 class="sec-title"><span class="sec-num">05</span> Complete Uninstall</h2>
+  <div class="sec-divider"></div>
+
+  <p>Run through these steps after your test run to get back to a clean slate. Once done, the machine will be in exactly the same state as before — ready to redo the lab in class.</p>
+
+  <div class="note n-warn">
+    <div class="note-icon">⚠️</div>
+    <div class="note-body"><div class="note-title">Run in order</div>
+      <p>Stop the agent before uninstalling it, and power off the VM before deleting it. Skipping the stop steps can leave orphaned processes.</p>
+    </div>
+  </div>
+
+  <div class="part-label" style="color:var(--amber)">Step 1 — Stop and Uninstall the Wazuh Agent (Windows)</div>
+  <div class="cb">
+    <div class="cb-top"><span class="cb-lang"><span class="dot d-ps"></span>PowerShell — Run as Administrator</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+    <pre><span class="cm"># Stop the agent service</span>
+NET STOP WazuhSvc
+
+<span class="cm"># Uninstall the agent via MSI — finds and removes it automatically</span>
+$agent = Get-WmiObject -Class Win32_Product | Where-Object { $_.Name -like "*Wazuh Agent*" }
+if ($agent) {
+    msiexec.exe /x $agent.IdentifyingNumber /qn /norestart
+    Write-Host "Wazuh Agent removed."
+} else {
+    Write-Host "Wazuh Agent not found."
+}</pre>
+  </div>
+  <p>Or uninstall manually: <strong>Settings → Apps → search "Wazuh" → Wazuh Agent → Uninstall</strong></p>
+
+  <div class="part-label" style="color:var(--amber)">Step 2 — Delete Leftover Agent Files (Windows)</div>
+  <div class="cb">
+    <div class="cb-top"><span class="cb-lang"><span class="dot d-ps"></span>PowerShell — Run as Administrator</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+    <pre><span class="cm"># Remove agent installation folder</span>
+Remove-Item -Path "C:\Program Files (x86)\ossec-agent" -Recurse -Force -ErrorAction SilentlyContinue
+
+<span class="cm"># Confirm it is gone</span>
+Test-Path "C:\Program Files (x86)\ossec-agent"
+<span class="cm"># Should return: False</span></pre>
+  </div>
+
+
+  <div class="part-label" style="color:var(--amber)">Step 3 — Remove the Wazuh VM (VirtualBox)</div>
+  <div class="note n-info">
+    <div class="note-icon">🖱️</div>
+    <div class="note-body"><div class="note-title">In VirtualBox</div>
+      <p>1. Right-click the Wazuh VM in the list → <strong>Close → Power Off</strong> (if it is running)</p>
+      <p>2. Right-click the VM → <strong>Remove → Delete all files</strong></p>
+      <p>This deletes the VM and all its disk files. The OVA download file itself is kept — you can reimport it for the next session without re-downloading.</p>
+    </div>
+  </div>
+
+  <div class="part-label" style="color:var(--amber)">Step 4 — Verify Clean State (Windows)</div>
+  <div class="cb">
+    <div class="cb-top"><span class="cb-lang"><span class="dot d-ps"></span>PowerShell — Run as Administrator</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+    <pre><span class="cm"># Check agent service is gone — should return an error</span>
+Get-Service WazuhSvc -ErrorAction SilentlyContinue
+
+<span class="cm"># Check agent folder is gone — should return False</span>
+Test-Path "C:\Program Files (x86)\ossec-agent"</pre>
+  </div>
+  <div class="note n-ok">
+    <div class="note-icon">✅</div>
+    <div class="note-body"><div class="note-title">Clean state confirmed when</div>
+      <p><code>Get-Service</code> returns nothing (or "not found") and <code>Test-Path</code> returns <strong>False</strong>. The VM is deleted in VirtualBox. The machine is back to its original state.</p>
+    </div>
+  </div>
+
+  <div class="part-label" style="color:var(--red)">Step 5 — Kali Cleanup (Optional)</div>
+  <div class="cb">
+    <div class="cb-top"><span class="cb-lang"><span class="dot d-kali"></span>Kali Linux — WSL2 Terminal</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+    <pre><span class="cm"># Remove attack tools if you want a fully clean attacker machine</span>
+sudo apt remove -y nmap hydra && sudo apt autoremove -y</pre>
+  </div>
+
+  <div class="part-label" style="color:var(--blue)">Uninstall Checklist</div>
+  <table>
+    <tr><th>#</th><th>Action</th><th>How</th><th>Done?</th></tr>
+    <tr><td>1</td><td>Stop Wazuh Agent service</td><td><code>NET STOP WazuhSvc</code></td><td>☐</td></tr>
+    <tr><td>2</td><td>Uninstall Wazuh Agent</td><td>MSI script or Settings → Apps</td><td>☐</td></tr>
+    <tr><td>3</td><td>Delete agent folder</td><td><code>Remove-Item C:\Program Files (x86)\ossec-agent</code></td><td>☐</td></tr>
+    <tr><td>4</td><td>Power off Wazuh VM</td><td>VirtualBox → Close → Power Off</td><td>☐</td></tr>
+    <tr><td>5</td><td>Delete Wazuh VM</td><td>VirtualBox → Remove → Delete all files</td><td>☐</td></tr>
+    <tr><td>6</td><td>Verify clean state</td><td><code>Get-Service</code> + <code>Test-Path</code> return empty / False</td><td>☐</td></tr>
+    <tr><td>7</td><td>Remove Kali tools (optional)</td><td><code>sudo apt remove nmap hydra</code></td><td>☐</td></tr>
+  </table>
+
+  <div class="note n-info">
+    <div class="note-icon">🔁</div>
+    <div class="note-body"><div class="note-title">Ready to run again for class</div>
+      <p>The OVA file is still on your disk. For the next session: re-import it into VirtualBox (Step 2–5 of Installation), reinstall the agent pointing to the new VM IP, and you are back to a fresh lab in under 10 minutes.</p>
+    </div>
+  </div>
+
+</div><!-- end s5 -->
+
+</div><!-- end content -->
+
+<div class="footer">
+  Security Operations Center Lab &nbsp;·&nbsp; Defensive Security &nbsp;·&nbsp; Brototype Cybersecurity Program
+</div>
+
+<script>
+function cp(btn) {
+  const pre = btn.closest('.cb').querySelector('pre');
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    btn.textContent = '✅ Copied';
+    btn.classList.add('ok');
+    setTimeout(() => { btn.textContent = '📋 Copy'; btn.classList.remove('ok'); }, 2000);
+  });
+}
+function gotoSec(btn, id) {
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+const ids = ['s1','s2','s3','s4','s5'];
+const btns = document.querySelectorAll('.nav-btn');
+window.addEventListener('scroll', () => {
+  let cur = 's1';
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && window.scrollY >= el.offsetTop - 80) cur = id;
+  });
+  btns.forEach((b, i) => b.classList.toggle('on', ids[i] === cur));
+}, { passive: true });
+</script>
+</body>
+</html>
