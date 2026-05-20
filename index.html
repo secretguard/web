@@ -687,6 +687,178 @@
         transition-duration: 0.01ms !important;
       }
     }
+
+    /* ══════════════════════════════════════════════════
+       SERVICES DROPDOWN
+    ══════════════════════════════════════════════════ */
+    .nav-dropdown {
+      position: relative;
+    }
+    .nav-dropdown-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--t-muted);
+      background: none;
+      border: none;
+      padding: 0;
+      font-family: inherit;
+      letter-spacing: 0;
+      transition: color var(--transition);
+      position: relative;
+    }
+    /* Underline animation — matches existing .nav-link style */
+    .nav-dropdown-toggle::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      height: 1px;
+      width: 0;
+      background: var(--red);
+      transition: width var(--transition);
+    }
+    .nav-dropdown-toggle:hover::after,
+    .nav-dropdown.open .nav-dropdown-toggle::after { width: 100%; }
+    .nav-dropdown-toggle:hover,
+    .nav-dropdown.open .nav-dropdown-toggle { color: var(--t-primary); }
+    .nav-dropdown-toggle svg {
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+    }
+    .nav-dropdown.open .nav-dropdown-toggle svg { transform: rotate(180deg); }
+
+    /* Dropdown panel */
+    .nav-dropdown-menu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 18px);
+      left: 50%;
+      transform: translateX(-50%);
+      width: 292px;
+      background: var(--bg-card-solid);
+      border: 1px solid var(--b-card);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.04);
+      z-index: 1000;
+    }
+    /* Arrow pointer */
+    .nav-dropdown-menu::before {
+      content: '';
+      position: absolute;
+      top: -6px;
+      left: 50%;
+      transform: translateX(-50%) rotate(45deg);
+      width: 10px; height: 10px;
+      background: var(--bg-card-solid);
+      border-top: 1px solid var(--b-card);
+      border-left: 1px solid var(--b-card);
+    }
+    .nav-dropdown.open .nav-dropdown-menu {
+      display: block;
+      animation: dropIn 0.18s cubic-bezier(0.4,0,0.2,1);
+    }
+    @keyframes dropIn {
+      from { opacity: 0; transform: translateX(-50%) translateY(-8px); }
+      to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+
+    /* Dropdown items */
+    .nav-dropdown-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+      padding: 0.875rem 1.25rem;
+      border-bottom: 1px solid var(--b-subtle);
+      text-decoration: none;
+      transition: background 0.15s ease;
+    }
+    .nav-dropdown-item:last-child { border-bottom: none; }
+    .nav-dropdown-item:hover { background: var(--bg-card); }
+    .nav-dropdown-item .item-title {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--t-primary);
+      letter-spacing: -0.01em;
+      transition: color 0.15s ease;
+    }
+    .nav-dropdown-item:hover .item-title { color: var(--red); }
+    .nav-dropdown-item .item-desc {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      color: var(--t-faint);
+      letter-spacing: 0.03em;
+    }
+
+    /* "All Services" item — accent treatment */
+    .nav-dropdown-item.all-services {
+      background: rgba(239,68,68,0.04);
+      border-bottom: 1px solid var(--b-card);
+    }
+    .nav-dropdown-item.all-services .item-title { color: var(--red); }
+    .nav-dropdown-item.all-services:hover { background: rgba(239,68,68,0.08); }
+
+    /* Click-outside overlay */
+    .nav-dropdown-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+    }
+    .nav-dropdown.open .nav-dropdown-overlay { display: block; }
+
+    /* Mobile services accordion */
+    .mobile-services-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      color: var(--t-muted);
+      border-bottom: 1px solid var(--b-subtle);
+      padding: 0.625rem 0;
+      font-size: 0.875rem;
+      font-weight: 500;
+      background: none;
+      border-left: none;
+      border-right: none;
+      border-top: none;
+      font-family: inherit;
+      cursor: pointer;
+      transition: color var(--transition);
+    }
+    .mobile-services-toggle:hover { color: var(--t-primary); }
+    .mobile-services-toggle svg { transition: transform 0.2s; flex-shrink: 0; }
+    .mobile-services-toggle.open svg { transform: rotate(180deg); }
+    .mobile-services-sub {
+      display: none;
+      flex-direction: column;
+      padding-left: 1rem;
+      border-bottom: 1px solid var(--b-subtle);
+      padding-bottom: 0.5rem;
+    }
+    .mobile-services-sub.open { display: flex; }
+    .mobile-services-sub a {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--b-subtle);
+      color: var(--t-muted);
+      font-size: 0.8rem;
+      transition: color var(--transition);
+    }
+    .mobile-services-sub a:last-child { border-bottom: none; }
+    .mobile-services-sub a:hover { color: var(--t-primary); }
+    .mobile-services-sub a span.sub-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.58rem;
+      color: var(--t-faint);
+      letter-spacing: 0.04em;
+    }
   </style>
 </head>
 
@@ -726,6 +898,49 @@
         <a href="#projects" class="nav-link">Projects</a>
         <a href="#skills" class="nav-link">Skills</a>
         <a href="#footprint" class="nav-link">Footprint</a>
+        <!-- Services dropdown -->
+        <div class="nav-dropdown" id="servicesDropdown">
+          <div class="nav-dropdown-overlay" onclick="closeServicesDropdown()"></div>
+          <button
+            class="nav-dropdown-toggle"
+            onclick="toggleServicesDropdown()"
+            aria-haspopup="true"
+            aria-expanded="false"
+            aria-label="Services menu"
+          >
+            Services
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </button>
+          <div class="nav-dropdown-menu" role="menu" aria-label="Services submenu">
+            <a href="/services/" class="nav-dropdown-item all-services" role="menuitem">
+              <span class="item-title">All Services</span>
+              <span class="item-desc">Overview of all service areas →</span>
+            </a>
+            <a href="/services/application-security.html" class="nav-dropdown-item" role="menuitem">
+              <span class="item-title">Application Security</span>
+              <span class="item-desc">SAST · DAST · Secure Code Review · AppSec</span>
+            </a>
+            <a href="/services/offensive-security.html" class="nav-dropdown-item" role="menuitem">
+              <span class="item-title">Offensive Security</span>
+              <span class="item-desc">Pentest · Red Team · Adversary Simulation</span>
+            </a>
+            <a href="/services/security-architecture.html" class="nav-dropdown-item" role="menuitem">
+              <span class="item-title">Security Architecture</span>
+              <span class="item-desc">Zero Trust · BC/DR · DevSecOps</span>
+            </a>
+            <a href="/services/grc-advisory.html" class="nav-dropdown-item" role="menuitem">
+              <span class="item-title">GRC Advisory</span>
+              <span class="item-desc">ISO 27001 · NIST CSF · Policy Framework</span>
+            </a>
+            <a href="/services/corporate-training.html" class="nav-dropdown-item" role="menuitem">
+              <span class="item-title">Corporate Training</span>
+              <span class="item-desc">CEH · CPENT · CHFI · AI Security</span>
+            </a>
+          </div>
+        </div>
+
         <a href="start.html" class="nav-link">Cybersec Guide</a>
 
         <!-- Dark/Light toggle -->
@@ -756,6 +971,45 @@
         <a href="#projects" class="mobile-link block py-2.5" onclick="toggleMobileMenu()">Projects</a>
         <a href="#skills" class="mobile-link block py-2.5" onclick="toggleMobileMenu()">Skills</a>
         <a href="#footprint" class="mobile-link block py-2.5" onclick="toggleMobileMenu()">Footprint</a>
+        <!-- Services accordion for mobile -->
+        <button
+          class="mobile-services-toggle"
+          id="mobileServicesToggle"
+          onclick="toggleMobileServices()"
+          aria-expanded="false"
+        >
+          Services
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+        <div class="mobile-services-sub" id="mobileServicesSub">
+          <a href="/services/" onclick="toggleMobileMenu()">
+            All Services
+            <span class="sub-label">Overview of all service areas</span>
+          </a>
+          <a href="/services/application-security.html" onclick="toggleMobileMenu()">
+            Application Security
+            <span class="sub-label">SAST · DAST · Secure Code Review</span>
+          </a>
+          <a href="/services/offensive-security.html" onclick="toggleMobileMenu()">
+            Offensive Security
+            <span class="sub-label">Pentest · Red Team · VAPT</span>
+          </a>
+          <a href="/services/security-architecture.html" onclick="toggleMobileMenu()">
+            Security Architecture
+            <span class="sub-label">Zero Trust · BC/DR · DevSecOps</span>
+          </a>
+          <a href="/services/grc-advisory.html" onclick="toggleMobileMenu()">
+            GRC Advisory
+            <span class="sub-label">ISO 27001 · NIST CSF · Policy</span>
+          </a>
+          <a href="/services/corporate-training.html" onclick="toggleMobileMenu()">
+            Corporate Training
+            <span class="sub-label">CEH · CPENT · CHFI · AI Security</span>
+          </a>
+        </div>
+
         <a href="start.html" class="mobile-link block py-2.5" onclick="toggleMobileMenu()">Cybersec Guide</a>
         <a href="#contact" class="inline-block w-fit px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-full transition-colors font-medium mt-3" onclick="toggleMobileMenu()">Contact Me</a>
       </div>
@@ -1980,6 +2234,49 @@
         initMagnetic();
       }
     })();
+  </script>
+
+  <!-- ══════════════════════════════════════════
+       SERVICES DROPDOWN / MOBILE ACCORDION JS
+  ══════════════════════════════════════════ -->
+  <script>
+    /* ── Desktop dropdown ── */
+    function toggleServicesDropdown() {
+      const dd  = document.getElementById('servicesDropdown');
+      const btn = dd.querySelector('.nav-dropdown-toggle');
+      const isOpen = dd.classList.contains('open');
+      // Close first (handles any future additional dropdowns)
+      document.querySelectorAll('.nav-dropdown.open').forEach(el => {
+        el.classList.remove('open');
+        el.querySelector('.nav-dropdown-toggle').setAttribute('aria-expanded', 'false');
+      });
+      if (!isOpen) {
+        dd.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    }
+    function closeServicesDropdown() {
+      const dd  = document.getElementById('servicesDropdown');
+      const btn = dd ? dd.querySelector('.nav-dropdown-toggle') : null;
+      if (!dd) return;
+      dd.classList.remove('open');
+      if (btn) btn.setAttribute('aria-expanded', 'false');
+    }
+
+    /* ── Mobile accordion ── */
+    function toggleMobileServices() {
+      const toggle = document.getElementById('mobileServicesToggle');
+      const sub    = document.getElementById('mobileServicesSub');
+      const isOpen = sub.classList.contains('open');
+      sub.classList.toggle('open', !isOpen);
+      toggle.classList.toggle('open', !isOpen);
+      toggle.setAttribute('aria-expanded', String(!isOpen));
+    }
+
+    /* ── Keyboard: close on Escape ── */
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeServicesDropdown();
+    });
   </script>
 </body>
 </html>

@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Cybersecurity Consulting Services | AppSec · Offensive Security · GRC · Architecture | Sarath G</title>
+  <meta name="description" content="Cybersecurity consulting services by Sarath G — Application Security, Penetration Testing & Offensive Security, Security Architecture, GRC Advisory, and Corporate Training. Available globally. CEH Master · CPENT · LPT Master · 8+ years." />
+  <meta name="keywords" content="cybersecurity consulting services, application security consultant, penetration testing consultant, security architecture consultant, GRC advisory, corporate cybersecurity training, AppSec consulting, offensive security" />
+  <meta name="author" content="Sarath G" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://www.sarathg.me/services/" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Cybersecurity Consulting Services | Sarath G" />
+  <meta property="og:description" content="AppSec · Penetration Testing · Security Architecture · GRC Advisory · Corporate Training. Available globally." />
+  <meta property="og:url" content="https://www.sarathg.me/services/" />
+  <meta property="og:image" content="https://www.sarathg.me/assets/og-image.jpg" />
+  <meta property="og:site_name" content="Sarath G Portfolio" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Cybersecurity Consulting Services | Sarath G" />
+  <meta name="twitter:description" content="AppSec · Penetration Testing · Security Architecture · GRC Advisory · Corporate Training." />
+  <meta name="twitter:image" content="https://www.sarathg.me/assets/og-image.jpg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Fira+Code:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": "https://www.sarathg.me/#sarath",
+        "name": "Sarath G",
+        "jobTitle": "Application Security Consultant & International Cybersecurity Trainer",
+        "url": "https://www.sarathg.me",
+        "sameAs": ["https://www.linkedin.com/in/sarathcybersec/","https://github.com/secretguard"]
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {"@type":"ListItem","position":1,"name":"Home","item":"https://www.sarathg.me/"},
+          {"@type":"ListItem","position":2,"name":"Services","item":"https://www.sarathg.me/services/"}
+        ]
+      },
+      {
+        "@type": "ItemList",
+        "name": "Cybersecurity Consulting Services — Sarath G",
+        "itemListElement": [
+          {"@type":"ListItem","position":1,"name":"Application Security Consulting","url":"https://www.sarathg.me/services/application-security.html"},
+          {"@type":"ListItem","position":2,"name":"Penetration Testing & Offensive Security","url":"https://www.sarathg.me/services/offensive-security.html"},
+          {"@type":"ListItem","position":3,"name":"Security Architecture Design & Implementation","url":"https://www.sarathg.me/services/security-architecture.html"},
+          {"@type":"ListItem","position":4,"name":"GRC Advisory & Policy Framework Development","url":"https://www.sarathg.me/services/grc-advisory.html"},
+          {"@type":"ListItem","position":5,"name":"Corporate Cybersecurity Training","url":"https://www.sarathg.me/services/corporate-training.html"}
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg:         #0a0a0a;
+      --bg-2:       #111111;
+      --bg-card:    #161616;
+      --bg-card-h:  #1c1c1c;
+      --border:     rgba(255,255,255,0.06);
+      --border-h:   rgba(255,255,255,0.12);
+      --accent:     #4fffb0;
+      --accent-dim: rgba(79,255,176,0.08);
+      --t1:         #f5f5f5;
+      --t2:         #888888;
+      --t3:         #4a4a4a;
+      --font:       'Space Grotesk', sans-serif;
+      --mono:       'Fira Code', monospace;
+      --nav-h:      64px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--t1);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; display: block; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      height: var(--nav-h); z-index: 999;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%;
+      background: rgba(10,10,10,0.92);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { font-weight: 700; font-size: 1.1rem; letter-spacing: -.01em; }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; align-items: center; gap: 2rem; list-style: none; }
+    .nav-links a { font-size: .85rem; font-weight: 500; color: var(--t2); transition: color .2s; }
+    .nav-links a:hover { color: var(--t1); }
+    .nav-links a.active { color: var(--accent); }
+    .nav-cta {
+      padding: .45rem 1.1rem; border: 1px solid var(--accent); border-radius: 3px;
+      color: var(--accent) !important; font-size: .78rem !important;
+      font-weight: 600 !important; letter-spacing: .06em; text-transform: uppercase;
+      transition: background .2s, color .2s !important;
+    }
+    .nav-cta:hover { background: var(--accent) !important; color: var(--bg) !important; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 60vh;
+      padding: calc(var(--nav-h) + 80px) 5% 80px;
+      display: flex; flex-direction: column; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(79,255,176,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(79,255,176,0.025) 1px, transparent 1px);
+      background-size: 80px 80px;
+    }
+    .hero::after {
+      content: ''; position: absolute; pointer-events: none;
+      top: -20%; right: -5%; width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(79,255,176,0.04) 0%, transparent 65%);
+    }
+    .hero-inner { position: relative; z-index: 1; max-width: 760px; }
+
+    .breadcrumb {
+      display: flex; align-items: center; gap: .5rem; margin-bottom: 2rem;
+      font-family: var(--mono); font-size: .7rem; color: var(--t3); letter-spacing: .06em;
+    }
+    .breadcrumb a { color: var(--t3); transition: color .2s; }
+    .breadcrumb a:hover { color: var(--accent); }
+
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .28rem .8rem; border: 1px solid rgba(79,255,176,.22); border-radius: 2px;
+      font-family: var(--mono); font-size: .68rem; color: var(--accent);
+      letter-spacing: .1em; text-transform: uppercase; margin-bottom: 1.75rem;
+    }
+    .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); animation: blink 2s infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+    .hero h1 {
+      font-size: clamp(2.2rem, 4.5vw, 3.5rem);
+      font-weight: 700; letter-spacing: -.03em; line-height: 1.08; margin-bottom: 1.25rem;
+    }
+    .hero h1 .ac { color: var(--accent); }
+    .hero-desc {
+      font-size: 1.05rem; color: var(--t2); max-width: 580px;
+      line-height: 1.75; font-weight: 300;
+    }
+
+    /* ── SERVICES GRID ── */
+    .services-section { padding: 0 5% 100px; background: var(--bg); }
+    .sec { max-width: 1100px; margin: 0 auto; }
+
+    .svc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    /* Service card */
+    .svc-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 2rem;
+      display: flex; flex-direction: column;
+      transition: border-color .25s, transform .25s, background .25s;
+      position: relative; overflow: hidden;
+    }
+    .svc-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: var(--accent); opacity: 0;
+      transition: opacity .25s;
+    }
+    .svc-card:hover {
+      border-color: var(--border-h);
+      transform: translateY(-3px);
+      background: var(--bg-card-h);
+    }
+    .svc-card:hover::before { opacity: 1; }
+
+    /* Card number */
+    .card-num {
+      font-family: var(--mono); font-size: .6rem; color: var(--t3);
+      letter-spacing: .08em; margin-bottom: 1.25rem;
+    }
+
+    /* Icon row */
+    .card-icon {
+      width: 40px; height: 40px; margin-bottom: 1.25rem;
+      background: var(--accent-dim); border: 1px solid rgba(79,255,176,.12);
+      border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      transition: background .25s, border-color .25s;
+    }
+    .svc-card:hover .card-icon {
+      background: rgba(79,255,176,.14);
+      border-color: rgba(79,255,176,.25);
+    }
+
+    .svc-card h2 {
+      font-size: 1.1rem; font-weight: 600; letter-spacing: -.015em;
+      margin-bottom: .6rem; line-height: 1.25; color: var(--t1);
+    }
+
+    .svc-card p {
+      font-size: .875rem; color: var(--t2); line-height: 1.7;
+      font-weight: 300; flex: 1; margin-bottom: 1.5rem;
+    }
+
+    /* Tag row */
+    .card-tags { display: flex; flex-wrap: wrap; gap: .35rem; margin-bottom: 1.75rem; }
+    .ctag {
+      padding: .15rem .55rem;
+      border: 1px solid var(--border); border-radius: 2px;
+      font-family: var(--mono); font-size: .6rem; color: var(--t3);
+      letter-spacing: .04em;
+      transition: border-color .2s, color .2s;
+    }
+    .svc-card:hover .ctag { border-color: rgba(79,255,176,.18); color: var(--t2); }
+
+    /* CTA link */
+    .card-link {
+      display: inline-flex; align-items: center; gap: .5rem;
+      font-family: var(--mono); font-size: .72rem; font-weight: 500;
+      color: var(--accent); letter-spacing: .04em;
+      margin-top: auto;
+      transition: gap .2s;
+    }
+    .card-link:hover { gap: .75rem; color: var(--accent); }
+    .card-link svg { flex-shrink: 0; transition: transform .2s; }
+    .svc-card:hover .card-link svg { transform: translateX(3px); }
+
+    /* ── STATS ROW ── */
+    .stats-section {
+      padding: 60px 5%;
+      background: var(--bg-2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .stats-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; flex-wrap: wrap; gap: 2.5rem;
+      align-items: center; justify-content: space-between;
+    }
+    .stat-item { display: flex; flex-direction: column; gap: .2rem; }
+    .stat-n {
+      font-size: 2rem; font-weight: 700; color: var(--accent);
+      letter-spacing: -.03em; line-height: 1;
+    }
+    .stat-l {
+      font-family: var(--mono); font-size: .65rem; color: var(--t3);
+      letter-spacing: .08em; text-transform: uppercase;
+    }
+    .stats-cta {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .72rem 1.7rem; background: var(--accent);
+      color: var(--bg); border-radius: 3px;
+      font-weight: 600; font-size: .875rem; letter-spacing: .02em;
+      transition: opacity .2s, transform .2s; flex-shrink: 0;
+    }
+    .stats-cta:hover { opacity: .88; transform: translateY(-1px); color: var(--bg); }
+
+    /* ── APPROACH SECTION ── */
+    .approach-section { padding: 90px 5%; background: var(--bg); }
+    .approach-grid {
+      max-width: 1100px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start;
+    }
+    .eyebrow { font-family: var(--mono); font-size: .66rem; color: var(--accent); letter-spacing: .14em; text-transform: uppercase; margin-bottom: .7rem; }
+    .sec-title { font-size: clamp(1.75rem, 3vw, 2.4rem); font-weight: 700; letter-spacing: -.025em; line-height: 1.1; margin-bottom: 1rem; }
+    .sec-title .ac { color: var(--accent); }
+    .sec-desc { font-size: 1rem; color: var(--t2); line-height: 1.75; font-weight: 300; }
+
+    .principles { display: flex; flex-direction: column; gap: 0; }
+    .principle {
+      display: grid; grid-template-columns: 38px 1fr; gap: 1.25rem;
+      padding: 1.4rem 0; border-bottom: 1px solid var(--border);
+    }
+    .principle:last-child { border-bottom: none; }
+    .p-num { font-family: var(--mono); font-size: .62rem; color: var(--accent); letter-spacing: .06em; padding-top: .15rem; }
+    .p-body h4 { font-size: .95rem; font-weight: 600; color: var(--t1); margin-bottom: .35rem; letter-spacing: -.01em; }
+    .p-body p { font-size: .84rem; color: var(--t2); line-height: 1.7; font-weight: 300; }
+
+    /* ── CTA ── */
+    .cta-section {
+      padding: 100px 5%; background: var(--bg-2); text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .cta-section::before {
+      content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+      width: 700px; height: 350px;
+      background: radial-gradient(ellipse, rgba(79,255,176,.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-inner { position: relative; z-index: 1; max-width: 560px; margin: 0 auto; }
+    .cta-section h2 { font-size: clamp(1.75rem, 3vw, 2.4rem); font-weight: 700; letter-spacing: -.03em; margin-bottom: 1rem; }
+    .cta-section h2 .ac { color: var(--accent); }
+    .cta-section p { font-size: 1rem; color: var(--t2); line-height: 1.75; margin-bottom: 2rem; font-weight: 300; }
+    .cta-row { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-p {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .72rem 1.7rem; background: var(--accent);
+      color: var(--bg); border-radius: 3px; font-weight: 600; font-size: .875rem;
+      transition: opacity .2s, transform .2s;
+    }
+    .btn-p:hover { opacity: .88; transform: translateY(-1px); color: var(--bg); }
+    .btn-o {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .72rem 1.7rem; border: 1px solid var(--border-h);
+      border-radius: 3px; color: var(--t2); font-size: .875rem; font-weight: 500;
+      transition: border-color .2s, color .2s;
+    }
+    .btn-o:hover { border-color: var(--accent); color: var(--accent); }
+    .cta-note { margin-top: 1.5rem; font-family: var(--mono); font-size: .63rem; color: var(--t3); letter-spacing: .06em; }
+
+    /* ── FOOTER ── */
+    footer { background: var(--bg); border-top: 1px solid var(--border); padding: 2rem 5%; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .f-brand { font-size: .875rem; font-weight: 600; color: var(--t2); }
+    .f-brand span { color: var(--accent); }
+    .f-links { display: flex; gap: 1.75rem; list-style: none; flex-wrap: wrap; }
+    .f-links a { font-size: .78rem; color: var(--t3); transition: color .2s; }
+    .f-links a:hover { color: var(--accent); }
+    .f-copy { font-family: var(--mono); font-size: .62rem; color: var(--t3); letter-spacing: .04em; width: 100%; }
+
+    /* ── REVEAL ── */
+    .rv { opacity: 0; transform: translateY(18px); transition: opacity .5s ease, transform .5s ease; }
+    .rv.in { opacity: 1; transform: none; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) { .approach-grid { grid-template-columns: 1fr; gap: 2.5rem; } }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      footer { flex-direction: column; align-items: flex-start; }
+      .cta-row { flex-direction: column; align-items: center; }
+      .btn-p, .btn-o { width: 100%; justify-content: center; }
+      .stats-inner { justify-content: flex-start; }
+      .stats-cta { width: 100%; justify-content: center; }
+    }
+    @media (max-width: 480px) { .hero { padding: calc(var(--nav-h) + 50px) 5% 50px; } }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="https://www.sarathg.me/" class="nav-logo">Sarath <span>G.</span></a>
+  <ul class="nav-links">
+    <li><a href="https://www.sarathg.me/#about">About</a></li>
+    <li><a href="https://www.sarathg.me/#experience">Experience</a></li>
+    <li><a href="https://www.sarathg.me/#gallery">Gallery</a></li>
+    <li><a href="https://www.sarathg.me/services/" class="active">Services</a></li>
+    <li><a href="https://www.sarathg.me/blog/">Blog</a></li>
+    <li><a href="https://calendar.app.google/r7fLjeQpyWbE4daw9" class="nav-cta" target="_blank" rel="noopener">Book a Call</a></li>
+  </ul>
+</nav>
+
+
+<!-- HERO -->
+<section class="hero" aria-labelledby="hero-h1">
+  <div class="hero-inner">
+
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="https://www.sarathg.me/">sarathg.me</a>
+      <span>›</span>
+      <span style="color:var(--t2)">services</span>
+    </nav>
+
+    <div class="hero-tag"><span class="dot"></span>Consulting &amp; Advisory</div>
+
+    <h1 id="hero-h1">
+      Cybersecurity Services<br/>
+      <span class="ac">Available Globally.</span>
+    </h1>
+
+    <p class="hero-desc">
+      End-to-end cybersecurity consulting — from securing individual applications
+      to designing enterprise security architecture. Every engagement is operationally
+      grounded, not template-driven.
+    </p>
+
+  </div>
+</section>
+
+
+<!-- STATS BAR -->
+<div class="stats-section">
+  <div class="stats-inner">
+    <div class="stat-item"><div class="stat-n">8+</div><div class="stat-l">Years Experience</div></div>
+    <div class="stat-item"><div class="stat-n">13</div><div class="stat-l">Countries</div></div>
+    <div class="stat-item"><div class="stat-n">30+</div><div class="stat-l">Enterprise Clients</div></div>
+    <div class="stat-item"><div class="stat-n">5</div><div class="stat-l">Service Areas</div></div>
+    <div class="stat-item"><div class="stat-n">CEH</div><div class="stat-l">Master Certified</div></div>
+    <a href="https://calendar.app.google/r7fLjeQpyWbE4daw9" class="stats-cta" target="_blank" rel="noopener">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Book a Discovery Call
+    </a>
+  </div>
+</div>
+
+
+<!-- SERVICES GRID -->
+<section class="services-section" aria-labelledby="svc-h">
+  <div class="sec" style="padding-top:80px">
+    <p class="eyebrow" style="margin-bottom:.7rem">All Services</p>
+    <h2 class="sec-title" id="svc-h" style="margin-bottom:3rem">Five Service <span class="ac">Areas</span></h2>
+
+    <div class="svc-grid">
+
+      <!-- AppSec -->
+      <a href="https://www.sarathg.me/services/application-security.html" class="svc-card rv">
+        <p class="card-num">01 / APPLICATION SECURITY</p>
+        <div class="card-icon" aria-hidden="true">🔬</div>
+        <h2>Application Security Consulting</h2>
+        <p>SAST, DAST, manual secure code review, threat modelling, and secure SDLC design — delivered for enterprise development teams building software where security cannot be an afterthought.</p>
+        <div class="card-tags">
+          <span class="ctag">SAST</span>
+          <span class="ctag">DAST</span>
+          <span class="ctag">Secure Code Review</span>
+          <span class="ctag">Threat Modelling</span>
+          <span class="ctag">Secure SDLC</span>
+          <span class="ctag">CASE .NET</span>
+        </div>
+        <span class="card-link">
+          View Service
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </span>
+      </a>
+
+      <!-- Offensive Security -->
+      <a href="https://www.sarathg.me/services/offensive-security.html" class="svc-card rv">
+        <p class="card-num">02 / OFFENSIVE SECURITY</p>
+        <div class="card-icon" aria-hidden="true">🎯</div>
+        <h2>Penetration Testing &amp; Offensive Security</h2>
+        <p>Web application, network, API, mobile, and thick client penetration testing. Red team engagements, purple team exercises, and MITRE ATT&CK-based adversary simulation — by a CEH Master, CPENT, and LPT Master certified practitioner.</p>
+        <div class="card-tags">
+          <span class="ctag">Web App Pentest</span>
+          <span class="ctag">Network Pentest</span>
+          <span class="ctag">API Security</span>
+          <span class="ctag">Red Team</span>
+          <span class="ctag">MITRE ATT&amp;CK</span>
+          <span class="ctag">VAPT</span>
+        </div>
+        <span class="card-link">
+          View Service
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </span>
+      </a>
+
+      <!-- Security Architecture -->
+      <a href="https://www.sarathg.me/services/security-architecture.html" class="svc-card rv">
+        <p class="card-num">03 / SECURITY ARCHITECTURE</p>
+        <div class="card-icon" aria-hidden="true">🏗️</div>
+        <h2>Security Architecture Design &amp; Implementation</h2>
+        <p>Security architecture design and review, Zero Trust Architecture (NIST SP 800-207), BC/DR architecture design, DevSecOps pipeline security integration, and enterprise security transformation advisory for CISOs and technology leadership.</p>
+        <div class="card-tags">
+          <span class="ctag">Zero Trust</span>
+          <span class="ctag">NIST SP 800-207</span>
+          <span class="ctag">BC/DR Architecture</span>
+          <span class="ctag">DevSecOps</span>
+          <span class="ctag">Cloud Security</span>
+        </div>
+        <span class="card-link">
+          View Service
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </span>
+      </a>
+
+      <!-- GRC -->
+      <a href="https://www.sarathg.me/services/grc-advisory.html" class="svc-card rv">
+        <p class="card-num">04 / GRC ADVISORY</p>
+        <div class="card-icon" aria-hidden="true">📋</div>
+        <h2>GRC Advisory &amp; Security Policy Framework Development</h2>
+        <p>Governance programme design, information security risk management, ISO 27001 readiness, NIST CSF 2.0 implementation, PCI-DSS advisory, security policy framework development, BC/DR policy creation, and CISO-level advisory support.</p>
+        <div class="card-tags">
+          <span class="ctag">ISO 27001</span>
+          <span class="ctag">NIST CSF 2.0</span>
+          <span class="ctag">PCI-DSS v4.0</span>
+          <span class="ctag">Risk Management</span>
+          <span class="ctag">Policy Framework</span>
+        </div>
+        <span class="card-link">
+          View Service
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </span>
+      </a>
+
+      <!-- Corporate Training -->
+      <a href="https://www.sarathg.me/services/corporate-training.html" class="svc-card rv">
+        <p class="card-num">05 / CORPORATE TRAINING</p>
+        <div class="card-icon" aria-hidden="true">🎓</div>
+        <h2>Corporate Cybersecurity Training</h2>
+        <p>CEH v13, CPENT, CHFI, Secure Coding (CASE .NET), AI &amp; LLM Security, Red/Blue Team workshops, and Security Awareness programmes — delivered onsite and online for enterprise teams across banking, government, healthcare, and technology sectors.</p>
+        <div class="card-tags">
+          <span class="ctag">CEH v13</span>
+          <span class="ctag">CPENT</span>
+          <span class="ctag">CHFI</span>
+          <span class="ctag">Secure Coding</span>
+          <span class="ctag">AI Security</span>
+          <span class="ctag">Red/Blue Team</span>
+        </div>
+        <span class="card-link">
+          View Service
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </span>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- APPROACH -->
+<section class="approach-section" aria-labelledby="approach-h">
+  <div class="approach-grid">
+    <div>
+      <p class="eyebrow">How I Work</p>
+      <h2 class="sec-title" id="approach-h">Consulting That's <span class="ac">Operationally Grounded.</span></h2>
+      <p class="sec-desc">
+        Every engagement is delivered by a practitioner who holds the credentials
+        for the work being done, has done it in the field across 13 countries,
+        and produces output that development teams and security leaders can
+        actually act on — not generic reports that age on a shelf.
+      </p>
+    </div>
+    <div class="principles">
+      <div class="principle rv">
+        <span class="p-num">01</span>
+        <div class="p-body">
+          <h4>Scope first, work second</h4>
+          <p>Every engagement starts with a discovery call. Scope, deliverables, and timeline are agreed in writing before any work begins. No surprises for either party.</p>
+        </div>
+      </div>
+      <div class="principle rv">
+        <span class="p-num">02</span>
+        <div class="p-body">
+          <h4>Manual depth over automated volume</h4>
+          <p>Automated tools find the obvious. Expert manual analysis finds the business logic flaws, chained vulnerabilities, and context-specific issues that scanners cannot detect.</p>
+        </div>
+      </div>
+      <div class="principle rv">
+        <span class="p-num">03</span>
+        <div class="p-body">
+          <h4>Findings that drive remediation</h4>
+          <p>Reports are written for development teams, not just for compliance. Every finding includes the exact remediation steps needed — not a generic recommendation that requires a second consultant to interpret.</p>
+        </div>
+      </div>
+      <div class="principle rv">
+        <span class="p-num">04</span>
+        <div class="p-body">
+          <h4>Engagement doesn't end at delivery</h4>
+          <p>Remediation debrief, retest, and verification are part of every engagement. The objective is a genuinely improved security posture — not a delivered document.</p>
+        </div>
+      </div>
+      <div class="principle rv">
+        <span class="p-num">05</span>
+        <div class="p-body">
+          <h4>Available globally, onsite and remote</h4>
+          <p>Engagements have been delivered across 13 countries. Both remote and onsite formats are available — logistics confirmed during scoping.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- CTA -->
+<section class="cta-section" aria-labelledby="cta-h">
+  <div class="cta-inner">
+    <p class="eyebrow">Ready to Start</p>
+    <h2 id="cta-h">Not sure which service <span class="ac">fits your situation?</span></h2>
+    <p>
+      Book a 30-minute discovery call. We'll discuss your security objectives
+      and identify the right starting point — before anything is formalised.
+    </p>
+    <div class="cta-row">
+      <a href="https://calendar.app.google/r7fLjeQpyWbE4daw9" class="btn-p" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Book a Discovery Call
+      </a>
+      <a href="https://www.sarathg.me/#contact" class="btn-o">Send a Message</a>
+    </div>
+    <p class="cta-note">Responds within 24 hours · Available globally · Remote &amp; onsite</p>
+  </div>
+</section>
+
+
+<!-- FOOTER -->
+<footer>
+  <div class="f-brand">Sarath <span>G.</span> — Cybersecurity Consulting</div>
+  <ul class="f-links">
+    <li><a href="https://www.sarathg.me/">Home</a></li>
+    <li><a href="https://www.sarathg.me/services/application-security.html">AppSec</a></li>
+    <li><a href="https://www.sarathg.me/services/offensive-security.html">Offensive Security</a></li>
+    <li><a href="https://www.sarathg.me/services/security-architecture.html">Architecture</a></li>
+    <li><a href="https://www.sarathg.me/services/grc-advisory.html">GRC Advisory</a></li>
+    <li><a href="https://www.sarathg.me/services/corporate-training.html">Training</a></li>
+    <li><a href="https://www.linkedin.com/in/sarathcybersec/" target="_blank" rel="noopener">LinkedIn</a></li>
+  </ul>
+  <p class="f-copy">Sarath G. © · Built with precision. Secured by design.</p>
+</footer>
+
+<script>
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('in'), i * 80);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.07 });
+  document.querySelectorAll('.rv').forEach(el => obs.observe(el));
+</script>
+
+</body>
+</html>
