@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Security Architecture Design & Implementation | Zero Trust · BC/DR · DevSecOps | Sarath G</title>
+  <meta name="description" content="Enterprise security architecture consulting by Sarath G — Security Architecture Design & Review, Zero Trust Architecture (NIST SP 800-207), BC/DR Architecture, DevSecOps Pipeline Security, and Enterprise Security Transformation Advisory. Available globally." />
+  <meta name="keywords" content="security architecture consultant, zero trust architecture consultant, enterprise security architect, BC DR architecture design, DevSecOps consultant, security architecture review, NIST zero trust, enterprise security transformation" />
+  <meta name="author" content="Sarath G" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://www.sarathg.me/services/security-architecture.html" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Security Architecture Design & Implementation | Sarath G" />
+  <meta property="og:description" content="Zero Trust Architecture · BC/DR Architecture · DevSecOps Pipeline Security · Enterprise Security Transformation. Available globally." />
+  <meta property="og:url" content="https://www.sarathg.me/services/security-architecture.html" />
+  <meta property="og:image" content="https://www.sarathg.me/assets/og-image.jpg" />
+  <meta property="og:site_name" content="Sarath G Portfolio" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Security Architecture Design & Implementation | Sarath G" />
+  <meta name="twitter:description" content="Zero Trust · BC/DR · DevSecOps · Enterprise Security Transformation. Global advisory." />
+  <meta name="twitter:image" content="https://www.sarathg.me/assets/og-image.jpg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Fira+Code:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": "https://www.sarathg.me/#sarath",
+        "name": "Sarath G",
+        "jobTitle": "Application Security Consultant & International Cybersecurity Trainer",
+        "url": "https://www.sarathg.me",
+        "sameAs": ["https://www.linkedin.com/in/sarathcybersec/","https://github.com/secretguard"],
+        "address": {"@type":"PostalAddress","addressLocality":"Kochi","addressRegion":"Kerala","addressCountry":"IN"},
+        "hasCredential": [
+          {"@type":"EducationalOccupationalCredential","name":"CEH Master","recognizedBy":{"@type":"Organization","name":"EC-Council"}},
+          {"@type":"EducationalOccupationalCredential","name":"CPENT","recognizedBy":{"@type":"Organization","name":"EC-Council"}},
+          {"@type":"EducationalOccupationalCredential","name":"LPT Master","recognizedBy":{"@type":"Organization","name":"EC-Council"}},
+          {"@type":"EducationalOccupationalCredential","name":"CHFI","recognizedBy":{"@type":"Organization","name":"EC-Council"}},
+          {"@type":"EducationalOccupationalCredential","name":"ISC2 CC","recognizedBy":{"@type":"Organization","name":"ISC2"}}
+        ]
+      },
+      {
+        "@type": "ProfessionalService",
+        "@id": "https://www.sarathg.me/services/security-architecture.html#service",
+        "name": "Security Architecture Design & Implementation — Sarath G",
+        "description": "Enterprise security architecture consulting including Security Architecture Design & Review, Zero Trust Architecture (NIST SP 800-207), BC/DR Architecture Design & Implementation, Secure CI/CD Pipeline Integration, DevSecOps Advisory, and Enterprise Security Transformation Advisory.",
+        "provider": {"@id":"https://www.sarathg.me/#sarath"},
+        "serviceType": "Security Architecture Consulting",
+        "areaServed": "Worldwide",
+        "url": "https://www.sarathg.me/services/security-architecture.html",
+        "offers": {"@type":"Offer","availability":"https://schema.org/InStock","url":"https://calendar.app.google/r7fLjeQpyWbE4daw9"}
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {"@type":"ListItem","position":1,"name":"Home","item":"https://www.sarathg.me/"},
+          {"@type":"ListItem","position":2,"name":"Services","item":"https://www.sarathg.me/services/"},
+          {"@type":"ListItem","position":3,"name":"Security Architecture","item":"https://www.sarathg.me/services/security-architecture.html"}
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is Zero Trust Architecture and how is it implemented?",
+            "acceptedAnswer": {"@type":"Answer","text":"Zero Trust Architecture (ZTA) is a security model based on the principle of 'never trust, always verify' — eliminating implicit trust from any network zone, user, or device. Implementation follows NIST SP 800-207 and covers identity verification, device health validation, least-privilege access enforcement, micro-segmentation, continuous monitoring, and policy engine design. Engagements begin with a current-state assessment and produce a phased ZTA roadmap aligned to your organisation's technology environment."}
+          },
+          {
+            "@type": "Question",
+            "name": "What is the difference between BC/DR planning and BC/DR architecture design?",
+            "acceptedAnswer": {"@type":"Answer","text":"BC/DR planning covers policy creation, business impact analysis, recovery strategy definition, RTO/RPO target setting, and documented response procedures. BC/DR architecture design translates those plans into actual technical infrastructure — replication topology, failover automation, backup architecture, cloud DR environments, and tested recovery runbooks. Both services are available independently or as a combined engagement."}
+          },
+          {
+            "@type": "Question",
+            "name": "What does a Security Architecture Design & Review engagement cover?",
+            "acceptedAnswer": {"@type":"Answer","text":"A Security Architecture Design & Review engagement covers the end-to-end security posture of an organisation's technology environment — network segmentation, identity and access architecture, data protection controls, application security integration points, cloud security design, and alignment to frameworks such as NIST CSF, ISO 27001, and SABSA. The output is a structured architecture document with identified gaps, risk-rated recommendations, and a prioritised remediation roadmap."}
+          },
+          {
+            "@type": "Question",
+            "name": "What is DevSecOps and how does secure CI/CD pipeline integration work?",
+            "acceptedAnswer": {"@type":"Answer","text":"DevSecOps integrates security controls into every stage of the software development and delivery lifecycle — shifting security left from post-deployment testing to design and development. Secure CI/CD pipeline integration covers SAST tool integration, dependency scanning, container image scanning, infrastructure-as-code security checks, secrets management, and automated security gates that block vulnerable code from reaching production."}
+          },
+          {
+            "@type": "Question",
+            "name": "Who is Security Architecture advisory designed for?",
+            "acceptedAnswer": {"@type":"Answer","text":"Security Architecture advisory is designed for CISOs, CTOs, Heads of IT, and security leadership teams at enterprise organisations undergoing digital transformation, cloud migration, regulatory compliance programmes, or post-incident security rebuilds. Engagements are available as project-based work, advisory retainers, or fractional security architecture support."}
+          },
+          {
+            "@type": "Question",
+            "name": "Are engagements available remotely for international organisations?",
+            "acceptedAnswer": {"@type":"Answer","text":"Yes. Security architecture advisory and consulting engagements are available fully remotely and onsite globally. Architecture review, Zero Trust roadmapping, and BC/DR planning engagements are well-suited to remote delivery. Onsite workshops for stakeholder alignment sessions and architecture deep-dives are available internationally."}
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg:         #0a0a0a;
+      --bg-2:       #111111;
+      --bg-card:    #161616;
+      --bg-card-h:  #1c1c1c;
+      --border:     rgba(255,255,255,0.06);
+      --border-h:   rgba(255,255,255,0.12);
+      --accent:     #4fffb0;
+      --accent-dim: rgba(79,255,176,0.08);
+      --t1:         #f5f5f5;
+      --t2:         #888888;
+      --t3:         #4a4a4a;
+      --font:       'Space Grotesk', sans-serif;
+      --mono:       'Fira Code', monospace;
+      --nav-h:      64px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--t1);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; display: block; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      height: var(--nav-h); z-index: 999;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%;
+      background: rgba(10,10,10,0.92);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { font-weight: 700; font-size: 1.1rem; letter-spacing: -.01em; }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; align-items: center; gap: 2rem; list-style: none; }
+    .nav-links a { font-size: .85rem; font-weight: 500; color: var(--t2); transition: color .2s; }
+    .nav-links a:hover { color: var(--t1); }
+    .nav-cta {
+      padding: .45rem 1.1rem; border: 1px solid var(--accent); border-radius: 3px;
+      color: var(--accent) !important; font-size: .78rem !important;
+      font-weight: 600 !important; letter-spacing: .06em; text-transform: uppercase;
+      transition: background .2s, color .2s !important;
+    }
+    .nav-cta:hover { background: var(--accent) !important; color: var(--bg) !important; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      padding: calc(var(--nav-h) + 90px) 5% 90px;
+      display: flex; flex-direction: column; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(79,255,176,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(79,255,176,0.025) 1px, transparent 1px);
+      background-size: 80px 80px;
+    }
+    /* Blueprint-style second grid at 45deg — signals architecture */
+    .hero::after {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(79,255,176,0.012) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(79,255,176,0.012) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+    .hero-inner { position: relative; z-index: 1; max-width: 880px; }
+
+    .breadcrumb {
+      display: flex; align-items: center; gap: .5rem; margin-bottom: 2.5rem;
+      font-family: var(--mono); font-size: .7rem; color: var(--t3); letter-spacing: .06em;
+    }
+    .breadcrumb a { color: var(--t3); transition: color .2s; }
+    .breadcrumb a:hover { color: var(--accent); }
+
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .28rem .8rem; border: 1px solid rgba(79,255,176,.22); border-radius: 2px;
+      font-family: var(--mono); font-size: .68rem; color: var(--accent);
+      letter-spacing: .1em; text-transform: uppercase; margin-bottom: 1.75rem;
+    }
+    .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); animation: blink 2s infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+    .hero h1 {
+      font-size: clamp(2.4rem, 5.5vw, 4rem);
+      font-weight: 700; letter-spacing: -.03em; line-height: 1.05; margin-bottom: 1.5rem;
+    }
+    .hero h1 .ac { color: var(--accent); }
+
+    .hero-desc {
+      font-size: 1.08rem; color: var(--t2); max-width: 620px;
+      line-height: 1.75; margin-bottom: 2.5rem; font-weight: 300;
+    }
+
+    /* framework pills */
+    .fw-pills { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 2.5rem; }
+    .fwp {
+      padding: .28rem .8rem; border: 1px solid var(--border-h); border-radius: 2px;
+      font-family: var(--mono); font-size: .68rem; color: var(--t2);
+      letter-spacing: .05em; transition: border-color .2s, color .2s;
+    }
+    .fwp:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* audience row */
+    .audience-row {
+      display: flex; flex-wrap: wrap; gap: 2.5rem;
+      padding: 1.75rem 0;
+      border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      margin-bottom: 2.5rem;
+    }
+    .aud-item { display: flex; flex-direction: column; gap: .2rem; }
+    .aud-role { font-size: .95rem; font-weight: 600; color: var(--t1); letter-spacing: -.01em; }
+    .aud-note { font-family: var(--mono); font-size: .63rem; color: var(--t3); letter-spacing: .06em; text-transform: uppercase; }
+
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
+    .btn-p {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .72rem 1.7rem; background: var(--accent);
+      color: var(--bg); border-radius: 3px;
+      font-weight: 600; font-size: .875rem; letter-spacing: .02em;
+      transition: opacity .2s, transform .2s;
+    }
+    .btn-p:hover { opacity: .88; transform: translateY(-1px); color: var(--bg); }
+    .btn-o {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .72rem 1.7rem; border: 1px solid var(--border-h);
+      border-radius: 3px; color: var(--t2); font-size: .875rem; font-weight: 500;
+      transition: border-color .2s, color .2s;
+    }
+    .btn-o:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── SECTION ── */
+    section { padding: 90px 5%; }
+    .sec { max-width: 1100px; margin: 0 auto; }
+
+    .eyebrow { font-family: var(--mono); font-size: .66rem; color: var(--accent); letter-spacing: .14em; text-transform: uppercase; margin-bottom: .7rem; }
+    .sec-title { font-size: clamp(1.75rem, 3vw, 2.4rem); font-weight: 700; letter-spacing: -.025em; line-height: 1.1; margin-bottom: 1rem; }
+    .sec-title .ac { color: var(--accent); }
+    .sec-desc { font-size: 1rem; color: var(--t2); max-width: 580px; line-height: 1.75; margin-bottom: 3rem; font-weight: 300; }
+
+    /* ── SERVICES GRID ── */
+    .svc-section { background: var(--bg-2); }
+    .svc-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1px; border: 1px solid var(--border); border-radius: 6px; overflow: hidden;
+    }
+    .svc-item { background: var(--bg-card); padding: 2rem; transition: background .2s; }
+    .svc-item:hover { background: var(--bg-card-h); }
+    .svc-num { font-family: var(--mono); font-size: .62rem; color: var(--t3); letter-spacing: .08em; margin-bottom: .9rem; }
+    .svc-item h3 { font-size: 1.05rem; font-weight: 600; letter-spacing: -.01em; margin-bottom: .55rem; line-height: 1.3; color: var(--t1); }
+    .svc-item p { font-size: .865rem; color: var(--t2); line-height: 1.7; font-weight: 300; margin-bottom: 1.2rem; }
+    .tags { display: flex; flex-wrap: wrap; gap: .35rem; }
+    .tag { padding: .18rem .6rem; border: 1px solid var(--border); border-radius: 2px; font-family: var(--mono); font-size: .62rem; color: var(--t3); letter-spacing: .04em; transition: border-color .2s, color .2s; }
+    .svc-item:hover .tag { border-color: rgba(79,255,176,.18); color: var(--t2); }
+
+    /* ── ZTA DEEP-DIVE ── */
+    .zta-section { background: var(--bg); }
+    .zta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
+    .zta-pillars { display: flex; flex-direction: column; gap: 0; }
+    .zta-pillar {
+      display: grid; grid-template-columns: 38px 1fr; gap: 1.25rem;
+      padding: 1.4rem 0; border-bottom: 1px solid var(--border);
+    }
+    .zta-pillar:last-child { border-bottom: none; }
+    .zta-num { font-family: var(--mono); font-size: .62rem; color: var(--accent); letter-spacing: .06em; padding-top: .15rem; }
+    .zta-body h4 { font-size: .95rem; font-weight: 600; color: var(--t1); margin-bottom: .35rem; letter-spacing: -.01em; }
+    .zta-body p { font-size: .84rem; color: var(--t2); line-height: 1.7; font-weight: 300; }
+
+    /* NIST badge */
+    .nist-badge {
+      display: inline-flex; align-items: center; gap: .6rem;
+      padding: .6rem 1rem;
+      background: var(--bg-card); border: 1px solid rgba(79,255,176,.18); border-radius: 3px;
+      font-family: var(--mono); font-size: .7rem; color: var(--accent);
+      letter-spacing: .06em; margin-bottom: 2rem;
+    }
+    .nist-badge::before {
+      content: ''; width: 8px; height: 8px; border-radius: 50%;
+      background: var(--accent); opacity: .6;
+    }
+
+    /* ── BCDR SPLIT ── */
+    .bcdr-section { background: var(--bg-2); }
+    .bcdr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .bcdr-card {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px;
+      padding: 2rem; transition: border-color .25s;
+    }
+    .bcdr-card:hover { border-color: var(--border-h); }
+    .bcdr-card .card-label {
+      font-family: var(--mono); font-size: .62rem; color: var(--accent);
+      letter-spacing: .1em; text-transform: uppercase; margin-bottom: .75rem;
+    }
+    .bcdr-card h3 { font-size: 1.1rem; font-weight: 600; color: var(--t1); margin-bottom: .6rem; letter-spacing: -.01em; line-height: 1.3; }
+    .bcdr-card p { font-size: .875rem; color: var(--t2); line-height: 1.7; font-weight: 300; margin-bottom: 1.25rem; }
+    .bcdr-list { display: flex; flex-direction: column; gap: .5rem; }
+    .bcdr-list li {
+      display: flex; align-items: flex-start; gap: .6rem;
+      font-size: .84rem; color: var(--t2); line-height: 1.5; font-weight: 300;
+      list-style: none;
+    }
+    .bcdr-list li::before {
+      content: '→'; font-family: var(--mono); font-size: .7rem;
+      color: var(--accent); flex-shrink: 0; margin-top: .1rem;
+    }
+
+    /* ── DEVSECOPS PIPELINE ── */
+    .devs-section { background: var(--bg); }
+    .pipeline {
+      display: flex; flex-wrap: wrap;
+      border: 1px solid var(--border); border-radius: 6px; overflow: hidden;
+      margin-bottom: 2rem;
+    }
+    .pipe-stage {
+      flex: 1; min-width: 140px;
+      background: var(--bg-card); padding: 1.5rem 1.25rem;
+      border-right: 1px solid var(--border);
+      transition: background .2s; position: relative;
+    }
+    .pipe-stage:last-child { border-right: none; }
+    .pipe-stage:hover { background: var(--bg-card-h); }
+    .pipe-stage-label {
+      font-family: var(--mono); font-size: .6rem; color: var(--accent);
+      letter-spacing: .08em; text-transform: uppercase; margin-bottom: .5rem;
+    }
+    .pipe-stage h4 { font-size: .88rem; font-weight: 600; color: var(--t1); margin-bottom: .5rem; }
+    .pipe-stage ul { display: flex; flex-direction: column; gap: .3rem; list-style: none; }
+    .pipe-stage ul li { font-family: var(--mono); font-size: .62rem; color: var(--t3); }
+    /* Arrow connector */
+    .pipe-stage::after {
+      content: '›'; position: absolute;
+      right: -10px; top: 50%; transform: translateY(-50%);
+      font-size: 1rem; color: var(--accent); z-index: 1;
+      font-family: var(--mono);
+    }
+    .pipe-stage:last-child::after { display: none; }
+
+    .devs-note {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px;
+      padding: 1.5rem 2rem;
+      display: grid; grid-template-columns: auto 1fr; gap: 1.5rem; align-items: center;
+    }
+    .devs-note-label {
+      font-family: var(--mono); font-size: .65rem; color: var(--accent);
+      letter-spacing: .08em; text-transform: uppercase; white-space: nowrap;
+      background: var(--accent-dim); border: 1px solid rgba(79,255,176,.2);
+      border-radius: 2px; padding: .4rem .8rem; text-align: center; line-height: 1.5;
+    }
+    .devs-note p { font-size: .875rem; color: var(--t2); line-height: 1.7; font-weight: 300; }
+    .devs-note strong { color: var(--t1); font-weight: 600; }
+
+    /* ── ENGAGEMENT MODELS ── */
+    .models-section { background: var(--bg-2); }
+    .models-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1px; border: 1px solid var(--border); border-radius: 6px; overflow: hidden;
+    }
+    .model-item { background: var(--bg-card); padding: 2rem; transition: background .2s; }
+    .model-item:hover { background: var(--bg-card-h); }
+    .model-icon { font-size: 1.3rem; margin-bottom: .75rem; }
+    .model-item h4 { font-size: .95rem; font-weight: 600; color: var(--t1); margin-bottom: .4rem; letter-spacing: -.01em; }
+    .model-item p { font-size: .84rem; color: var(--t2); line-height: 1.65; font-weight: 300; }
+
+    /* ── FRAMEWORKS ── */
+    .fw-section { background: var(--bg); }
+    .fw-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1px; border: 1px solid var(--border); border-radius: 6px; overflow: hidden;
+    }
+    .fw-item { background: var(--bg-card); padding: 1.5rem 1.75rem; transition: background .2s; }
+    .fw-item:hover { background: var(--bg-card-h); }
+    .fw-item .fw-label { font-family: var(--mono); font-size: .62rem; color: var(--accent); letter-spacing: .08em; text-transform: uppercase; margin-bottom: .5rem; }
+    .fw-item h4 { font-size: .92rem; font-weight: 600; color: var(--t1); margin-bottom: .35rem; }
+    .fw-item p { font-size: .82rem; color: var(--t2); line-height: 1.6; font-weight: 300; }
+
+    /* ── DELIVERABLES ── */
+    .del-section { background: var(--bg-2); }
+    .del-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1px; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+    .del-item { background: var(--bg-card); padding: 1.75rem 2rem; transition: background .2s; }
+    .del-item:hover { background: var(--bg-card-h); }
+    .del-icon { font-size: 1.4rem; margin-bottom: .75rem; }
+    .del-item h4 { font-size: .95rem; font-weight: 600; color: var(--t1); margin-bottom: .4rem; }
+    .del-item p { font-size: .84rem; color: var(--t2); line-height: 1.65; font-weight: 300; }
+
+    /* ── FAQ ── */
+    .faq-section { background: var(--bg); }
+    .faq-wrap { max-width: 740px; }
+    .faq-item { border-bottom: 1px solid var(--border); }
+    .faq-q { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; padding: 1.35rem 0; cursor: pointer; user-select: none; }
+    .faq-q h4 { font-size: .93rem; font-weight: 600; color: var(--t1); letter-spacing: -.01em; line-height: 1.4; }
+    .faq-ico { font-family: var(--mono); font-size: 1.1rem; color: var(--t3); flex-shrink: 0; transition: color .2s, transform .2s; margin-top: 2px; }
+    .faq-item.open .faq-ico { color: var(--accent); transform: rotate(45deg); }
+    .faq-a { display: none; padding: 0 0 1.35rem; }
+    .faq-item.open .faq-a { display: block; }
+    .faq-a p { font-size: .875rem; color: var(--t2); line-height: 1.8; font-weight: 300; }
+
+    /* ── CTA ── */
+    .cta-section { background: var(--bg-2); padding: 100px 5%; text-align: center; position: relative; overflow: hidden; }
+    .cta-section::before {
+      content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+      width: 700px; height: 350px;
+      background: radial-gradient(ellipse, rgba(79,255,176,.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-inner { position: relative; z-index: 1; max-width: 560px; margin: 0 auto; }
+    .cta-section h2 { font-size: clamp(1.75rem, 3vw, 2.4rem); font-weight: 700; letter-spacing: -.03em; margin-bottom: 1rem; }
+    .cta-section h2 .ac { color: var(--accent); }
+    .cta-section p { font-size: 1rem; color: var(--t2); line-height: 1.75; margin-bottom: 2rem; font-weight: 300; }
+    .cta-row { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .cta-note { margin-top: 1.5rem; font-family: var(--mono); font-size: .63rem; color: var(--t3); letter-spacing: .06em; }
+
+    /* ── FOOTER ── */
+    footer { background: var(--bg); border-top: 1px solid var(--border); padding: 2rem 5%; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .f-brand { font-size: .875rem; font-weight: 600; color: var(--t2); }
+    .f-brand span { color: var(--accent); }
+    .f-links { display: flex; gap: 1.75rem; list-style: none; flex-wrap: wrap; }
+    .f-links a { font-size: .78rem; color: var(--t3); transition: color .2s; }
+    .f-links a:hover { color: var(--accent); }
+    .f-copy { font-family: var(--mono); font-size: .62rem; color: var(--t3); letter-spacing: .04em; width: 100%; }
+
+    /* ── REVEAL ── */
+    .rv { opacity: 0; transform: translateY(18px); transition: opacity .5s ease, transform .5s ease; }
+    .rv.in { opacity: 1; transform: none; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .zta-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .bcdr-grid { grid-template-columns: 1fr; }
+      .devs-note { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hero h1 { font-size: 2.2rem; }
+      footer { flex-direction: column; align-items: flex-start; }
+      .cta-row { flex-direction: column; align-items: center; }
+      .btn-p, .btn-o { width: 100%; justify-content: center; }
+      .pipe-stage { min-width: 100%; border-right: none; border-bottom: 1px solid var(--border); }
+      .pipe-stage::after { display: none; }
+    }
+    @media (max-width: 480px) {
+      section { padding: 60px 5%; }
+      .hero { padding: calc(var(--nav-h) + 50px) 5% 50px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="https://www.sarathg.me/" class="nav-logo">Sarath <span>G.</span></a>
+  <ul class="nav-links">
+    <li><a href="https://www.sarathg.me/#about">About</a></li>
+    <li><a href="https://www.sarathg.me/#experience">Experience</a></li>
+    <li><a href="https://www.sarathg.me/#gallery">Gallery</a></li>
+    <li><a href="https://www.sarathg.me/services/">Services</a></li>
+    <li><a href="https://www.sarathg.me/blog/">Blog</a></li>
+    <li><a href="https://calendar.app.google/r7fLjeQpyWbE4daw9" class="nav-cta" target="_blank" rel="noopener">Book a Call</a></li>
+  </ul>
+</nav>
+
+
+<!-- HERO -->
+<section class="hero" aria-labelledby="hero-h1">
+  <div class="hero-inner">
+
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="https://www.sarathg.me/">sarathg.me</a>
+      <span>›</span>
+      <a href="https://www.sarathg.me/services/">services</a>
+      <span>›</span>
+      <span style="color:var(--t2)">security-architecture</span>
+    </nav>
+
+    <div class="hero-tag"><span class="dot"></span>Security Architecture</div>
+
+    <h1 id="hero-h1">
+      Security Architecture<br/>
+      <span class="ac">Design &amp; Implementation.</span>
+    </h1>
+
+    <p class="hero-desc">
+      Zero Trust Architecture · BC/DR Architecture · Secure CI/CD Pipeline Integration
+      · Enterprise Security Transformation Advisory.<br/><br/>
+      Strategic security architecture for organisations building secure infrastructure
+      from the ground up — or rebuilding after discovering the gaps.
+    </p>
+
+    <!-- Framework alignment signals -->
+    <div class="fw-pills" aria-label="Frameworks aligned to">
+      <span class="fwp">NIST SP 800-207</span>
+      <span class="fwp">NIST CSF 2.0</span>
+      <span class="fwp">ISO 27001</span>
+      <span class="fwp">SABSA</span>
+      <span class="fwp">TOGAF</span>
+      <span class="fwp">CIS Controls</span>
+      <span class="fwp">ISO 22301</span>
+      <span class="fwp">MITRE ATT&amp;CK</span>
+    </div>
+
+    <!-- Who this is for — shown in hero because audience targeting matters at CISO level -->
+    <div class="audience-row" aria-label="Primary audience">
+      <div class="aud-item">
+        <span class="aud-role">CISO</span>
+        <span class="aud-note">Security Leadership</span>
+      </div>
+      <div class="aud-item">
+        <span class="aud-role">CTO</span>
+        <span class="aud-note">Technology Leadership</span>
+      </div>
+      <div class="aud-item">
+        <span class="aud-role">Head of IT</span>
+        <span class="aud-note">Infrastructure &amp; Operations</span>
+      </div>
+      <div class="aud-item">
+        <span class="aud-role">Security Architect</span>
+        <span class="aud-note">Advisory &amp; Peer Review</span>
+      </div>
+      <div class="aud-item">
+        <span class="aud-role">Engineering Lead</span>
+        <span class="aud-note">DevSecOps &amp; Platform</span>
+      </div>
+    </div>
+
+    <div class="hero-actions">
+      <a href="https://calendar.app.google/r7fLjeQpyWbE4daw9" class="btn-p" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Book an Architecture Consultation
+      </a>
+      <a href="#services" class="btn-o">
+        View Services
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- SERVICES -->
+<section class="svc-section" id="services" aria-labelledby="svc-h">
+  <div class="sec">
+    <p class="eyebrow">Services</p>
+    <h2 class="sec-title" id="svc-h">What I <span class="ac">Design &amp; Advise On</span></h2>
+    <p class="sec-desc">
+      Security architecture is not a document — it's a set of decisions that determine
+      how resilient, recoverable, and defensible your organisation is when things go wrong.
+    </p>
+
+    <div class="svc-grid">
+
+      <div class="svc-item rv">
+        <p class="svc-num">01 / ARCHITECTURE</p>
+        <h3>Security Architecture Design &amp; Review</h3>
+        <p>End-to-end design or independent review of an organisation's security architecture — covering network segmentation, identity and access architecture, data protection controls, application security integration points, cloud security design, and alignment to NIST CSF, ISO 27001, and SABSA. Produces a current-state gap assessment and prioritised architecture roadmap.</p>
+        <div class="tags">
+          <span class="tag">Current-State Assessment</span><span class="tag">Gap Analysis</span>
+          <span class="tag">Architecture Roadmap</span><span class="tag">NIST CSF</span>
+        </div>
+      </div>
+
+      <div class="svc-item rv">
+        <p class="svc-num">02 / ZERO TRUST</p>
+        <h3>Zero Trust Architecture (ZTA) Design &amp; Implementation</h3>
+        <p>Design and implementation advisory for Zero Trust Architecture aligned to NIST SP 800-207. Covers identity verification strategy, device health validation, least-privilege access enforcement, micro-segmentation design, continuous monitoring architecture, and policy engine selection and configuration — with a phased implementation roadmap suited to your current technology environment.</p>
+        <div class="tags">
+          <span class="tag">NIST SP 800-207</span><span class="tag">Micro-Segmentation</span>
+          <span class="tag">Identity-First</span><span class="tag">Policy Engine</span>
+        </div>
+      </div>
+
+      <div class="svc-item rv">
+        <p class="svc-num">03 / BC/DR</p>
+        <h3>BC/DR Architecture Design &amp; Implementation</h3>
+        <p>Technical architecture for business continuity and disaster recovery — translating BC/DR strategy into actual infrastructure. Covers replication topology design, failover automation, backup architecture, cloud DR environments (active-passive, active-active), RTO/RPO alignment, runbook development, and tested recovery procedures. Aligned to ISO 22301.</p>
+        <div class="tags">
+          <span class="tag">ISO 22301</span><span class="tag">RTO/RPO Design</span>
+          <span class="tag">Failover Architecture</span><span class="tag">Cloud DR</span>
+        </div>
+      </div>
+
+      <div class="svc-item rv">
+        <p class="svc-num">04 / DEVSECOPS</p>
+        <h3>Secure CI/CD Pipeline Integration &amp; DevSecOps Advisory</h3>
+        <p>Shift-left security integration across the software development and delivery lifecycle — from developer workstation to production deployment. Covers SAST/DAST tool integration, dependency and container scanning, infrastructure-as-code security, secrets management architecture, and automated security gates that block vulnerable code from reaching production without slowing delivery teams.</p>
+        <div class="tags">
+          <span class="tag">Shift-Left Security</span><span class="tag">SAST/DAST Integration</span>
+          <span class="tag">IaC Security</span><span class="tag">Secrets Management</span>
+        </div>
+      </div>
+
+      <div class="svc-item rv">
+        <p class="svc-num">05 / ADVISORY</p>
+        <h3>Enterprise Security Transformation Advisory</h3>
+        <p>Strategic advisory for security leadership teams undergoing enterprise-scale transformation — cloud migration, digital transformation, post-merger integration, or post-incident security rebuilds. Covers security programme design, team structure alignment, toolchain rationalisation, security operating model design, and board-level risk communication.</p>
+        <div class="tags">
+          <span class="tag">Security Programme Design</span><span class="tag">Operating Model</span>
+          <span class="tag">Cloud Migration</span><span class="tag">Board Risk Comms</span>
+        </div>
+      </div>
+
+      <div class="svc-item rv">
+        <p class="svc-num">06 / CLOUD</p>
+        <h3>Cloud Security Architecture</h3>
+        <p>Security architecture design for cloud-native and hybrid environments across AWS, Azure, and GCP. Covers landing zone security design, IAM architecture, network security topology, data classification and protection controls, workload security, and cloud security posture management (CSPM) tooling strategy — aligned to the relevant cloud provider's Well-Architected Security Pillar.</p>
+        <div class="tags">
+          <span class="tag">AWS / Azure / GCP</span><span class="tag">Landing Zone Design</span>
+          <span class="tag">IAM Architecture</span><span class="tag">CSPM</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ZTA DEEP DIVE -->
+<section class="zta-section" id="zero-trust" aria-labelledby="zta-h">
+  <div class="sec">
+    <div class="zta-grid">
+
+      <div>
+        <p class="eyebrow">Zero Trust Architecture</p>
+        <h2 class="sec-title" id="zta-h">Never Trust. <span class="ac">Always Verify.</span></h2>
+        <p class="sec-desc" style="margin-bottom:1.5rem">
+          Zero Trust is not a product — it's an architectural philosophy. The traditional
+          perimeter model assumes everything inside the network is safe. ZTA assumes
+          breach and enforces verification at every access request, regardless of
+          network location.
+        </p>
+        <div class="nist-badge">Aligned to NIST SP 800-207 Zero Trust Architecture</div>
+        <p class="sec-desc" style="margin-bottom:0;max-width:100%">
+          Implementation is phased and pragmatic — not a rip-and-replace exercise.
+          The engagement starts with your current identity, network, and access
+          architecture and builds a roadmap that moves you toward ZTA maturity
+          without disrupting operations.
+        </p>
+      </div>
+
+      <div class="zta-pillars">
+        <div class="zta-pillar rv">
+          <span class="zta-num">01</span>
+          <div class="zta-body">
+            <h4>Identity as the New Perimeter</h4>
+            <p>Every user, service account, and workload identity is verified continuously — not just at login. MFA, conditional access policies, and risk-based authentication form the first enforcement layer.</p>
+          </div>
+        </div>
+        <div class="zta-pillar rv">
+          <span class="zta-num">02</span>
+          <div class="zta-body">
+            <h4>Device Health Validation</h4>
+            <p>Access decisions incorporate device compliance status — patch level, EDR status, certificate validity, and configuration drift. Unhealthy devices receive reduced or no access regardless of valid credentials.</p>
+          </div>
+        </div>
+        <div class="zta-pillar rv">
+          <span class="zta-num">03</span>
+          <div class="zta-body">
+            <h4>Least-Privilege Access Enforcement</h4>
+            <p>Access is granted at the minimum scope required for the task, for the minimum time needed. Just-in-time (JIT) and just-enough-access (JEA) patterns are designed into the access architecture.</p>
+          </div>
+        </div>
+        <div class="zta-pillar rv">
+          <span class="zta-num">04</span>
+          <div class="zta-body">
+            <h4>Micro-Segmentation</h4>
+            <p>Network segments are divided at the workload level — preventing lateral movement even when an attacker has initial access. East-west traffic is inspected and controlled, not assumed safe.</p>
+          </div>
+        </div>
+        <div class="zta-pillar rv">
+          <span class="zta-num">05</span>
+          <div class="zta-body">
+            <h4>Continuous Monitoring &amp; Analytics</h4>
+            <p>Security posture is monitored continuously — not at point-in-time. Behavioural analytics, access logs, and telemetry feed a policy engine that can revoke access dynamically when anomalies are detected.</p>
+          </div>
+        </div>
+        <div class="zta-pillar rv">
+          <span class="zta-num">06</span>
+          <div class="zta-body">
+            <h4>Phased Roadmap &amp; Maturity Model</h4>
+            <p>ZTA is a journey, not a switch. The engagement produces a phased roadmap with measurable maturity milestones — from initial assessment to full ZTA posture — prioritised by risk reduction impact.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- BC/DR SPLIT -->
+<section class="bcdr-section" id="bcdr" aria-labelledby="bcdr-h">
+  <div class="sec">
+    <p class="eyebrow">Business Continuity &amp; Disaster Recovery</p>
+    <h2 class="sec-title" id="bcdr-h">Resilience by <span class="ac">Design, Not by Luck.</span></h2>
+    <p class="sec-desc">
+      Most organisations discover their BC/DR gaps during the incident, not before it.
+      Architecture-first resilience means your recovery procedures are tested, your
+      failover is automated, and your RTO/RPO targets are achievable — not aspirational.
+    </p>
+
+    <div class="bcdr-grid">
+
+      <div class="bcdr-card rv">
+        <p class="card-label">BC/DR Planning &amp; Policy Development</p>
+        <h3>Strategy, Policy &amp; Documentation</h3>
+        <p>The foundational layer — defining what the organisation needs to recover, in what order, and within what timeframes. Aligned to ISO 22301 Business Continuity Management.</p>
+        <ul class="bcdr-list">
+          <li>Business Impact Analysis (BIA)</li>
+          <li>Recovery Time Objective (RTO) &amp; Recovery Point Objective (RPO) definition</li>
+          <li>Business Continuity Plan (BCP) documentation</li>
+          <li>Disaster Recovery Plan (DRP) creation</li>
+          <li>Crisis communication and escalation procedures</li>
+          <li>Tabletop exercise design and facilitation</li>
+          <li>ISO 22301 alignment and gap assessment</li>
+        </ul>
+      </div>
+
+      <div class="bcdr-card rv">
+        <p class="card-label">BC/DR Architecture Design &amp; Implementation</p>
+        <h3>Infrastructure, Automation &amp; Testing</h3>
+        <p>Translating BC/DR strategy into actual technical infrastructure — so recovery is automated, tested, and achievable within defined RTO/RPO targets when it matters.</p>
+        <ul class="bcdr-list">
+          <li>Replication topology design (synchronous / asynchronous)</li>
+          <li>Active-passive and active-active failover architecture</li>
+          <li>Cloud DR environment design (AWS, Azure, GCP)</li>
+          <li>Backup architecture and retention policy design</li>
+          <li>Recovery runbook development and automation</li>
+          <li>DR testing framework and test execution</li>
+          <li>Recovery validation and post-test reporting</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- DEVSECOPS PIPELINE -->
+<section class="devs-section" id="devsecops" aria-labelledby="devs-h">
+  <div class="sec">
+    <p class="eyebrow">DevSecOps &amp; Secure CI/CD</p>
+    <h2 class="sec-title" id="devs-h">Security Built Into <span class="ac">Every Stage.</span></h2>
+    <p class="sec-desc">
+      Security bolted on at the end of a delivery pipeline creates friction, delays,
+      and missed vulnerabilities. Shifting security left means catching issues at the
+      point where they are cheapest to fix — in the developer's IDE, not in production.
+    </p>
+
+    <div class="pipeline" aria-label="Secure CI/CD pipeline stages">
+      <div class="pipe-stage rv">
+        <p class="pipe-stage-label">Plan</p>
+        <h4>Threat Modelling</h4>
+        <ul>
+          <li>Security requirements</li>
+          <li>Architecture review</li>
+          <li>Risk acceptance gates</li>
+        </ul>
+      </div>
+      <div class="pipe-stage rv">
+        <p class="pipe-stage-label">Code</p>
+        <h4>Developer Security</h4>
+        <ul>
+          <li>IDE SAST plugins</li>
+          <li>Pre-commit hooks</li>
+          <li>Secrets detection</li>
+        </ul>
+      </div>
+      <div class="pipe-stage rv">
+        <p class="pipe-stage-label">Build</p>
+        <h4>Automated Scanning</h4>
+        <ul>
+          <li>SAST pipeline integration</li>
+          <li>Dependency scanning (SCA)</li>
+          <li>Licence compliance</li>
+        </ul>
+      </div>
+      <div class="pipe-stage rv">
+        <p class="pipe-stage-label">Test</p>
+        <h4>Dynamic Testing</h4>
+        <ul>
+          <li>DAST integration</li>
+          <li>API security testing</li>
+          <li>Security regression tests</li>
+        </ul>
+      </div>
+      <div class="pipe-stage rv">
+        <p class="pipe-stage-label">Deploy</p>
+        <h4>Infrastructure Security</h4>
+        <ul>
+          <li>IaC security scanning</li>
+          <li>Container image scanning</li>
+          <li>Policy-as-code gates</li>
+        </ul>
+      </div>
+      <div class="pipe-stage rv">
+        <p class="pipe-stage-label">Operate</p>
+        <h4>Runtime Protection</h4>
+        <ul>
+          <li>RASP / WAF integration</li>
+          <li>Runtime anomaly detection</li>
+          <li>Continuous compliance</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="devs-note rv">
+      <div class="devs-note-label">AppSec<br/>Context</div>
+      <p>DevSecOps advisory builds on the <strong>Application Security consulting</strong> practice — SAST, DAST, secure code review, and threat modelling are the tools; DevSecOps is the operating model that makes them part of every delivery cycle rather than a one-time event. <a href="https://www.sarathg.me/services/application-security.html" style="color:var(--accent)">View AppSec Consulting →</a></p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ENGAGEMENT MODELS -->
+<section class="models-section" aria-labelledby="models-h">
+  <div class="sec">
+    <p class="eyebrow">Engagement Models</p>
+    <h2 class="sec-title" id="models-h">How We <span class="ac">Work Together</span></h2>
+    <p class="sec-desc">
+      Security architecture advisory does not fit a single delivery model.
+      The right format depends on the scope, urgency, and whether your team
+      needs a one-time design or ongoing strategic support.
+    </p>
+
+    <div class="models-grid">
+      <div class="model-item rv">
+        <div class="model-icon">🎯</div>
+        <h4>Project-Based Engagement</h4>
+        <p>Defined scope, defined timeline, defined deliverable. Suited to: architecture reviews, Zero Trust roadmaps, BC/DR design, or DevSecOps pipeline builds with a clear start and end.</p>
+      </div>
+      <div class="model-item rv">
+        <div class="model-icon">🔁</div>
+        <h4>Advisory Retainer</h4>
+        <p>Ongoing monthly advisory — a fixed number of hours per month for strategic guidance, architecture review of in-progress work, and security leadership support. Suited to organisations without a full-time security architect.</p>
+      </div>
+      <div class="model-item rv">
+        <div class="model-icon">⚡</div>
+        <h4>Fractional Security Architect</h4>
+        <p>Embedded part-time security architecture function — joining your leadership team on a fractional basis. Suited to scaling organisations that need senior security architecture input without a full-time hire.</p>
+      </div>
+      <div class="model-item rv">
+        <div class="model-icon">🔍</div>
+        <h4>Architecture Review &amp; Peer Audit</h4>
+        <p>Independent expert review of an existing architecture design or security programme. Produces an objective assessment with gaps, risks, and recommendations — useful before major investment decisions or regulatory audits.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- FRAMEWORKS -->
+<section class="fw-section" aria-labelledby="fw-h">
+  <div class="sec">
+    <p class="eyebrow">Frameworks &amp; Standards</p>
+    <h2 class="sec-title" id="fw-h">Architecture Aligned to <span class="ac">Industry Standards</span></h2>
+    <p class="sec-desc">
+      Architecture built on recognised frameworks reduces re-work, aligns with
+      regulatory expectations, and gives leadership confidence that decisions
+      are grounded in globally accepted security engineering principles.
+    </p>
+
+    <div class="fw-grid">
+      <div class="fw-item rv">
+        <p class="fw-label">Zero Trust</p>
+        <h4>NIST SP 800-207</h4>
+        <p>The definitive US federal standard for Zero Trust Architecture design. Used as the primary reference framework for all ZTA engagements.</p>
+      </div>
+      <div class="fw-item rv">
+        <p class="fw-label">Security Management</p>
+        <h4>NIST CSF 2.0</h4>
+        <p>The updated Cybersecurity Framework covering Govern, Identify, Protect, Detect, Respond, and Recover functions. Used for security programme design and gap assessment.</p>
+      </div>
+      <div class="fw-item rv">
+        <p class="fw-label">Information Security</p>
+        <h4>ISO/IEC 27001</h4>
+        <p>International standard for information security management systems. Architecture recommendations are aligned to Annex A controls and support ISO 27001 certification readiness.</p>
+      </div>
+      <div class="fw-item rv">
+        <p class="fw-label">Business Continuity</p>
+        <h4>ISO 22301</h4>
+        <p>International standard for business continuity management systems. BC/DR planning and architecture engagements are aligned to ISO 22301 requirements and terminology.</p>
+      </div>
+      <div class="fw-item rv">
+        <p class="fw-label">Enterprise Architecture</p>
+        <h4>SABSA</h4>
+        <p>Sherwood Applied Business Security Architecture — a risk-driven enterprise security architecture framework used for end-to-end security architecture design from business context to technical implementation.</p>
+      </div>
+      <div class="fw-item rv">
+        <p class="fw-label">Threat Intelligence</p>
+        <h4>MITRE ATT&amp;CK</h4>
+        <p>Used for threat-informed architecture decisions — designing detective and preventive controls that map to known adversary TTPs relevant to the organisation's industry and geography.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- DELIVERABLES -->
+<section class="del-section" aria-labelledby="del-h">
+  <div class="sec">
+    <p class="eyebrow">What You Receive</p>
+    <h2 class="sec-title" id="del-h">Engagement <span class="ac">Deliverables</span></h2>
+    <p class="sec-desc">
+      Architecture engagements produce documentation that drives decisions —
+      not reports that sit on a shelf.
+    </p>
+
+    <div class="del-grid">
+      <div class="del-item rv">
+        <div class="del-icon">🗺️</div>
+        <h4>Current-State Architecture Assessment</h4>
+        <p>Documented analysis of the existing security architecture — what is in place, what is missing, and where the highest-risk gaps are relative to your threat model and compliance requirements.</p>
+      </div>
+      <div class="del-item rv">
+        <div class="del-icon">📐</div>
+        <h4>Target-State Architecture Design</h4>
+        <p>Detailed design of the target security architecture — network topology, identity architecture, data flow diagrams, control mapping, and technology recommendations — in a format suitable for implementation teams.</p>
+      </div>
+      <div class="del-item rv">
+        <div class="del-icon">🛣️</div>
+        <h4>Phased Implementation Roadmap</h4>
+        <p>A sequenced, prioritised roadmap from current state to target state — with each phase scoped by risk reduction impact, resource requirements, and dependencies. Board and CISO presentation-ready.</p>
+      </div>
+      <div class="del-item rv">
+        <div class="del-icon">📋</div>
+        <h4>Policy &amp; Standards Documentation</h4>
+        <p>Where required — security policies, architecture standards, and design principles documentation that governs how the architecture is implemented and maintained over time.</p>
+      </div>
+      <div class="del-item rv">
+        <div class="del-icon">🔄</div>
+        <h4>Stakeholder Briefing &amp; Workshop</h4>
+        <p>Structured briefing session with security, IT, and business leadership to walk through findings, architecture decisions, and roadmap priorities — ensuring alignment before implementation begins.</p>
+      </div>
+      <div class="del-item rv">
+        <div class="del-icon">✅</div>
+        <h4>Implementation Review</h4>
+        <p>Checkpoint review during or after implementation to validate that the architecture has been realised as designed — identifying deviations, unintended gaps, and configuration drift before they become vulnerabilities.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- FAQ -->
+<section class="faq-section" aria-labelledby="faq-h">
+  <div class="sec">
+    <p class="eyebrow">Common Questions</p>
+    <h2 class="sec-title" id="faq-h">Frequently Asked <span class="ac">Questions</span></h2>
+    <div class="faq-wrap">
+
+      <div class="faq-item">
+        <div class="faq-q" tabindex="0" role="button" aria-expanded="false" onclick="faq(this)">
+          <h4>What is Zero Trust Architecture and how is it implemented?</h4>
+          <span class="faq-ico">+</span>
+        </div>
+        <div class="faq-a"><p>Zero Trust Architecture (ZTA) is a security model based on the principle of "never trust, always verify" — eliminating implicit trust from any network zone, user, or device. Implementation follows NIST SP 800-207 and covers identity verification, device health validation, least-privilege access enforcement, micro-segmentation, and continuous monitoring. Engagements begin with a current-state assessment and produce a phased ZTA roadmap aligned to your existing technology environment — not a rip-and-replace exercise.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" tabindex="0" role="button" aria-expanded="false" onclick="faq(this)">
+          <h4>What is the difference between BC/DR planning and BC/DR architecture design?</h4>
+          <span class="faq-ico">+</span>
+        </div>
+        <div class="faq-a"><p>BC/DR planning covers policy creation, business impact analysis, recovery strategy definition, RTO/RPO target setting, and documented response procedures — the "what and when" of recovery. BC/DR architecture design translates those plans into actual technical infrastructure — replication topology, failover automation, backup architecture, cloud DR environments, and tested recovery runbooks. Both services are available independently or as a combined engagement aligned to ISO 22301.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" tabindex="0" role="button" aria-expanded="false" onclick="faq(this)">
+          <h4>What does a Security Architecture Design &amp; Review engagement cover?</h4>
+          <span class="faq-ico">+</span>
+        </div>
+        <div class="faq-a"><p>A Security Architecture Design & Review engagement covers the end-to-end security posture of an organisation's technology environment — network segmentation, identity and access architecture, data protection controls, application security integration points, cloud security design, and alignment to frameworks such as NIST CSF, ISO 27001, and SABSA. The output is a current-state gap assessment, target-state architecture design, and a prioritised implementation roadmap.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" tabindex="0" role="button" aria-expanded="false" onclick="faq(this)">
+          <h4>What is DevSecOps and how does secure CI/CD pipeline integration work?</h4>
+          <span class="faq-ico">+</span>
+        </div>
+        <div class="faq-a"><p>DevSecOps integrates security controls into every stage of the software development and delivery lifecycle — shifting security left from post-deployment testing to design and development. Secure CI/CD pipeline integration covers SAST tool integration, dependency scanning (SCA), container image scanning, infrastructure-as-code security checks, secrets management architecture, and automated security gates that prevent vulnerable code from reaching production. The goal is making security a natural part of delivery, not a blocker to it.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" tabindex="0" role="button" aria-expanded="false" onclick="faq(this)">
+          <h4>Who is Security Architecture advisory designed for?</h4>
+          <span class="faq-ico">+</span>
+        </div>
+        <div class="faq-a"><p>Security Architecture advisory is designed for CISOs, CTOs, Heads of IT, and security leadership teams at enterprise organisations undergoing digital transformation, cloud migration, regulatory compliance programmes, or post-incident security rebuilds. Engagements are available as project-based work, advisory retainers, or fractional security architecture support — depending on the organisation's needs and internal capability.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" tabindex="0" role="button" aria-expanded="false" onclick="faq(this)">
+          <h4>Are engagements available remotely for international organisations?</h4>
+          <span class="faq-ico">+</span>
+        </div>
+        <div class="faq-a"><p>Yes. Security architecture advisory and consulting engagements are available fully remotely and onsite globally. Architecture review, Zero Trust roadmapping, and BC/DR planning engagements are well-suited to remote delivery with structured workshops conducted virtually. Onsite delivery is available for stakeholder alignment workshops and architecture deep-dive sessions — internationally.</p></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- CTA -->
+<section class="cta-section" aria-labelledby="cta-h">
+  <div class="cta-inner">
+    <p class="eyebrow">Ready to Start</p>
+    <h2 id="cta-h">Build security into the <span class="ac">architecture, not around it.</span></h2>
+    <p>
+      30-minute consultation. We'll discuss your current architecture posture,
+      the problem you're trying to solve, and whether there's a fit —
+      before anything is formalised.
+    </p>
+    <div class="cta-row">
+      <a href="https://calendar.app.google/r7fLjeQpyWbE4daw9" class="btn-p" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Book an Architecture Consultation
+      </a>
+      <a href="https://www.linkedin.com/in/sarathcybersec/" class="btn-o" target="_blank" rel="noopener">Connect on LinkedIn</a>
+    </div>
+    <p class="cta-note">Available globally · Remote &amp; onsite · Project-based · Advisory retainer · Fractional</p>
+  </div>
+</section>
+
+
+<!-- FOOTER -->
+<footer>
+  <div class="f-brand">Sarath <span>G.</span> — Security Architecture Consultant</div>
+  <ul class="f-links">
+    <li><a href="https://www.sarathg.me/">Home</a></li>
+    <li><a href="https://www.sarathg.me/services/">Services</a></li>
+    <li><a href="https://www.sarathg.me/services/application-security.html">AppSec Consulting</a></li>
+    <li><a href="https://www.sarathg.me/services/corporate-training.html">Corporate Training</a></li>
+    <li><a href="https://www.sarathg.me/services/offensive-security.html">Offensive Security</a></li>
+    <li><a href="https://www.sarathg.me/services/grc-advisory.html">GRC Advisory</a></li>
+    <li><a href="https://www.sarathg.me/blog/">Blog</a></li>
+    <li><a href="https://www.linkedin.com/in/sarathcybersec/" target="_blank" rel="noopener">LinkedIn</a></li>
+  </ul>
+  <p class="f-copy">Sarath G. © · Built with precision. Secured by design.</p>
+</footer>
+
+
+<script>
+  function faq(btn) {
+    const item = btn.closest('.faq-item');
+    const open = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(el => {
+      el.classList.remove('open');
+      el.querySelector('.faq-q').setAttribute('aria-expanded','false');
+    });
+    if (!open) { item.classList.add('open'); btn.setAttribute('aria-expanded','true'); }
+  }
+  document.querySelectorAll('.faq-q').forEach(b => {
+    b.addEventListener('keydown', e => { if(e.key==='Enter'||e.key===' '){e.preventDefault();faq(b);} });
+  });
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('in'), i * 55);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.07 });
+  document.querySelectorAll('.rv').forEach(el => obs.observe(el));
+</script>
+
+</body>
+</html>
