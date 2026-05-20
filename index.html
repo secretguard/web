@@ -8,8 +8,8 @@
   <!-- ═══════════════════════════════════════════════════════════ -->
   <!-- SEO: Primary Meta Tags -->
   <!-- ═══════════════════════════════════════════════════════════ -->
-  <title>Sarath G | Cybersecurity Consultant & Global Corporate Trainer</title>
-  <meta name="description" content="Sarath G — Cybersecurity Consultant, Digital Forensics Expert, and Global Corporate Trainer. 8+ years securing governments, banks, and Fortune 500 companies across 10+ countries." />
+  <title>Sarath G | Application Security Consultant & International Cybersecurity Trainer</title>
+  <meta name="description" content="Sarath G — Application Security Consultant and International Cybersecurity Trainer. 8 years, 1,100+ instruction hours, Central Banks to Fortune 500 across 10+ countries." />
   <meta name="keywords" content="cybersecurity consultant, penetration testing, digital forensics, corporate trainer, ethical hacking, CEH, CPENT, LPT Master, OSINT, malware analysis, India" />
   <meta name="author" content="Sarath G" />
   <meta name="robots" content="index, follow" />
@@ -20,8 +20,8 @@
   <!-- ═══════════════════════════════════════════════════════════ -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://sarathg.me/" />
-  <meta property="og:title" content="Sarath G | Cybersecurity Consultant & Global Corporate Trainer" />
-  <meta property="og:description" content="Defending digital infrastructures against advanced threats. Expert in offensive security, incident response, and global capacity building across 10+ countries." />
+  <meta property="og:title" content="Sarath G | Application Security Consultant & International Cybersecurity Trainer" />
+  <meta property="og:description" content="Globally active AppSec consultant and cybersecurity trainer. 1,100+ teaching hours across Central Banks, Fortune 500, and Government agencies in 10+ countries." />
   <meta property="og:image" content="https://sarathg.me/assets/og-image.jpg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
@@ -44,7 +44,7 @@
     "@context": "https://schema.org",
     "@type": "Person",
     "name": "Sarath G",
-    "jobTitle": "Cybersecurity Consultant & Global Corporate Trainer",
+    "jobTitle": "Application Security Consultant & International Cybersecurity Trainer",
     "description": "Cybersecurity expert specializing in penetration testing, digital forensics, OSINT, and corporate training across 10+ countries.",
     "url": "https://sarathg.me",
     "sameAs": [
@@ -72,7 +72,7 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
 
   <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -88,7 +88,6 @@
           fontFamily: {
             sans: ['Inter', 'sans-serif'],
             display: ['Outfit', 'sans-serif'],
-            serif: ['Playfair Display', 'serif'],
             mono: ['JetBrains Mono', 'monospace'],
           }
         }
@@ -145,6 +144,11 @@
 
       /* Misc */
       --transition:       0.3s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    ::selection {
+      background: #ef4444;
+      color: #ffffff;
     }
 
     /* ── LIGHT THEME ── */
@@ -274,7 +278,7 @@
       left: 1.5rem;
       font-size: 5rem;
       line-height: 1;
-      font-family: 'Playfair Display', serif;
+      font-family: serif;
       color: var(--red);
       opacity: 0.20;
     }
@@ -290,9 +294,9 @@
       box-shadow: 0 2px 12px rgba(0,0,0,0.06);
     }
     .theme-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 20px 48px rgba(239,68,68,0.12);
-      border-color: rgba(239,68,68,0.28) !important;
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(239,68,68,0.08);
+      border-color: rgba(239,68,68,0.22) !important;
     }
 
     /* ── Navbar ── */
@@ -474,6 +478,30 @@
       opacity: 1;
       transform: translateY(0);
     }
+
+    /* ── Logo sector tag (hover-only) ── */
+    .logo-sector {
+      position: absolute;
+      bottom: 22px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--red);
+      opacity: 0;
+      transform: translateY(3px);
+      transition: opacity 0.35s cubic-bezier(0.25,0.46,0.45,0.94),
+                  transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94);
+      pointer-events: none;
+    }
+    .logo-cell.proximity-active .logo-sector,
+    .logo-cell:hover .logo-sector {
+      opacity: 1;
+      transform: translateY(0);
+    }
     /* Light mode: dark text so it reads on light background */
     html.light .logo-label { color: rgba(0,0,0,0.55); }
 
@@ -586,6 +614,18 @@
     }
     .footer-link:hover { color: var(--t-primary); }
 
+    /* ── Marquee ── */
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: marquee 30s linear infinite;
+    }
+    .marquee-track:hover { animation-play-state: paused; }
+
     /* ── Spotlight ── */
     #spotlight {
       pointer-events: none;
@@ -685,7 +725,6 @@
         <a href="#gallery" class="nav-link">Gallery</a>
         <a href="#projects" class="nav-link">Projects</a>
         <a href="#skills" class="nav-link">Skills</a>
-        <a href="#blog" class="nav-link">Blog</a>
         <a href="#footprint" class="nav-link">Footprint</a>
         <a href="start.html" class="nav-link">Cybersec Guide</a>
 
@@ -716,7 +755,6 @@
         <a href="#gallery" class="mobile-link block py-2.5" onclick="toggleMobileMenu()">Gallery</a>
         <a href="#projects" class="mobile-link block py-2.5" onclick="toggleMobileMenu()">Projects</a>
         <a href="#skills" class="mobile-link block py-2.5" onclick="toggleMobileMenu()">Skills</a>
-        <a href="#blog" class="mobile-link block py-2.5" onclick="toggleMobileMenu()">Blog</a>
         <a href="#footprint" class="mobile-link block py-2.5" onclick="toggleMobileMenu()">Footprint</a>
         <a href="start.html" class="mobile-link block py-2.5" onclick="toggleMobileMenu()">Cybersec Guide</a>
         <a href="#contact" class="inline-block w-fit px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-full transition-colors font-medium mt-3" onclick="toggleMobileMenu()">Contact Me</a>
@@ -727,10 +765,10 @@
   <!-- ═══════════════════════════════════════════════════════════ -->
   <!-- HERO -->
   <!-- ═══════════════════════════════════════════════════════════ -->
-  <section id="hero" class="relative min-h-screen flex flex-col justify-center overflow-hidden pt-20">
+  <section id="hero" class="relative min-h-[90vh] max-h-[920px] flex flex-col justify-center overflow-hidden pt-20">
     <div class="absolute inset-0 z-0 pointer-events-none hero-glows">
       <div class="absolute top-[20%] left-[5%] w-[35vw] h-[35vw] min-w-[260px] rounded-full bg-red-600/10 blur-[100px] animate-pulse"></div>
-      <div class="absolute bottom-[20%] right-[5%] w-[40vw] h-[40vw] min-w-[320px] rounded-full bg-blue-500/8 blur-[120px]"></div>
+      <div class="absolute bottom-[20%] right-[5%] w-[40vw] h-[40vw] min-w-[320px] rounded-full bg-red-900/6 blur-[120px]"></div>
       <div class="dot-grid absolute inset-0"></div>
     </div>
 
@@ -743,12 +781,12 @@
           <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-700" id="hero-name">Sarath G.</span>
         </h1>
 
-        <h2 class="text-xl sm:text-2xl md:text-3xl font-serif font-medium t-secondary leading-snug fade-up-hero">
+        <h2 class="text-xl sm:text-2xl md:text-3xl font-display font-light t-secondary leading-snug fade-up-hero min-h-[2rem] sm:min-h-[2.5rem] md:min-h-[3rem]">
           <span id="typewriter-text"></span><span class="cursor-blink"></span>
         </h2>
 
         <p class="text-base sm:text-lg t-muted max-w-lg leading-relaxed fade-up-hero">
-          Defending digital infrastructures against advanced threats. Expert in offensive security assessments, incident response, and global capacity building.
+          8 years. 6 continents of clients. 30,000+ professionals trained across central banking, healthcare, and Fortune 500 enterprises. I secure organizations and build the teams that defend them.
         </p>
 
         <div class="flex flex-wrap gap-3 pt-4 fade-up-hero">
@@ -760,21 +798,6 @@
           </a>
         </div>
 
-        <!-- Social links -->
-        <div class="flex items-center gap-4 pt-2 fade-up-hero">
-          <a href="https://www.linkedin.com/in/sarathcybersec/" target="_blank" rel="noopener" aria-label="LinkedIn" class="t-faint hover:text-red-400 transition-colors">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-          </a>
-          <a href="https://github.com/secretguard" target="_blank" rel="noopener" aria-label="GitHub" class="t-faint hover:text-red-400 transition-colors">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-          </a>
-          <a href="https://sarathg.medium.com/" target="_blank" rel="noopener" aria-label="Medium" class="t-faint hover:text-red-400 transition-colors">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M13.54 12a6.8 6.8 0 01-6.77 6.82A6.8 6.8 0 010 12a6.8 6.8 0 016.77-6.82A6.8 6.8 0 0113.54 12zM20.96 12c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42M24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z"/></svg>
-          </a>
-          <a href="https://www.instagram.com/i.sarathg/" target="_blank" rel="noopener" aria-label="Instagram" class="t-faint hover:text-red-400 transition-colors">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-          </a>
-        </div>
       </div>
 
       <!-- Profile image -->
@@ -792,7 +815,7 @@
         </div>
 
         <!-- Floating badge -->
-        <div class="absolute -bottom-5 -left-5 sm:-bottom-6 sm:-left-6 bg-card backdrop-blur-md border b-medium p-3 sm:p-4 rounded-2xl shadow-xl flex items-center gap-3 sm:gap-4 z-20" style="animation: float 3s ease-in-out infinite;">
+        <div class="absolute -bottom-5 -left-5 sm:-bottom-6 sm:-left-6 bg-card backdrop-blur-md border b-medium p-3 sm:p-4 rounded-2xl shadow-xl flex items-center gap-3 sm:gap-4 z-20" style="animation: float 4s ease-in-out infinite;">
           <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-red-500/20 flex items-center justify-center text-red-500 shrink-0">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 sm:w-6 sm:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
           </div>
@@ -803,7 +826,7 @@
         </div>
 
         <!-- Second badge -->
-        <div class="absolute -top-4 -right-4 sm:-top-5 sm:-right-5 bg-card backdrop-blur-md border b-medium px-3 py-2 rounded-xl shadow-xl z-20" style="animation: float 3s ease-in-out 1.5s infinite;">
+        <div class="absolute -top-4 -right-4 sm:-top-5 sm:-right-5 bg-card backdrop-blur-md border b-medium px-3 py-2 rounded-xl shadow-xl z-20" style="animation: float 6s ease-in-out 1s infinite;">
           <div class="flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
             <span class="t-primary text-xs font-medium">Available for Engagements</span>
@@ -818,6 +841,48 @@
       <div class="w-px h-8 animate-pulse" style="background:linear-gradient(to bottom,var(--t-faint),transparent)"></div>
     </div>
   </section>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- MARQUEE STRIP -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div class="border-y b-subtle overflow-hidden py-3 bg-section/50">
+    <div class="marquee-track">
+      <span class="flex items-center gap-0 whitespace-nowrap">
+        <span class="font-mono text-[10px] t-faint uppercase tracking-widest px-5">CEH v13</span><span class="text-red-500/40 text-xs">·</span>
+        <span class="font-mono text-[10px] t-faint uppercase tracking-widest px-5">CPENT</span><span class="text-red-500/40 text-xs">·</span>
+        <span class="font-mono text-[10px] t-faint uppercase tracking-widest px-5">PEN-200 / OSCP</span><span class="text-red-500/40 text-xs">·</span>
+        <span class="font-mono text-[10px] t-faint uppercase tracking-widest px-5">SAST</span><span class="text-red-500/40 text-xs">·</span>
+        <span class="font-mono text-[10px] t-faint uppercase tracking-widest px-5">DAST</span><span class="text-red-500/40 text-xs">·</span>
+        <span class="font-mono text-[10px] t-faint uppercase tracking-widest px-5">CASE .NET</span><span class="text-red-500/40 text-xs">·</span>
+        <span class="font-mono text-[10px] t-faint uppercase tracking-widest px-5">CHFI</span><span class="text-red-500/40 text-xs">·</span>
+        <span class="font-mono text-[10px] t-faint uppercase tracking-widest px-5">CCISO</span><span class="text-red-500/40 text-xs">·</span>
+        <span class="font-mono text-[10px] t-faint uppercase tracking-widest px-5">OSINT</span><span class="text-red-500/40 text-xs">·</span>
+        <span class="font-mono text-[10px] t-faint uppercase tracking-widest px-5">SWIFT Essential</span><span class="text-red-500/40 text-xs">·</span>
+        <span class="font-mono text-[10px] t-faint uppercase tracking-widest px-5">ISO 20022</span><span class="text-red-500/40 text-xs">·</span>
+        <span class="font-mono text-[10px] t-faint uppercase tracking-widest px-5">WAHS</span><span class="text-red-500/40 text-xs">·</span>
+        <span class="font-mono text-[10px] t-faint uppercase tracking-widest px-5">Secure Coding</span><span class="text-red-500/40 text-xs">·</span>
+        <span class="font-mono text-[10px] t-faint uppercase tracking-widest px-5">CND</span><span class="text-red-500/40 text-xs">·</span>
+        <span class="font-mono text-[10px] t-faint uppercase tracking-widest px-5">CITDRP</span><span class="text-red-500/40 text-xs">·</span>
+      </span>
+      <span class="flex items-center gap-0 whitespace-nowrap" aria-hidden="true">
+        <span class="font-mono text-[10px] t-faint uppercase tracking-widest px-5">CEH v13</span><span class="text-red-500/40 text-xs">·</span>
+        <span class="font-mono text-[10px] t-faint uppercase tracking-widest px-5">CPENT</span><span class="text-red-500/40 text-xs">·</span>
+        <span class="font-mono text-[10px] t-faint uppercase tracking-widest px-5">PEN-200 / OSCP</span><span class="text-red-500/40 text-xs">·</span>
+        <span class="font-mono text-[10px] t-faint uppercase tracking-widest px-5">SAST</span><span class="text-red-500/40 text-xs">·</span>
+        <span class="font-mono text-[10px] t-faint uppercase tracking-widest px-5">DAST</span><span class="text-red-500/40 text-xs">·</span>
+        <span class="font-mono text-[10px] t-faint uppercase tracking-widest px-5">CASE .NET</span><span class="text-red-500/40 text-xs">·</span>
+        <span class="font-mono text-[10px] t-faint uppercase tracking-widest px-5">CHFI</span><span class="text-red-500/40 text-xs">·</span>
+        <span class="font-mono text-[10px] t-faint uppercase tracking-widest px-5">CCISO</span><span class="text-red-500/40 text-xs">·</span>
+        <span class="font-mono text-[10px] t-faint uppercase tracking-widest px-5">OSINT</span><span class="text-red-500/40 text-xs">·</span>
+        <span class="font-mono text-[10px] t-faint uppercase tracking-widest px-5">SWIFT Essential</span><span class="text-red-500/40 text-xs">·</span>
+        <span class="font-mono text-[10px] t-faint uppercase tracking-widest px-5">ISO 20022</span><span class="text-red-500/40 text-xs">·</span>
+        <span class="font-mono text-[10px] t-faint uppercase tracking-widest px-5">WAHS</span><span class="text-red-500/40 text-xs">·</span>
+        <span class="font-mono text-[10px] t-faint uppercase tracking-widest px-5">Secure Coding</span><span class="text-red-500/40 text-xs">·</span>
+        <span class="font-mono text-[10px] t-faint uppercase tracking-widest px-5">CND</span><span class="text-red-500/40 text-xs">·</span>
+        <span class="font-mono text-[10px] t-faint uppercase tracking-widest px-5">CITDRP</span><span class="text-red-500/40 text-xs">·</span>
+      </span>
+    </div>
+  </div>
 
   <!-- ═══════════════════════════════════════════════════════════ -->
   <!-- STATS BANNER -->
@@ -857,7 +922,7 @@
             <div class="absolute inset-0 bg-[url('assets/gallery/google_wow-2.jpg')] bg-cover bg-center opacity-30 group-hover:opacity-55 transition-opacity duration-700"></div>
             <div class="absolute inset-0 flex flex-col justify-end p-8 z-10">
               <h3 class="font-display text-2xl sm:text-3xl font-bold t-primary mb-2">My Journey</h3>
-              <p class="t-secondary text-sm sm:text-base">Turning curiosity about fragile digital systems into a career dedicated to protection and education.</p>
+              <p class="t-secondary text-sm sm:text-base">8 years. 6 countries. One mission.</p>
             </div>
           </div>
           <!-- Decorative -->
@@ -874,28 +939,49 @@
           </div>
 
           <div class="space-y-4 t-secondary leading-relaxed text-base sm:text-lg">
-            <p>Hello! My name is Sarath and I enjoy diving deep into the world of bits and bytes. My interest in cybersecurity started when I realized the fragility of digital systems — turning curiosity into a career dedicated to protection and education.</p>
-            <p>Fast-forward to today, and I've had the privilege of working with <strong class="t-primary font-semibold">government agencies</strong>, <strong class="t-primary font-semibold">financial institutions</strong>, and <strong class="t-primary font-semibold">Fortune 500 organizations</strong> across three continents.</p>
+            <p>I'm a globally deployed cybersecurity instructor-consultant with 8 years of operational experience. Over 1,100 instruction hours delivered to security teams at Central Banks, Fortune 500 firms, and government agencies — across three continents, onsite where it matters.</p>
+            <p>Every engagement is operationally earned — from central banking institutions in West Africa to enterprise development teams across Southeast Asia and the Gulf. The work spans offensive security, application security enablement, and building the teams that defend critical infrastructure.</p>
           </div>
 
-          <!-- Mini skill bars -->
-          <div class="space-y-4 pt-2">
-            <div>
-              <div class="flex justify-between text-sm mb-1.5"><span class="t-secondary font-medium">Penetration Testing</span><span class="text-red-400 font-mono text-xs">95%</span></div>
-              <div class="skill-bar-track"><div class="skill-bar-fill" style="--target: 0.95;" data-width="95"></div></div>
+          <!-- Evidence cards -->
+          <div class="grid grid-cols-2 gap-3 pt-2">
+
+            <div class="relative overflow-hidden rounded-xl bg-card border b-card p-4">
+              <div class="absolute top-0 left-0 w-10 h-[2px] bg-red-500"></div>
+              <p class="font-mono text-[10px] text-red-400 uppercase tracking-wider mb-1.5">Application Security</p>
+              <p class="t-primary text-sm font-medium leading-snug">SAST · DAST · CASE .NET · Secure Coding</p>
+              <p class="t-muted font-mono text-[10px] mt-1.5">Most-delivered domain</p>
             </div>
-            <div>
-              <div class="flex justify-between text-sm mb-1.5"><span class="t-secondary font-medium">Digital Forensics</span><span class="text-red-400 font-mono text-xs">92%</span></div>
-              <div class="skill-bar-track"><div class="skill-bar-fill" style="--target: 0.92;" data-width="92"></div></div>
+
+            <div class="relative overflow-hidden rounded-xl bg-card border b-card p-4">
+              <div class="absolute top-0 left-0 w-10 h-[2px] bg-red-500"></div>
+              <p class="font-mono text-[10px] text-red-400 uppercase tracking-wider mb-1.5">Offensive Security</p>
+              <p class="t-primary text-sm font-medium leading-snug">CEH Master · CPENT · LPT · PEN-200</p>
+              <p class="t-muted font-mono text-[10px] mt-1.5">Certified &amp; delivered</p>
             </div>
-            <div>
-              <div class="flex justify-between text-sm mb-1.5"><span class="t-secondary font-medium">Corporate Training</span><span class="text-red-400 font-mono text-xs">98%</span></div>
-              <div class="skill-bar-track"><div class="skill-bar-fill" style="--target: 0.98;" data-width="98"></div></div>
+
+            <div class="relative overflow-hidden rounded-xl bg-card border b-card p-4">
+              <div class="absolute top-0 left-0 w-10 h-[2px] bg-red-500"></div>
+              <p class="font-mono text-[10px] text-red-400 uppercase tracking-wider mb-1.5">Enterprise Training</p>
+              <p class="t-primary text-sm font-medium leading-snug">156 days · 33 assignments · 26 max batch</p>
+              <p class="t-muted font-mono text-[10px] mt-1.5">Banking · Healthcare · Gov</p>
             </div>
-            <div>
-              <div class="flex justify-between text-sm mb-1.5"><span class="t-secondary font-medium">OSINT & Threat Intel</span><span class="text-red-400 font-mono text-xs">90%</span></div>
-              <div class="skill-bar-track"><div class="skill-bar-fill" style="--target: 0.90;" data-width="90"></div></div>
+
+            <div class="relative overflow-hidden rounded-xl bg-card border b-card p-4">
+              <div class="absolute top-0 left-0 w-10 h-[2px] bg-red-500"></div>
+              <p class="font-mono text-[10px] text-red-400 uppercase tracking-wider mb-1.5">Global Reach</p>
+              <p class="t-primary text-sm font-medium leading-snug">1,188 hrs · 6 countries · 3 continents</p>
+              <p class="t-muted font-mono text-[10px] mt-1.5">Last 2 years · Koenig Solutions</p>
             </div>
+
+          </div>
+
+          <!-- Domain tags -->
+          <div class="flex flex-wrap gap-2 pt-2">
+            <span class="px-4 py-2 rounded-full border b-card bg-card font-mono text-xs t-secondary tracking-wide">Application Security</span>
+            <span class="px-4 py-2 rounded-full border b-card bg-card font-mono text-xs t-secondary tracking-wide">Web App Penetration Testing</span>
+            <span class="px-4 py-2 rounded-full border b-card bg-card font-mono text-xs t-secondary tracking-wide">Offensive Security</span>
+            <span class="px-4 py-2 rounded-full border b-card bg-card font-mono text-xs t-secondary tracking-wide">Corporate Training</span>
           </div>
 
           <div class="pt-2">
@@ -928,7 +1014,7 @@
           <div class="p-5 sm:p-7 rounded-2xl bg-card border b-card theme-card">
             <h3 class="t-primary font-display font-bold text-lg sm:text-xl mb-0.5">Corporate Trainer</h3>
             <p class="text-red-400 text-xs font-mono mb-3">Koenig Solutions Pvt. Ltd. · Remote</p>
-            <p class="t-muted text-sm leading-relaxed mb-4">Delivering advanced cybersecurity certification training globally. Mentoring corporate clients and students in CEH, CPENT, CHFI, and offensive security.</p>
+            <p class="t-muted text-sm leading-relaxed mb-4">1,188 instruction hours across 156 delivery days · 33 assignments spanning online, onsite, and corporate formats · Banking, Healthcare, Government, and Enterprise sectors across Asia, the Middle East, and Africa.</p>
             <div class="flex flex-wrap gap-2"><span class="skill-tag">CEH</span><span class="skill-tag">CPENT</span><span class="skill-tag">CHFI</span><span class="skill-tag">Corporate Training</span><span class="skill-tag">Mentoring</span></div>
           </div>
         </div>
@@ -1004,13 +1090,14 @@
       </div>
 
       <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
-        <!-- Skill cards -->
+        <!-- Skill cards — ordered by delivery volume -->
+
         <div class="group p-6 sm:p-8 rounded-3xl bg-card backdrop-blur-md border b-card theme-card fade-in-scroll">
           <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-red-500/15 flex items-center justify-center text-red-500 mb-5 sm:mb-6 group-hover:scale-110 transition-transform">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
           </div>
-          <h3 class="text-lg sm:text-xl font-display font-bold t-primary mb-2.5">Forensics & IR</h3>
-          <p class="t-muted leading-relaxed text-sm sm:text-base">Digital evidence recovery and incident response for complex, high-stakes breaches.</p>
+          <h3 class="text-lg sm:text-xl font-display font-bold t-primary mb-2.5">Application Security</h3>
+          <p class="t-muted leading-relaxed text-sm sm:text-base">SAST, DAST, and secure coding enablement for enterprise development and security teams.</p>
         </div>
 
         <div class="group p-6 sm:p-8 rounded-3xl bg-card backdrop-blur-md border b-card theme-card fade-in-scroll">
@@ -1031,18 +1118,18 @@
 
         <div class="group p-6 sm:p-8 rounded-3xl bg-card backdrop-blur-md border b-card theme-card fade-in-scroll">
           <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-red-500/15 flex items-center justify-center text-red-500 mb-5 sm:mb-6 group-hover:scale-110 transition-transform">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
           </div>
-          <h3 class="text-lg sm:text-xl font-display font-bold t-primary mb-2.5">OSINT</h3>
-          <p class="t-muted leading-relaxed text-sm sm:text-base">Open Source Intelligence gathering for comprehensive threat landscape analysis.</p>
+          <h3 class="text-lg sm:text-xl font-display font-bold t-primary mb-2.5">Forensics & IR</h3>
+          <p class="t-muted leading-relaxed text-sm sm:text-base">Digital evidence recovery and incident response for complex, high-stakes breaches.</p>
         </div>
 
         <div class="group p-6 sm:p-8 rounded-3xl bg-card backdrop-blur-md border b-card theme-card fade-in-scroll">
           <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-red-500/15 flex items-center justify-center text-red-500 mb-5 sm:mb-6 group-hover:scale-110 transition-transform">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
           </div>
-          <h3 class="text-lg sm:text-xl font-display font-bold t-primary mb-2.5">Malware Analysis</h3>
-          <p class="t-muted leading-relaxed text-sm sm:text-base">Dissecting malicious software to understand behavior, pinpoint origin, and mitigate impact.</p>
+          <h3 class="text-lg sm:text-xl font-display font-bold t-primary mb-2.5">OSINT</h3>
+          <p class="t-muted leading-relaxed text-sm sm:text-base">Open Source Intelligence gathering for comprehensive threat landscape analysis.</p>
         </div>
 
         <div class="group p-6 sm:p-8 rounded-3xl bg-card backdrop-blur-md border b-card theme-card fade-in-scroll">
@@ -1419,7 +1506,25 @@
       <div class="text-center max-w-2xl mx-auto mb-14 sm:mb-16 fade-in-scroll">
         <div class="section-eyebrow justify-center">Reach</div>
         <h2 class="text-3xl sm:text-4xl md:text-5xl font-display font-bold t-primary mb-4">Global Footprint</h2>
-        <p class="t-muted text-base sm:text-lg">Delivering security excellence across borders.</p>
+        <p class="t-muted text-base sm:text-lg">From Central Bank training rooms in West Africa to enterprise AppSec deployments across Southeast Asia and the Gulf — security delivered where it matters.</p>
+      </div>
+
+      <!-- Footprint stats row -->
+      <div class="flex justify-center items-center gap-8 sm:gap-12 mb-10 fade-in-scroll">
+        <div class="text-center">
+          <div class="text-2xl sm:text-3xl font-display font-bold text-red-400">6</div>
+          <div class="font-mono text-xs t-muted uppercase tracking-widest mt-1">Physically Onsite</div>
+        </div>
+        <div class="w-px h-10 bg-[var(--b-subtle)]"></div>
+        <div class="text-center">
+          <div class="text-2xl sm:text-3xl font-display font-bold text-red-400">13</div>
+          <div class="font-mono text-xs t-muted uppercase tracking-widest mt-1">Client Engagements</div>
+        </div>
+        <div class="w-px h-10 bg-[var(--b-subtle)]"></div>
+        <div class="text-center">
+          <div class="text-2xl sm:text-3xl font-display font-bold text-red-400">3</div>
+          <div class="font-mono text-xs t-muted uppercase tracking-widest mt-1">Asia · Middle East · Africa</div>
+        </div>
       </div>
 
       <div class="map-wrapper shadow-2xl relative h-[250px] sm:h-[350px] md:h-[500px] fade-in-scroll">
@@ -1448,25 +1553,25 @@
         <div class="relative max-w-6xl mx-auto">
           <div class="[mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_80%)] pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:calc(100%/3)_160px] md:bg-[size:calc(100%/4)_180px] lg:bg-[size:calc(100%/6)_200px]"></div>
           <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 items-center justify-items-center opacity-80 hover:opacity-100 transition-opacity">
-            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/african-union.jpg" alt="African Union" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">African Union</span></div>
-            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/abk.jpg" alt="Al Ahli Bank" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">Al Ahli Bank</span></div>
-            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/ashghal.jpg" alt="Ashghal" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">Ashghal</span></div>
-            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/cbn.jpg" alt="Central Bank of Nigeria" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">CBN Nigeria</span></div>
-            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/navy.jpg" alt="Indian Navy" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">Indian Navy</span></div>
-            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/samsung.jpg" alt="Samsung" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">Samsung</span></div>
-            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/bank-of-tanzania.jpg" alt="Bank of Tanzania" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">Bank of Tanzania</span></div>
-            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/iit.jpg" alt="IIT Madras" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">IIT Madras</span></div>
-            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/ust.jpg" alt="UST" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">UST</span></div>
-            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/oil-india.jpg" alt="Oil India" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">Oil India</span></div>
-            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/bank-of-baroda.jpg" alt="Bank of Baroda" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">Bank of Baroda</span></div>
-            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/vit.jpg" alt="VIT" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">VIT</span></div>
-            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/anm.jpg" alt="ANM" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">ANM</span></div>
-            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/bakkavor.jpg" alt="Bakkavor" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">Bakkavor</span></div>
-            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/bia.png" alt="Brunei Investment Agency" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">Brunei Inv. Agency</span></div>
-            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/canara-bank.jpg" alt="Canara Bank" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">Canara Bank</span></div>
-            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/ewura.jpg" alt="EWURA" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">EWURA</span></div>
-            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/mumi.jpg" alt="Mutanda Mining" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">Mutanda Mining</span></div>
-            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/siemens.png" alt="Siemens Healthineers" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">Siemens</span></div>
+            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/african-union.jpg" alt="African Union" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">African Union</span><span class="logo-sector">Government</span></div>
+            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/abk.jpg" alt="Al Ahli Bank" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">Al Ahli Bank</span><span class="logo-sector">Banking</span></div>
+            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/ashghal.jpg" alt="Ashghal" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">Ashghal</span><span class="logo-sector">Government</span></div>
+            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/cbn.jpg" alt="Central Bank of Nigeria" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">CBN Nigeria</span><span class="logo-sector">Central Banking</span></div>
+            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/navy.jpg" alt="Indian Navy" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">Indian Navy</span><span class="logo-sector">Defence</span></div>
+            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/samsung.jpg" alt="Samsung" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">Samsung</span><span class="logo-sector">Technology</span></div>
+            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/bank-of-tanzania.jpg" alt="Bank of Tanzania" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">Bank of Tanzania</span><span class="logo-sector">Banking</span></div>
+            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/iit.jpg" alt="IIT Madras" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">IIT Madras</span><span class="logo-sector">Academia</span></div>
+            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/ust.jpg" alt="UST" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">UST</span><span class="logo-sector">Enterprise</span></div>
+            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/oil-india.jpg" alt="Oil India" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">Oil India</span><span class="logo-sector">Energy</span></div>
+            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/bank-of-baroda.jpg" alt="Bank of Baroda" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">Bank of Baroda</span><span class="logo-sector">Banking</span></div>
+            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/vit.jpg" alt="VIT" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">VIT</span><span class="logo-sector">Academia</span></div>
+            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/anm.jpg" alt="ANM" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">ANM</span><span class="logo-sector">Government</span></div>
+            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/bakkavor.jpg" alt="Bakkavor" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">Bakkavor</span><span class="logo-sector">Enterprise</span></div>
+            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/bia.png" alt="Brunei Investment Agency" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">Brunei Inv. Agency</span><span class="logo-sector">Sovereign Finance</span></div>
+            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/canara-bank.jpg" alt="Canara Bank" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">Canara Bank</span><span class="logo-sector">Banking</span></div>
+            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/ewura.jpg" alt="EWURA" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">EWURA</span><span class="logo-sector">Government</span></div>
+            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/mumi.jpg" alt="Mutanda Mining" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">Mutanda Mining</span><span class="logo-sector">Mining</span></div>
+            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/siemens.png" alt="Siemens Healthineers" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">Siemens</span><span class="logo-sector">Healthcare</span></div>
           </div>
         </div>
       </div>
@@ -1527,13 +1632,21 @@
           <span class="font-display font-bold text-xl text-red-500">G.</span>
           <span class="t-faint text-sm ml-2">© <span id="year"></span></span>
         </div>
-        <div class="flex items-center gap-5 sm:gap-6 text-sm">
-          <a href="https://www.linkedin.com/in/sarathcybersec/" target="_blank" rel="noopener" class="footer-link transition-colors">LinkedIn</a>
-          <a href="https://github.com/secretguard" target="_blank" rel="noopener" class="footer-link transition-colors">GitHub</a>
-          <a href="https://www.instagram.com/i.sarathg/" target="_blank" rel="noopener" class="footer-link transition-colors">Instagram</a>
-          <a href="https://sarathg.medium.com/" target="_blank" rel="noopener" class="footer-link transition-colors">Medium</a>
-          <a href="https://chatgpt.com/g/g-688c937222c88191b1735af3a8aea4aa-ethan-your-cybersecurity-mentor" target="_blank" rel="noopener" class="t-muted hover:text-red-400 transition-colors">Ethan AI</a>
-          <a href="start.html" class="footer-link transition-colors">Cybersec Guide</a>
+        <div class="flex items-center gap-5 sm:gap-6">
+          <a href="https://www.linkedin.com/in/sarathcybersec/" target="_blank" rel="noopener" aria-label="LinkedIn" class="footer-link transition-colors hover:text-red-400">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </a>
+          <a href="https://github.com/secretguard" target="_blank" rel="noopener" aria-label="GitHub" class="footer-link transition-colors hover:text-red-400">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+          </a>
+          <a href="https://sarathg.medium.com/" target="_blank" rel="noopener" aria-label="Medium" class="footer-link transition-colors hover:text-red-400">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M13.54 12a6.8 6.8 0 01-6.77 6.82A6.8 6.8 0 010 12a6.8 6.8 0 016.77-6.82A6.8 6.8 0 0113.54 12zM20.96 12c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42M24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z"/></svg>
+          </a>
+          <a href="https://www.instagram.com/i.sarathg/" target="_blank" rel="noopener" aria-label="Instagram" class="footer-link transition-colors hover:text-red-400">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </a>
+          <a href="https://chatgpt.com/g/g-688c937222c88191b1735af3a8aea4aa-ethan-your-cybersecurity-mentor" target="_blank" rel="noopener" class="footer-link text-xs font-mono transition-colors hover:text-red-400">Ethan AI</a>
+          <a href="start.html" class="footer-link text-xs font-mono transition-colors hover:text-red-400">Cybersec Guide</a>
         </div>
       </div>
       <div class="mt-8 pt-8 border-t b-subtle text-center t-faint text-xs font-mono">
@@ -1570,7 +1683,7 @@
     }
 
     // ── Typewriter ──
-    const phrases = ['Cybersecurity Consultant.', 'Digital Forensics Expert.', 'Global Corporate Trainer.', 'Ethical Hacker.', 'Security Researcher.'];
+    const phrases = ['Application Security Consultant.', 'Penetration Testing Expert.', 'Global Cybersecurity Trainer.'];
     let pi = 0, ci = 0, deleting = false;
     const el = document.getElementById('typewriter-text');
     function type() {
@@ -1667,7 +1780,7 @@
               );
             }
           })
-            .to('.intro-text', { opacity: 0, duration: 0.5, delay: 0.9, ease: 'power2.in' })
+            .to('.intro-text', { opacity: 0, duration: 0.5, delay: 0.4, ease: 'power2.in' })
             .to(overlay, { opacity: 0, duration: 1.0, ease: 'power2.inOut' });
         } catch(e) {
           revealPage();
@@ -1808,6 +1921,31 @@
         btn.disabled = false;
       }
     });
+  </script>
+
+  <script>
+    (function() {
+      function initMagnetic() {
+        document.querySelectorAll('.magnetic').forEach(el => {
+          el.addEventListener('mousemove', function(e) {
+            const r = this.getBoundingClientRect();
+            const cx = r.left + r.width  / 2;
+            const cy = r.top  + r.height / 2;
+            const dx = (e.clientX - cx) * 0.28;
+            const dy = (e.clientY - cy) * 0.28;
+            this.style.transform = `translate(${dx}px, ${dy}px)`;
+          });
+          el.addEventListener('mouseleave', function() {
+            this.style.transform = '';
+          });
+        });
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initMagnetic);
+      } else {
+        initMagnetic();
+      }
+    })();
   </script>
 </body>
 </html>
