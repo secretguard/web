@@ -826,8 +826,8 @@
       const data = await res.json();
 
       if (data.success) {
-        showSuccess(payload);
-      } else {
+      showSuccess(payload, data.eventId);
+     } else {
         showError(data.error || 'Something went wrong. Please try again.');
         btn.classList.remove('loading');
         btn.disabled = false;
@@ -845,15 +845,19 @@
     el.classList.add('show');
   }
 
-  function showSuccess(p) {
-    document.getElementById('rightPanel').style.display = 'none';
-    const sc = document.getElementById('successScreen');
-    sc.classList.add('show');
-    document.getElementById('successDetail').innerHTML =
-      `<strong style="color:var(--text)">${p.name}</strong>, your scoping call with Sarath G is set for<br>
-       <strong style="color:var(--gold)">${fmtDate(selDate)} at ${selSlot} IST</strong>.<br><br>
-       A calendar invite will be sent to <strong style="color:var(--text)">${p.email}</strong>.`;
-  }
+  function showSuccess(p, eventId) {
+  document.getElementById('rightPanel').style.display = 'none';
+  const sc = document.getElementById('successScreen');
+  sc.classList.add('show');
+
+  const cancelUrl = `${BACKEND_URL}?action=cancel&eventId=${encodeURIComponent(eventId)}&email=${encodeURIComponent(p.email)}`;
+
+  document.getElementById('successDetail').innerHTML =
+    `<strong style="color:var(--text)">${p.name}</strong>, your scoping call with Sarath G is set for<br>
+     <strong style="color:var(--gold)">${fmtDate(selDate)} at ${selSlot} IST</strong>.<br><br>
+     A calendar invite will be sent to <strong style="color:var(--text)">${p.email}</strong>.<br><br>
+     <a href="${cancelUrl}" style="font-size:11px;color:var(--text3);text-decoration:underline;text-underline-offset:3px;">Need to cancel? Click here</a>`;
+}
 
   function resetPage() {
     selDate = null;
