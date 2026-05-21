@@ -845,12 +845,12 @@
     el.classList.add('show');
   }
 
-  function showSuccess(p, eventId) {
+ function showSuccess(p, eventId) {
   document.getElementById('rightPanel').style.display = 'none';
   const sc = document.getElementById('successScreen');
   sc.classList.add('show');
 
-  const cancelUrl = `${BACKEND_URL}?action=cancel&eventId=${encodeURIComponent(eventId)}&email=${encodeURIComponent(p.email)}`;
+  const cancelUrl = `https://sarathg.me/cancel.html?eventId=${encodeURIComponent(eventId)}&email=${encodeURIComponent(p.email)}&name=${encodeURIComponent(p.name)}&date=${encodeURIComponent(fmtDate(selDate))}&time=${encodeURIComponent(selSlot)}`;
 
   document.getElementById('successDetail').innerHTML =
     `<strong style="color:var(--text)">${p.name}</strong>, your scoping call with Sarath G is set for<br>
