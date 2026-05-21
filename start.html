@@ -107,27 +107,6 @@
             z-index: 9998;
             opacity: 0.35;
         }
-        /* ── Navbar ── */
-        #navbar { transition: background 0.4s ease, border-color 0.3s, backdrop-filter 0.3s, box-shadow 0.3s; }
-        #navbar.scrolled {
-            background: color-mix(in srgb, var(--bg-page) 85%, transparent) !important;
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--b-subtle) !important;
-            box-shadow: 0 4px 32px rgba(0,0,0,0.12);
-        }
-        .nav-link { color: var(--t-muted); transition: color var(--transition); position: relative; }
-        .nav-link::after { content: ''; position: absolute; bottom: -2px; left: 0; height: 1px; width: 0; background: var(--red); transition: width var(--transition); }
-        .nav-link:hover { color: var(--t-primary); }
-        .nav-link:hover::after { width: 100%; }
-        .nav-link.active-page { color: var(--red); }
-        .nav-link.active-page::after { width: 100%; }
-        #mobile-menu { background: var(--bg-section); border-bottom: 1px solid var(--b-subtle); transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s; max-height: 0; overflow: hidden; opacity: 0; }
-        #mobile-menu.open { max-height: 600px; opacity: 1; }
-        .mobile-link { color: var(--t-muted); border-bottom: 1px solid var(--b-subtle); transition: color var(--transition); }
-        .mobile-link:hover { color: var(--t-primary); }
-        .mode-toggle { position: relative; width: 48px; height: 26px; background: var(--b-medium); border-radius: 999px; border: 1px solid var(--b-medium); cursor: pointer; flex-shrink: 0; transition: background 0.3s; }
-        .mode-toggle::after { content: ''; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: var(--t-primary); transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); }
-        html.light .mode-toggle::after { transform: translateX(22px); }
         /* ── Footer ── */
         .theme-footer { background: var(--bg-section); border-top: 1px solid var(--b-subtle); transition: background 0.4s ease; }
         .footer-link { color: var(--t-muted); transition: color var(--transition); }
@@ -198,51 +177,7 @@
 </head>
 
 <body class="font-sans antialiased selection:bg-red-500 selection:text-white overflow-x-hidden">
-
-    <!-- ============================================================ -->
-    <!-- NAVBAR -->
-    <!-- ============================================================ -->
-    <nav id="navbar" class="fixed w-full top-0 z-50 bg-transparent border-b border-transparent transition-all duration-500">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
-            <a href="./" class="font-display font-bold text-2xl tracking-tight flex items-center gap-1 group">
-                <span class="t-primary group-hover:text-red-500 transition-colors duration-300">Sarath</span>
-                <span class="text-red-500 group-hover:text-[var(--t-primary)] transition-colors duration-300">G.</span>
-            </a>
-            <div class="hidden lg:flex gap-6 font-sans text-sm font-medium items-center">
-                <a href="./#about" class="nav-link">About</a>
-                <a href="./#experience" class="nav-link">Experience</a>
-                <a href="./#gallery" class="nav-link">Gallery</a>
-                <a href="./#projects" class="nav-link">Projects</a>
-                <a href="./#skills" class="nav-link">Skills</a>
-                <a href="./#blog" class="nav-link">Blog</a>
-                <a href="./#footprint" class="nav-link">Footprint</a>
-                <a href="start.html" class="nav-link active-page">Cybersec Guide</a>
-                <button onclick="toggleMode()" class="mode-toggle" aria-label="Toggle dark/light mode" title="Toggle theme"></button>
-                <a href="./#contact" class="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-full transition-all font-medium hover:scale-105">Contact Me</a>
-            </div>
-            <div class="lg:hidden flex items-center gap-3">
-                <button onclick="toggleMode()" class="mode-toggle" aria-label="Toggle theme"></button>
-                <button id="menu-btn" aria-label="Open menu" onclick="toggleMobileMenu()" class="t-secondary hover:text-[var(--t-primary)] focus:outline-none p-1">
-                    <svg id="menu-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                </button>
-            </div>
-        </div>
-        <div id="mobile-menu" class="lg:hidden backdrop-blur-xl border-b absolute w-full left-0 top-full shadow-2xl">
-            <div class="flex flex-col px-6 py-5 space-y-1 font-sans text-sm">
-                <a href="./#about" class="mobile-link block py-2.5" onclick="toggleMobileMenu()">About</a>
-                <a href="./#experience" class="mobile-link block py-2.5" onclick="toggleMobileMenu()">Experience</a>
-                <a href="./#gallery" class="mobile-link block py-2.5" onclick="toggleMobileMenu()">Gallery</a>
-                <a href="./#projects" class="mobile-link block py-2.5" onclick="toggleMobileMenu()">Projects</a>
-                <a href="./#skills" class="mobile-link block py-2.5" onclick="toggleMobileMenu()">Skills</a>
-                <a href="./#blog" class="mobile-link block py-2.5" onclick="toggleMobileMenu()">Blog</a>
-                <a href="./#footprint" class="mobile-link block py-2.5" onclick="toggleMobileMenu()">Footprint</a>
-                <a href="start.html" class="mobile-link block py-2.5 text-red-400" onclick="toggleMobileMenu()">Cybersec Guide</a>
-                <a href="./#contact" class="inline-block w-fit px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-full transition-colors font-medium mt-3" onclick="toggleMobileMenu()">Contact Me</a>
-            </div>
-        </div>
-    </nav>
+    <script src="navbar.js"></script>
 
     <!-- ============================================================ -->
     <!-- HERO -->
@@ -1093,17 +1028,6 @@
         // Year
         document.getElementById('year').textContent = new Date().getFullYear();
 
-        // Dark / Light Mode
-        function toggleMode() {
-            document.documentElement.classList.toggle('light');
-            localStorage.setItem('theme', document.documentElement.classList.contains('light') ? 'light' : 'dark');
-        }
-        if (localStorage.getItem('theme') === 'light') document.documentElement.classList.add('light');
-
-        // Mobile menu
-        function toggleMobileMenu() {
-            document.getElementById('mobile-menu').classList.toggle('open');
-        }
 
         // GSAP Initialization
         gsap.registerPlugin(ScrollTrigger);
@@ -1198,16 +1122,6 @@
             });
         });
 
-        // Navbar scroll effect
-        window.addEventListener('scroll', () => {
-            const nav = document.getElementById('navbar');
-            if (window.scrollY > 50) {
-                nav.classList.add('scrolled');
-                nav.classList.remove('bg-transparent', 'border-transparent');
-            } else {
-                nav.classList.remove('scrolled');
-            }
-        }, { passive: true });
     </script>
 </body>
 
