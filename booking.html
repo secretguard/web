@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book a Meeting with me </title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #c9a96e;
+    --gold-dim: #c9a96e22;
+    --gold-soft: #c9a96e0d;
+    --bg: #080808;
+    --bg2: #0f0f0f;
+    --bg3: #141414;
+    --bg4: #1a1a1a;
+    --border: #222;
+    --border2: #2e2e2e;
+    --text: #e8e2d6;
+    --text2: #888;
+    --text3: #555;
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --sans: 'DM Sans', system-ui, sans-serif;
+  }
+
+  html, body {
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* grain overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.028;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 860px;
+    display: flex;
+    border: 0.5px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    background: var(--bg2);
+    animation: fadeUp 0.6s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── LEFT PANEL ── */
+  .left {
+    width: 260px;
+    flex-shrink: 0;
+    background: var(--bg3);
+    border-right: 0.5px solid var(--border);
+    padding: 40px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .avatar {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #c9a96e 0%, #7a5218 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 600;
+    color: #0a0a0a;
+    letter-spacing: 0.03em;
+    flex-shrink: 0;
+  }
+
+  .host-name {
+    font-family: var(--serif);
+    font-size: 24px;
+    font-weight: 300;
+    color: var(--text);
+    line-height: 1.1;
+    margin-bottom: 4px;
+  }
+
+  .host-role {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 400;
+  }
+
+  .divider {
+    height: 0.5px;
+    background: var(--border);
+  }
+
+  .meta-label {
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 10px;
+  }
+
+  .meta-list {
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+  }
+
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12.5px;
+    color: var(--text2);
+  }
+
+  .meta-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    opacity: 0.7;
+    color: var(--gold);
+  }
+
+  .desc {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 14.5px;
+    color: var(--text3);
+    line-height: 1.75;
+  }
+
+  .left-footer {
+    margin-top: auto;
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 0.06em;
+    border-top: 0.5px solid var(--border);
+    padding-top: 20px;
+  }
+
+  /* ── RIGHT PANEL ── */
+  .right {
+    flex: 1;
+    padding: 40px 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    min-width: 0;
+  }
+
+  /* steps */
+  .step {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-bottom: 28px;
+    border-bottom: 0.5px solid var(--border);
+    margin-bottom: 28px;
+    transition: opacity 0.3s;
+  }
+  .step:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .step.locked { opacity: 0.3; pointer-events: none; }
+
+  .step-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .step-num {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 0.5px solid var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+  }
+
+  .step-title {
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text2);
+  }
+
+  /* calendar */
+  .cal-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  .cal-month {
+    font-family: var(--serif);
+    font-size: 19px;
+    font-weight: 300;
+    color: var(--text);
+  }
+
+  .nav-btn {
+    background: none;
+    border: 0.5px solid var(--border2);
+    color: var(--text2);
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .nav-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .nav-btn svg { width: 12px; height: 12px; }
+
+  .weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+    margin-bottom: 4px;
+  }
+
+  .wd {
+    text-align: center;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text3);
+    padding: 3px 0;
+  }
+
+  .days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+  }
+
+  .day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--text);
+    border: 0.5px solid transparent;
+    transition: all 0.15s;
+    position: relative;
+  }
+  .day:hover:not(.empty):not(.past) { border-color: var(--gold); color: var(--gold); }
+  .day.selected { background: var(--gold); color: #0a0a0a !important; border-color: var(--gold); font-weight: 500; }
+  .day.past { color: #2e2e2e; cursor: default; }
+  .day.today:not(.selected)::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--gold);
+  }
+  .day.weekend:not(.selected) { color: #3a3a3a; }
+  .day.weekend:not(.selected):hover { color: #3a3a3a; border-color: transparent; cursor: default; }
+  .day.empty { cursor: default; }
+
+  /* slots */
+  .slots-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+
+  .slot {
+    padding: 9px 6px;
+    border: 0.5px solid var(--border2);
+    border-radius: 7px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--text2);
+    cursor: pointer;
+    transition: all 0.15s;
+    background: var(--bg3);
+  }
+  .slot:hover { border-color: var(--gold); color: var(--text); }
+  .slot.selected { border-color: var(--gold); color: var(--gold); background: var(--gold-soft); }
+
+  .no-slots {
+    font-size: 12px;
+    color: var(--text3);
+    font-style: italic;
+    padding: 8px 0;
+  }
+
+  .loading-slots {
+    font-size: 12px;
+    color: var(--text3);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .spinner {
+    width: 12px;
+    height: 12px;
+    border: 1.5px solid var(--border2);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    flex-shrink: 0;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* selected summary */
+  .sel-summary {
+    display: none;
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+    padding: 8px 12px;
+    border: 0.5px solid var(--gold-dim);
+    border-radius: 8px;
+    background: var(--gold-soft);
+  }
+  .sel-summary.show { display: block; }
+
+  /* form */
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field.full { grid-column: 1 / -1; }
+
+  .field-label {
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text3);
+  }
+
+  input[type="text"],
+  input[type="email"],
+  textarea {
+    background: var(--bg3);
+    border: 0.5px solid var(--border2);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 13px;
+    color: var(--text);
+    font-family: var(--sans);
+    outline: none;
+    transition: border-color 0.15s;
+    width: 100%;
+  }
+  input:focus, textarea:focus { border-color: var(--gold); }
+  input::placeholder, textarea::placeholder { color: var(--text3); }
+
+  textarea {
+    resize: none;
+    height: 72px;
+    line-height: 1.6;
+  }
+
+  .submit-btn {
+    width: 100%;
+    margin-top: 6px;
+    padding: 13px;
+    background: var(--gold);
+    border: none;
+    border-radius: 8px;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #0a0a0a;
+    font-family: var(--sans);
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .submit-btn:hover { opacity: 0.85; }
+  .submit-btn:active { transform: scale(0.99); }
+  .submit-btn:disabled { opacity: 0.3; cursor: default; }
+
+  .btn-spinner {
+    width: 12px;
+    height: 12px;
+    border: 1.5px solid #0a0a0a44;
+    border-top-color: #0a0a0a;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: none;
+  }
+  .submit-btn.loading .btn-spinner { display: block; }
+  .submit-btn.loading .btn-text { opacity: 0.6; }
+
+  /* error */
+  .error-msg {
+    display: none;
+    font-size: 11px;
+    color: #e05c5c;
+    padding: 8px 12px;
+    border: 0.5px solid #e05c5c44;
+    border-radius: 7px;
+    background: #e05c5c0a;
+  }
+  .error-msg.show { display: block; }
+
+  /* success screen */
+  .success-screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    text-align: center;
+    padding: 60px 40px;
+    min-height: 360px;
+    animation: fadeUp 0.5s ease both;
+  }
+  .success-screen.show { display: flex; }
+
+  .success-check {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 1px solid var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .success-check svg { color: var(--gold); width: 24px; height: 24px; }
+
+  .success-title {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 300;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .success-detail {
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.8;
+    max-width: 340px;
+  }
+
+  .success-note {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-top: 4px;
+  }
+
+  .success-new {
+    margin-top: 8px;
+    background: none;
+    border: 0.5px solid var(--border2);
+    border-radius: 7px;
+    padding: 9px 20px;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text2);
+    font-family: var(--sans);
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .success-new:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* responsive */
+  @media (max-width: 680px) {
+    .card { flex-direction: column; }
+    .left { width: 100%; border-right: none; border-bottom: 0.5px solid var(--border); }
+    .right { padding: 28px 20px; }
+    .slots-grid { grid-template-columns: repeat(3, 1fr); }
+    .form-grid { grid-template-columns: 1fr; }
+    .field.full { grid-column: auto; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="card">
+
+    <!-- LEFT -->
+    <div class="left">
+      <div class="avatar">SG</div>
+      <div>
+        <div class="host-name">Sarath G</div>
+        <div class="host-role">Cyber Security Consultant</div>
+      </div>
+      <div class="divider"></div>
+      <div>
+        <div class="meta-label">Session Details</div>
+        <div class="meta-list">
+          <div class="meta-item">
+            <svg class="meta-icon" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            30-minute scoping call
+          </div>
+          <div class="meta-item">
+            <svg class="meta-icon" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M15 10l4.553-2.069A1 1 0 0121 8.869v6.262a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/></svg>
+            Google Meet
+          </div>
+          <div class="meta-item">
+            <svg class="meta-icon" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
+           Indian Standard Time (IST)
+          </div>
+          <div class="meta-item">
+            <svg class="meta-icon" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Mon – Fri only
+          </div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="desc">"A focused 30-minute conversation to understand your challenge and explore how we might work together."</div>
+      <div class="left-footer">All times shown in IST (India)</div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="right" id="rightPanel">
+
+      <!-- STEP 1: DATE -->
+      <div class="step" id="step1">
+        <div class="step-head">
+          <div class="step-num">01</div>
+          <div class="step-title">Select a date</div>
+        </div>
+        <div>
+          <div class="cal-nav">
+            <button class="nav-btn" id="prevBtn" onclick="changeMonth(-1)" aria-label="Previous month">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <div class="cal-month" id="monthLabel"></div>
+            <button class="nav-btn" onclick="changeMonth(1)" aria-label="Next month">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+          <div class="weekdays">
+            <div class="wd">Su</div><div class="wd">Mo</div><div class="wd">Tu</div>
+            <div class="wd">We</div><div class="wd">Th</div><div class="wd">Fr</div><div class="wd">Sa</div>
+          </div>
+          <div class="days" id="calDays"></div>
+        </div>
+      </div>
+
+      <!-- STEP 2: TIME -->
+      <div class="step locked" id="step2">
+        <div class="step-head">
+          <div class="step-num">02</div>
+          <div class="step-title">Pick a time <span id="slotDateLabel" style="color:var(--gold);margin-left:6px;font-size:9px;letter-spacing:0.08em;"></span></div>
+        </div>
+        <div id="slotsContainer">
+          <div class="no-slots">Select a date first</div>
+        </div>
+      </div>
+
+      <!-- STEP 3: FORM -->
+      <div class="step locked" id="step3">
+        <div class="step-head">
+          <div class="step-num">03</div>
+          <div class="step-title">Your details</div>
+        </div>
+        <div class="sel-summary" id="selSummary"></div>
+        <div class="form-grid">
+          <div class="field">
+            <label class="field-label" for="fname">First name</label>
+            <input type="text" id="fname" placeholder="First name" autocomplete="given-name">
+          </div>
+          <div class="field">
+            <label class="field-label" for="lname">Last name</label>
+            <input type="text" id="lname" placeholder="Last name" autocomplete="family-name">
+          </div>
+          <div class="field full">
+            <label class="field-label" for="email">Email address</label>
+            <input type="email" id="email" placeholder="you@company.com" autocomplete="email">
+          </div>
+          <div class="field full">
+            <label class="field-label" for="topic">What would you like to discuss?</label>
+            <textarea id="topic" placeholder="Briefly describe your challenge or goal…"></textarea>
+          </div>
+        </div>
+        <div class="error-msg" id="errorMsg"></div>
+        <button class="submit-btn" id="submitBtn" onclick="confirmBooking()">
+          <span class="btn-text">Confirm Booking</span>
+          <div class="btn-spinner"></div>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="success-screen" id="successScreen">
+      <div class="success-check">
+        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="success-title">You're confirmed.</div>
+      <div class="success-detail" id="successDetail"></div>
+      <div class="success-note">A calendar invite has been sent to your email</div>
+      <button class="success-new" onclick="resetPage()">Book another time</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // ── CONFIG ──────────────────────────────────────────────────
+  const BACKEND_URL = 'https://script.google.com/macros/s/AKfycby8AOqJIfQ9ohXC2Z8WROSgbAko2CCbqKmqfs4BoBSEzio0XGCjmB04DHrHjibqs32N/exec';
+  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const DAYS_SHORT = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+  // ── STATE ────────────────────────────────────────────────────
+  let today    = new Date();
+  let curYear  = today.getFullYear();
+  let curMonth = today.getMonth();
+  let selDate  = null;
+  let selSlot  = null;
+  let cachedSlots = {}; // cache slots per date string
+
+  // ── CALENDAR ─────────────────────────────────────────────────
+  function renderCal() {
+    document.getElementById('monthLabel').textContent = MONTHS[curMonth] + ' ' + curYear;
+    const grid  = document.getElementById('calDays');
+    grid.innerHTML = '';
+    const first = new Date(curYear, curMonth, 1).getDay();
+    const total = new Date(curYear, curMonth + 1, 0).getDate();
+
+    for (let i = 0; i < first; i++) {
+      const d = document.createElement('div');
+      d.className = 'day empty';
+      grid.appendChild(d);
+    }
+
+    for (let i = 1; i <= total; i++) {
+      const d   = document.createElement('div');
+      const dt  = new Date(curYear, curMonth, i);
+      const dow = dt.getDay();
+      const isWeekend = dow === 0 || dow === 6;
+      const isPast    = dt < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+      const isToday   = dt.toDateString() === today.toDateString();
+      const isSel     = selDate && dt.toDateString() === selDate.toDateString();
+
+      d.className = 'day';
+      d.textContent = i;
+      if (isWeekend) d.classList.add('weekend');
+      if (isPast || isWeekend) d.classList.add('past');
+      if (isToday) d.classList.add('today');
+      if (isSel)   d.classList.add('selected');
+
+      if (!isPast && !isWeekend) {
+        d.onclick = () => selectDate(new Date(curYear, curMonth, i));
+      }
+      grid.appendChild(d);
+    }
+
+    // disable prev button if we're already on current month
+    document.getElementById('prevBtn').disabled =
+      curYear === today.getFullYear() && curMonth === today.getMonth();
+  }
+
+  function changeMonth(dir) {
+    curMonth += dir;
+    if (curMonth > 11) { curMonth = 0; curYear++; }
+    if (curMonth < 0)  { curMonth = 11; curYear--; }
+    renderCal();
+  }
+
+  // ── DATE SELECTION ───────────────────────────────────────────
+  function selectDate(date) {
+    selDate = date;
+    selSlot = null;
+    renderCal();
+    unlock('step2');
+    lock('step3');
+    document.getElementById('selSummary').classList.remove('show');
+    loadSlots(date);
+  }
+
+  function fmtDate(d) {
+    return d.toLocaleDateString('en-IN', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
+  }
+
+  function dateKey(d) {
+    return d.getFullYear() + '-' +
+      String(d.getMonth() + 1).padStart(2,'0') + '-' +
+      String(d.getDate()).padStart(2,'0');
+  }
+
+  // ── SLOT LOADING ─────────────────────────────────────────────
+  async function loadSlots(date) {
+    const key  = dateKey(date);
+    const cont = document.getElementById('slotsContainer');
+    document.getElementById('slotDateLabel').textContent = date.toLocaleDateString('en-IN',{month:'short',day:'numeric'});
+
+    if (cachedSlots[key]) {
+      renderSlots(cachedSlots[key]);
+      return;
+    }
+
+    cont.innerHTML = '<div class="loading-slots"><div class="spinner"></div> Checking availability…</div>';
+
+    try {
+      const res  = await fetch(`${BACKEND_URL}?date=${key}`);
+      const data = await res.json();
+      cachedSlots[key] = data.slots || [];
+      renderSlots(cachedSlots[key]);
+    } catch (err) {
+      cont.innerHTML = '<div class="no-slots">Could not load availability. Please try again.</div>';
+    }
+  }
+
+  function renderSlots(slots) {
+    const cont = document.getElementById('slotsContainer');
+    if (!slots || slots.length === 0) {
+      cont.innerHTML = '<div class="no-slots">No availability on this day — please pick another date.</div>';
+      return;
+    }
+
+    const grid = document.createElement('div');
+    grid.className = 'slots-grid';
+    slots.forEach(s => {
+      const el = document.createElement('div');
+      el.className = 'slot' + (selSlot === s ? ' selected' : '');
+      el.textContent = s;
+      el.onclick = () => selectSlot(s);
+      grid.appendChild(el);
+    });
+    cont.innerHTML = '';
+    cont.appendChild(grid);
+  }
+
+  // ── SLOT SELECTION ───────────────────────────────────────────
+  function selectSlot(slot) {
+    selSlot = slot;
+    renderSlots(cachedSlots[dateKey(selDate)]);
+    unlock('step3');
+
+    const summary = document.getElementById('selSummary');
+    summary.textContent = fmtDate(selDate) + '  ·  ' + slot + ' IST  ·  30 min';
+    summary.classList.add('show');
+  }
+
+  // ── STEP HELPERS ─────────────────────────────────────────────
+  function lock(id)   { document.getElementById(id).classList.add('locked'); }
+  function unlock(id) { document.getElementById(id).classList.remove('locked'); }
+
+  // ── BOOKING SUBMIT ───────────────────────────────────────────
+  async function confirmBooking() {
+    const fname = document.getElementById('fname').value.trim();
+    const lname = document.getElementById('lname').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const topic = document.getElementById('topic').value.trim();
+    const errEl = document.getElementById('errorMsg');
+
+    errEl.classList.remove('show');
+
+    if (!fname) { showError('Please enter your first name.'); return; }
+    if (!email || !email.includes('@')) { showError('Please enter a valid email address.'); return; }
+    if (!selDate || !selSlot) { showError('Please select a date and time.'); return; }
+
+    const btn = document.getElementById('submitBtn');
+    btn.classList.add('loading');
+    btn.disabled = true;
+
+    const payload = {
+      date:  dateKey(selDate),
+      time:  selSlot,
+      name:  (fname + ' ' + lname).trim(),
+      email: email,
+      topic: topic
+    };
+
+    try {
+      const res  = await fetch(BACKEND_URL, {
+        method:  'POST',
+        body:    JSON.stringify(payload)
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        showSuccess(payload);
+      } else {
+        showError(data.error || 'Something went wrong. Please try again.');
+        btn.classList.remove('loading');
+        btn.disabled = false;
+      }
+    } catch (err) {
+      showError('Network error. Please check your connection and try again.');
+      btn.classList.remove('loading');
+      btn.disabled = false;
+    }
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('errorMsg');
+    el.textContent = msg;
+    el.classList.add('show');
+  }
+
+  function showSuccess(p) {
+    document.getElementById('rightPanel').style.display = 'none';
+    const sc = document.getElementById('successScreen');
+    sc.classList.add('show');
+    document.getElementById('successDetail').innerHTML =
+      `<strong style="color:var(--text)">${p.name}</strong>, your scoping call with Sarath G is set for<br>
+       <strong style="color:var(--gold)">${fmtDate(selDate)} at ${selSlot} IST</strong>.<br><br>
+       A calendar invite will be sent to <strong style="color:var(--text)">${p.email}</strong>.`;
+  }
+
+  function resetPage() {
+    selDate = null;
+    selSlot = null;
+    cachedSlots = {};
+    document.getElementById('fname').value = '';
+    document.getElementById('lname').value = '';
+    document.getElementById('email').value = '';
+    document.getElementById('topic').value = '';
+    document.getElementById('successScreen').classList.remove('show');
+    document.getElementById('rightPanel').style.display = 'flex';
+    document.getElementById('rightPanel').style.flexDirection = 'column';
+    lock('step2');
+    lock('step3');
+    document.getElementById('selSummary').classList.remove('show');
+    document.getElementById('slotsContainer').innerHTML = '<div class="no-slots">Select a date first</div>';
+    document.getElementById('slotDateLabel').textContent = '';
+    renderCal();
+  }
+
+  // ── INIT ─────────────────────────────────────────────────────
+  renderCal();
+</script>
+</body>
+</html>
