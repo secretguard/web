@@ -8,7 +8,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
     --gold: #c9a96e;
     --gold-dim: #c9a96e22;
@@ -25,7 +24,6 @@
     --serif: 'Cormorant Garamond', Georgia, serif;
     --sans: 'DM Sans', system-ui, sans-serif;
   }
-
   html, body {
     min-height: 100vh;
     background: var(--bg);
@@ -35,7 +33,6 @@
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
   }
-
   body::before {
     content: '';
     position: fixed;
@@ -45,7 +42,6 @@
     pointer-events: none;
     z-index: 0;
   }
-
   .page {
     position: relative;
     z-index: 1;
@@ -55,7 +51,6 @@
     justify-content: center;
     padding: 40px 20px;
   }
-
   .card {
     width: 100%;
     max-width: 480px;
@@ -66,12 +61,10 @@
     text-align: center;
     animation: fadeUp 0.5s ease both;
   }
-
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(20px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-
   .icon-ring {
     width: 56px;
     height: 56px;
@@ -81,17 +74,14 @@
     align-items: center;
     justify-content: center;
     margin: 0 auto 28px;
-    transition: border-color 0.4s;
   }
-  .icon-ring svg { width: 22px; height: 22px; color: var(--text2); transition: color 0.4s; }
-
+  .icon-ring svg { width: 22px; height: 22px; color: var(--text2); }
   .icon-ring.confirm  { border-color: var(--red-dim); }
   .icon-ring.confirm svg { color: var(--red); }
-  .icon-ring.success  { border-color: var(--gold-dim); border-color: #c9a96e22; }
+  .icon-ring.success  { border-color: var(--gold-dim); }
   .icon-ring.success svg { color: var(--gold); }
   .icon-ring.error    { border-color: var(--red-dim); }
   .icon-ring.error svg { color: var(--red); }
-
   h1 {
     font-family: var(--serif);
     font-size: 26px;
@@ -100,14 +90,12 @@
     margin-bottom: 12px;
     line-height: 1.2;
   }
-
   .subtitle {
     font-size: 13px;
     color: var(--text2);
     line-height: 1.8;
     margin-bottom: 32px;
   }
-
   .booking-detail {
     background: var(--bg3);
     border: 0.5px solid var(--border2);
@@ -116,33 +104,25 @@
     margin-bottom: 28px;
     text-align: left;
   }
-
   .detail-label {
     font-size: 9px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--text3);
-    margin-bottom: 8px;
+    margin-bottom: 10px;
   }
-
   .detail-row {
     display: flex;
     align-items: center;
     gap: 10px;
     font-size: 13px;
     color: var(--text2);
-    margin-bottom: 6px;
+    margin-bottom: 7px;
   }
   .detail-row:last-child { margin-bottom: 0; }
   .detail-row svg { width: 14px; height: 14px; color: var(--gold); flex-shrink: 0; }
   .detail-value { color: var(--text); }
-
-  .btn-row {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
+  .btn-row { display: flex; flex-direction: column; gap: 10px; }
   .btn-cancel {
     width: 100%;
     padding: 13px;
@@ -164,7 +144,6 @@
   }
   .btn-cancel:hover { opacity: 0.85; }
   .btn-cancel:disabled { opacity: 0.4; cursor: default; }
-
   .btn-back {
     width: 100%;
     padding: 12px;
@@ -180,10 +159,9 @@
     transition: border-color 0.2s, color 0.2s;
     text-decoration: none;
     display: block;
-    line-height: 1;
+    line-height: 2.2;
   }
   .btn-back:hover { border-color: var(--gold); color: var(--gold); }
-
   .btn-book {
     display: inline-block;
     margin-top: 4px;
@@ -199,7 +177,6 @@
     font-family: var(--sans);
   }
   .btn-book:hover { border-color: var(--gold); color: var(--gold); }
-
   .spinner {
     width: 13px;
     height: 13px;
@@ -212,7 +189,6 @@
   .btn-cancel.loading .spinner { display: block; }
   .btn-cancel.loading .btn-label { opacity: 0.6; }
   @keyframes spin { to { transform: rotate(360deg); } }
-
   .host-footer {
     margin-top: 36px;
     padding-top: 20px;
@@ -222,38 +198,45 @@
     justify-content: center;
     gap: 10px;
   }
-
   .host-avatar {
-    width: 28px;
-    height: 28px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     background: linear-gradient(135deg, #c9a96e 0%, #7a5218 100%);
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: var(--serif);
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 600;
     color: #0a0a0a;
     flex-shrink: 0;
   }
-
   .host-info { text-align: left; }
   .host-name { font-size: 12px; color: var(--text); }
   .host-role { font-size: 10px; color: var(--text3); letter-spacing: 0.06em; }
-
-  /* screens */
   .screen { display: none; }
   .screen.active { display: block; }
+  .error-inline {
+    font-size: 11px;
+    color: var(--red);
+    padding: 8px 12px;
+    border: 0.5px solid var(--red-dim);
+    border-radius: 7px;
+    background: #e05c5c0a;
+    margin-bottom: 16px;
+    display: none;
+  }
+  .error-inline.show { display: block; }
 </style>
 </head>
 <body>
 <div class="page">
   <div class="card">
 
-    <!-- LOADING SCREEN -->
+    <!-- LOADING -->
     <div class="screen active" id="screen-loading">
-      <div class="icon-ring" id="loading-ring">
+      <div class="icon-ring">
         <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
           <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
         </svg>
@@ -262,17 +245,19 @@
       <p class="subtitle">Fetching your booking details.</p>
     </div>
 
-    <!-- CONFIRM SCREEN -->
+    <!-- CONFIRM -->
     <div class="screen" id="screen-confirm">
       <div class="icon-ring confirm">
         <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-          <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/>
+          <polyline points="3 6 5 6 21 6"/>
+          <path d="M19 6l-1 14H6L5 6"/>
+          <path d="M10 11v6M14 11v6"/>
+          <path d="M9 6V4h6v2"/>
         </svg>
       </div>
       <h1>Cancel this booking?</h1>
       <p class="subtitle">This will permanently remove your scoping call and you will receive a confirmation email.</p>
-
-      <div class="booking-detail" id="booking-detail">
+      <div class="booking-detail">
         <div class="detail-label">Booking details</div>
         <div class="detail-row">
           <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
@@ -287,7 +272,7 @@
           <span class="detail-value" id="detail-time">—</span>
         </div>
       </div>
-
+      <div class="error-inline" id="cancelError"></div>
       <div class="btn-row">
         <button class="btn-cancel" id="confirmCancelBtn" onclick="executeCancel()">
           <span class="btn-label">Yes, cancel booking</span>
@@ -297,7 +282,7 @@
       </div>
     </div>
 
-    <!-- SUCCESS SCREEN -->
+    <!-- SUCCESS -->
     <div class="screen" id="screen-success">
       <div class="icon-ring success">
         <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
@@ -309,11 +294,13 @@
       <a class="btn-book" href="https://sarathg.me/booking.html">Book a new time</a>
     </div>
 
-    <!-- ERROR SCREEN -->
+    <!-- ERROR -->
     <div class="screen" id="screen-error">
       <div class="icon-ring error">
         <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
         </svg>
       </div>
       <h1>Something went wrong</h1>
@@ -336,13 +323,12 @@
 <script>
   const BACKEND_URL = 'https://script.google.com/macros/s/AKfycby8AOqJIfQ9ohXC2Z8WROSgbAko2CCbqKmqfs4BoBSEzio0XGCjmB04DHrHjibqs32N/exec';
 
-  // parse URL params
-  const params   = new URLSearchParams(window.location.search);
-  const eventId  = params.get('eventId');
-  const email    = params.get('email');
-  const dateStr  = params.get('date');
-  const timeStr  = params.get('time');
-  const nameStr  = params.get('name');
+  const params  = new URLSearchParams(window.location.search);
+  const eventId = params.get('eventId');
+  const email   = params.get('email');
+  const dateStr = params.get('date');
+  const timeStr = params.get('time');
+  const nameStr = params.get('name');
 
   function show(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -354,40 +340,44 @@
     show('error');
   }
 
-  // validate params on load
   window.addEventListener('load', () => {
     if (!eventId || !email) {
       showError('Invalid cancellation link. Please use the link from your confirmation email.');
       return;
     }
-
-    // populate booking details
-    document.getElementById('detail-name').textContent  = nameStr  || email;
-    document.getElementById('detail-date').textContent  = dateStr  || '—';
-    document.getElementById('detail-time').textContent  = (timeStr || '—') + ' IST';
+    document.getElementById('detail-name').textContent = nameStr || email;
+    document.getElementById('detail-date').textContent = dateStr || '—';
+    document.getElementById('detail-time').textContent = (timeStr ? decodeURIComponent(timeStr) : '—') + ' IST';
     show('confirm');
   });
 
   async function executeCancel() {
-    const btn = document.getElementById('confirmCancelBtn');
+    const btn      = document.getElementById('confirmCancelBtn');
+    const errEl    = document.getElementById('cancelError');
+    errEl.classList.remove('show');
     btn.classList.add('loading');
     btn.disabled = true;
 
     try {
-      const url = `${BACKEND_URL}?action=cancel&eventId=${encodeURIComponent(eventId)}&email=${encodeURIComponent(email)}`;
-      const res  = await fetch(url);
-      const text = await res.text();
+      const res  = await fetch(BACKEND_URL, {
+        method: 'POST',
+        body:   JSON.stringify({ action: 'cancel', eventId, email })
+      });
+      const data = await res.json();
 
-      // GAS returns HTML for cancel action — check for success keyword
-      if (text.includes('has been cancelled') || text.includes('Booking Cancelled')) {
+      if (data.success) {
         document.getElementById('success-msg').textContent =
-          `Your booking${dateStr ? ' on ' + dateStr : ''}${timeStr ? ' at ' + timeStr + ' IST' : ''} has been cancelled. A confirmation email has been sent to ${email}.`;
+          `Your booking${dateStr ? ' on ' + decodeURIComponent(dateStr) : ''}${timeStr ? ' at ' + decodeURIComponent(timeStr) + ' IST' : ''} has been cancelled. A confirmation email has been sent to ${email}.`;
         show('success');
       } else {
-        showError('Could not cancel this booking. It may have already been cancelled or the link has expired.');
+        errEl.textContent = data.error || 'Could not cancel. The booking may already be cancelled.';
+        errEl.classList.add('show');
+        btn.classList.remove('loading');
+        btn.disabled = false;
       }
     } catch (err) {
-      showError('Network error. Please try again or reply to your confirmation email to cancel.');
+      errEl.textContent = 'Network error. Please try again or reply to your confirmation email to cancel.';
+      errEl.classList.add('show');
       btn.classList.remove('loading');
       btn.disabled = false;
     }
