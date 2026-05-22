@@ -36,7 +36,6 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* grain overlay */
   body::before {
     content: '';
     position: fixed;
@@ -168,7 +167,24 @@
     letter-spacing: 0.06em;
     border-top: 0.5px solid var(--border);
     padding-top: 20px;
+    line-height: 1.8;
   }
+
+  /* ── TZ BADGE ── */
+  .tz-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border: 0.5px solid var(--gold-dim);
+    border-radius: 20px;
+    font-size: 10px;
+    color: var(--gold);
+    background: var(--gold-soft);
+    margin-top: 8px;
+    letter-spacing: 0.04em;
+  }
+  .tz-badge svg { width: 10px; height: 10px; flex-shrink: 0; }
 
   /* ── RIGHT PANEL ── */
   .right {
@@ -180,7 +196,6 @@
     min-width: 0;
   }
 
-  /* steps */
   .step {
     display: flex;
     flex-direction: column;
@@ -220,7 +235,6 @@
     color: var(--text2);
   }
 
-  /* calendar */
   .cal-nav {
     display: flex;
     align-items: center;
@@ -304,7 +318,6 @@
   .day.weekend:not(.selected):hover { color: #3a3a3a; border-color: transparent; cursor: default; }
   .day.empty { cursor: default; }
 
-  /* slots */
   .slots-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -321,9 +334,13 @@
     cursor: pointer;
     transition: all 0.15s;
     background: var(--bg3);
+    line-height: 1.3;
   }
   .slot:hover { border-color: var(--gold); color: var(--text); }
   .slot.selected { border-color: var(--gold); color: var(--gold); background: var(--gold-soft); }
+  .slot-local { display: block; font-size: 11px; }
+  .slot-ist { display: block; font-size: 9px; color: var(--text3); margin-top: 1px; letter-spacing: 0.02em; }
+  .slot.selected .slot-ist { color: var(--gold); opacity: 0.6; }
 
   .no-slots {
     font-size: 12px;
@@ -351,7 +368,6 @@
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* selected summary */
   .sel-summary {
     display: none;
     font-size: 11px;
@@ -361,10 +377,10 @@
     border: 0.5px solid var(--gold-dim);
     border-radius: 8px;
     background: var(--gold-soft);
+    line-height: 1.6;
   }
   .sel-summary.show { display: block; }
 
-  /* form */
   .form-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -440,7 +456,6 @@
   .submit-btn.loading .btn-spinner { display: block; }
   .submit-btn.loading .btn-text { opacity: 0.6; }
 
-  /* error */
   .error-msg {
     display: none;
     font-size: 11px;
@@ -452,7 +467,6 @@
   }
   .error-msg.show { display: block; }
 
-  /* success screen */
   .success-screen {
     display: none;
     flex-direction: column;
@@ -516,7 +530,6 @@
   }
   .success-new:hover { border-color: var(--gold); color: var(--gold); }
 
-  /* responsive */
   @media (max-width: 680px) {
     .card { flex-direction: column; }
     .left { width: 100%; border-right: none; border-bottom: 0.5px solid var(--border); }
@@ -551,18 +564,24 @@
             Google Meet
           </div>
           <div class="meta-item">
-            <svg class="meta-icon" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
-           Indian Standard Time (IST)
-          </div>
-          <div class="meta-item">
             <svg class="meta-icon" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
             Mon – Sat, 9 AM – 8 PM IST
+          </div>
+          <div class="meta-item">
+            <svg class="meta-icon" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
+            <span id="tzDisplay">Detecting timezone…</span>
           </div>
         </div>
       </div>
       <div class="divider"></div>
       <div class="desc">"A focused 30-minute conversation to understand your challenge and explore how we might work together."</div>
-      <div class="left-footer">All times shown in IST (India)</div>
+      <div class="left-footer">
+        Host timezone: IST (India)<br>
+        <div class="tz-badge" id="clientTzBadge">
+          <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span id="clientTzLabel">Detecting…</span>
+        </div>
+      </div>
     </div>
 
     <!-- RIGHT -->
@@ -655,15 +674,64 @@
   // ── CONFIG ──────────────────────────────────────────────────
   const BACKEND_URL = 'https://script.google.com/macros/s/AKfycby8AOqJIfQ9ohXC2Z8WROSgbAko2CCbqKmqfs4BoBSEzio0XGCjmB04DHrHjibqs32N/exec';
   const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-  const DAYS_SHORT = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+  // ── TIMEZONE DETECTION ───────────────────────────────────────
+  const CLIENT_TZ   = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const IST_OFFSET  = 5.5 * 60; // minutes
+
+  // Get short timezone label e.g. "EST", "GMT+8"
+  function shortTZ(tz) {
+    try {
+      const parts = Intl.DateTimeFormat('en', { timeZoneName: 'short', timeZone: tz })
+        .formatToParts(new Date());
+      return parts.find(p => p.type === 'timeZoneName')?.value || tz;
+    } catch { return tz; }
+  }
+
+  const CLIENT_TZ_SHORT = shortTZ(CLIENT_TZ);
+  const IS_IST = CLIENT_TZ === 'Asia/Calcutta' || CLIENT_TZ === 'Asia/Kolkata';
+
+  // Update UI labels
+  document.getElementById('tzDisplay').textContent =
+    IS_IST ? 'Indian Standard Time (IST)' : `Your local time (${CLIENT_TZ_SHORT})`;
+  document.getElementById('clientTzLabel').textContent =
+    IS_IST ? 'Showing times in IST' : `Times shown in ${CLIENT_TZ_SHORT}`;
+
+  // Convert IST slot string + IST date → local time string
+  function istToLocal(istTimeStr, istDateStr) {
+    const [time, period] = istTimeStr.split(' ');
+    let [h, m] = time.split(':').map(Number);
+    if (period === 'PM' && h !== 12) h += 12;
+    if (period === 'AM' && h === 12) h = 0;
+    const utcMs = new Date(istDateStr + 'T00:00:00Z').getTime()
+                + (h * 60 + m) * 60000
+                - IST_OFFSET * 60000;
+    return new Date(utcMs).toLocaleTimeString('en-US', {
+      hour: '2-digit', minute: '2-digit', hour12: true, timeZone: CLIENT_TZ
+    });
+  }
+
+  // Format local date for a given IST slot (may be different day)
+  function localDateForSlot(istTimeStr, istDateStr) {
+    const [time, period] = istTimeStr.split(' ');
+    let [h, m] = time.split(':').map(Number);
+    if (period === 'PM' && h !== 12) h += 12;
+    if (period === 'AM' && h === 12) h = 0;
+    const utcMs = new Date(istDateStr + 'T00:00:00Z').getTime()
+                + (h * 60 + m) * 60000
+                - IST_OFFSET * 60000;
+    return new Date(utcMs).toLocaleDateString('en-US', {
+      weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', timeZone: CLIENT_TZ
+    });
+  }
 
   // ── STATE ────────────────────────────────────────────────────
   let today    = new Date();
   let curYear  = today.getFullYear();
   let curMonth = today.getMonth();
   let selDate  = null;
-  let selSlot  = null;
-  let cachedSlots = {}; // cache slots per date string
+  let selSlot  = null; // stored as IST slot string
+  let cachedSlots = {};
 
   // ── CALENDAR ─────────────────────────────────────────────────
   function renderCal() {
@@ -701,7 +769,6 @@
       grid.appendChild(d);
     }
 
-    // disable prev button if we're already on current month
     document.getElementById('prevBtn').disabled =
       curYear === today.getFullYear() && curMonth === today.getMonth();
   }
@@ -738,12 +805,10 @@
   async function loadSlots(date) {
     const key  = dateKey(date);
     const cont = document.getElementById('slotsContainer');
-    document.getElementById('slotDateLabel').textContent = date.toLocaleDateString('en-IN',{month:'short',day:'numeric'});
+    document.getElementById('slotDateLabel').textContent =
+      date.toLocaleDateString('en-IN', { month:'short', day:'numeric' });
 
-    if (cachedSlots[key]) {
-      renderSlots(cachedSlots[key]);
-      return;
-    }
+    if (cachedSlots[key]) { renderSlots(cachedSlots[key], key); return; }
 
     cont.innerHTML = '<div class="loading-slots"><div class="spinner"></div> Checking availability…</div>';
 
@@ -751,13 +816,13 @@
       const res  = await fetch(`${BACKEND_URL}?date=${key}`);
       const data = await res.json();
       cachedSlots[key] = data.slots || [];
-      renderSlots(cachedSlots[key]);
+      renderSlots(cachedSlots[key], key);
     } catch (err) {
       cont.innerHTML = '<div class="no-slots">Could not load availability. Please try again.</div>';
     }
   }
 
-  function renderSlots(slots) {
+  function renderSlots(slots, istDateStr) {
     const cont = document.getElementById('slotsContainer');
     if (!slots || slots.length === 0) {
       cont.innerHTML = '<div class="no-slots">No availability on this day — please pick another date.</div>';
@@ -766,25 +831,45 @@
 
     const grid = document.createElement('div');
     grid.className = 'slots-grid';
-    slots.forEach(s => {
+
+    slots.forEach(istSlot => {
       const el = document.createElement('div');
-      el.className = 'slot' + (selSlot === s ? ' selected' : '');
-      el.textContent = s;
-      el.onclick = () => selectSlot(s);
+      el.className = 'slot' + (selSlot === istSlot ? ' selected' : '');
+
+      if (IS_IST) {
+        // same timezone — just show IST time
+        el.innerHTML = `<span class="slot-local">${istSlot}</span>`;
+      } else {
+        // show local time prominently, IST underneath
+        const localTime = istToLocal(istSlot, istDateStr);
+        el.innerHTML = `
+          <span class="slot-local">${localTime}</span>
+          <span class="slot-ist">${istSlot} IST</span>`;
+      }
+
+      el.onclick = () => selectSlot(istSlot, istDateStr);
       grid.appendChild(el);
     });
+
     cont.innerHTML = '';
     cont.appendChild(grid);
   }
 
   // ── SLOT SELECTION ───────────────────────────────────────────
-  function selectSlot(slot) {
-    selSlot = slot;
-    renderSlots(cachedSlots[dateKey(selDate)]);
+  function selectSlot(istSlot, istDateStr) {
+    selSlot = istSlot;
+    renderSlots(cachedSlots[istDateStr], istDateStr);
     unlock('step3');
 
-    const summary = document.getElementById('selSummary');
-    summary.textContent = fmtDate(selDate) + '  ·  ' + slot + ' IST  ·  30 min';
+    const summary    = document.getElementById('selSummary');
+    const localTime  = IS_IST ? istSlot : istToLocal(istSlot, istDateStr);
+    const localDate  = IS_IST ? fmtDate(selDate) : localDateForSlot(istSlot, istDateStr);
+    const tzLabel    = IS_IST ? 'IST' : CLIENT_TZ_SHORT;
+
+    let summaryText = `${localDate}  ·  ${localTime} ${tzLabel}  ·  30 min`;
+    if (!IS_IST) summaryText += `\n${istSlot} IST (host timezone)`;
+
+    summary.textContent = summaryText;
     summary.classList.add('show');
   }
 
@@ -812,22 +897,19 @@
 
     const payload = {
       date:  dateKey(selDate),
-      time:  selSlot,
+      time:  selSlot,          // always IST — backend expects IST
       name:  (fname + ' ' + lname).trim(),
       email: email,
       topic: topic
     };
 
     try {
-      const res  = await fetch(BACKEND_URL, {
-        method:  'POST',
-        body:    JSON.stringify(payload)
-      });
+      const res  = await fetch(BACKEND_URL, { method: 'POST', body: JSON.stringify(payload) });
       const data = await res.json();
 
       if (data.success) {
-      showSuccess(payload, data.eventId);
-     } else {
+        showSuccess(payload, data.eventId);
+      } else {
         showError(data.error || 'Something went wrong. Please try again.');
         btn.classList.remove('loading');
         btn.disabled = false;
@@ -845,19 +927,23 @@
     el.classList.add('show');
   }
 
- function showSuccess(p, eventId) {
-  document.getElementById('rightPanel').style.display = 'none';
-  const sc = document.getElementById('successScreen');
-  sc.classList.add('show');
+  function showSuccess(p, eventId) {
+    document.getElementById('rightPanel').style.display = 'none';
+    const sc = document.getElementById('successScreen');
+    sc.classList.add('show');
 
-  const cancelUrl = `https://sarathg.me/cancel.html?eventId=${encodeURIComponent(eventId)}&email=${encodeURIComponent(p.email)}&name=${encodeURIComponent(p.name)}&date=${encodeURIComponent(fmtDate(selDate))}&time=${encodeURIComponent(selSlot)}`;
+    const cancelUrl = `https://sarathg.me/cancel.html?eventId=${encodeURIComponent(eventId)}&email=${encodeURIComponent(p.email)}&name=${encodeURIComponent(p.name)}&date=${encodeURIComponent(fmtDate(selDate))}&time=${encodeURIComponent(selSlot)}`;
 
-  document.getElementById('successDetail').innerHTML =
-    `<strong style="color:var(--text)">${p.name}</strong>, your scoping call with Sarath G is set for<br>
-     <strong style="color:var(--gold)">${fmtDate(selDate)} at ${selSlot} IST</strong>.<br><br>
-     A calendar invite will be sent to <strong style="color:var(--text)">${p.email}</strong>.<br><br>
-     <a href="${cancelUrl}" style="font-size:11px;color:var(--text3);text-decoration:underline;text-underline-offset:3px;">Need to cancel? Click here</a>`;
-}
+    // show local time in confirmation if different from IST
+    const localTime = IS_IST ? selSlot + ' IST' : istToLocal(selSlot, p.date) + ` ${CLIENT_TZ_SHORT} (${selSlot} IST)`;
+    const localDate = IS_IST ? fmtDate(selDate) : localDateForSlot(selSlot, p.date);
+
+    document.getElementById('successDetail').innerHTML =
+      `<strong style="color:var(--text)">${p.name}</strong>, your scoping call with Sarath G is set for<br>
+       <strong style="color:var(--gold)">${localDate} at ${localTime}</strong>.<br><br>
+       A calendar invite will be sent to <strong style="color:var(--text)">${p.email}</strong>.<br><br>
+       <a href="${cancelUrl}" style="font-size:11px;color:var(--text3);text-decoration:underline;text-underline-offset:3px;">Need to cancel? Click here</a>`;
+  }
 
   function resetPage() {
     selDate = null;
