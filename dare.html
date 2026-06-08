@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The DARE Framework — Sarath G</title>
+<meta name="description" content="The DARE Framework — Deconstruct, Attack, Remediate, Exchange. A design constraint for cybersecurity training that produces real understanding.">
+<meta name="author" content="Sarath G">
+<link rel="canonical" href="https://www.sarathg.me/dare.html">
+<meta property="og:title" content="The DARE Framework — Sarath G">
+<meta property="og:description" content="A design constraint for cybersecurity training. Four stages. One learner. The same environment. No stage skipped.">
+<meta property="og:url" content="https://www.sarathg.me/dare.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg:         #0a0a0a;
+    --bg2:        #111111;
+    --bg3:        #161616;
+    --border:     rgba(255,255,255,0.06);
+    --border-h:   rgba(255,255,255,0.12);
+    --text:       #f5f5f5;
+    --muted:      #888888;
+    --accent:     #4fffb0;
+    --accent-dim: rgba(79,255,176,0.08);
+    --t1:         #f5f5f5;
+    --t2:         #888888;
+    --t3:         #4a4a4a;
+    --mono:       'Fira Code', monospace;
+    --font:       'Space Grotesk', sans-serif;
+    --d:          #4a9fd4;
+    --a:          #e05c5c;
+    --r:          #3db87a;
+    --e:          #c47a3a;
+    --d-bg:       rgba(74,159,212,0.07);
+    --a-bg:       rgba(224,92,92,0.07);
+    --r-bg:       rgba(61,184,122,0.07);
+    --e-bg:       rgba(196,122,58,0.07);
+  }
+
+  html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 16px;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  a { text-decoration: none; color: inherit; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: calc(64px + 80px) 40px 80px;
+    position: relative; overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(79,255,176,0.018) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(79,255,176,0.018) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    animation: gridPulse 8s ease-in-out infinite;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -60%);
+    width: 700px; height: 500px;
+    background: radial-gradient(ellipse, rgba(74,159,212,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  @keyframes gridPulse {
+    0%,100% { opacity: 0.6; }
+    50%      { opacity: 1; }
+  }
+
+  .hero-label {
+    font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.3em; color: var(--t3);
+    text-transform: uppercase; margin-bottom: 36px;
+    opacity: 0; animation: fadeUp 0.7s 0.1s ease forwards;
+    position: relative; z-index: 1;
+  }
+
+  .hero-the {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(18px, 3vw, 26px); font-style: italic;
+    color: var(--muted); margin-bottom: 8px;
+    opacity: 0; animation: fadeUp 0.7s 0.2s ease forwards;
+    position: relative; z-index: 1;
+  }
+
+  .dare-letters {
+    display: flex; align-items: flex-end; justify-content: center;
+    gap: 0; margin-bottom: 8px;
+    opacity: 0; animation: fadeUp 0.7s 0.3s ease forwards;
+    position: relative; z-index: 1;
+  }
+
+  .dare-letter {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 0 12px; cursor: pointer;
+    transition: transform 0.25s ease;
+  }
+
+  .dare-letter:hover { transform: translateY(-6px); }
+
+  .dare-letter .big {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(72px, 14vw, 130px); font-weight: 700;
+    line-height: 1; letter-spacing: -0.02em;
+    transition: text-shadow 0.3s;
+  }
+
+  .dare-letter:hover .big { text-shadow: 0 0 40px currentColor; }
+
+  .dare-letter .small {
+    font-family: var(--mono);
+    font-size: clamp(8px, 1.2vw, 11px);
+    letter-spacing: 0.15em; margin-top: 4px; text-transform: uppercase;
+    opacity: 0; transform: translateY(4px);
+    transition: opacity 0.25s, transform 0.25s;
+  }
+
+  .dare-letter:hover .small { opacity: 1; transform: translateY(0); }
+
+  .d .big, .d .small { color: var(--d); }
+  .a .big, .a .small { color: var(--a); }
+  .r .big, .r .small { color: var(--r); }
+  .e .big, .e .small { color: var(--e); }
+
+  .hero-framework {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(16px, 2.5vw, 22px);
+    letter-spacing: 0.3em; color: var(--muted);
+    text-transform: uppercase; margin-bottom: 48px;
+    opacity: 0; animation: fadeUp 0.7s 0.4s ease forwards;
+    position: relative; z-index: 1;
+  }
+
+  .hero-desc {
+    max-width: 560px; font-size: 17px; font-weight: 300;
+    color: var(--muted); line-height: 1.8; margin-bottom: 48px;
+    opacity: 0; animation: fadeUp 0.7s 0.5s ease forwards;
+    position: relative; z-index: 1;
+  }
+
+  .hero-cta {
+    display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
+    opacity: 0; animation: fadeUp 0.7s 0.6s ease forwards;
+    position: relative; z-index: 1;
+  }
+
+  .scroll-hint {
+    position: absolute; bottom: 36px; left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    opacity: 0; animation: fadeUp 0.7s 1.2s ease forwards; z-index: 1;
+  }
+
+  .scroll-arrow {
+    width: 1px; height: 32px;
+    background: linear-gradient(to bottom, var(--t3), transparent);
+    animation: scrollBounce 2s ease-in-out infinite;
+  }
+
+  @keyframes scrollBounce {
+    0%,100% { transform: scaleY(1); opacity: 0.5; }
+    50%      { transform: scaleY(1.3); opacity: 1; }
+  }
+
+  /* ── BUTTONS ── */
+  .btn {
+    font-family: var(--mono); font-size: 12px;
+    letter-spacing: 0.08em; padding: 13px 28px; border-radius: 3px;
+    text-decoration: none; transition: all 0.2s; cursor: pointer; border: none;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+
+  .btn-primary { background: var(--accent); color: #0a0a0a; font-weight: 600; }
+  .btn-primary:hover { background: #6fffbe; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(79,255,176,0.2); }
+
+  .btn-secondary { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+  .btn-secondary:hover { color: var(--text); border-color: var(--border-h); }
+
+  /* ── LAYOUT ── */
+  .wrap        { max-width: 1060px; margin: 0 auto; padding: 100px 40px; }
+  .wrap-narrow { max-width: 760px;  margin: 0 auto; padding: 100px 40px; }
+
+  .eyebrow {
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.28em; color: var(--accent);
+    text-transform: uppercase; margin-bottom: 18px;
+    display: block;
+  }
+
+  .section-h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 4vw, 40px); font-weight: 700;
+    color: var(--t1); line-height: 1.18;
+    margin-bottom: 20px; letter-spacing: -0.02em;
+  }
+
+  .section-lead {
+    font-size: 17px; font-weight: 300; color: var(--t2);
+    max-width: 620px; line-height: 1.8; margin-bottom: 64px;
+  }
+
+  /* ── BELIEF BLOCK ── */
+  .belief {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-left: 3px solid var(--accent); border-radius: 4px;
+    padding: 36px 44px; margin-bottom: 72px;
+    position: relative; overflow: hidden;
+    transition: border-color 0.3s;
+  }
+
+  .belief::before {
+    content: '"'; font-family: 'Playfair Display', serif;
+    font-size: 120px; line-height: 1; color: var(--accent); opacity: 0.07;
+    position: absolute; top: -10px; left: 20px; pointer-events: none;
+  }
+
+  .belief:hover { border-color: var(--accent); }
+
+  .belief p {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(17px, 2.2vw, 21px); font-style: italic;
+    color: var(--t1); line-height: 1.7; position: relative;
+  }
+
+  /* ── STAGE TILES ── */
+  .stages-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 2px; background: var(--border);
+    border-radius: 6px 6px 0 0; overflow: hidden;
+  }
+
+  .stage-tile {
+    background: var(--bg2); padding: 36px 28px 32px;
+    cursor: pointer; transition: background 0.2s;
+    position: relative; display: flex; flex-direction: column;
+  }
+
+  .stage-tile::before {
+    content: ''; position: absolute;
+    top: 0; left: 0; right: 0; height: 3px;
+    opacity: 0; transition: opacity 0.25s;
+  }
+
+  .stage-tile.d-tile::before { background: var(--d); }
+  .stage-tile.a-tile::before { background: var(--a); }
+  .stage-tile.r-tile::before { background: var(--r); }
+  .stage-tile.e-tile::before { background: var(--e); }
+
+  .stage-tile:hover::before, .stage-tile.active::before { opacity: 1; }
+  .stage-tile:hover, .stage-tile.active { background: var(--bg3); }
+
+  .tile-letter {
+    font-family: 'Playfair Display', serif; font-size: 56px;
+    font-weight: 700; line-height: 1; margin-bottom: 10px;
+    transition: text-shadow 0.25s;
+  }
+
+  .stage-tile:hover .tile-letter,
+  .stage-tile.active .tile-letter { text-shadow: 0 0 30px currentColor; }
+
+  .d-tile .tile-letter { color: var(--d); }
+  .a-tile .tile-letter { color: var(--a); }
+  .r-tile .tile-letter { color: var(--r); }
+  .e-tile .tile-letter { color: var(--e); }
+
+  .tile-word {
+    font-family: var(--mono); font-size: 9px;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--t3); margin-bottom: 20px;
+    transition: color 0.2s;
+  }
+
+  .stage-tile:hover .tile-word, .stage-tile.active .tile-word { color: var(--t2); }
+
+  .tile-def {
+    font-size: 13.5px; font-style: italic; color: var(--t2);
+    line-height: 1.55; flex: 1;
+  }
+
+  .tile-expand-hint {
+    font-family: var(--mono); font-size: 9px; color: var(--t3);
+    letter-spacing: 0.1em; margin-top: 20px;
+    display: flex; align-items: center; gap: 6px;
+    transition: color 0.2s;
+  }
+
+  .tile-expand-hint svg { transition: transform 0.25s; }
+  .stage-tile:hover .tile-expand-hint { color: var(--t2); }
+  .stage-tile.active .tile-expand-hint { color: var(--accent); }
+  .stage-tile.active .tile-expand-hint svg { transform: rotate(180deg); }
+
+  /* ── EXPANDED PANEL ── */
+  .stage-panel {
+    display: none; background: var(--bg3);
+    border: 1px solid var(--border); border-top: none;
+    border-radius: 0 0 6px 6px; margin-bottom: 72px; overflow: hidden;
+  }
+
+  .stage-panel.open { display: block; animation: panelOpen 0.28s ease; }
+
+  @keyframes panelOpen {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .panel-inner { display: grid; grid-template-columns: 200px 1fr; }
+
+  .panel-id {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 44px 20px; gap: 10px; border-right: 1px solid var(--border);
+  }
+
+  .panel-id .big-letter {
+    font-family: 'Playfair Display', serif; font-size: 80px;
+    font-weight: 700; line-height: 1;
+  }
+
+  .panel-id .big-word {
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--t2);
+  }
+
+  .d-panel .panel-id { background: var(--d-bg); }
+  .d-panel .panel-id .big-letter, .d-panel .panel-id .big-word { color: var(--d); }
+  .a-panel .panel-id { background: var(--a-bg); }
+  .a-panel .panel-id .big-letter, .a-panel .panel-id .big-word { color: var(--a); }
+  .r-panel .panel-id { background: var(--r-bg); }
+  .r-panel .panel-id .big-letter, .r-panel .panel-id .big-word { color: var(--r); }
+  .e-panel .panel-id { background: var(--e-bg); }
+  .e-panel .panel-id .big-letter, .e-panel .panel-id .big-word { color: var(--e); }
+
+  .panel-content { padding: 40px 44px; }
+
+  .panel-def {
+    font-family: 'Playfair Display', serif; font-size: 19px;
+    font-style: italic; color: var(--t1); line-height: 1.55; margin-bottom: 16px;
+  }
+
+  .panel-detail { font-size: 15px; font-weight: 300; color: var(--t2); line-height: 1.8; }
+  .panel-detail strong { color: var(--t1); font-weight: 500; }
+
+  /* ── DIAGNOSTIC ── */
+  .diagnostic-section {
+    background: var(--bg2); padding: 100px 40px;
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  }
+
+  .diagnostic-inner { max-width: 860px; margin: 0 auto; }
+
+  .diagnostic-header {
+    display: flex; justify-content: space-between;
+    align-items: flex-end; margin-bottom: 20px; gap: 20px; flex-wrap: wrap;
+  }
+
+  .diag-score { font-family: var(--mono); font-size: 11px; color: var(--t3); letter-spacing: 0.08em; text-align: right; }
+
+  .score-val {
+    font-size: 32px; font-weight: 600; display: block;
+    line-height: 1; margin-bottom: 4px; transition: color 0.4s;
+  }
+
+  .score-val.complete { color: var(--r); }
+  .score-val.partial  { color: var(--e); }
+  .score-val.empty    { color: var(--t3); }
+
+  .diag-questions { display: flex; flex-direction: column; gap: 3px; margin-bottom: 20px; }
+
+  .diag-row {
+    display: grid; grid-template-columns: 52px 1fr auto;
+    align-items: center; gap: 20px;
+    padding: 22px 24px; background: var(--bg3); border-radius: 4px;
+    cursor: pointer; transition: background 0.15s, outline 0.15s;
+    user-select: none; outline: 1px solid transparent;
+  }
+
+  .diag-row:hover { background: #1a1a1a; outline-color: var(--border); }
+  .diag-row.checked { outline-color: var(--border-h); }
+  .diag-row.d-row.checked { background: rgba(74,159,212,0.05); }
+  .diag-row.a-row.checked { background: rgba(224,92,92,0.05); }
+  .diag-row.r-row.checked { background: rgba(61,184,122,0.05); }
+  .diag-row.e-row.checked { background: rgba(196,122,58,0.05); }
+
+  .diag-key {
+    font-family: var(--mono); font-size: 20px;
+    font-weight: 600; text-align: center;
+  }
+
+  .d-row .diag-key { color: var(--d); }
+  .a-row .diag-key { color: var(--a); }
+  .r-row .diag-key { color: var(--r); }
+  .e-row .diag-key { color: var(--e); }
+
+  .diag-q { font-size: 15px; font-weight: 400; color: var(--t1); line-height: 1.5; }
+
+  .diag-row.checked .diag-q {
+    color: var(--t2);
+    text-decoration: line-through;
+    text-decoration-color: var(--border-h);
+  }
+
+  .diag-check {
+    width: 26px; height: 26px; border-radius: 50%;
+    border: 2px solid var(--border-h);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: all 0.2s;
+  }
+
+  .diag-row:hover .diag-check { border-color: var(--t2); }
+  .diag-row.d-row.checked .diag-check { background: var(--d); border-color: var(--d); }
+  .diag-row.a-row.checked .diag-check { background: var(--a); border-color: var(--a); }
+  .diag-row.r-row.checked .diag-check { background: var(--r); border-color: var(--r); }
+  .diag-row.e-row.checked .diag-check { background: var(--e); border-color: var(--e); }
+
+  .diag-check svg { opacity: 0; transform: scale(0.5); transition: all 0.18s; }
+  .diag-row.checked .diag-check svg { opacity: 1; transform: scale(1); }
+
+  .diag-verdict {
+    padding: 20px 24px; border-radius: 4px;
+    border-left: 3px solid transparent;
+    font-family: var(--mono); font-size: 12px;
+    letter-spacing: 0.04em; line-height: 1.65;
+    transition: all 0.3s; min-height: 66px;
+    display: flex; align-items: center;
+  }
+
+  .diag-verdict.v0 { background: rgba(255,255,255,0.02); border-color: var(--border); color: var(--t3); }
+  .diag-verdict.v1, .diag-verdict.v2, .diag-verdict.v3 { background: rgba(196,122,58,0.06); border-color: var(--e); color: var(--e); }
+  .diag-verdict.v4 { background: rgba(61,184,122,0.08); border-color: var(--r); color: var(--r); }
+
+  .diag-note {
+    margin-top: 16px; font-family: var(--mono); font-size: 10px;
+    color: var(--t3); letter-spacing: 0.08em; text-align: center;
+  }
+
+  /* ── PROJECT CARDS ── */
+  .projects { display: flex; flex-direction: column; gap: 2px; }
+
+  .project-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 6px; overflow: hidden; transition: border-color 0.2s;
+  }
+
+  .project-card:hover { border-color: var(--border-h); }
+
+  .project-head {
+    padding: 32px 36px; cursor: pointer;
+    display: grid; grid-template-columns: 1fr auto;
+    align-items: start; gap: 24px;
+    transition: background 0.15s; user-select: none;
+  }
+
+  .project-head:hover { background: rgba(255,255,255,0.015); }
+
+  .project-num { font-family: var(--mono); font-size: 10px; color: var(--t3); letter-spacing: 0.12em; margin-bottom: 8px; }
+  .project-title { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; color: var(--t1); margin-bottom: 8px; }
+  .project-desc { font-size: 14px; font-weight: 300; color: var(--t2); max-width: 540px; line-height: 1.65; margin-bottom: 14px; }
+  .project-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .tag {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em;
+    padding: 4px 10px; border-radius: 2px; border: 1px solid var(--border);
+    color: var(--t3); white-space: nowrap; transition: border-color 0.2s, color 0.2s;
+  }
+
+  .project-card:hover .tag { border-color: rgba(255,255,255,0.1); color: var(--t2); }
+
+  .project-toggle {
+    width: 36px; height: 36px; border: 1px solid var(--border);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 4px; transition: all 0.25s; color: var(--t3);
+  }
+
+  .project-head:hover .project-toggle { border-color: var(--border-h); color: var(--t2); }
+
+  .project-card.open .project-toggle {
+    background: var(--accent-dim); border-color: rgba(79,255,176,0.3);
+    color: var(--accent); transform: rotate(180deg);
+  }
+
+  .dare-breakdown {
+    display: none;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px; background: var(--border);
+    border-top: 1px solid var(--border);
+  }
+
+  .project-card.open .dare-breakdown { display: grid; animation: panelOpen 0.25s ease; }
+
+  .dare-cell { background: var(--bg); padding: 26px 30px; transition: background 0.15s; }
+  .dare-cell:hover { background: #0f0f0f; }
+  .dare-cell-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .dare-cell-letter { font-family: var(--mono); font-size: 14px; font-weight: 600; }
+  .dare-cell-word { font-family: var(--mono); font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--t3); }
+  .dc .dare-cell-letter { color: var(--d); }
+  .ac .dare-cell-letter { color: var(--a); }
+  .rc .dare-cell-letter { color: var(--r); }
+  .ec .dare-cell-letter { color: var(--e); }
+  .dare-cell-text { font-size: 13px; font-weight: 300; color: var(--t2); line-height: 1.7; }
+
+  /* ── PRINCIPLE QUOTE ── */
+  .principle {
+    text-align: center; padding: 80px 40px;
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    max-width: 1060px; margin: 0 auto;
+  }
+
+  .principle p {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(19px, 2.8vw, 26px); font-style: italic;
+    color: var(--t1); max-width: 700px; margin: 0 auto; line-height: 1.6;
+  }
+
+  /* ── CTA ── */
+  .cta-section { text-align: center; padding: 100px 40px; max-width: 760px; margin: 0 auto; }
+  .cta-section .section-lead { margin: 0 auto 36px; text-align: center; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--bg); border-top: 1px solid var(--border);
+    padding: 2rem 5%; display: flex; align-items: center;
+    justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+  }
+
+  .f-brand { font-size: .875rem; font-weight: 600; color: var(--t2); }
+  .f-brand span { color: var(--accent); }
+  .f-links { display: flex; gap: 1.75rem; list-style: none; flex-wrap: wrap; }
+  .f-links a { font-size: .78rem; color: var(--t3); transition: color .2s; }
+  .f-links a:hover { color: var(--accent); }
+  .f-copy { font-family: var(--mono); font-size: .62rem; color: var(--t3); letter-spacing: .04em; width: 100%; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .rv { opacity: 0; transform: translateY(22px); transition: opacity 0.55s ease, transform 0.55s ease; }
+  .rv.in { opacity: 1; transform: none; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .stages-grid  { grid-template-columns: 1fr 1fr; }
+    .panel-inner  { grid-template-columns: 1fr; }
+    .panel-id     { flex-direction: row; justify-content: flex-start; padding: 24px 28px; border-right: none; border-bottom: 1px solid var(--border); }
+  }
+
+  @media (max-width: 768px) {
+    footer { flex-direction: column; align-items: flex-start; }
+    .dare-breakdown { grid-template-columns: 1fr; }
+    .project-head { grid-template-columns: 1fr; }
+    .project-toggle { display: none; }
+    .diagnostic-header { flex-direction: column; align-items: flex-start; }
+    .diag-score { text-align: left; }
+  }
+
+  @media (max-width: 640px) {
+    .wrap, .wrap-narrow { padding: 72px 20px; }
+    .hero { padding: calc(64px + 50px) 20px 60px; }
+    .dare-letter { padding: 0 6px; }
+    .belief { padding: 24px 28px; }
+    .panel-content { padding: 28px 24px; }
+    .diag-row { grid-template-columns: 40px 1fr auto; padding: 18px 16px; gap: 12px; }
+    .diagnostic-section { padding: 72px 20px; }
+    .cta-section { padding: 72px 20px; }
+    .principle { padding: 64px 20px; }
+  }
+</style>
+</head>
+<body>
+<script src="/navbar.js"></script>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-label">sarathg.me &nbsp;/&nbsp; framework</div>
+  <div class="hero-the">The</div>
+  <div class="dare-letters">
+    <div class="dare-letter d" onclick="scrollToStage('d')" title="Deconstruct — click to explore">
+      <span class="big">D</span><span class="small">Deconstruct</span>
+    </div>
+    <div class="dare-letter a" onclick="scrollToStage('a')" title="Attack — click to explore">
+      <span class="big">A</span><span class="small">Attack</span>
+    </div>
+    <div class="dare-letter r" onclick="scrollToStage('r')" title="Remediate — click to explore">
+      <span class="big">R</span><span class="small">Remediate</span>
+    </div>
+    <div class="dare-letter e" onclick="scrollToStage('e')" title="Exchange — click to explore">
+      <span class="big">E</span><span class="small">Exchange</span>
+    </div>
+  </div>
+  <div class="hero-framework">Framework</div>
+  <p class="hero-desc">A design constraint for cybersecurity training. Four stages. One learner. The same environment. No stage skipped.</p>
+  <div class="hero-cta">
+    <a href="#framework" class="btn btn-primary">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+      Explore the Framework
+    </a>
+    <a href="https://sarathg.medium.com/why-most-cybersecurity-training-produces-people-who-can-pass-exams-and-fail-incidents-7ca2d3d75020" target="_blank" class="btn btn-secondary">Read the Article ↗</a>
+  </div>
+  <div class="scroll-hint"><div class="scroll-arrow"></div></div>
+</div>
+
+<!-- CORE BELIEF -->
+<div class="wrap-narrow" id="framework">
+  <span class="eyebrow rv">The Core Belief</span>
+  <h2 class="section-h2 rv">Understanding is not real until it has been experienced in context.</h2>
+  <div class="belief rv">
+    <p>A learner who can describe SQL injection has not understood SQL injection. A learner who has executed it, watched it fail against a patched version, and then defended against it — that learner understands it. Most training stops after the first step. DARE does not stop until all four are complete.</p>
+  </div>
+</div>
+
+<!-- FOUR STAGES — interactive tiles -->
+<div class="wrap" id="stages" style="padding-top: 0;">
+  <span class="eyebrow rv">The Four Stages</span>
+  <h2 class="section-h2 rv">Each stage is necessary. None is sufficient alone.</h2>
+  <p class="section-lead rv">The stages must be completed in sequence, by the same learner, in the same environment. Click any tile to expand the full explanation.</p>
+
+  <div class="stages-grid rv" id="stages-grid">
+
+    <div class="stage-tile d-tile" id="tile-d" onclick="toggleStage('d')" role="button" tabindex="0" aria-expanded="false">
+      <div class="tile-letter">D</div>
+      <div class="tile-word">Deconstruct</div>
+      <div class="tile-def">Start from how the system actually works — not from the attack.</div>
+      <div class="tile-expand-hint">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        Expand
+      </div>
+    </div>
+
+    <div class="stage-tile a-tile" id="tile-a" onclick="toggleStage('a')" role="button" tabindex="0" aria-expanded="false">
+      <div class="tile-letter">A</div>
+      <div class="tile-word">Attack</div>
+      <div class="tile-def">Execute the attack in a realistic, relatable environment.</div>
+      <div class="tile-expand-hint">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        Expand
+      </div>
+    </div>
+
+    <div class="stage-tile r-tile" id="tile-r" onclick="toggleStage('r')" role="button" tabindex="0" aria-expanded="false">
+      <div class="tile-letter">R</div>
+      <div class="tile-word">Remediate</div>
+      <div class="tile-def">Show the fix in the same environment, against the same attack.</div>
+      <div class="tile-expand-hint">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        Expand
+      </div>
+    </div>
+
+    <div class="stage-tile e-tile" id="tile-e" onclick="toggleStage('e')" role="button" tabindex="0" aria-expanded="false">
+      <div class="tile-letter">E</div>
+      <div class="tile-word">Exchange</div>
+      <div class="tile-def">Make the learner switch sides and occupy the defensive position.</div>
+      <div class="tile-expand-hint">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        Expand
+      </div>
+    </div>
+  </div>
+
+  <!-- Expanded panels -->
+  <div id="panel-d" class="stage-panel d-panel">
+    <div class="panel-inner">
+      <div class="panel-id"><div class="big-letter">D</div><div class="big-word">Deconstruct</div></div>
+      <div class="panel-content">
+        <div class="panel-def">Start from how the system actually works — not from the attack.</div>
+        <p class="panel-detail">The learner builds a functional understanding of the target before anything is broken. How the protocol operates. How the application handles requests. How trust is established. Without this, an attack is a procedure that can be repeated but not adapted. <strong>Context converts instruction into understanding.</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <div id="panel-a" class="stage-panel a-panel">
+    <div class="panel-inner">
+      <div class="panel-id"><div class="big-letter">A</div><div class="big-word">Attack</div></div>
+      <div class="panel-content">
+        <div class="panel-def">Execute the attack in a realistic, relatable environment.</div>
+        <p class="panel-detail">The learner performs the attack against something they can recognise — familiar structure, implied stakes, not a synthetic box. The learner does not observe the attack. They execute it. <strong>Recognition produces relevance. Relevance produces retention.</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <div id="panel-r" class="stage-panel r-panel">
+    <div class="panel-inner">
+      <div class="panel-id"><div class="big-letter">R</div><div class="big-word">Remediate</div></div>
+      <div class="panel-content">
+        <div class="panel-def">Show the fix in the same environment, against the same attack.</div>
+        <p class="panel-detail">The patched version sits beside the broken one. The learner runs the same attack and watches it fail. The fix is not described — it is demonstrated. <strong>The failure of the attack is the explanation of the fix.</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <div id="panel-e" class="stage-panel e-panel">
+    <div class="panel-inner">
+      <div class="panel-id"><div class="big-letter">E</div><div class="big-word">Exchange</div></div>
+      <div class="panel-content">
+        <div class="panel-def">Make the learner switch sides and occupy the defensive position.</div>
+        <p class="panel-detail">The learner moves from attacker to defender against the same target. Same scenario, switched. What does this look like in a log? How would you detect it? What would remove it? <strong>A practitioner who has only attacked is half-trained.</strong></p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- DIAGNOSTIC — INTERACTIVE CHECKLIST -->
+<div class="diagnostic-section" id="diagnostic">
+  <div class="diagnostic-inner">
+    <div class="diagnostic-header">
+      <div>
+        <span class="eyebrow rv">The DARE Diagnostic</span>
+        <h2 class="section-h2 rv" style="margin-bottom:0;">Four questions every training environment must answer yes to.</h2>
+      </div>
+      <div class="diag-score rv">
+        <span class="score-val empty" id="score-val">0/4</span>
+        answered yes
+      </div>
+    </div>
+
+    <p class="section-lead rv" style="margin-bottom: 40px;">DARE is not a curriculum. It doesn't tell you which vulnerabilities to cover or which tools to teach. It's a design constraint. Evaluate your training environment — click each question it answers yes to.</p>
+
+    <div class="diag-questions rv">
+
+      <div class="diag-row d-row" onclick="toggleDiag(this)" role="checkbox" aria-checked="false" tabindex="0">
+        <span class="diag-key">D</span>
+        <span class="diag-q">Does the learner understand how the system works before they attack it?</span>
+        <div class="diag-check" aria-hidden="true">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+      </div>
+
+      <div class="diag-row a-row" onclick="toggleDiag(this)" role="checkbox" aria-checked="false" tabindex="0">
+        <span class="diag-key">A</span>
+        <span class="diag-q">Are they executing the attack themselves, not watching someone else do it?</span>
+        <div class="diag-check" aria-hidden="true">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+      </div>
+
+      <div class="diag-row r-row" onclick="toggleDiag(this)" role="checkbox" aria-checked="false" tabindex="0">
+        <span class="diag-key">R</span>
+        <span class="diag-q">Can they see the fix stop the attack in the same environment?</span>
+        <div class="diag-check" aria-hidden="true">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+      </div>
+
+      <div class="diag-row e-row" onclick="toggleDiag(this)" role="checkbox" aria-checked="false" tabindex="0">
+        <span class="diag-key">E</span>
+        <span class="diag-q">Have they been required to defend against what they just executed?</span>
+        <div class="diag-check" aria-hidden="true">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="diag-verdict v0 rv" id="diag-verdict">
+      Click each question to evaluate your training environment against the DARE constraint.
+    </div>
+    <p class="diag-note rv">If any answer is no, the environment is incomplete. It might still be useful. But it isn't producing the understanding it could.</p>
+  </div>
+</div>
+
+<!-- CASE STUDIES -->
+<div class="wrap" id="projects">
+  <span class="eyebrow rv">The Framework in Practice</span>
+  <h2 class="section-h2 rv">DARE applied — three training environments.</h2>
+  <p class="section-lead rv">Each project below was built around the DARE constraint. Click any card to see how each stage appears in that environment.</p>
+
+  <div class="projects">
+
+    <div class="project-card rv" id="proj-parallax">
+      <div class="project-head" onclick="toggleProject('proj-parallax')" role="button" tabindex="0">
+        <div>
+          <div class="project-num">01 / Simulation</div>
+          <div class="project-title">Parallax</div>
+          <div class="project-desc">A browser-based cybersecurity training simulation with dual-role scenarios. Six real-world attack sequences played from both the attacker and SOC analyst position — in the same environment, back to back.</div>
+          <div class="project-tags">
+            <span class="tag">Dual POV</span>
+            <span class="tag">Six Scenarios</span>
+            <span class="tag">Three.js</span>
+            <span class="tag">parallax.sarathg.me</span>
+          </div>
+        </div>
+        <div class="project-toggle">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
+      <div class="dare-breakdown">
+        <div class="dare-cell dc">
+          <div class="dare-cell-header"><span class="dare-cell-letter">D</span><span class="dare-cell-word">Deconstruct</span></div>
+          <div class="dare-cell-text">Each scenario opens with the system context — how the target environment is structured, what the normal state looks like, and what the attacker is about to exploit. The learner understands the ground before the attack begins.</div>
+        </div>
+        <div class="dare-cell ac">
+          <div class="dare-cell-header"><span class="dare-cell-letter">A</span><span class="dare-cell-word">Attack</span></div>
+          <div class="dare-cell-text">The learner executes the attack using real tool syntax and decision branches across six scenarios: OSINT Reconnaissance, Phishing, Network Intrusion, Social Engineering, Privilege Escalation, and Ransomware.</div>
+        </div>
+        <div class="dare-cell rc">
+          <div class="dare-cell-header"><span class="dare-cell-letter">R</span><span class="dare-cell-word">Remediate</span></div>
+          <div class="dare-cell-text">Each scenario ends with a debrief screen showing what defensive control would have stopped the attack at each decision point — in the same scenario context, not as a separate module.</div>
+        </div>
+        <div class="dare-cell ec">
+          <div class="dare-cell-header"><span class="dare-cell-letter">E</span><span class="dare-cell-word">Exchange</span></div>
+          <div class="dare-cell-text">The same scenario is then played again — mandatory — from the SOC analyst position. The learner detects, investigates, and responds to the attack they just executed. The Exchange is built into the structure, not optional.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card rv" id="proj-vulnshop">
+      <div class="project-head" onclick="toggleProject('proj-vulnshop')" role="button" tabindex="0">
+        <div>
+          <div class="project-num">02 / Vulnerable Application</div>
+          <div class="project-title">VulnShop</div>
+          <div class="project-desc">A deliberately vulnerable Laravel e-commerce application with ten intentional CVEs. Built as a SAST/DAST training environment — the familiar e-commerce context makes every vulnerability feel real rather than academic.</div>
+          <div class="project-tags">
+            <span class="tag">Laravel</span>
+            <span class="tag">10 CVEs</span>
+            <span class="tag">SAST · DAST</span>
+            <span class="tag">E-commerce Context</span>
+          </div>
+        </div>
+        <div class="project-toggle">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
+      <div class="dare-breakdown">
+        <div class="dare-cell dc">
+          <div class="dare-cell-header"><span class="dare-cell-letter">D</span><span class="dare-cell-word">Deconstruct</span></div>
+          <div class="dare-cell-text">The e-commerce context does the deconstruction work. Every learner already understands what a shop is, what an order is, what an account is. The application structure is immediately legible before any vulnerability is touched.</div>
+        </div>
+        <div class="dare-cell ac">
+          <div class="dare-cell-header"><span class="dare-cell-letter">A</span><span class="dare-cell-word">Attack</span></div>
+          <div class="dare-cell-text">Ten intentional vulnerabilities across SQL injection, stored XSS, IDOR, CSRF, weak hashing, hardcoded credentials, insecure file upload, missing rate limiting, debug exposure, and information disclosure.</div>
+        </div>
+        <div class="dare-cell rc">
+          <div class="dare-cell-header"><span class="dare-cell-letter">R</span><span class="dare-cell-word">Remediate</span></div>
+          <div class="dare-cell-text">Each CVE has a corresponding remediation exercise — fixing the vulnerable code, validating the fix, and re-running the attack to confirm it fails. The fix lives in the same codebase as the vulnerability.</div>
+        </div>
+        <div class="dare-cell ec">
+          <div class="dare-cell-header"><span class="dare-cell-letter">E</span><span class="dare-cell-word">Exchange</span></div>
+          <div class="dare-cell-text">After exploiting each vulnerability, learners switch to the developer/defender position — reviewing the code that made it possible, understanding the design decision that introduced it, and writing the fix themselves.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card rv" id="proj-shopeasy">
+      <div class="project-head" onclick="toggleProject('proj-shopeasy')" role="button" tabindex="0">
+        <div>
+          <div class="project-num">03 / API Security Lab</div>
+          <div class="project-title">ShopEasy</div>
+          <div class="project-desc">A Flask API application pair — vulnerable on port 5000, patched on port 5001. The same application, two states, running simultaneously. Built for API security training covering BOLA, JWT forgery, and endpoint fuzzing.</div>
+          <div class="project-tags">
+            <span class="tag">Flask</span>
+            <span class="tag">API Security</span>
+            <span class="tag">BOLA · JWT</span>
+            <span class="tag">Dual Instance</span>
+          </div>
+        </div>
+        <div class="project-toggle">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
+      <div class="dare-breakdown">
+        <div class="dare-cell dc">
+          <div class="dare-cell-header"><span class="dare-cell-letter">D</span><span class="dare-cell-word">Deconstruct</span></div>
+          <div class="dare-cell-text">The session begins with how the API authorisation model works — how JWT tokens are issued, how object-level permissions are meant to be enforced, and what the intended trust boundaries are before any of them are broken.</div>
+        </div>
+        <div class="dare-cell ac">
+          <div class="dare-cell-header"><span class="dare-cell-letter">A</span><span class="dare-cell-word">Attack</span></div>
+          <div class="dare-cell-text">Learners attack the vulnerable instance on port 5000 — forging JWT tokens, accessing other users' resources via BOLA, and fuzzing endpoints with ffuf to discover undocumented routes. Real attacks, real tool output.</div>
+        </div>
+        <div class="dare-cell rc">
+          <div class="dare-cell-header"><span class="dare-cell-letter">R</span><span class="dare-cell-word">Remediate</span></div>
+          <div class="dare-cell-text">The patched instance runs simultaneously on port 5001. The learner runs the same attacks and receives correct 401 and 403 responses. The fix is not described — it is visible in the response headers and code, in the same session.</div>
+        </div>
+        <div class="dare-cell ec">
+          <div class="dare-cell-header"><span class="dare-cell-letter">E</span><span class="dare-cell-word">Exchange</span></div>
+          <div class="dare-cell-text">After the attack phase, learners review the secure implementation — reading the authorisation middleware, understanding what the patched code does differently, and explaining why each control stops the attack they just executed.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- PRINCIPLE QUOTE -->
+<div class="principle rv">
+  <p>"A learner hasn't understood a security concept until they have broken it in context, watched it defended, and stood on both sides of it."</p>
+</div>
+
+<!-- CTA -->
+<div class="cta-section rv">
+  <span class="eyebrow">Read More</span>
+  <h2 class="section-h2">The argument behind the framework.</h2>
+  <p class="section-lead">Why most cybersecurity training produces people who can pass exams and fail incidents — and what DARE does differently.</p>
+  <a href="https://sarathg.medium.com/why-most-cybersecurity-training-produces-people-who-can-pass-exams-and-fail-incidents-7ca2d3d75020" target="_blank" class="btn btn-primary">Read on Medium ↗</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="f-brand">Sarath <span>G.</span> — DARE Framework</div>
+  <ul class="f-links">
+    <li><a href="https://www.sarathg.me/">Home</a></li>
+    <li><a href="https://www.sarathg.me/services/corporate-training.html">Corporate Training</a></li>
+    <li><a href="https://www.sarathg.me/services/application-security.html">AppSec Consulting</a></li>
+    <li><a href="https://www.sarathg.me/services/offensive-security.html">Offensive Security</a></li>
+    <li><a href="https://sarathg.medium.com/" target="_blank" rel="noopener">Medium</a></li>
+    <li><a href="https://www.linkedin.com/in/sarathcybersec/" target="_blank" rel="noopener">LinkedIn</a></li>
+    <li><a href="https://github.com/secretguard" target="_blank" rel="noopener">GitHub</a></li>
+  </ul>
+  <p class="f-copy">Sarath G. © · Built with precision. Secured by design.</p>
+</footer>
+
+<script>
+  /* ── Scroll reveal ── */
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('in'), i * 60);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.07 });
+  document.querySelectorAll('.rv').forEach(el => obs.observe(el));
+
+  /* ── Hero letters → scroll + open stage ── */
+  function scrollToStage(letter) {
+    document.getElementById('stages').scrollIntoView({ behavior: 'smooth' });
+    setTimeout(() => openStage(letter), 650);
+  }
+
+  /* ── Stage tile accordion ── */
+  let activeStage = null;
+
+  function openStage(letter) {
+    ['d','a','r','e'].forEach(l => {
+      if (l !== letter) {
+        document.getElementById('tile-' + l).classList.remove('active');
+        document.getElementById('tile-' + l).setAttribute('aria-expanded', 'false');
+        document.getElementById('panel-' + l).classList.remove('open');
+      }
+    });
+    const tile  = document.getElementById('tile-' + letter);
+    const panel = document.getElementById('panel-' + letter);
+    if (activeStage === letter) {
+      tile.classList.remove('active');
+      tile.setAttribute('aria-expanded', 'false');
+      panel.classList.remove('open');
+      activeStage = null;
+    } else {
+      tile.classList.add('active');
+      tile.setAttribute('aria-expanded', 'true');
+      panel.classList.add('open');
+      activeStage = letter;
+    }
+  }
+
+  function toggleStage(letter) { openStage(letter); }
+
+  document.querySelectorAll('.stage-tile').forEach(tile => {
+    tile.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleStage(tile.id.split('-')[1]);
+      }
+    });
+  });
+
+  /* ── Diagnostic checklist ── */
+  const verdicts = [
+    'Click each question to evaluate your training environment against the DARE constraint.',
+    'One out of four. The environment is missing three of the four constraints — it may teach, but it isn\'t producing durable understanding.',
+    'Two out of four. Partial DARE compliance. The environment has a foundation but leaves significant understanding gaps.',
+    'Three out of four. Almost there. One missing stage is still enough to leave a practitioner half-trained in a critical area.',
+    'Four out of four. DARE-compliant. This environment produces the kind of understanding that holds under real conditions.'
+  ];
+  const verdictClasses = ['v0','v1','v2','v3','v4'];
+
+  function toggleDiag(row) {
+    row.classList.toggle('checked');
+    row.setAttribute('aria-checked', String(row.classList.contains('checked')));
+    const checked  = document.querySelectorAll('.diag-row.checked').length;
+    const scoreEl  = document.getElementById('score-val');
+    const verdictEl = document.getElementById('diag-verdict');
+    scoreEl.textContent = checked + '/4';
+    scoreEl.className = 'score-val ' + (checked === 4 ? 'complete' : checked > 0 ? 'partial' : 'empty');
+    verdictEl.textContent = verdicts[checked];
+    verdictEl.className = 'diag-verdict ' + verdictClasses[checked];
+  }
+
+  document.querySelectorAll('.diag-row').forEach(row => {
+    row.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleDiag(row); }
+    });
+  });
+
+  /* ── Project card accordion ── */
+  let activeProject = null;
+
+  function toggleProject(id) {
+    const card = document.getElementById(id);
+    if (activeProject && activeProject !== id) {
+      document.getElementById(activeProject).classList.remove('open');
+    }
+    card.classList.toggle('open');
+    activeProject = card.classList.contains('open') ? id : null;
+  }
+
+  document.querySelectorAll('.project-head').forEach(head => {
+    head.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); head.click(); }
+    });
+  });
+</script>
+
+</body>
+</html>
