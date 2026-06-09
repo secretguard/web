@@ -185,6 +185,327 @@
     50%      { transform: scaleY(1.3); opacity: 1; }
   }
 
+  /* ── WORKED EXAMPLE ── */
+  .example-section {
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .ex-stage {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 6px; overflow: hidden;
+  }
+
+  .ex-stage-top {
+    display: flex; align-items: center; gap: 16px;
+    padding: 20px 28px; border-bottom: 1px solid var(--border);
+  }
+
+  .ex-letter {
+    font-family: 'Playfair Display', serif; font-size: 40px;
+    font-weight: 700; line-height: 1; flex-shrink: 0; width: 36px;
+  }
+
+  .ex-stage-name {
+    font-size: 16px; font-weight: 500; margin-bottom: 3px;
+  }
+
+  .ex-stage-label {
+    font-family: var(--mono); font-size: 11px;
+    color: var(--t3); letter-spacing: 0.05em;
+  }
+
+  .ex-body { padding: 24px 28px; }
+
+  .ex-text {
+    font-size: 14px; color: var(--t2); line-height: 1.75;
+    margin-bottom: 16px;
+  }
+
+  .ex-code-block {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 4px; margin-bottom: 16px; overflow: hidden;
+  }
+
+  .ex-code-label {
+    font-family: var(--mono); font-size: 10px;
+    color: var(--t3); letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 8px 16px; border-bottom: 1px solid var(--border);
+  }
+
+  .ex-code {
+    font-family: var(--mono); font-size: 13px;
+    color: var(--t2); line-height: 1.7;
+    padding: 14px 16px; margin: 0;
+    white-space: pre-wrap; word-break: break-word;
+  }
+
+  .ex-comment { color: var(--t3); font-style: italic; }
+
+  .ex-highlight-d { color: var(--d); }
+  .ex-highlight-a { color: var(--a); }
+  .ex-highlight-r { color: var(--r); }
+
+  .ex-code code, .ex-text code {
+    font-family: var(--mono); font-size: 12px;
+    color: var(--t1); background: var(--bg3);
+    border: 1px solid var(--border); border-radius: 3px;
+    padding: 1px 6px;
+  }
+
+  .ex-check {
+    font-size: 13px; color: var(--t3);
+    display: flex; align-items: flex-start; gap: 8px;
+    margin-top: 8px; font-style: italic;
+  }
+
+  .ex-check-icon { flex-shrink: 0; font-style: normal; }
+
+  .ex-connector {
+    width: 1px; height: 28px;
+    background: linear-gradient(to bottom, var(--border), transparent);
+    margin: 0 auto;
+  }
+
+  .ex-questions {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 4px; margin-bottom: 16px; overflow: hidden;
+  }
+
+  .ex-q {
+    display: flex; gap: 16px; align-items: flex-start;
+    padding: 14px 16px; border-bottom: 1px solid var(--border);
+  }
+
+  .ex-q:last-child { border-bottom: none; }
+
+  .ex-q-num {
+    font-family: var(--mono); font-size: 10px;
+    color: var(--e); letter-spacing: 0.1em;
+    flex-shrink: 0; padding-top: 2px;
+  }
+
+  .ex-q-text { font-size: 13px; color: var(--t2); line-height: 1.6; }
+
+  /* ── LEARNER CHECKLIST ── */
+  .learner-section {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .lc-progress-row {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 40px;
+  }
+
+  .lc-progress-wrap {
+    flex: 1; height: 3px;
+    background: var(--border);
+    border-radius: 2px; overflow: hidden;
+  }
+
+  .lc-progress-bar {
+    height: 100%; background: var(--accent);
+    border-radius: 2px; transition: width 0.3s ease;
+  }
+
+  .lc-progress-label {
+    font-family: var(--mono); font-size: 11px;
+    color: var(--t3); letter-spacing: 0.08em; min-width: 36px; text-align: right;
+  }
+
+  .lc-stage {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 6px; margin-bottom: 16px; overflow: hidden;
+  }
+
+  .lc-stage-head {
+    display: flex; align-items: center; gap: 16px;
+    padding: 18px 24px; border-bottom: 1px solid var(--border);
+  }
+
+  .lc-letter {
+    width: 40px; height: 40px; border-radius: 4px;
+    border: 1px solid; display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .lc-stage-title {
+    font-size: 15px; font-weight: 500; color: var(--t1);
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .lc-stage-sub {
+    font-size: 12px; color: var(--t3); margin-top: 2px;
+    font-family: var(--mono); letter-spacing: 0.04em;
+  }
+
+  .lc-hard-badge {
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em;
+    text-transform: uppercase; padding: 3px 8px; border-radius: 2px;
+    background: rgba(196,122,58,0.12); color: var(--e);
+    border: 1px solid rgba(196,122,58,0.2);
+  }
+
+  .lc-items { padding: 8px 24px 16px; }
+
+  .lc-item {
+    display: flex; align-items: flex-start; gap: 14px;
+    padding: 14px 0; border-bottom: 1px solid var(--border);
+    cursor: pointer; transition: opacity 0.2s;
+  }
+
+  .lc-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .lc-item:first-child { padding-top: 8px; }
+  .lc-item:hover { opacity: 0.85; }
+
+  .lc-check {
+    width: 18px; height: 18px; border-radius: 3px;
+    border: 1px solid var(--t3); flex-shrink: 0; margin-top: 2px;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s, border-color 0.15s;
+  }
+
+  .lc-check::after {
+    content: ''; display: none;
+    width: 5px; height: 9px;
+    border: 2px solid #0a0a0a;
+    border-top: none; border-left: none;
+    transform: rotate(45deg) translate(-1px,-1px);
+  }
+
+  .lc-item.checked .lc-check::after { display: block; }
+  .lc-item.checked .d-check { background: var(--d); border-color: var(--d); }
+  .lc-item.checked .a-check { background: var(--a); border-color: var(--a); }
+  .lc-item.checked .r-check { background: var(--r); border-color: var(--r); }
+  .lc-item.checked .e-check { background: var(--e); border-color: var(--e); }
+
+  .lc-text {
+    font-size: 14px; color: var(--t1); line-height: 1.6; flex: 1;
+    transition: color 0.2s;
+  }
+
+  .lc-item.checked .lc-text { color: var(--t3); text-decoration: line-through; text-decoration-color: var(--t3); }
+
+  .lc-note {
+    font-size: 12px; color: var(--t3); margin-top: 5px;
+    font-style: italic; line-height: 1.5;
+  }
+
+  .lc-footer {
+    font-size: 14px; color: var(--t3); line-height: 1.7;
+    margin-top: 32px; padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-style: italic;
+  }
+
+  /* ── TRAINER GUIDE ── */
+  .trainer-section {
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .trainer-tabs {
+    display: flex; gap: 0;
+    border: 1px solid var(--border); border-radius: 4px;
+    overflow: hidden; margin-bottom: 48px; width: fit-content;
+  }
+
+  .tr-tab {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+    padding: 11px 22px; background: transparent;
+    color: var(--t3); border: none; cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    border-right: 1px solid var(--border);
+  }
+
+  .tr-tab:last-child { border-right: none; }
+  .tr-tab:hover { background: var(--bg2); color: var(--t2); }
+  .tr-tab.active { background: var(--bg3); color: var(--accent); }
+
+  .tr-steps { display: flex; flex-direction: column; gap: 0; }
+
+  .tr-step {
+    display: flex; gap: 32px; align-items: flex-start;
+    padding: 32px 0; border-bottom: 1px solid var(--border);
+  }
+
+  .tr-step:last-child { border-bottom: none; }
+
+  .tr-step-num {
+    font-family: var(--mono); font-size: 11px;
+    color: var(--t3); letter-spacing: 0.12em;
+    min-width: 28px; padding-top: 3px;
+  }
+
+  .tr-step-body { flex: 1; }
+
+  .tr-step-title {
+    font-size: 16px; font-weight: 500; color: var(--t1);
+    margin-bottom: 10px;
+  }
+
+  .tr-step-desc {
+    font-size: 14px; color: var(--t2); line-height: 1.7;
+    margin-bottom: 8px;
+  }
+
+  .tr-step-note {
+    font-size: 12px; color: var(--t3); line-height: 1.6;
+    font-style: italic; border-left: 2px solid var(--border);
+    padding-left: 14px; margin-top: 12px;
+  }
+
+  .tr-resonance {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 4px; overflow: hidden; margin-top: 16px;
+  }
+
+  .tr-res-row {
+    display: grid; grid-template-columns: 1fr 1.6fr;
+    padding: 11px 16px; border-bottom: 1px solid var(--border);
+    font-size: 13px; color: var(--t2); gap: 16px;
+  }
+
+  .tr-res-row:last-child { border-bottom: none; }
+  .tr-res-row.header { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; color: var(--t3); text-transform: uppercase; }
+  .tr-res-row.default-row span:first-child { color: var(--accent); }
+  .tr-res-row span:first-child { color: var(--t1); font-weight: 500; }
+
+  .tr-audit-progress {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 36px;
+  }
+
+  .tr-audit-group {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 6px; overflow: hidden; margin-bottom: 16px;
+  }
+
+  .tr-audit-head {
+    display: flex; align-items: center; gap: 10px;
+    padding: 14px 20px; border-bottom: 1px solid var(--border);
+    font-size: 13px; font-weight: 500; color: var(--t2);
+    font-family: var(--mono); letter-spacing: 0.06em; text-transform: uppercase;
+  }
+
+  .tr-audit-letter {
+    font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700;
+  }
+
+  .tr-audit-item {
+    display: flex; align-items: flex-start; gap: 14px;
+    padding: 14px 20px; border-bottom: 1px solid var(--border);
+    cursor: pointer; transition: background 0.15s;
+  }
+
+  .tr-audit-item:last-child { border-bottom: none; }
+  .tr-audit-item:hover { background: var(--bg3); }
+  .tr-audit-item.checked .lc-text { color: var(--t3); text-decoration: line-through; text-decoration-color: var(--t3); }
+
   /* ── BUTTONS ── */
   .btn {
     font-family: var(--mono); font-size: 12px;
@@ -782,6 +1103,386 @@
   </div>
 </div>
 
+<!-- LEARNER CHECKLIST -->
+<div class="learner-section rv" id="learner">
+  <div class="wrap-narrow">
+    <span class="eyebrow rv">For The Learner</span>
+    <h2 class="section-h2 rv">Run this against any vulnerability you are studying.</h2>
+    <p class="section-lead rv">A no answer is not a failure — it tells you exactly what you have not done yet.</p>
+
+    <div class="lc-progress-row rv">
+      <div class="lc-progress-wrap"><div class="lc-progress-bar" id="lc-bar" style="width:0%"></div></div>
+      <span class="lc-progress-label" id="lc-label">0 / 9</span>
+    </div>
+
+    <div class="lc-stage rv" id="lcs-d">
+      <div class="lc-stage-head">
+        <div class="lc-letter" style="color:var(--d); border-color:var(--d-bg);">D</div>
+        <div>
+          <div class="lc-stage-title">Deconstruct</div>
+          <div class="lc-stage-sub">Understand how the system works before anything is broken</div>
+        </div>
+      </div>
+      <div class="lc-items">
+        <div class="lc-item" onclick="lcToggle(this)" role="checkbox" aria-checked="false" tabindex="0">
+          <div class="lc-check d-check"></div>
+          <div class="lc-text">Can you explain how this system works in normal operation — without mentioning the attack?
+            <div class="lc-note">Describe the request/response flow, where data goes, and what happens step by step.</div>
+          </div>
+        </div>
+        <div class="lc-item" onclick="lcToggle(this)" role="checkbox" aria-checked="false" tabindex="0">
+          <div class="lc-check d-check"></div>
+          <div class="lc-text">Can you identify all the inputs that come from the client, and how the system checks whether that information is valid?
+            <div class="lc-note">List every field, parameter, or value the user can send. For each one, ask: does the system verify this, or does it just use it?</div>
+          </div>
+        </div>
+        <div class="lc-item" onclick="lcToggle(this)" role="checkbox" aria-checked="false" tabindex="0">
+          <div class="lc-check d-check"></div>
+          <div class="lc-text">Have you demonstrated your understanding to someone else — by explaining it or answering questions about it?
+            <div class="lc-note">The format does not matter. What matters is that your mental model has been checked by another person.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lc-stage rv" id="lcs-a">
+      <div class="lc-stage-head">
+        <div class="lc-letter" style="color:var(--a); border-color:var(--a-bg);">A</div>
+        <div>
+          <div class="lc-stage-title">Attack</div>
+          <div class="lc-stage-sub">Execute the attack yourself — not watch someone else do it</div>
+        </div>
+      </div>
+      <div class="lc-items">
+        <div class="lc-item" onclick="lcToggle(this)" role="checkbox" aria-checked="false" tabindex="0">
+          <div class="lc-check a-check"></div>
+          <div class="lc-text">Have you executed the attack yourself and observed the actual impact?
+            <div class="lc-note">Getting a result is not enough. You must have seen what the attack actually does to the system.</div>
+          </div>
+        </div>
+        <div class="lc-item" onclick="lcToggle(this)" role="checkbox" aria-checked="false" tabindex="0">
+          <div class="lc-check a-check"></div>
+          <div class="lc-text">Can you replicate the attack on a different target without guidance?
+            <div class="lc-note">If you can only execute it on the original target with the original steps, you followed instructions. Transfer is the proof of understanding.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lc-stage rv" id="lcs-r">
+      <div class="lc-stage-head">
+        <div class="lc-letter" style="color:var(--r); border-color:var(--r-bg);">R</div>
+        <div>
+          <div class="lc-stage-title">Remediate</div>
+          <div class="lc-stage-sub">Watch the fix stop the attack in the same environment</div>
+        </div>
+      </div>
+      <div class="lc-items">
+        <div class="lc-item" onclick="lcToggle(this)" role="checkbox" aria-checked="false" tabindex="0">
+          <div class="lc-check r-check"></div>
+          <div class="lc-text">Have you run the same attack against a patched version of the same environment — and watched it fail?
+            <div class="lc-note">Reading about the fix is not the same as seeing the fix stop the attack you just executed.</div>
+          </div>
+        </div>
+        <div class="lc-item" onclick="lcToggle(this)" role="checkbox" aria-checked="false" tabindex="0">
+          <div class="lc-check r-check"></div>
+          <div class="lc-text">Can you explain why the fix works — not just what the fix is?
+            <div class="lc-note">For example: parameterized queries stop SQL injection because the query structure is fixed before user input is added. The input cannot change the structure.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lc-stage rv" id="lcs-e">
+      <div class="lc-stage-head">
+        <div class="lc-letter" style="color:var(--e); border-color:var(--e-bg);">E</div>
+        <div>
+          <div class="lc-stage-title">Exchange <span class="lc-hard-badge">hardest stage</span></div>
+          <div class="lc-stage-sub">Defend against what you just attacked</div>
+        </div>
+      </div>
+      <div class="lc-items">
+        <div class="lc-item" onclick="lcToggle(this)" role="checkbox" aria-checked="false" tabindex="0">
+          <div class="lc-check e-check"></div>
+          <div class="lc-text">Could you detect this attack if someone ran it against a system you were defending?
+            <div class="lc-note">What would it look like in logs, traffic, or behaviour? What would alert you?</div>
+          </div>
+        </div>
+        <div class="lc-item" onclick="lcToggle(this)" role="checkbox" aria-checked="false" tabindex="0">
+          <div class="lc-check e-check"></div>
+          <div class="lc-text">Have you actively taken the defender's position — not just understood the fix, but thought from the defender's perspective?
+            <div class="lc-note">This stage is incomplete in most training. If you cannot answer yes, you know what to work on next.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="lc-footer rv">A practitioner who has only attacked is half-trained. The Exchange stage is where most cybersecurity training stops — including formal certifications. If your no answers cluster here, you are not behind. You are seeing clearly what the industry routinely skips.</p>
+  </div>
+</div>
+
+<!-- WORKED EXAMPLE -->
+<div class="example-section" id="example">
+  <div class="wrap-narrow">
+    <span class="eyebrow rv">DARE in Action</span>
+    <h2 class="section-h2 rv">SQL injection via a login form.</h2>
+    <p class="section-lead rv">The same vulnerability, walked through all four stages. This is what DARE looks like in practice.</p>
+
+    <div class="ex-stage rv ex-d">
+      <div class="ex-stage-top">
+        <div class="ex-letter" style="color:var(--d);">D</div>
+        <div>
+          <div class="ex-stage-name" style="color:var(--d);">Deconstruct</div>
+          <div class="ex-stage-label">Understand how the login form works before anything is broken</div>
+        </div>
+      </div>
+      <div class="ex-body">
+        <p class="ex-text">A login form sends a username and password to the server. The server builds a database query using those values — something like: find the user where the username matches and the password matches. If a matching record is found, the user is granted access.</p>
+        <p class="ex-text">The learner maps every input the user can send — the username field, the password field, any hidden fields — and asks: does the server check these values before putting them into the query, or does it use them directly?</p>
+        <div class="ex-code-block">
+          <div class="ex-code-label">What the server does with your input</div>
+          <pre class="ex-code">SELECT * FROM users
+WHERE username = '<span class="ex-highlight-d">user_input</span>'
+AND password = '<span class="ex-highlight-d">user_input</span>'</pre>
+        </div>
+        <p class="ex-check"><span class="ex-check-icon" style="color:var(--d);">✓</span> The learner now understands the system before the attack begins.</p>
+      </div>
+    </div>
+
+    <div class="ex-connector rv"></div>
+
+    <div class="ex-stage rv ex-a">
+      <div class="ex-stage-top">
+        <div class="ex-letter" style="color:var(--a);">A</div>
+        <div>
+          <div class="ex-stage-name" style="color:var(--a);">Attack</div>
+          <div class="ex-stage-label">Execute the injection and observe what happens</div>
+        </div>
+      </div>
+      <div class="ex-body">
+        <p class="ex-text">The learner types a crafted value into the username field. They do not observe this — they type it themselves, submit the form, and watch what the server returns.</p>
+        <div class="ex-code-block">
+          <div class="ex-code-label">What the learner types into the username field</div>
+          <pre class="ex-code"><span class="ex-highlight-a">admin' OR '1'='1</span></pre>
+        </div>
+        <div class="ex-code-block">
+          <div class="ex-code-label">What the server query becomes</div>
+          <pre class="ex-code">SELECT * FROM users
+WHERE username = '<span class="ex-highlight-a">admin' OR '1'='1</span>'
+AND password = ''</pre>
+        </div>
+        <p class="ex-text">The condition <code>OR '1'='1'</code> is always true. The query returns the first user in the database — typically an admin account. The learner is now logged in without a valid password.</p>
+        <p class="ex-check"><span class="ex-check-icon" style="color:var(--a);">✓</span> The learner has executed the attack and seen the actual impact — unauthorised access, not just a flag.</p>
+      </div>
+    </div>
+
+    <div class="ex-connector rv"></div>
+
+    <div class="ex-stage rv ex-r">
+      <div class="ex-stage-top">
+        <div class="ex-letter" style="color:var(--r);">R</div>
+        <div>
+          <div class="ex-stage-name" style="color:var(--r);">Remediate</div>
+          <div class="ex-stage-label">Run the same attack against the patched version — watch it fail</div>
+        </div>
+      </div>
+      <div class="ex-body">
+        <p class="ex-text">The patched version of the same login form is now presented. The learner types the exact same input and submits. This time, access is denied.</p>
+        <div class="ex-code-block">
+          <div class="ex-code-label">The patched server uses a parameterized query</div>
+          <pre class="ex-code">SELECT * FROM users
+WHERE username = <span class="ex-highlight-r">?</span>
+AND password = <span class="ex-highlight-r">?</span>
+
+<span class="ex-comment">-- The query structure is fixed first.
+-- User input is passed separately as data.
+-- It cannot change the structure of the query.</span></pre>
+        </div>
+        <p class="ex-text">The injected value <code>admin' OR '1'='1</code> is treated as a literal string — not as SQL. The database looks for a user whose username is exactly that string. No such user exists. Login fails.</p>
+        <p class="ex-check"><span class="ex-check-icon" style="color:var(--r);">✓</span> The learner has seen the fix stop the attack — not read about it.</p>
+      </div>
+    </div>
+
+    <div class="ex-connector rv"></div>
+
+    <div class="ex-stage rv ex-e">
+      <div class="ex-stage-top">
+        <div class="ex-letter" style="color:var(--e);">E</div>
+        <div>
+          <div class="ex-stage-name" style="color:var(--e);">Exchange</div>
+          <div class="ex-stage-label">Switch sides — now you are the defender</div>
+        </div>
+      </div>
+      <div class="ex-body">
+        <p class="ex-text">The learner has just executed a SQL injection attack. Now they take the defender's position against the same login form.</p>
+        <div class="ex-questions">
+          <div class="ex-q"><span class="ex-q-num">01</span><span class="ex-q-text">You are monitoring the application logs. What pattern in the login attempts would alert you that this attack is being attempted?</span></div>
+          <div class="ex-q"><span class="ex-q-num">02</span><span class="ex-q-text">A developer on your team has written a new login form. What do you check in the code before it goes to production?</span></div>
+          <div class="ex-q"><span class="ex-q-num">03</span><span class="ex-q-text">The attack succeeded against an older part of the system before it was patched. What data was at risk and what would you tell the affected users?</span></div>
+        </div>
+        <p class="ex-check"><span class="ex-check-icon" style="color:var(--e);">✓</span> The learner has stood on both sides of the same vulnerability. That is DARE complete.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- TRAINER GUIDE -->
+<div class="trainer-section" id="trainer">
+  <div class="wrap">
+    <span class="eyebrow rv">For The Trainer</span>
+    <h2 class="section-h2 rv">Design environments that produce real understanding.</h2>
+    <p class="section-lead rv">Two tools for trainers — a build sequence for designing from scratch, and an audit checklist for reviewing environments you have already built.</p>
+
+    <div class="trainer-tabs rv">
+      <button class="tr-tab active" onclick="trTab('build', this)">Build from scratch</button>
+      <button class="tr-tab" onclick="trTab('audit', this)">Audit an existing environment</button>
+    </div>
+
+    <div class="tr-panel" id="tr-build">
+      <div class="tr-steps">
+
+        <div class="tr-step rv">
+          <div class="tr-step-num">01</div>
+          <div class="tr-step-body">
+            <div class="tr-step-title">Choose the vulnerability</div>
+            <p class="tr-step-desc">Start with what you need to teach — not with the application, not with the tools. The vulnerability is the anchor. Everything else is built around it.</p>
+            <p class="tr-step-note">Be specific. "Injection attacks" is too broad to build around. "SQL injection via login form" is a starting point.</p>
+          </div>
+        </div>
+
+        <div class="tr-step rv">
+          <div class="tr-step-num">02</div>
+          <div class="tr-step-body">
+            <div class="tr-step-title">Choose the application context — the resonance principle</div>
+            <p class="tr-step-desc">The application must come from the learner's world. A learner who recognises the environment they are attacking will engage faster and retain longer.</p>
+            <div class="tr-resonance rv">
+              <div class="tr-res-row header">
+                <span>Audience</span><span>Application context</span>
+              </div>
+              <div class="tr-res-row"><span>Banking / finance</span><span>Internet banking portal, transaction system</span></div>
+              <div class="tr-res-row"><span>Healthcare</span><span>Patient portal, medical records system</span></div>
+              <div class="tr-res-row"><span>Government / public sector</span><span>Citizen services portal, document submission</span></div>
+              <div class="tr-res-row default-row"><span>Unknown / mixed audience</span><span>E-commerce — almost everyone has been a customer. Default to this when you cannot identify their industry.</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tr-step rv">
+          <div class="tr-step-num">03</div>
+          <div class="tr-step-body">
+            <div class="tr-step-title" style="color:var(--d);">D — Build the Deconstruct layer</div>
+            <p class="tr-step-desc">Before any attack is possible, the learner must be able to explain how the application works in normal operation. Prepare the materials that let them map the system — the request flow, the inputs, and what the application does with each one.</p>
+            <p class="tr-step-note">Verification is flexible. Some learners demonstrate understanding by explaining. Others demonstrate it by answering questions correctly. Both are valid. The goal is to confirm the mental model is accurate before moving forward.</p>
+          </div>
+        </div>
+
+        <div class="tr-step rv">
+          <div class="tr-step-num">04</div>
+          <div class="tr-step-body">
+            <div class="tr-step-title" style="color:var(--a);">A — Build the vulnerable version</div>
+            <p class="tr-step-desc">The learner must execute the attack themselves — not observe it. Build an environment where the vulnerability is real and exploitable, and where the learner can see the actual impact of a successful attack.</p>
+            <p class="tr-step-note">In-person: the emotional response at the moment of execution tells you whether they understood or just got a result. Online: have them replicate the attack on a second target without guidance. Transfer is the proof of understanding.</p>
+          </div>
+        </div>
+
+        <div class="tr-step rv">
+          <div class="tr-step-num">05</div>
+          <div class="tr-step-body">
+            <div class="tr-step-title" style="color:var(--r);">R — Build the patched version</div>
+            <p class="tr-step-desc">The patched environment lives beside the vulnerable one. The learner runs the same attack and watches it fail. The trainer owns the fix — the learner's job at this stage is not to implement the fix but to experience what the fix does to the attack.</p>
+            <p class="tr-step-note">After the attack fails, explain why the fix works — not just what it is. The failure of the attack is the best moment to deliver that explanation.</p>
+          </div>
+        </div>
+
+        <div class="tr-step rv">
+          <div class="tr-step-num">06</div>
+          <div class="tr-step-body">
+            <div class="tr-step-title" style="color:var(--e);">E — Design the Exchange</div>
+            <p class="tr-step-desc">The learner switches from attacker to defender. They must engage with the same scenario from the opposite position. This is the stage most training environments do not reach — design it deliberately or it will not happen.</p>
+            <p class="tr-step-note">Exchange does not require a live red/blue exercise. It can be as simple as: given what you just executed, what would you look for in logs to detect it? What alert would you write? What policy would you change? The question must be asked. It will not arise on its own.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="tr-panel" id="tr-audit" style="display:none;">
+      <div class="tr-audit-progress rv">
+        <div class="lc-progress-wrap"><div class="lc-progress-bar" id="ta-bar" style="width:0%"></div></div>
+        <span class="lc-progress-label" id="ta-label">0 / 8</span>
+      </div>
+
+      <div class="tr-audit-group rv">
+        <div class="tr-audit-head"><span class="tr-audit-letter" style="color:var(--d);">D</span> Deconstruct</div>
+        <div class="tr-audit-item" onclick="taToggle(this)" role="checkbox" aria-checked="false" tabindex="0">
+          <div class="lc-check d-check"></div>
+          <div class="lc-text">Does the environment require the learner to understand how the system works before they can attempt the attack?
+            <div class="lc-note">If the learner can jump straight to the attack without any system context, Deconstruct is missing.</div>
+          </div>
+        </div>
+        <div class="tr-audit-item" onclick="taToggle(this)" role="checkbox" aria-checked="false" tabindex="0">
+          <div class="lc-check d-check"></div>
+          <div class="lc-text">Is there a mechanism to verify the learner's understanding — not just assume it?
+            <div class="lc-note">A question, a demonstration, an explanation back to the trainer. Something that confirms the mental model before the attack begins.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tr-audit-group rv">
+        <div class="tr-audit-head"><span class="tr-audit-letter" style="color:var(--a);">A</span> Attack</div>
+        <div class="tr-audit-item" onclick="taToggle(this)" role="checkbox" aria-checked="false" tabindex="0">
+          <div class="lc-check a-check"></div>
+          <div class="lc-text">Does the learner execute the attack themselves — not watch a demonstration?
+            <div class="lc-note">Observation is not Attack. The learner must execute.</div>
+          </div>
+        </div>
+        <div class="tr-audit-item" onclick="taToggle(this)" role="checkbox" aria-checked="false" tabindex="0">
+          <div class="lc-check a-check"></div>
+          <div class="lc-text">Does the environment make the impact of the attack visible — not just the result?
+            <div class="lc-note">Getting a flag or a response code is a result. Seeing data exposed, access granted, or a system compromised is impact. The learner must see impact.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tr-audit-group rv">
+        <div class="tr-audit-head"><span class="tr-audit-letter" style="color:var(--r);">R</span> Remediate</div>
+        <div class="tr-audit-item" onclick="taToggle(this)" role="checkbox" aria-checked="false" tabindex="0">
+          <div class="lc-check r-check"></div>
+          <div class="lc-text">Is there a patched version of the same environment where the learner can re-run the attack?
+            <div class="lc-note">A description of the fix is not Remediate. The patched environment must exist and the attack must fail in it.</div>
+          </div>
+        </div>
+        <div class="tr-audit-item" onclick="taToggle(this)" role="checkbox" aria-checked="false" tabindex="0">
+          <div class="lc-check r-check"></div>
+          <div class="lc-text">Is the explanation of the fix tied to the moment the attack fails — not delivered separately as theory?
+            <div class="lc-note">The failure of the attack is the best moment to explain why the fix works. If the explanation happens before or after, that connection is weakened.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tr-audit-group rv">
+        <div class="tr-audit-head"><span class="tr-audit-letter" style="color:var(--e);">E</span> Exchange <span class="lc-hard-badge">most commonly missing</span></div>
+        <div class="tr-audit-item" onclick="taToggle(this)" role="checkbox" aria-checked="false" tabindex="0">
+          <div class="lc-check e-check"></div>
+          <div class="lc-text">Does the environment require the learner to engage with the scenario from the defender's perspective?
+            <div class="lc-note">This does not require a live exercise. A question like "what would you look for in logs to detect this attack?" is a valid Exchange activity.</div>
+          </div>
+        </div>
+        <div class="tr-audit-item" onclick="taToggle(this)" role="checkbox" aria-checked="false" tabindex="0">
+          <div class="lc-check e-check"></div>
+          <div class="lc-text">Is the Exchange stage designed deliberately — or left as something that might happen if time allows?
+            <div class="lc-note">If it is not built into the session plan, it will not happen. Exchange must be a scheduled requirement, not an optional extension.</div>
+          </div>
+        </div>
+      </div>
+
+      <p class="lc-footer rv">If the Exchange stage answers are both no, the environment is producing people who can attack but not defend. That is the most common gap in cybersecurity training — including environments built by experienced trainers.</p>
+    </div>
+
+  </div>
+</div>
+
 <!-- CASE STUDIES -->
 <div class="wrap" id="projects">
   <span class="eyebrow rv">The Framework in Practice</span>
@@ -1014,6 +1715,50 @@
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleDiag(row); }
     });
   });
+
+  /* ── Learner checklist ── */
+  const LC_TOTAL = 9;
+
+  function lcToggle(el) {
+    el.classList.toggle('checked');
+    el.setAttribute('aria-checked', String(el.classList.contains('checked')));
+    const checked = document.querySelectorAll('.lc-item.checked').length;
+    const pct = Math.round((checked / LC_TOTAL) * 100);
+    document.getElementById('lc-bar').style.width = pct + '%';
+    document.getElementById('lc-label').textContent = checked + ' / ' + LC_TOTAL;
+  }
+
+  document.querySelectorAll('.lc-item').forEach(item => {
+    item.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); lcToggle(item); }
+    });
+  });
+
+  /* ── Trainer audit checklist ── */
+  const TA_TOTAL = 8;
+
+  function taToggle(el) {
+    el.classList.toggle('checked');
+    el.setAttribute('aria-checked', String(el.classList.contains('checked')));
+    const checked = document.querySelectorAll('.tr-audit-item.checked').length;
+    const pct = Math.round((checked / TA_TOTAL) * 100);
+    document.getElementById('ta-bar').style.width = pct + '%';
+    document.getElementById('ta-label').textContent = checked + ' / ' + TA_TOTAL;
+  }
+
+  document.querySelectorAll('.tr-audit-item').forEach(item => {
+    item.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); taToggle(item); }
+    });
+  });
+
+  /* ── Trainer guide tabs ── */
+  function trTab(name, btn) {
+    document.querySelectorAll('.tr-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tr-build').style.display = name === 'build' ? 'block' : 'none';
+    document.getElementById('tr-audit').style.display = name === 'audit' ? 'block' : 'none';
+  }
 
   /* ── Project card accordion ── */
   let activeProject = null;
