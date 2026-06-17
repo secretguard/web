@@ -462,6 +462,10 @@
               <span class="sg-drop-item-title">Wazuh SOC Lab</span>
               <span class="sg-drop-item-desc">SIEM &amp; log monitoring guide</span>
             </a>
+            <a href="https://labs.sarathg.me" class="sg-drop-item sg-all" role="menuitem" data-sg-nav="alllabs" target="_blank" rel="noopener">
+              <span class="sg-drop-item-title">All Labs →</span>
+              <span class="sg-drop-item-desc">Full lab directory · labs.sarathg.me</span>
+            </a>
           </div>
         </div>
 
@@ -559,6 +563,10 @@
           <a href="/wazuh.html" onclick="SG.toggleMobile()" data-sg-nav="wazuh">
             Wazuh SOC Lab
             <span class="sg-sub-label">SIEM &amp; log monitoring guide</span>
+          </a>
+          <a href="https://labs.sarathg.me" onclick="SG.toggleMobile()" data-sg-nav="alllabs" target="_blank" rel="noopener" style="color:#ef4444;">
+            All Labs →
+            <span class="sg-sub-label">Full lab directory · labs.sarathg.me</span>
           </a>
         </div>
 
