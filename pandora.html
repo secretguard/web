@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ML4GP9590F"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-ML4GP9590F');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAST &amp; DAST Lab — Pandora</title>
+<meta name="description" content="Pandora is a self-hosted SAST &amp; DAST lab — one script installs SonarQube, OWASP ZAP, and Nessus alongside DVWA and the custom-built VulnShop app, so you can practice static and dynamic application security testing end to end.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0d12; --surface:#11151c; --surface2:#171c26;
+  --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.13);
+  --text:#e7e9f0; --muted:#7d8499; --muted2:#a3aabd;
+  --mono:'JetBrains Mono',monospace;
+  --display:'Sora',sans-serif;
+  --body:'Inter',sans-serif;
+
+  --blue:#4f8cff;   --blue-dim:rgba(79,140,255,0.10);   --blue-b:rgba(79,140,255,0.28);
+  --amber:#f5a623;  --amber-dim:rgba(245,166,35,0.10);  --amber-b:rgba(245,166,35,0.28);
+  --violet:#b780ff; --violet-dim:rgba(183,128,255,0.11); --violet-b:rgba(183,128,255,0.32);
+  --green:#34d399;  --green-dim:rgba(52,211,153,0.10);  --green-b:rgba(52,211,153,0.28);
+  --red:#f6465d;    --red-dim:rgba(246,70,93,0.10);     --red-b:rgba(246,70,93,0.28);
+
+  --radius:12px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--body);line-height:1.7;overflow-x:hidden;font-size:16px}
+a{color:inherit;text-decoration:none}
+code,.mono{font-family:var(--mono)}
+:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:4px}
+
+h1,h2,h3,h4{font-family:var(--display);letter-spacing:-0.01em;color:var(--text)}
+
+/* ── REVEAL ON SCROLL ── */
+.rv{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease}
+.rv.visible{opacity:1;transform:translateY(0)}
+@media (prefers-reduced-motion: reduce){
+  .rv{opacity:1;transform:none;transition:none}
+  *{scroll-behavior:auto !important}
+}
+
+/* ── HERO ── */
+.hero{min-height:92vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:7rem 1.5rem 4rem;text-align:center;position:relative;overflow:hidden}
+.hero-dots{position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,0.06) 1px,transparent 1px);
+  background-size:30px 30px;pointer-events:none;mask-image:radial-gradient(ellipse 70% 60% at 50% 40%,black,transparent)}
+.hero-glow{position:absolute;top:8%;left:0;width:55%;height:60%;
+  background:radial-gradient(ellipse,rgba(79,140,255,0.16) 0%,transparent 68%);pointer-events:none;filter:blur(4px)}
+.hero-glow2{position:absolute;top:8%;right:0;width:55%;height:60%;
+  background:radial-gradient(ellipse,rgba(245,166,35,0.14) 0%,transparent 68%);pointer-events:none;filter:blur(4px)}
+.hero-badge{font-family:var(--mono);font-size:0.72rem;color:var(--muted2);
+  background:var(--surface);border:1px solid var(--border2);
+  padding:0.35rem 1.1rem;border-radius:100px;margin-bottom:1.75rem;position:relative;z-index:1;
+  display:inline-flex;align-items:center;gap:0.5rem}
+.hero-badge-dot{width:6px;height:6px;border-radius:50%;background:linear-gradient(90deg,var(--blue),var(--amber))}
+.hero-name{font-family:var(--mono);font-size:1rem;font-weight:700;letter-spacing:0.32em;text-transform:uppercase;
+  margin-bottom:1.1rem;position:relative;z-index:1;
+  background:linear-gradient(90deg,var(--blue),var(--amber));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero h1{font-size:clamp(2.2rem,5.4vw,3.6rem);font-weight:700;line-height:1.14;max-width:780px;position:relative;z-index:1}
+.hero h1 em{font-style:normal;background:linear-gradient(90deg,var(--blue),var(--amber));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{margin-top:1.4rem;font-size:1.05rem;color:var(--muted2);max-width:640px;line-height:1.75;position:relative;z-index:1}
+.hero-sub strong{color:var(--text);font-weight:600}
+.hero-ctas{margin-top:2.2rem;display:flex;gap:0.9rem;flex-wrap:wrap;justify-content:center;position:relative;z-index:1}
+.btn-primary{display:inline-flex;align-items:center;gap:0.5rem;background:var(--text);color:#0a0d12;
+  padding:0.8rem 1.5rem;border-radius:9px;font-weight:600;font-size:0.92rem;transition:transform .15s,opacity .15s}
+.btn-primary:hover{transform:translateY(-1px);opacity:0.92}
+.btn-ghost{display:inline-flex;align-items:center;padding:0.8rem 1.5rem;border-radius:9px;
+  border:1px solid var(--border2);font-weight:600;font-size:0.92rem;color:var(--text);transition:border-color .15s,background .15s}
+.btn-ghost:hover{border-color:var(--muted2);background:var(--surface)}
+.hero-stats{margin-top:3.2rem;display:flex;gap:2.6rem;flex-wrap:wrap;justify-content:center;position:relative;z-index:1}
+.stat-n{font-family:var(--mono);font-size:1.5rem;font-weight:700;color:var(--text)}
+.stat-l{font-size:0.74rem;color:var(--muted);margin-top:0.2rem;text-transform:uppercase;letter-spacing:0.06em}
+
+/* ── SECTION SHELL ── */
+.section{max-width:880px;margin:0 auto;padding:6.5rem 1.5rem}
+.section-wide{max-width:1080px;margin:0 auto;padding:6.5rem 1.5rem}
+.sec-label{font-family:var(--mono);font-size:0.74rem;color:var(--blue);letter-spacing:0.05em;margin-bottom:0.9rem}
+.section h2{font-size:clamp(1.6rem,3.4vw,2.1rem);font-weight:700;margin-bottom:0.9rem}
+.section h2 em{font-style:normal;color:var(--blue)}
+.sec-sub{color:var(--muted2);font-size:1rem;line-height:1.75;max-width:640px;margin-bottom:2.5rem}
+hr.div{border:none;border-top:1px solid var(--border);max-width:1080px;margin:0 auto}
+
+/* ── STACK CARDS ── */
+.stack-group-label{font-family:var(--mono);font-size:0.78rem;letter-spacing:0.04em;margin:2.4rem 0 1rem;
+  display:flex;align-items:center;gap:0.6rem}
+.stack-group-label .dot{width:8px;height:8px;border-radius:50%}
+.stack-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem}
+.stack-card{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--border2);
+  border-radius:var(--radius);padding:1.4rem 1.5rem}
+.stack-card.sast{border-left-color:var(--blue)}
+.stack-card.dast{border-left-color:var(--amber)}
+.stack-card.target{border-left-color:var(--muted)}
+.stack-card-head{display:flex;justify-content:space-between;align-items:baseline;gap:0.6rem;margin-bottom:0.5rem}
+.stack-card-title{font-family:var(--display);font-weight:700;font-size:1.02rem}
+.stack-card-port{font-family:var(--mono);font-size:0.7rem;color:var(--muted);white-space:nowrap}
+.stack-card p{font-size:0.875rem;color:var(--muted2);line-height:1.7}
+
+/* ── STEPS ── */
+.step{margin:2.2rem 0}
+.step-hd{display:flex;align-items:center;gap:0.85rem;margin-bottom:0.65rem}
+.step-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:0.75rem;font-weight:700;flex-shrink:0;
+  background:var(--blue-dim);color:var(--blue);border:1px solid var(--blue-b)}
+.step h3{font-size:1.02rem;font-weight:600}
+.step p{font-size:0.9rem;color:var(--muted2);margin-bottom:0.75rem;line-height:1.8}
+.step p code{background:var(--surface2);padding:0.1rem 0.4rem;border-radius:4px;font-size:0.85em;color:var(--text)}
+
+/* ── CALLOUTS ── */
+.callout{border-radius:10px;padding:1rem 1.2rem;margin:1rem 0;font-size:0.86rem;
+  border-left:3px solid;display:flex;gap:0.7rem;align-items:flex-start;line-height:1.7}
+.callout-icon{flex-shrink:0;font-size:1rem;line-height:1.5}
+.callout.info{background:var(--blue-dim);border-color:var(--blue);color:#bcd2ff}
+.callout.warn{background:var(--amber-dim);border-color:var(--amber);color:#ffd9a0}
+.callout.danger{background:var(--red-dim);border-color:var(--red);color:#ffb3bd}
+.callout.note{background:var(--violet-dim);border-color:var(--violet);color:#e3cfff}
+.callout code{background:rgba(255,255,255,0.08);padding:0.08rem 0.35rem;border-radius:4px}
+
+/* ── COMMAND / CODE BLOCKS ── */
+.cmd{border-radius:10px;overflow:hidden;margin:0.9rem 0;border:1px solid var(--border2);background:#0d1117}
+.cmd-bar{display:flex;align-items:center;justify-content:space-between;padding:0.6rem 1rem;
+  background:var(--surface2);border-bottom:1px solid var(--border)}
+.cmd-bar span{font-family:var(--mono);font-size:0.7rem;color:var(--muted);letter-spacing:0.04em}
+.copy-btn{font-family:var(--mono);font-size:0.7rem;background:transparent;border:1px solid var(--border2);
+  color:var(--muted2);padding:0.25rem 0.7rem;border-radius:6px;cursor:pointer;transition:all .15s}
+.copy-btn:hover{border-color:var(--blue);color:var(--blue)}
+.cmd-body{padding:1rem 1.2rem;font-family:var(--mono);font-size:0.82rem;line-height:1.8;white-space:pre-wrap;
+  word-break:break-word;color:#d8dee9}
+.cmd-body .c1{color:#6b7280}
+.cmd-body .c2{color:#7dd3fc}
+
+/* ── TABLES ── */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:10px;margin:1rem 0}
+table.dtbl{width:100%;border-collapse:collapse;font-size:0.85rem}
+table.dtbl th{text-align:left;font-family:var(--mono);font-size:0.68rem;color:var(--muted);
+  text-transform:uppercase;letter-spacing:0.06em;padding:0.85rem 1rem;border-bottom:1px solid var(--border);
+  background:var(--surface2);white-space:nowrap}
+table.dtbl td{padding:0.85rem 1rem;border-bottom:1px solid var(--border);vertical-align:top;color:var(--muted2)}
+table.dtbl tr:last-child td{border-bottom:none}
+table.dtbl tr:hover td{background:rgba(255,255,255,0.015)}
+table.dtbl td code,table.dtbl td .mono{color:var(--text);font-size:0.82em}
+
+/* ── MATRIX TABLE SPECIFIC ── */
+.matrix-row-none td{background:var(--violet-dim) !important}
+.badge{display:inline-flex;align-items:center;gap:0.35rem;font-family:var(--mono);font-size:0.74rem;
+  padding:0.22rem 0.6rem;border-radius:6px;border:1px solid;white-space:nowrap}
+.badge.b-yes{background:var(--blue-dim);color:var(--blue);border-color:var(--blue-b)}
+.badge.a-yes{background:var(--amber-dim);color:var(--amber);border-color:var(--amber-b)}
+.badge.partial{background:rgba(255,255,255,0.04);color:var(--muted2);border-color:var(--border2);border-style:dashed}
+.badge.none{background:var(--violet-dim);color:var(--violet);border-color:var(--violet-b);font-weight:700}
+
+/* ── ARCHITECTURE ── */
+.arch-legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0.7rem;margin-top:1.4rem}
+.arch-item{display:flex;gap:0.7rem;align-items:flex-start;background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;padding:0.8rem 1rem}
+.arch-dot{width:9px;height:9px;border-radius:50%;margin-top:0.35rem;flex-shrink:0}
+.arch-item-title{font-family:var(--mono);font-size:0.82rem;color:var(--text);font-weight:600}
+.arch-item-desc{font-size:0.78rem;color:var(--muted);margin-top:0.15rem;line-height:1.6}
+
+/* ── WALKTHROUGH OVERVIEW CARDS ── */
+.wt-overview{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0.9rem;margin-bottom:2.2rem}
+.wt-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:1.3rem 1.4rem;cursor:pointer;transition:border-color .15s}
+.wt-card:hover{border-color:var(--border2)}
+.wt-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  font-size:1.05rem;margin-bottom:0.8rem}
+.wt-title{font-family:var(--display);font-weight:700;font-size:0.96rem;margin-bottom:0.35rem}
+.wt-desc{font-size:0.8rem;color:var(--muted);line-height:1.6}
+.wt-tag{display:inline-block;margin-top:0.7rem;font-family:var(--mono);font-size:0.66rem;padding:0.18rem 0.55rem;border-radius:4px}
+
+/* ── ACCORDION PANELS ── */
+.lab-panel{border:1px solid var(--border);border-radius:14px;margin-bottom:1rem;overflow:hidden;transition:border-color .2s}
+.lab-panel.open{border-color:var(--border2)}
+.lab-trigger{width:100%;background:var(--surface);border:none;padding:1.3rem 1.6rem;display:flex;align-items:center;
+  gap:1.1rem;cursor:pointer;text-align:left;transition:background .15s;color:var(--text)}
+.lab-trigger:hover{background:var(--surface2)}
+.lab-trigger-icon{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;flex-shrink:0}
+.lab-trigger-info{flex:1;min-width:0}
+.lab-trigger-title{font-family:var(--display);font-size:1rem;font-weight:700;margin-bottom:0.15rem}
+.lab-trigger-sub{font-size:0.78rem;color:var(--muted)}
+.lab-trigger-right{display:flex;align-items:center;gap:0.7rem;flex-shrink:0}
+.lab-chevron{width:19px;height:19px;color:var(--muted);transition:transform .25s;flex-shrink:0}
+.lab-panel.open .lab-chevron{transform:rotate(180deg)}
+.lab-body{display:none;padding:0 1.6rem 1.6rem;border-top:1px solid var(--border);background:var(--bg)}
+.lab-panel.open .lab-body{display:block;animation:panelOpen .2s ease}
+@keyframes panelOpen{from{opacity:0}to{opacity:1}}
+.lab-concept{background:var(--surface);border-radius:10px;padding:1.1rem 1.3rem;margin:1.4rem 0;
+  font-size:0.86rem;color:var(--muted2);line-height:1.8;border-left:3px solid var(--border2)}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--border);padding:2.5rem 1.5rem;margin-top:2rem}
+.footer-inner{max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:1rem}
+.footer-logo{font-family:var(--mono);font-size:0.8rem;color:var(--muted2)}
+.footer-logo span{background:linear-gradient(90deg,var(--blue),var(--amber));-webkit-background-clip:text;
+  background-clip:text;-webkit-text-fill-color:transparent;font-weight:600}
+.footer-links{display:flex;gap:1.4rem;flex-wrap:wrap}
+.footer-links a{font-size:0.78rem;color:var(--muted);transition:color .15s}
+.footer-links a:hover{color:var(--text)}
+.footer-note{font-size:0.72rem;color:var(--muted);width:100%;text-align:center;margin-top:0.5rem}
+
+@media (max-width:640px){
+  .hero{padding-top:6rem}
+  .hero-stats{gap:1.6rem}
+  .section,.section-wide{padding:4rem 1.2rem}
+  .footer-inner{justify-content:center;text-align:center}
+}
+</style>
+</head>
+<body>
+<script src="navbar.js"></script>
+
+<!-- ══════════════════════════════════════════════
+     HERO
+══════════════════════════════════════════════ -->
+<div class="hero">
+  <div class="hero-dots"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-badge"><span class="hero-badge-dot"></span>Free · Self-hosted · Docker-based</div>
+  <div class="hero-name">Pandora</div>
+  <h1>One script. Five tools.<br><em>Two vulnerable targets.</em></h1>
+  <p class="hero-sub">
+    A self-hosted lab that installs SonarQube, OWASP ZAP, and Nessus
+    alongside two intentionally vulnerable applications — DVWA and the custom-built VulnShop —
+    so you can practice static and dynamic application security testing end to end, on your own machine.
+  </p>
+  <div class="hero-ctas">
+    <a class="btn-primary" href="#setup">
+      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 3l14 9-14 9V3z"/></svg>
+      Start the Lab
+    </a>
+    <a class="btn-ghost" href="https://github.com/secretguard/SASTandDAST" target="_blank" rel="noopener">View on GitHub</a>
+  </div>
+  <div class="hero-stats">
+    <div><div class="stat-n">5</div><div class="stat-l">security tools</div></div>
+    <div><div class="stat-n">2</div><div class="stat-l">vulnerable targets</div></div>
+    <div><div class="stat-n">10</div><div class="stat-l">documented CVEs</div></div>
+    <div><div class="stat-n">free</div><div class="stat-l">&amp; open source</div></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     WHAT'S IN THE STACK
+══════════════════════════════════════════════ -->
+<section class="section-wide" id="stack">
+  <div class="sec-label rv">// the stack</div>
+  <h2 class="rv">Five tools, two jobs</h2>
+  <p class="sec-sub rv">
+    Two tools read source code without running it. Two tools test an application while it's running.
+    One tool seeds the data they all point at. Together they cover both halves of an AppSec programme —
+    catching issues early in the code, and catching what only shows up once the app is alive.
+  </p>
+
+  <div class="stack-group-label rv"><span class="dot" style="background:var(--blue)"></span>Static Analysis (SAST) — reads the code</div>
+  <div class="stack-grid rv">
+    <div class="stack-card sast">
+      <div class="stack-card-head"><span class="stack-card-title">SonarQube</span><span class="stack-card-port">:9000</span></div>
+      <p>Parses VulnShop's source code without executing it. Flags weak cryptography, hardcoded secrets, debug configuration, and risky patterns like raw SQL string concatenation — directly in the codebase, before anything ever runs.</p>
+    </div>
+  </div>
+
+  <div class="stack-group-label rv"><span class="dot" style="background:var(--amber)"></span>Dynamic Analysis (DAST) — tests the running app</div>
+  <div class="stack-grid rv">
+    <div class="stack-card dast">
+      <div class="stack-card-head"><span class="stack-card-title">OWASP ZAP</span><span class="stack-card-port">:8090 + GUI</span></div>
+      <p>Tests a running application the way an attacker would — crawling pages, fuzzing parameters, injecting payloads, and reading the responses. Available both as a point-and-click desktop app and a scriptable API daemon.</p>
+    </div>
+    <div class="stack-card dast">
+      <div class="stack-card-head"><span class="stack-card-title">Nessus</span><span class="stack-card-port">:8834</span></div>
+      <p>General infrastructure and vulnerability scanning, aimed at DVWA in this lab to show a different angle from app-specific DAST: known CVEs, missing patches, exposed services, and misconfigurations.</p>
+    </div>
+  </div>
+
+  <div class="stack-group-label rv"><span class="dot" style="background:var(--muted)"></span>Targets — what gets scanned</div>
+  <div class="stack-grid rv">
+    <div class="stack-card target">
+      <div class="stack-card-head"><span class="stack-card-title">DVWA</span><span class="stack-card-port">:8888</span></div>
+      <p>The long-standing reference vulnerable web app. Useful for general scanning practice and as Nessus's target in this lab.</p>
+    </div>
+    <div class="stack-card target">
+      <div class="stack-card-head"><span class="stack-card-title">VulnShop</span><span class="stack-card-port">:4040</span></div>
+      <p>A custom-built Laravel e-commerce app with ten documented, intentional vulnerabilities — the dataset behind the coverage matrix further down this page.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="div">
+
+<!-- ══════════════════════════════════════════════
+     SETUP
+══════════════════════════════════════════════ -->
+<section class="section" id="setup">
+  <div class="sec-label rv">// setup</div>
+  <h2 class="rv">Get the lab running</h2>
+  <p class="sec-sub rv">Four steps from a clean machine to all five tools running. Each one explains what's actually happening before you run the command.</p>
+
+  <div class="tbl-wrap rv">
+    <table class="dtbl">
+      <tr><th>Requirement</th><th>Minimum</th></tr>
+      <tr><td>OS</td><td>Ubuntu 22.04 LTS (or any Debian-based distro)</td></tr>
+      <tr><td>RAM</td><td>6 GB — 8 GB recommended, SonarQube alone needs ~3 GB</td></tr>
+      <tr><td>Disk</td><td>20 GB free</td></tr>
+      <tr><td>Run as</td><td>Your own user via <code>sudo</code> — not logged in directly as root</td></tr>
+      <tr><td>Internet</td><td>Required on first run, to pull ~2 GB of Docker images</td></tr>
+    </table>
+  </div>
+
+  <div class="step rv">
+    <div class="step-hd"><div class="step-num">1</div><h3>Clone the repository</h3></div>
+    <p>Everything — the compose file, the setup script, and VulnShop's full source — lives in one repo.</p>
+    <div class="cmd">
+      <div class="cmd-bar"><span>terminal</span><button class="copy-btn" onclick="cpEl('cmd-clone',this)">copy</button></div>
+      <div class="cmd-body" id="cmd-clone">git clone https://github.com/secretguard/SASTandDAST.git
+cd SASTandDAST</div>
+    </div>
+  </div>
+
+  <div class="step rv">
+    <div class="step-hd"><div class="step-num">2</div><h3>Run the setup script</h3></div>
+    <p><code>student-setup.sh</code> does five things in order: installs Docker if it isn't already present, installs the ZAP desktop application separately from the dockerized ZAP daemon, tunes a kernel parameter (<code>vm.max_map_count</code>) that SonarQube's embedded Elasticsearch needs to start reliably, creates a <code>.env</code> file and asks for an optional free Nessus activation code, then builds and starts every container. The whole run typically takes 5–10 minutes the first time, mostly spent downloading images.</p>
+    <div class="cmd">
+      <div class="cmd-bar"><span>terminal</span><button class="copy-btn" onclick="cpEl('cmd-setup',this)">copy</button></div>
+      <div class="cmd-body" id="cmd-setup">sudo bash student-setup.sh</div>
+    </div>
+    <div class="callout info">
+      <span class="callout-icon">ℹ</span>
+      <span>Run this with <code>sudo</code> as your normal user, not while logged in directly as root — the script needs to know which account to hand Docker permissions to afterward.</span>
+    </div>
+  </div>
+
+  <div class="step rv">
+    <div class="step-hd"><div class="step-num">3</div><h3>Confirm everything's healthy</h3></div>
+    <p><code>healthcheck.sh</code> checks Docker itself, then each of the eight containers individually — whether it's running, whether Docker's own health check passes, and where relevant, whether the service actually responds over HTTP with the content expected. A clean run prints every service's URL and login at the bottom.</p>
+    <div class="cmd">
+      <div class="cmd-bar"><span>terminal</span><button class="copy-btn" onclick="cpEl('cmd-health',this)">copy</button></div>
+      <div class="cmd-body" id="cmd-health">bash healthcheck.sh</div>
+    </div>
+    <div class="callout warn">
+      <span class="callout-icon">⚠</span>
+      <span>If SonarQube shows as still starting, that's normal — its embedded Elasticsearch can take 2–3 minutes on first boot. Re-run the check, or use <code>bash healthcheck.sh --fix</code> to auto-restart anything unhealthy.</span>
+    </div>
+  </div>
+
+  <div class="step rv">
+    <div class="step-hd"><div class="step-num">4</div><h3>Log in to each service</h3></div>
+    <p>The containers are running, but three of the five need a one-time step in the browser before you can use them.</p>
+
+    <p style="margin-top:1.2rem"><strong style="color:var(--text)">SonarQube</strong> — open <code>http://localhost:9000</code>, log in with <code>admin</code> / <code>admin</code>, and change the password when prompted. That forced change is a security default, not a bug.</p>
+
+    <p><strong style="color:var(--text)">Nessus</strong> — open <code>https://localhost:8834</code> and accept the self-signed certificate. If you skipped the activation code during setup, it starts as an <em>unregistered server</em>: click the gear icon → Settings → Overview, and enter a free code from <a href="https://www.tenable.com/products/nessus/nessus-essentials" target="_blank" rel="noopener" style="color:var(--amber)">tenable.com/products/nessus/nessus-essentials</a> — it's emailed instantly. Either way, plugin download takes 15–30 minutes before scans will run, with a progress bar on the dashboard.</p>
+
+    <p><strong style="color:var(--text)">DVWA</strong> and <strong style="color:var(--text)">VulnShop</strong> need no setup beyond logging in — both databases are migrated and seeded automatically by their entrypoint scripts.</p>
+  </div>
+
+  <div class="tbl-wrap rv">
+    <table class="dtbl">
+      <tr><th>Service</th><th>URL</th><th>Credentials</th></tr>
+      <tr><td>SonarQube <span style="color:var(--blue)">SAST</span></td><td><code>http://localhost:9000</code></td><td><code>admin</code> / <code>admin</code> (change on first login)</td></tr>
+      <tr><td>OWASP ZAP <span style="color:var(--amber)">DAST</span></td><td><code>http://localhost:8090</code> or the <code>zaproxy</code> desktop app</td><td>API key: <code>lab-api-key-2024</code></td></tr>
+      <tr><td>Nessus <span style="color:var(--amber)">DAST</span></td><td><code>https://localhost:8834</code></td><td><code>admin</code> / <code>admin123</code> if prompted</td></tr>
+      <tr><td>DVWA</td><td><code>http://localhost:8888</code></td><td><code>admin</code> / <code>password</code></td></tr>
+      <tr><td>VulnShop — admin</td><td><code>http://localhost:4040</code></td><td><code>admin@vulnshop.local</code> / <code>admin123</code></td></tr>
+      <tr><td>VulnShop — user 1</td><td><code>http://localhost:4040</code></td><td><code>alice@example.com</code> / <code>password123</code></td></tr>
+      <tr><td>VulnShop — user 2</td><td><code>http://localhost:4040</code></td><td><code>bob@example.com</code> / <code>password123</code></td></tr>
+    </table>
+  </div>
+</section>
+
+<hr class="div">
+
+<!-- ══════════════════════════════════════════════
+     MANAGING THE LAB
+══════════════════════════════════════════════ -->
+<section class="section" id="manage">
+  <div class="sec-label rv">// day to day</div>
+  <h2 class="rv">Starting, stopping, and resetting</h2>
+  <p class="sec-sub rv">SonarQube projects, scan results, and DVWA/VulnShop state all persist in Docker volumes across start/stop cycles. Only one specific flag wipes that data — everything else is safe to run freely.</p>
+
+  <div class="tbl-wrap rv">
+    <table class="dtbl">
+      <tr><th>Action</th><th>Command</th></tr>
+      <tr><td>Start lab</td><td><code>docker compose up -d</code></td></tr>
+      <tr><td>Stop lab</td><td><code>docker compose down</code></td></tr>
+      <tr><td>Check health</td><td><code>bash healthcheck.sh</code></td></tr>
+      <tr><td>Full reset (deletes all data)</td><td><code>docker compose down -v &amp;&amp; docker compose up -d</code></td></tr>
+    </table>
+  </div>
+
+  <div class="cmd rv">
+    <div class="cmd-bar"><span>terminal — full command reference</span><button class="copy-btn" onclick="cpEl('cmd-manage',this)">copy</button></div>
+    <div class="cmd-body" id="cmd-manage"><span class="c1"># Start or stop a single service</span>
+docker compose up -d sonarqube
+docker compose stop sonarqube
+
+<span class="c1"># Restart a single service</span>
+docker compose restart sonarqube
+
+<span class="c1"># View live logs for a service</span>
+docker compose logs -f vulnshop
+
+<span class="c1"># Auto-restart anything unhealthy</span>
+bash healthcheck.sh --fix
+
+<span class="c1"># Rebuild VulnShop after source changes</span>
+docker compose up -d --build vulnshop
+
+<span class="c1"># Full reset — wipes all volumes and starts fresh</span>
+docker compose down -v &amp;&amp; docker compose up -d</div>
+  </div>
+
+  <div class="callout danger rv">
+    <span class="callout-icon">⚠</span>
+    <span>Only <code>docker compose down -v</code> — the <code>-v</code> flag specifically — deletes volumes. A plain <code>docker compose down</code> always leaves your data intact for next time.</span>
+  </div>
+</section>
+
+<hr class="div">
+
+<!-- ══════════════════════════════════════════════
+     COVERAGE MATRIX
+══════════════════════════════════════════════ -->
+<section class="section-wide" id="matrix">
+  <div class="sec-label rv">// the matrix</div>
+  <h2 class="rv">What each method actually catches</h2>
+  <p class="sec-sub rv">All ten of VulnShop's documented vulnerabilities, mapped against what SonarQube's static analysis flags and what ZAP/Nessus's dynamic testing flags. One of them gets past both.</p>
+
+  <div class="tbl-wrap rv">
+    <table class="dtbl">
+      <tr><th>#</th><th>Vulnerability</th><th>Static (SonarQube)</th><th>Dynamic (ZAP / Nessus)</th><th>OWASP</th><th>CWE</th></tr>
+      <tr><td>1</td><td>SQL Injection</td><td><span class="badge b-yes">✓ caught</span></td><td><span class="badge a-yes">✓ caught</span></td><td class="mono">A03:2021</td><td class="mono">CWE-89</td></tr>
+      <tr><td>2</td><td>Stored XSS</td><td><span class="badge b-yes">✓ caught</span></td><td><span class="badge a-yes">✓ caught</span></td><td class="mono">A03:2021</td><td class="mono">CWE-79</td></tr>
+      <tr class="matrix-row-none"><td>3</td><td><strong style="color:var(--text)">IDOR</strong></td><td><span class="badge none">✕ neither</span></td><td><span class="badge none">✕ neither</span></td><td class="mono">A01:2021</td><td class="mono">CWE-639</td></tr>
+      <tr><td>4</td><td>CSRF</td><td><span class="badge b-yes">✓ caught</span></td><td><span class="badge a-yes">✓ caught</span></td><td class="mono">A01:2021</td><td class="mono">CWE-352</td></tr>
+      <tr><td>5</td><td>Weak Crypto (MD5)</td><td><span class="badge b-yes">✓ caught</span></td><td><span class="badge partial">— blind</span></td><td class="mono">A02:2021</td><td class="mono">CWE-328</td></tr>
+      <tr><td>6</td><td>Hardcoded Credentials</td><td><span class="badge b-yes">✓ caught</span></td><td><span class="badge partial">— blind</span></td><td class="mono">A07:2021</td><td class="mono">CWE-798</td></tr>
+      <tr><td>7</td><td>Debug Mode</td><td><span class="badge b-yes">✓ caught</span></td><td><span class="badge a-yes">✓ caught</span></td><td class="mono">A05:2021</td><td class="mono">CWE-215</td></tr>
+      <tr><td>8</td><td>Insecure File Upload</td><td><span class="badge partial">~ partial</span></td><td><span class="badge a-yes">✓ caught</span></td><td class="mono">A04:2021</td><td class="mono">CWE-434</td></tr>
+      <tr><td>9</td><td>No Rate Limiting</td><td><span class="badge partial">~ partial</span></td><td><span class="badge a-yes">✓ caught</span></td><td class="mono">A07:2021</td><td class="mono">CWE-307</td></tr>
+      <tr><td>10</td><td>Info Disclosure</td><td><span class="badge partial">~ partial</span></td><td><span class="badge a-yes">✓ caught</span></td><td class="mono">A05:2021</td><td class="mono">CWE-200</td></tr>
+    </table>
+  </div>
+
+  <div class="callout note rv">
+    <span class="callout-icon">◆</span>
+    <span><strong>IDOR is the one finding neither tool reliably catches.</strong> SonarQube has no way to know that order #4 belongs to a different customer than order #7 — that's a fact about your data, not a pattern in your code. ZAP and Nessus would need to log in as two different users and deliberately try to read each other's records, which isn't what a default scan does. Catching this requires a person who understands what correct authorization looks like for this specific app — which is exactly what the manual walkthrough below demonstrates.</span>
+  </div>
+</section>
+
+<hr class="div">
+
+<!-- ══════════════════════════════════════════════
+     ARCHITECTURE
+══════════════════════════════════════════════ -->
+<section class="section-wide" id="architecture">
+  <div class="sec-label rv">// architecture</div>
+  <h2 class="rv">Eight containers, one command</h2>
+  <p class="sec-sub rv"><code>docker compose up -d</code> brings up every service below in dependency order — each database waits for nothing, each app waits for its database.</p>
+
+  <div class="cmd rv">
+    <div class="cmd-bar"><span>docker compose up -d</span></div>
+    <div class="cmd-body">docker compose up -d
+        │
+        ├─ sonar-db      (PostgreSQL 15)
+        ├─ sonarqube     (SonarQube Community)  ── :9000
+        ├─ zap           (OWASP ZAP daemon)     ── :8090
+        ├─ nessus        (Nessus Essentials)    ── :8834
+        ├─ dvwa-db       (MariaDB 10)
+        ├─ dvwa          (DVWA)                 ── :8888
+        ├─ vulnshop-db   (MariaDB 10)
+        └─ vulnshop      (Laravel app)          ── :4040</div>
+  </div>
+
+  <div class="arch-legend rv">
+    <div class="arch-item"><span class="arch-dot" style="background:var(--blue)"></span><div><div class="arch-item-title">sonarqube + sonar-db</div><div class="arch-item-desc">Static analysis engine and its Postgres backend</div></div></div>
+    <div class="arch-item"><span class="arch-dot" style="background:var(--amber)"></span><div><div class="arch-item-title">zap</div><div class="arch-item-desc">Dynamic scanning daemon, API-key protected</div></div></div>
+    <div class="arch-item"><span class="arch-dot" style="background:var(--amber)"></span><div><div class="arch-item-title">nessus</div><div class="arch-item-desc">Infrastructure vulnerability scanner</div></div></div>
+    <div class="arch-item"><span class="arch-dot" style="background:var(--muted)"></span><div><div class="arch-item-title">dvwa + dvwa-db</div><div class="arch-item-desc">Reference vulnerable app and its MariaDB backend</div></div></div>
+    <div class="arch-item"><span class="arch-dot" style="background:var(--muted)"></span><div><div class="arch-item-title">vulnshop + vulnshop-db</div><div class="arch-item-desc">Custom Laravel target and its MariaDB backend</div></div></div>
+  </div>
+</section>
+
+<hr class="div">
+
+<!-- ══════════════════════════════════════════════
+     LAB WALKTHROUGHS
+══════════════════════════════════════════════ -->
+<section class="section-wide" id="labs">
+  <div class="sec-label rv">// walkthroughs</div>
+  <h2 class="rv">Five guided exercises</h2>
+  <p class="sec-sub rv">Work through these in order if you're new to SAST/DAST — each one builds on context from the last. Jump straight to #5 if you've already read the matrix above and want the punchline first.</p>
+
+  <div class="wt-overview rv">
+    <div class="wt-card" onclick="openPanel('p-sonar')">
+      <div class="wt-icon" style="background:var(--blue-dim)">🔍</div>
+      <div class="wt-title">Your First SonarQube Scan</div>
+      <div class="wt-desc">Generate a token, scan VulnShop's source, read the findings.</div>
+      <span class="wt-tag" style="background:var(--blue-dim);color:var(--blue)">SAST</span>
+    </div>
+    <div class="wt-card" onclick="openPanel('p-zap-gui')">
+      <div class="wt-icon" style="background:var(--amber-dim)">🖱</div>
+      <div class="wt-title">ZAP via the GUI</div>
+      <div class="wt-desc">Point-and-click dynamic scanning against VulnShop.</div>
+      <span class="wt-tag" style="background:var(--amber-dim);color:var(--amber)">DAST</span>
+    </div>
+    <div class="wt-card" onclick="openPanel('p-zap-api')">
+      <div class="wt-icon" style="background:var(--amber-dim)">⚙</div>
+      <div class="wt-title">ZAP via the API</div>
+      <div class="wt-desc">Same engine, driven entirely through HTTP calls.</div>
+      <span class="wt-tag" style="background:var(--amber-dim);color:var(--amber)">DAST</span>
+    </div>
+    <div class="wt-card" onclick="openPanel('p-nessus')">
+      <div class="wt-icon" style="background:var(--amber-dim)">🛰</div>
+      <div class="wt-title">Nessus vs DVWA</div>
+      <div class="wt-desc">Infrastructure-level scanning, a different angle on DAST.</div>
+      <span class="wt-tag" style="background:var(--amber-dim);color:var(--amber)">DAST</span>
+    </div>
+    <div class="wt-card" onclick="openPanel('p-idor')">
+      <div class="wt-icon" style="background:var(--violet-dim)">🔓</div>
+      <div class="wt-title">Manual IDOR Walkthrough</div>
+      <div class="wt-desc">The one finding from the matrix that needs a human.</div>
+      <span class="wt-tag" style="background:var(--violet-dim);color:var(--violet)">Manual</span>
+    </div>
+  </div>
+
+  <!-- PANEL 1 — SONARQUBE -->
+  <div class="lab-panel" id="p-sonar">
+    <button class="lab-trigger" onclick="togglePanel('p-sonar')">
+      <div class="lab-trigger-icon" style="background:var(--blue-dim)">🔍</div>
+      <div class="lab-trigger-info">
+        <div class="lab-trigger-title">Your First SonarQube Scan</div>
+        <div class="lab-trigger-sub">Generate a token, scan VulnShop's source, read the findings · Tool: SonarQube</div>
+      </div>
+      <div class="lab-trigger-right">
+        <span class="badge b-yes">SAST</span>
+        <svg class="lab-chevron" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+      </div>
+    </button>
+    <div class="lab-body">
+      <div class="lab-concept">
+        <strong style="color:var(--text)">What SAST actually does:</strong> SonarQube parses source code into a structure it can pattern-match against known-bad rules — it never executes the application. That's why it's fast and deterministic enough to run on every commit in a pipeline, and also why it has no idea how the app behaves once real users start clicking around.
+      </div>
+      <div class="step">
+        <div class="step-hd"><div class="step-num">1</div><h3>Generate a token</h3></div>
+        <p>Open <code>http://localhost:9000</code> → click your avatar → <strong>My Account</strong> → <strong>Security</strong> → <strong>Generate Token</strong>. Name it anything — <code>vulnshop-scan</code> works fine.</p>
+      </div>
+      <div class="step">
+        <div class="step-hd"><div class="step-num">2</div><h3>Run the scanner against VulnShop's source</h3></div>
+        <p>This runs from the same directory you cloned the repo into.</p>
+        <div class="cmd">
+          <div class="cmd-bar"><span>terminal</span><button class="copy-btn" onclick="cpEl('cmd-sonar-scan',this)">copy</button></div>
+          <div class="cmd-body" id="cmd-sonar-scan">docker run --rm \
+  --network sastanddast-main_default \
+  -v "$(pwd)/vulnshop:/usr/src" \
+  sonarsource/sonar-scanner-cli \
+  -Dsonar.projectKey=vulnshop \
+  -Dsonar.sources=/usr/src \
+  -Dsonar.host.url=http://sonarqube:9000 \
+  -Dsonar.token=&lt;your-token&gt;</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-hd"><div class="step-num">3</div><h3>Read the results</h3></div>
+        <p>Open the <strong>vulnshop</strong> project in SonarQube's dashboard. Look specifically for the MD5 password-hashing flag, the hardcoded credentials warning, and the issue raised on the raw SQL query in <code>ProductController.php</code> — three of the matrix's "caught by SAST" rows, found without anything ever running.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 2 — ZAP GUI -->
+  <div class="lab-panel" id="p-zap-gui">
+    <button class="lab-trigger" onclick="togglePanel('p-zap-gui')">
+      <div class="lab-trigger-icon" style="background:var(--amber-dim)">🖱</div>
+      <div class="lab-trigger-info">
+        <div class="lab-trigger-title">ZAP via the GUI</div>
+        <div class="lab-trigger-sub">Point-and-click dynamic scanning against VulnShop · Tool: ZAP desktop</div>
+      </div>
+      <div class="lab-trigger-right">
+        <span class="badge a-yes">DAST</span>
+        <svg class="lab-chevron" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+      </div>
+    </button>
+    <div class="lab-body">
+      <div class="lab-concept">
+        <strong style="color:var(--text)">Why start here:</strong> the desktop ZAP app is the easier on-ramp into DAST — a visible alert list and a single "Attack" button, good for understanding what a dynamic scan is actually doing before you start scripting it.
+      </div>
+      <div class="step">
+        <div class="step-hd"><div class="step-num">1</div><h3>Launch ZAP</h3></div>
+        <p>Search for <code>zaproxy</code> in your applications menu, or run it directly from a terminal.</p>
+        <div class="cmd">
+          <div class="cmd-bar"><span>terminal</span><button class="copy-btn" onclick="cpEl('cmd-zap-launch',this)">copy</button></div>
+          <div class="cmd-body" id="cmd-zap-launch">zaproxy</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-hd"><div class="step-num">2</div><h3>Set the target</h3></div>
+        <p>In the Quick Start tab, enter <code>http://localhost:4040</code> in the URL field and click <strong>Attack</strong>.</p>
+      </div>
+      <div class="step">
+        <div class="step-hd"><div class="step-num">3</div><h3>Read the Alerts tab</h3></div>
+        <p>ZAP crawls VulnShop, fuzzes parameters, and lists findings by severity as it goes. Expect to see the stored XSS in product reviews and the missing CSRF token on <code>/change-password</code> flagged directly — both of them rows the matrix marks as "caught" by dynamic analysis too.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 3 — ZAP API -->
+  <div class="lab-panel" id="p-zap-api">
+    <button class="lab-trigger" onclick="togglePanel('p-zap-api')">
+      <div class="lab-trigger-icon" style="background:var(--amber-dim)">⚙</div>
+      <div class="lab-trigger-info">
+        <div class="lab-trigger-title">ZAP via the API</div>
+        <div class="lab-trigger-sub">Same engine, driven entirely through HTTP calls · Tool: ZAP daemon, port 8090</div>
+      </div>
+      <div class="lab-trigger-right">
+        <span class="badge a-yes">DAST</span>
+        <svg class="lab-chevron" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+      </div>
+    </button>
+    <div class="lab-body">
+      <div class="lab-concept">
+        <strong style="color:var(--text)">Why this matters:</strong> this is the same scanning engine as the GUI, but driven entirely through HTTP calls to the daemon already running on <code>:8090</code> inside Docker — this is how ZAP gets wired into an automated pipeline instead of waiting for someone to click a button.
+      </div>
+      <div class="step">
+        <div class="step-hd"><div class="step-num">1</div><h3>Confirm the daemon is reachable</h3></div>
+        <div class="cmd">
+          <div class="cmd-bar"><span>terminal</span><button class="copy-btn" onclick="cpEl('cmd-zap1',this)">copy</button></div>
+          <div class="cmd-body" id="cmd-zap1">curl "http://localhost:8090/JSON/core/view/version/?apikey=lab-api-key-2024"</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-hd"><div class="step-num">2</div><h3>Spider the target</h3></div>
+        <p>Targeting <code>vulnshop</code> by its service name — ZAP's container shares a Docker network with VulnShop, so it resolves directly.</p>
+        <div class="cmd">
+          <div class="cmd-bar"><span>terminal</span><button class="copy-btn" onclick="cpEl('cmd-zap2',this)">copy</button></div>
+          <div class="cmd-body" id="cmd-zap2">curl "http://localhost:8090/JSON/spider/action/scan/?apikey=lab-api-key-2024&amp;url=http://vulnshop"</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-hd"><div class="step-num">3</div><h3>Run an active scan</h3></div>
+        <div class="cmd">
+          <div class="cmd-bar"><span>terminal</span><button class="copy-btn" onclick="cpEl('cmd-zap3',this)">copy</button></div>
+          <div class="cmd-body" id="cmd-zap3">curl "http://localhost:8090/JSON/ascan/action/scan/?apikey=lab-api-key-2024&amp;url=http://vulnshop"</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-hd"><div class="step-num">4</div><h3>Pull the results</h3></div>
+        <div class="cmd">
+          <div class="cmd-bar"><span>terminal</span><button class="copy-btn" onclick="cpEl('cmd-zap4',this)">copy</button></div>
+          <div class="cmd-body" id="cmd-zap4">curl "http://localhost:8090/JSON/core/view/alerts/?apikey=lab-api-key-2024"</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 4 — NESSUS -->
+  <div class="lab-panel" id="p-nessus">
+    <button class="lab-trigger" onclick="togglePanel('p-nessus')">
+      <div class="lab-trigger-icon" style="background:var(--amber-dim)">🛰</div>
+      <div class="lab-trigger-info">
+        <div class="lab-trigger-title">Nessus vs DVWA</div>
+        <div class="lab-trigger-sub">Infrastructure-level scanning, a different angle on DAST · Tool: Nessus</div>
+      </div>
+      <div class="lab-trigger-right">
+        <span class="badge a-yes">DAST</span>
+        <svg class="lab-chevron" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+      </div>
+    </button>
+    <div class="lab-body">
+      <div class="lab-concept">
+        <strong style="color:var(--text)">Why it's here:</strong> Nessus works one level below app-specific DAST. It's a general vulnerability scanner built around plugins that check for known CVEs, missing patches, and misconfigurations, rather than crawling and fuzzing a single app's pages. Running it against DVWA shows what that angle looks like in practice.
+      </div>
+      <div class="step">
+        <div class="step-hd"><div class="step-num">1</div><h3>Confirm activation</h3></div>
+        <p><strong>Settings → Overview</strong> should show the plugin feed as up to date. This can take 15–30 minutes after first setup if you're seeing it for the first time.</p>
+      </div>
+      <div class="step">
+        <div class="step-hd"><div class="step-num">2</div><h3>Create a new scan</h3></div>
+        <p>Click <strong>New Scan → Basic Network Scan</strong>, name it, and set the target to <code>dvwa</code> — or run <code>docker inspect dvwa</code> on the host to get its container IP if the hostname doesn't resolve from Nessus's container.</p>
+      </div>
+      <div class="step">
+        <div class="step-hd"><div class="step-num">3</div><h3>Launch and review</h3></div>
+        <p>Once the scan completes, open it and review the findings list grouped by severity — outdated packages and exposed services in the base image, alongside whatever DVWA's own intentional vulnerabilities surface.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 5 — MANUAL IDOR -->
+  <div class="lab-panel" id="p-idor">
+    <button class="lab-trigger" onclick="togglePanel('p-idor')">
+      <div class="lab-trigger-icon" style="background:var(--violet-dim)">🔓</div>
+      <div class="lab-trigger-info">
+        <div class="lab-trigger-title">Manual IDOR Walkthrough</div>
+        <div class="lab-trigger-sub">The one finding from the matrix that needs a human · No tool required</div>
+      </div>
+      <div class="lab-trigger-right">
+        <span class="badge none">Manual</span>
+        <svg class="lab-chevron" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+      </div>
+    </button>
+    <div class="lab-body">
+      <div class="lab-concept" style="border-left-color:var(--violet);background:var(--violet-dim)">
+        <strong style="color:var(--text)">Why this one's different:</strong> this is the finding from the coverage matrix that neither SonarQube nor ZAP caught on their own. Walking through it by hand is the point — it's the clearest demonstration on this page of why automated tooling still needs a person who understands the application's intended behavior.
+      </div>
+      <div class="step">
+        <div class="step-hd"><div class="step-num">1</div><h3>Log in as Alice</h3></div>
+        <p>At <code>http://localhost:4040</code>, sign in with <code>alice@example.com</code> / <code>password123</code>.</p>
+      </div>
+      <div class="step">
+        <div class="step-hd"><div class="step-num">2</div><h3>Place an order</h3></div>
+        <p>Buy anything, then note the order number in the resulting URL — for example <code>/order/1</code>.</p>
+      </div>
+      <div class="step">
+        <div class="step-hd"><div class="step-num">3</div><h3>Log out, log in as Bob</h3></div>
+        <p>Sign out, then sign back in with <code>bob@example.com</code> / <code>password123</code>.</p>
+      </div>
+      <div class="step">
+        <div class="step-hd"><div class="step-num">4</div><h3>Request Alice's order directly</h3></div>
+        <p>Type Alice's order URL straight into the address bar — for example <code>http://localhost:4040/order/1</code>.</p>
+      </div>
+      <div class="step">
+        <div class="step-hd"><div class="step-num">5</div><h3>Observe the result</h3></div>
+        <p>Bob sees Alice's shipping address, phone number, and full order contents — despite never being authorized to view this order. <code>OrderController::show()</code> calls <code>findOrFail($id)</code> with no check against the logged-in user's ID at all. The fix is a single ownership check; finding the need for it in the first place is what neither scanner managed on its own.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="div">
+
+<!-- ══════════════════════════════════════════════
+     TROUBLESHOOTING
+══════════════════════════════════════════════ -->
+<section class="section" id="troubleshooting">
+  <div class="sec-label rv">// troubleshooting</div>
+  <h2 class="rv">When something doesn't come up</h2>
+  <p class="sec-sub rv">Most of these resolve themselves with a little patience — Elasticsearch and Nessus's plugin feed are the usual culprits.</p>
+
+  <div class="tbl-wrap rv">
+    <table class="dtbl">
+      <tr><th>Issue</th><th>Fix</th></tr>
+      <tr><td>SonarQube shows 503</td><td>Wait 2–3 min — Elasticsearch takes time to start</td></tr>
+      <tr><td>SonarQube keeps restarting</td><td>Check <code>sysctl vm.max_map_count</code> — should be ≥ 524288. Run <code>sudo bash student-setup.sh</code> to fix it.</td></tr>
+      <tr><td>VulnShop not loading</td><td><code>docker compose logs vulnshop</code> — usually still waiting on its database on first start</td></tr>
+      <tr><td>DVWA login fails</td><td><code>docker compose restart dvwa</code> — its database may not have been ready yet</td></tr>
+      <tr><td>Nessus 503 / blank page</td><td>Normal during plugin download — check <code>docker compose logs nessus</code></td></tr>
+      <tr><td>Port already in use</td><td>Edit <code>.env</code> to change the port, then <code>docker compose up -d</code></td></tr>
+      <tr><td>Want fresh data</td><td><code>docker compose down -v &amp;&amp; docker compose up -d</code> — deletes all volumes</td></tr>
+    </table>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <span class="footer-logo">// SAST &amp; DAST Lab — <span>Pandora</span></span>
+    <div class="footer-links">
+      <a href="https://github.com/secretguard/SASTandDAST" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://owasp.org/www-project-top-ten/" target="_blank" rel="noopener">OWASP Top 10</a>
+      <a href="https://docs.sonarsource.com/" target="_blank" rel="noopener">SonarQube Docs</a>
+      <a href="https://www.zaproxy.org/docs/" target="_blank" rel="noopener">ZAP Docs</a>
+    </div>
+    <span class="footer-note">Free &amp; open source · Educational use only</span>
+  </div>
+</footer>
+
+<script>
+function togglePanel(id){
+  document.getElementById(id).classList.toggle('open');
+}
+function openPanel(id){
+  const el = document.getElementById(id);
+  if(!el.classList.contains('open')) el.classList.add('open');
+  el.scrollIntoView({behavior:'smooth', block:'start'});
+}
+function cpEl(id, btn){
+  const text = document.getElementById(id).textContent.trim();
+  navigator.clipboard.writeText(text).then(() => {
+    const old = btn.textContent;
+    btn.textContent = 'copied!';
+    setTimeout(() => btn.textContent = old, 1800);
+  });
+}
+(function(){
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll('.rv').forEach(el => el.classList.add('visible'));
+    return;
+  }
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+  }, {threshold:0.1, rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.rv').forEach(el => obs.observe(el));
+})();
+</script>
+</body>
+</html>
