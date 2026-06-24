@@ -1,0 +1,2298 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ML4GP9590F"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-ML4GP9590F');
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Splunk for SOC Analysts — 2026 Edition | sarathg.me</title>
+    <meta name="description" content="A hands-on, reading-optimized guide to learning Splunk for security operations, with a clickable command reference. By Sarath G — sarathg.me" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.78em' x='.5em' text-anchor='middle' font-size='80' fill='%231e6e5c'>%E2%9C%B3</text></svg>" />
+    <style>
+/* ============================================================
+   Splunk for SOC Analysts — reading-optimized stylesheet
+   ============================================================ */
+
+:root {
+  --bg: #fbfaf7;
+  --bg-raised: #ffffff;
+  --text: #2a2722;
+  --heading: #18160f;
+  --muted: #6b6358;
+  --rule: #e7e2d8;
+  --accent: #1e6e5c;
+  --accent-soft: #e3efe9;
+  --exercise-bg: #fffaf0;
+  --exercise-border: #d4a657;
+  --exercise-tag-bg: #d4a657;
+  --warning-bg: #fdf1ef;
+  --warning-border: #c1453a;
+  --tip-bg: #eef5f1;
+  --tip-border: #1e6e5c;
+  --code-bg: #1c1f26;
+  --code-text: #e8e6e1;
+  --code-border: #30343d;
+}
+
+* { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 96px;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Source Serif 4", "Georgia", serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: #c9e3da; }
+
+/* ---------- Side rail (persistent module navigation) ---------- */
+
+:root {
+  --rail-width: 268px;
+  --portfolio-nav-height: 56px; /* reserved space for navbar.js, adjust if your navbar differs */
+}
+
+.app-shell {
+  display: flex;
+  align-items: flex-start;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.siderail {
+  position: sticky;
+  top: var(--portfolio-nav-height);
+  width: var(--rail-width);
+  flex-shrink: 0;
+  height: calc(100vh - var(--portfolio-nav-height));
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--rule);
+  background: rgba(251, 250, 247, 0.92);
+  backdrop-filter: blur(10px) saturate(1.2);
+  z-index: 90;
+}
+
+.progress-track {
+  height: 3px;
+  background: var(--rule);
+  flex-shrink: 0;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.1s linear;
+}
+
+.siderail-head {
+  padding: 20px 20px 14px;
+  border-bottom: 1px solid var(--rule);
+  flex-shrink: 0;
+}
+
+.brand {
+  font-family: "Inter", "Helvetica Neue", sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.03em;
+  color: var(--heading);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.siderail-progress-count {
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+.jumplinks {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 12px 24px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--rule) transparent;
+}
+.jumplinks::-webkit-scrollbar { width: 6px; }
+.jumplinks::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 3px; }
+
+.jumplink-group {
+  margin-bottom: 4px;
+}
+
+.jumplink-group-label {
+  font-family: "Inter", sans-serif;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 14px 10px 6px;
+}
+
+.jumplink {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: "Inter", "Helvetica Neue", sans-serif;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text);
+  text-decoration: none;
+  white-space: normal;
+  line-height: 1.4;
+  padding: 8px 10px;
+  border-radius: 7px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.jumplink:hover {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.jumplink.active {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+}
+
+.jumplink-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--jl-accent, var(--muted));
+  opacity: 0.7;
+}
+
+.jumplink.active .jumplink-dot {
+  background: #fff;
+  opacity: 0.9;
+}
+
+/* ---------- Page layout ---------- */
+
+.page {
+  max-width: 720px;
+  margin: 0;
+  padding: 0 24px 80px 40px;
+  flex: 1;
+  min-width: 0;
+}
+
+.hero {
+  padding: 56px 0 40px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.hero-eyebrow {
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 16px;
+}
+
+.hero h1 {
+  font-family: "Source Serif 4", serif;
+  font-size: clamp(32px, 5vw, 44px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--heading);
+  margin: 0 0 18px;
+}
+
+.hero-sub {
+  font-size: 18px;
+  line-height: 1.7;
+  color: var(--muted);
+  max-width: 600px;
+  margin: 0 0 20px;
+}
+
+.hero-meta {
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+  color: var(--muted);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* ---------- Module ---------- */
+
+.module {
+  padding: 56px 0 8px;
+  border-bottom: 1px solid var(--rule);
+  scroll-margin-top: 96px;
+}
+
+.module:last-of-type { border-bottom: none; }
+
+.module-header { margin-bottom: 28px; }
+
+.module-day {
+  font-family: "Inter", sans-serif;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.module h2 {
+  font-family: "Source Serif 4", serif;
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--heading);
+  margin: 0 0 10px;
+  line-height: 1.25;
+}
+
+.module-blurb {
+  font-size: 16.5px;
+  line-height: 1.6;
+  color: var(--muted);
+  margin: 0;
+  font-style: italic;
+}
+
+/* ---------- Content sections ---------- */
+
+.content-section {
+  margin-bottom: 38px;
+}
+
+.content-section h3 {
+  font-family: "Source Serif 4", serif;
+  font-size: 21px;
+  font-weight: 700;
+  color: var(--heading);
+  margin: 0 0 14px;
+  line-height: 1.35;
+}
+
+.content-section p {
+  font-size: 17px;
+  line-height: 1.75;
+  color: var(--text);
+  margin: 0 0 16px;
+}
+
+.plain-steps, .key-points {
+  margin: 0 0 16px;
+  padding-left: 24px;
+}
+
+.plain-steps li, .key-points li {
+  font-size: 16.5px;
+  line-height: 1.7;
+  color: var(--text);
+  margin-bottom: 9px;
+}
+
+.key-points { list-style: square; }
+
+/* ---------- Tables ---------- */
+
+.table-wrap {
+  overflow-x: auto;
+  margin: 4px 0 22px;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  background: var(--bg-raised);
+}
+
+th {
+  text-align: left;
+  padding: 10px 14px;
+  background: #f3f0e8;
+  color: var(--heading);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  border-bottom: 1px solid var(--rule);
+  white-space: nowrap;
+}
+
+td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--rule);
+  color: var(--text);
+  line-height: 1.5;
+  vertical-align: top;
+}
+
+tr:last-child td { border-bottom: none; }
+
+td:first-child { font-weight: 600; color: var(--heading); }
+
+/* ---------- Code blocks (always dark — lit window on the page) ---------- */
+
+.code-block {
+  position: relative;
+  margin: 4px 0 16px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--code-bg);
+  border: 1px solid var(--code-border);
+}
+
+.code-block pre {
+  margin: 0;
+  padding: 16px 18px;
+  overflow-x: auto;
+  font-family: "JetBrains Mono", "IBM Plex Mono", monospace;
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--code-text);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #2c303a;
+  border: 1px solid #3a3f4a;
+  color: #b8c4d4;
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.copy-btn:hover { background: #3a3f4a; }
+
+/* ---------- Exercise blocks ---------- */
+
+.exercise {
+  margin: 18px 0 22px;
+  padding: 20px 22px 22px;
+  background: var(--exercise-bg);
+  border: 1px solid var(--exercise-border);
+  border-left-width: 4px;
+  border-radius: 8px;
+}
+
+.exercise-label {
+  font-family: "Inter", sans-serif;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #8a6315;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.exercise-tag {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--exercise-tag-bg);
+  color: #fff;
+  padding: 3px 9px;
+  border-radius: 20px;
+}
+
+.exercise-steps {
+  margin: 0 0 14px;
+  padding-left: 22px;
+}
+
+.exercise-steps li {
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: #4a3c1f;
+  margin-bottom: 8px;
+}
+
+.exercise-body {
+  font-size: 15.5px;
+  line-height: 1.7;
+  color: #5c4a26;
+  margin: 0 0 4px;
+}
+
+.followup {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--exercise-border);
+}
+
+/* ---------- Callouts ---------- */
+
+.callout {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  margin: 4px 0 18px;
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.callout-warning {
+  background: var(--warning-bg);
+  border-left: 3px solid var(--warning-border);
+  color: #7a2a22;
+}
+
+.callout-tip {
+  background: var(--tip-bg);
+  border-left: 3px solid var(--tip-border);
+  color: #1a4438;
+}
+
+.callout-label {
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+  opacity: 0.75;
+  padding-top: 1px;
+}
+
+/* ---------- Downloads ---------- */
+
+.downloads {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 6px 0 18px;
+}
+
+.download-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--accent);
+  padding: 10px 16px;
+  border-radius: 7px;
+  text-decoration: none;
+  transition: background 0.15s, transform 0.1s;
+}
+
+.download-btn:hover { background: #175a4b; }
+.download-btn:active { transform: scale(0.98); }
+
+.download-icon { font-size: 13px; }
+
+/* ---------- Footer ---------- */
+
+.footer {
+  margin-top: 50px;
+  padding-top: 28px;
+  border-top: 1px solid var(--rule);
+  text-align: center;
+}
+
+.footer p {
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+  color: var(--muted);
+  margin: 0 0 6px;
+}
+
+.footer-sub { font-size: 12px; color: #9a9286; }
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 900px) {
+  .app-shell { flex-direction: column; }
+  .siderail {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height: auto;
+    max-height: none;
+    border-right: none;
+    border-bottom: 1px solid var(--rule);
+    flex-direction: column;
+  }
+  .siderail-head { padding: 14px 18px 10px; }
+  .jumplinks {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: visible;
+    padding: 8px 12px 12px;
+    gap: 4px;
+  }
+  .jumplink-group { display: flex; flex-shrink: 0; }
+  .jumplink-group-label { display: none; }
+  .jumplink {
+    flex-shrink: 0;
+    white-space: nowrap;
+    padding: 7px 12px;
+  }
+  .page { padding: 0 24px 80px; max-width: 720px; margin: 0 auto; }
+}
+
+@media (max-width: 640px) {
+  .hero h1 { font-size: 28px; }
+  .module h2 { font-size: 25px; }
+  .content-section h3 { font-size: 19px; }
+  .brand { font-size: 11.5px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { transition: none !important; }
+}
+
+/* ============================================================
+   V3 ADDITIONS — richer visual character, per-module theming,
+   glossary popovers, branding, interactivity
+   ============================================================ */
+
+/* ---------- Subtle page texture (signature element, used sparingly) ---------- */
+
+body {
+  background-image:
+    radial-gradient(circle at 8% 4%, rgba(30, 110, 92, 0.05) 0%, transparent 40%),
+    radial-gradient(circle at 95% 18%, rgba(180, 81, 63, 0.04) 0%, transparent 35%);
+  background-attachment: fixed;
+}
+
+/* ---------- Brand mark + header link ---------- */
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  text-decoration: none;
+  color: var(--heading);
+  transition: color 0.15s;
+}
+.brand:hover { color: var(--accent); }
+
+.brand-mark {
+  display: inline-block;
+  color: var(--accent);
+  font-size: 14px;
+  transform: rotate(0deg);
+  transition: transform 0.4s ease;
+}
+.brand:hover .brand-mark { transform: rotate(90deg); }
+
+/* ---------- Hero: richer treatment ---------- */
+
+.hero {
+  position: relative;
+  padding: 60px 0 44px;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: -40px;
+  width: 3px;
+  height: 64px;
+  background: linear-gradient(180deg, var(--accent), transparent);
+  border-radius: 2px;
+}
+
+.hero-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hero-author-link {
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.15s;
+}
+.hero-author-link:hover { border-bottom-color: var(--accent); }
+
+/* ---------- Module: per-module accent theming ---------- */
+
+.module {
+  position: relative;
+  padding-left: 22px;
+  border-left: 3px solid var(--module-accent, var(--rule));
+  border-bottom: none;
+  margin-bottom: 8px;
+}
+
+.module-header {
+  margin-bottom: 28px;
+  padding-top: 4px;
+}
+
+.module-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.module-day {
+  font-family: "Inter", sans-serif;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--module-accent, var(--accent));
+}
+
+.module-done-pill {
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--module-accent, var(--accent));
+  padding: 2px 9px;
+  border-radius: 20px;
+}
+
+.module h2::first-letter {
+  color: var(--module-accent, var(--accent));
+}
+
+.content-section h3 {
+  position: relative;
+}
+
+.content-section h3::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--module-accent, var(--accent));
+  margin-right: 10px;
+  vertical-align: middle;
+  opacity: 0.7;
+}
+
+/* ---------- Progress toggle ---------- */
+
+.progress-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0 48px;
+  padding: 9px 16px;
+  border: 1.5px solid var(--rule);
+  border-radius: 24px;
+  background: var(--bg-raised);
+  font-family: "Inter", sans-serif;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.18s;
+}
+
+.progress-toggle:hover {
+  border-color: var(--module-accent, var(--accent));
+  color: var(--module-accent, var(--accent));
+}
+
+.progress-toggle.done {
+  background: var(--module-accent, var(--accent));
+  border-color: var(--module-accent, var(--accent));
+  color: #fff;
+}
+
+.progress-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  font-size: 10px;
+}
+
+.progress-toggle.done .progress-check {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ---------- Side rail additions ---------- */
+
+.navlink-check {
+  display: inline-block;
+  margin-right: 2px;
+  font-size: 10px;
+}
+
+/* ---------- Brand banner (interstitial CTA) ---------- */
+
+.brand-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 8px 0 56px;
+  padding: 18px 22px;
+  background: linear-gradient(120deg, #1e6e5c, #155248);
+  border-radius: 10px;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(30, 110, 92, 0.18);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.brand-banner:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(30, 110, 92, 0.25);
+}
+
+.brand-banner-text {
+  font-family: "Inter", sans-serif;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: #eafaf3;
+}
+
+.brand-banner-text strong {
+  color: #fff;
+  font-weight: 700;
+}
+
+.brand-banner-arrow {
+  font-size: 18px;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+/* ---------- Glossary: clickable terms in code ---------- */
+
+.code-term {
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: #6a93b8;
+  text-underline-offset: 3px;
+  border-radius: 2px;
+  transition: background 0.12s;
+}
+
+.code-term:hover {
+  background: rgba(106, 147, 184, 0.18);
+}
+
+.glossary-popover {
+  z-index: 500;
+  width: 320px;
+  max-width: calc(100vw - 32px);
+  background: var(--bg-raised);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  box-shadow: 0 12px 32px rgba(20, 18, 12, 0.18);
+  padding: 16px 18px;
+  font-family: "Inter", sans-serif;
+  animation: popIn 0.14s ease;
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.glossary-popover-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.glossary-popover-header code {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--heading);
+  background: #f3f0e8;
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+.glossary-cat {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.glossary-short {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--heading);
+  line-height: 1.5;
+  margin: 0 0 8px;
+}
+
+.glossary-long {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--muted);
+  margin: 0 0 10px;
+}
+
+.glossary-more {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+}
+.glossary-more:hover { text-decoration: underline; }
+
+/* ---------- Reference module ---------- */
+
+.ref-list {
+  display: grid;
+  gap: 4px;
+}
+
+.ref-entry {
+  padding: 18px 0;
+  border-bottom: 1px solid var(--rule);
+  scroll-margin-top: 110px;
+  transition: background 0.6s;
+}
+
+.ref-entry:target,
+.ref-entry.flash {
+  background: var(--accent-soft);
+}
+
+.ref-entry-head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.ref-entry-head code {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--heading);
+}
+
+.ref-cat {
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.ref-short {
+  font-size: 15.5px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0 0 5px;
+  font-family: "Inter", sans-serif;
+}
+
+.ref-long {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--muted);
+  margin: 0;
+}
+
+/* ---------- Reveal (predict-then-check) ---------- */
+
+.reveal { margin-top: 4px; }
+
+.reveal-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #8a6315;
+  background: rgba(212, 166, 87, 0.16);
+  border: 1px dashed var(--exercise-border);
+  padding: 8px 14px;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.reveal-btn:hover { background: rgba(212, 166, 87, 0.28); }
+
+.reveal-btn::before {
+  content: "?";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--exercise-border);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.reveal-body {
+  margin-top: 10px;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 6px;
+}
+
+/* ---------- Footer brand ---------- */
+
+.footer-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--accent);
+  text-decoration: none;
+  margin-bottom: 10px;
+}
+.footer-brand:hover { text-decoration: underline; }
+
+/* ---------- Exercise card: a touch more depth ---------- */
+
+.exercise {
+  box-shadow: 0 2px 8px rgba(180, 140, 60, 0.06);
+}
+
+.table-wrap {
+  box-shadow: 0 1px 4px rgba(20, 18, 12, 0.04);
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 640px) {
+  .module { padding-left: 14px; border-left-width: 2px; }
+  .brand-banner { flex-direction: column; align-items: flex-start; }
+  .glossary-popover { width: calc(100vw - 32px); }
+  .hero::before { left: -24px; }
+}
+
+    </style>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  </head>
+  <body>
+    <script src="navbar.js"></script>
+    <div id="root"></div>
+    <script>
+/* ============================================================
+   SPL COMMAND GLOSSARY
+   Used by: inline code popovers + the Command Reference module
+   ============================================================ */
+
+const glossary = {
+  search: {
+    category: "Filtering",
+    short: "Filters events using raw field matching, wildcards, and CIDR ranges.",
+    long: "The implicit command at the start of every query. Matches raw field values directly — supports wildcards (status=4*) and CIDR notation (clientip=\"10.0.0.0/24\") natively. Best for filtering on values exactly as they appear in the log, early in the pipeline, for performance."
+  },
+  where: {
+    category: "Filtering",
+    short: "Filters using evaluated expressions — required for fields eval just created.",
+    long: "Evaluates a boolean expression rather than pattern-matching raw text. Does NOT support wildcards or CIDR the way search does. Use it when comparing two fields to each other, or filtering on a field that eval created earlier in the same pipeline."
+  },
+  table: {
+    category: "Display",
+    short: "Displays chosen fields as a clean grid, in the order you list them.",
+    long: "A display-only command — it shows the fields you pick as columns, in the order given. Does not populate the Statistics tab. Often added after fields, dedup, or sort to actually see what those commands did."
+  },
+  fields: {
+    category: "Display",
+    short: "Trims the underlying field set, mostly invisible until you add table.",
+    long: "Trims which fields are kept in the result set. Changes the sidebar's Interesting Fields list, but the Events tab still shows full raw text — the trimming is invisible until combined with table, or with a transforming command."
+  },
+  dedup: {
+    category: "Display",
+    short: "Keeps only the first event per unique value of a field.",
+    long: "Removes duplicate events based on one or more fields, keeping the first (most recent, by default sort order) match. A display-only command — check the Statistics tab won't reflect it; pipe into table to see the effect directly."
+  },
+  sort: {
+    category: "Display",
+    short: "Orders results. A leading minus sign means descending.",
+    long: "Sorts results by one or more fields. sort field is ascending; sort - field is descending. Order matters for downstream commands like transaction, which require descending chronological order to behave correctly."
+  },
+  rename: {
+    category: "Display",
+    short: "Changes a column's display label only — the underlying data is untouched.",
+    long: "Purely cosmetic: relabels a field's header text for display. The original field name still works in later pipeline stages exactly as before — rename does not propagate the new name backward or forward into the field's identity."
+  },
+  top: {
+    category: "Transforming",
+    short: "Most common values for a field, with automatic count and percent.",
+    long: "A transforming command — populates the Statistics tab automatically. Returns the top 10 most frequent values by default, sorted descending, with count and percent columns added. Functionally a shortcut for stats count by field | sort - count."
+  },
+  rare: {
+    category: "Transforming",
+    short: "Least common values for a field — the mirror image of top.",
+    long: "Same output shape as top, but sorted ascending by count instead of descending. Rare values are often more interesting in security work than common ones — a rare status code or login pattern is frequently where real problems hide."
+  },
+  stats: {
+    category: "Transforming",
+    short: "Flexible aggregation — count, sum, avg, and more, grouped by any fields.",
+    long: "The most flexible transforming command in SPL. Supports any number of BY-clause fields and a wide range of aggregation functions (count, sum, avg, min, max, dc, and more). top and rare are really just shortcuts for specific stats patterns."
+  },
+  chart: {
+    category: "Transforming",
+    short: "Builds a chart-ready table: one row-split, one column-split field.",
+    long: "Like stats, but capped at two BY-clause fields specifically structured for charting — one field becomes the row-split (x-axis categories), the other becomes the column-split (separate data series)."
+  },
+  timechart: {
+    category: "Transforming",
+    short: "Time-series aggregation — _time is always the row-split automatically.",
+    long: "Builds a time-series table. _time is automatically the first column and row-split; only one additional BY-clause field (the column-split) is allowed. Use span= to control the time bucket size, e.g. span=1h."
+  },
+  eval: {
+    category: "Calculation",
+    short: "Creates new fields by calculating or deriving values from existing ones.",
+    long: "The most versatile command in SPL — handles arithmetic, string manipulation, conditionals (if, case), and type conversion. eval only calculates; it doesn't filter. Pair it with where afterward if you need to remove non-matching results."
+  },
+  fillnull: {
+    category: "Calculation",
+    short: "Replaces empty/null values with a default — 0, or any string you choose.",
+    long: "Fills blank field values, defaulting to 0 if no value is specified, or fillnull value=\"X\" for a custom fill. Cannot act on a field that is null in every single event in the result set, since Splunk doesn't consider such a field to exist in the schema at all."
+  },
+  lookup: {
+    category: "Enrichment",
+    short: "Adds fields from an external CSV by matching on a key field.",
+    long: "Manually invokes a lookup definition, matching a key field against a reference CSV and pulling in output columns. Once an automatic lookup is configured for the same definition, this manual invocation becomes unnecessary — the fields just appear."
+  },
+  iplocation: {
+    category: "Enrichment",
+    short: "Adds City, Country, lat, lon, and Region from an IP address field.",
+    long: "Looks up an IP field against Splunk's built-in geolocation database. Private/internal IPs (10.x.x.x, 192.168.x.x) get no fields added at all — not blank values, simply nothing — since they aren't present in the database."
+  },
+  geostats: {
+    category: "Enrichment",
+    short: "Aggregates geographic data for point-based map visualizations.",
+    long: "Works like stats but expects latitude/longitude fields and accepts only one BY-clause field. Built specifically to feed map visualizations like Cluster Map — plots individual points, e.g. one dot per city."
+  },
+  geom: {
+    category: "Enrichment",
+    short: "Adds polygon/shape data for choropleth (region-shaded) maps.",
+    long: "Adds featureCollection and geom fields containing JSON polygon data, used to shade entire regions (countries, states) on a Choropleth Map visualization, rather than plotting individual points the way geostats does."
+  },
+  addtotals: {
+    category: "Calculation",
+    short: "Adds a row or column total — defaults to a per-row total field.",
+    long: "Defaults to row=true, adding a Total field summing all numeric fields in each row. Set row=f col=t for a single grand-total summary row instead. Restrict which fields get summed by listing them explicitly, e.g. addtotals count_*."
+  },
+  transaction: {
+    category: "Correlation",
+    short: "Groups conceptually related events into one unit, keeping raw events.",
+    long: "Groups events sharing one or more fields (optionally constrained by maxspan, maxpause, or startswith/endswith content boundaries) into a single combined event. Unlike stats, it keeps the original raw events rather than discarding them — at a real performance cost."
+  },
+  head: {
+    category: "Display",
+    short: "Returns only the first N results.",
+    long: "Limits output to the first N events (or results, if used after a transforming command). Commonly used early in exploration — head 5 — to preview raw data before building a real query."
+  },
+  coalesce: {
+    category: "Calculation",
+    short: "Returns the first non-null value from a list of fields.",
+    long: "An eval function, not a standalone command — used inside eval or a calculated field definition. coalesce(fieldA, fieldB) returns whichever field actually has a value, useful when the same concept is split across differently-named fields."
+  },
+  case: {
+    category: "Calculation",
+    short: "Multi-tier conditional logic inside eval — first match wins.",
+    long: "An eval function: case(condition1, value1, condition2, value2, ...) evaluates conditions top to bottom and returns the value for the first one that's true. Note: the function name CASE() is itself case-sensitive when used for forced case-sensitive matching elsewhere."
+  }
+};
+const glossaryOrder = ["search", "where", "table", "fields", "dedup", "sort", "rename", "top", "rare", "stats", "chart", "timechart", "eval", "fillnull", "case", "coalesce", "lookup", "iplocation", "geostats", "geom", "addtotals", "transaction", "head"];
+const {
+  useState,
+  useEffect,
+  useRef
+} = React;
+
+/* ============================================================
+   CONTENT DATA
+   Structure: modules[] -> { id, day, title, blurb, sections: [
+     { heading, body, exercise?, warning?, tip?, table?, steps? }
+   ]}
+   ============================================================ */
+
+const modules = [{
+  id: "setup",
+  day: "Start here",
+  accent: "#1e6e5c",
+  title: "Setup — Install Splunk and Load the Tutorial Data",
+  blurb: "Everything in this guide runs against a sample dataset called index=tutorial. Do this once, before anything else.",
+  sections: [{
+    heading: "1. Download Splunk Enterprise",
+    body: "Splunk offers a free trial of Splunk Enterprise, which is what every exercise in this guide assumes you're running. Download the Windows installer below, or visit splunk.com/download for macOS/Linux.",
+    downloads: [{
+      label: "Splunk 10.4.0 — Windows x64 (.msi)",
+      url: "https://download.splunk.com/products/splunk/releases/10.4.0/windows/splunk-10.4.0-f798d4d49089-windows-x64.msi"
+    }],
+    steps: ["Run the downloaded .msi file.", "Accept the license agreement.", "Choose \"Local System\" account when prompted (default is fine for a learning install).", "Set an admin username and password — you will use this to log into Splunk Web every time, so write it down somewhere safe.", "Finish the install. It will automatically open Splunk Web in your browser at http://localhost:8000, or you can navigate there manually once setup completes."],
+    tip: "If port 8000 is already in use by something else on your machine, the installer will tell you during setup — you can change it, but localhost:8000 is the default everyone's instructions (including this guide) assume."
+  }, {
+    heading: "2. Download the tutorial data",
+    body: "This is the sample dataset — fictional company \"Buttercup Games\" — that every single exercise in this guide is written against. It's a single zip file containing several log file types.",
+    downloads: [{
+      label: "tutorialdata.zip",
+      url: "https://docs.splunk.com/images/Tutorial/tutorialdata.zip"
+    }],
+    tip: "Don't unzip this file. Splunk reads it directly as a .zip during the upload step below — unzipping it first is unnecessary and won't cause anything to work better."
+  }, {
+    heading: "3. Create the tutorial index",
+    body: "Before uploading any data, you need a destination for it: an index named tutorial. Every search example in this guide starts with index=tutorial — if you name it something else, you'll need to mentally substitute your own index name in every single search from here on, so it's worth just matching the name exactly.",
+    steps: ["Log into Splunk Web (http://localhost:8000).", "Click Settings (top right) → Indexes.", "Click New Index (top right of the indexes list).", "Index Name: type tutorial exactly, all lowercase.", "Leave every other setting at its default — Index Data Type: Events, Max Size, Home Path, etc. all default values are fine for a learning environment.", "Click Save."],
+    exercise: {
+      label: "Confirm the index exists",
+      body: "Go back to Settings → Indexes and look for tutorial in the list. It should show 0 events for now — that's expected, you haven't loaded any data into it yet."
+    }
+  }, {
+    heading: "4. Upload tutorialdata.zip into the tutorial index",
+    body: "Now you'll point Splunk at the zip file and tell it specifically to load that data into the tutorial index you just created — not the default index, which is a mistake that quietly breaks every exercise later if it happens.",
+    steps: ["Click Settings → Add Data.", "Click Upload (the \"I want to upload a file\" option, not monitor or forward).", "Click Select File, browse to wherever you saved tutorialdata.zip, and select it.", "Click Next at the bottom of the page.", "On the \"Set Source Type\" screen, Splunk will try to auto-detect the format. You can leave this as-is and click Next — the three sourcetypes used in this guide (access_combined_wcookie, vendor_sales/vendor_sales, www1/secure) are bundled inside the zip with their formats already defined.", "On the \"Input Settings\" screen, find the Index dropdown. Change it from default to tutorial.", "Click Review, confirm the settings look correct (Index: tutorial), then click Submit."],
+    warning: "The single most common setup mistake: forgetting to change the Index dropdown away from default before submitting. If every search in this guide comes back with zero results, this is the first thing to check — go to Settings → Indexes, look at how many events default has versus tutorial, and re-upload correctly if needed."
+  }, {
+    heading: "5. Verify the data loaded correctly",
+    body: "Before trusting any exercise in this guide, confirm the data is actually there and Splunk can find it.",
+    exercise: {
+      label: "Run your first search",
+      code: "index=tutorial",
+      body: "Go to the Search & Reporting app, paste this into the search bar, and set the time range (top right of the search bar) to All time. You should see thousands of events appear. If you see zero, check the warning above about the Index dropdown, and double-check the time range — almost every \"zero results\" problem in this entire guide traces back to one of those two things."
+    },
+    tip: "Set your time range to All time as a habit for the rest of this guide, every time a search comes back empty before you assume something is broken."
+  }]
+}, {
+  id: "reference",
+  day: "Reference",
+  accent: "#6b5e3c",
+  title: "SPL Command Reference",
+  blurb: "Every command used in this guide, in one place. Click any command name inline, anywhere in this guide, to see this same definition pop up without losing your place.",
+  sections: [{
+    heading: "How to use this module",
+    body: "Skim this once up front if you like, or skip it and come back later — every command name inside a code block elsewhere in this guide is clickable and shows the same short definition in place. This page exists for when you want the fuller explanation, or want to browse the full list at once."
+  }],
+  isReference: true
+}, {
+  id: "foundations",
+  day: "Day 1",
+  accent: "#1e6e5c",
+  title: "Search Fundamentals — table, rename, fields, dedup, sort",
+  blurb: "Your first real SPL commands: turning a messy raw event into a clean, readable report.",
+  sections: [{
+    heading: "The dataset you'll use throughout this guide",
+    body: "index=tutorial contains three sourcetypes. Knowing their shape up front saves a lot of guessing later.",
+    table: {
+      headers: ["Sourcetype", "What it contains", "Quoting needed?"],
+      rows: [["access_combined_wcookie", "Web traffic — clientip, method, productId, status, bytes", "No"], ["vendor_sales/vendor_sales", "Vendor transactions — VendorID, Code, AcctID", "Yes — wrap in quotes"], ["www1/secure", "Secure site activity — clientip, action, categoryId, itemId", "Yes — wrap in quotes"]]
+    },
+    warning: "Sourcetype names containing a slash (/) must be wrapped in double quotes — e.g. sourcetype=\"vendor_sales/vendor_sales\". Forgetting this is the single most common syntax mistake newcomers make."
+  }, {
+    heading: "table and rename",
+    body: "table picks and orders the columns you want to see. rename changes a column's display label without touching the underlying field name or data — the data never changes, only what you see.",
+    exercise: {
+      label: "Build a clean web traffic report",
+      code: "index=tutorial sourcetype=access_combined_wcookie\n| head 5",
+      body: "Run this first and just look at the raw results — don't build anything yet, get a feel for what fields exist.",
+      followups: [{
+        code: "index=tutorial sourcetype=access_combined_wcookie\n| table _time, clientip, method, productId, status, bytes",
+        body: "You picked 6 fields out of a much messier raw event, displayed as clean columns in the order you listed them."
+      }, {
+        code: 'index=tutorial sourcetype=access_combined_wcookie\n| table _time, clientip, method, productId, status, bytes\n| rename clientip as "Visitor IP", method as "HTTP Method", productId as "Product", status as "Response Code", bytes as "Response Size"',
+        body: "Every column header except _time now has a friendly name. Try renaming _time to \"Visit Time\" as well — type it yourself rather than copy-pasting."
+      }]
+    }
+  }, {
+    heading: "The single most useful distinction in all of SPL",
+    body: "It's easy to assume any command's effect shows up on the Statistics tab. It doesn't. Splunk's commands split into two groups, and mixing them up causes confusion for weeks if it isn't corrected early.",
+    table: {
+      headers: ["Group", "Commands", "Behavior"],
+      rows: [["Display-only", "table, fields, dedup, sort, rename", "Change what you SEE or how results are arranged. Do NOT populate the Statistics tab."], ["Transforming", "stats, top, rare, chart, timechart", "Actually aggregate or summarize data. DO populate the Statistics tab automatically."]]
+    },
+    tip: "Quick check: after running a search, look at the Statistics tab next to Events and Visualization. Empty or greyed out → display-only command. Populated with a summary table → transforming command."
+  }, {
+    heading: "fields, dedup, and sort",
+    body: "fields trims which fields are kept in the underlying result set — but on its own it changes nothing visible in the raw Events display. dedup keeps only the first event per unique value of a field. sort orders results (a leading minus sign means descending).",
+    exercise: {
+      label: "Trim, deduplicate, and order a result set",
+      code: "index=tutorial sourcetype=access_combined_wcookie\n| fields clientip, method, productId",
+      predict: "What do you expect to see change in the Events tab? Click to check.",
+      body: "Run it, then check the Fields sidebar — only your 3 chosen fields are listed there now. Add | table clientip, method, productId to actually see it.",
+      followups: [{
+        code: "index=tutorial sourcetype=access_combined_wcookie\n| dedup clientip\n| table _time, clientip, method, productId",
+        body: "Only the first event for each unique clientip is kept — compare the result count to a plain search without dedup."
+      }, {
+        code: "index=tutorial sourcetype=access_combined_wcookie\n| dedup clientip\n| table _time, clientip, method, productId\n| sort - _time",
+        body: "Descending (newest first). Remove the minus sign and rerun to see ascending order instead."
+      }]
+    },
+    tip: "Most finished, real-world reports look roughly like this: filter → trim → dedup → sort → table → rename."
+  }, {
+    heading: "top, rare, and stats",
+    body: "Unlike fields/dedup/sort, these three ARE transforming commands — the Statistics tab populates the moment you use any of them. top finds the most common values (sorted descending, with an automatic percent column, top 10 by default). rare is its mirror image — least common values, same shape, opposite order. stats is the most flexible of the three; top and rare are really just shortcuts for specific stats patterns underneath.",
+    exercise: {
+      label: "Compare top, rare, and stats on the same field",
+      code: "index=tutorial sourcetype=access_combined_wcookie\n| top productId",
+      body: "Most common product viewed.",
+      followups: [{
+        code: 'index=tutorial sourcetype="vendor_sales/vendor_sales"\n| rare Code',
+        body: "Least common transaction code. Rare events often matter more in real investigations than common ones — a rare status code or login pattern is often where problems hide."
+      }, {
+        code: "index=tutorial sourcetype=access_combined_wcookie\n| stats count by productId\n| sort - count",
+        body: "Run this and compare it directly to the top productId result above — they should show identical products in identical order. top is doing exactly what you just built manually with stats and sort."
+      }]
+    }
+  }, {
+    heading: "From real-world questions to SPL queries",
+    body: "In a real SOC, nobody asks you to 'run a top.' They ask a business or security question, and you decide which command answers it. The pattern: read the question in plain English, decide whether you're counting, finding extremes, or just cleaning up a list, then pick the matching command.",
+    table: {
+      headers: ["The question sounds like...", "Use this"],
+      rows: [["\"What's the most common / top / most frequent...?\"", "top"], ["\"What's the least common / rarest...?\"", "rare"], ["\"How many of each...?\" / needs grouping by 2+ fields", "stats count by"], ["\"Just show me a clean list, no duplicates, sorted, readable\"", "fields + dedup + sort + table + rename"], ["\"Only include records where X\"", "Add a filter right after sourcetype=, before any other command"]]
+    },
+    exercise: {
+      label: "Translate three real questions into SPL",
+      code: 'index=tutorial sourcetype=access_combined_wcookie\n| top limit=1 clientip\n| rename clientip as "Most Frequent Visitor", count as "Number of Visits"',
+      body: "\"Who visits us the most?\" — a single winner, so limit=1.",
+      followups: [{
+        code: "index=tutorial sourcetype=access_combined_wcookie status!=200\n| stats count by productId\n| sort - count",
+        body: "\"How many requests failed (non-200) per product?\" — notice we filter with status!=200 BEFORE piping into stats. Filter early, aggregate after — this pattern shows up constantly."
+      }, {
+        code: 'index=tutorial sourcetype="vendor_sales/vendor_sales"\n| fields VendorID, Code, AcctID\n| dedup VendorID\n| sort - AcctID\n| table VendorID, Code, AcctID',
+        body: "\"Which vendors had the highest account numbers?\" — no counting language at all, so reaching for stats/top here out of habit would be the wrong instinct."
+      }]
+    }
+  }]
+}, {
+  id: "case-job",
+  day: "Day 1",
+  accent: "#a8632b",
+  title: "Case Sensitivity & Job Inspector",
+  blurb: "Three rules that aren't uniform, and the tool that shows you what a search actually did.",
+  sections: [{
+    heading: "Case sensitivity has three different defaults",
+    body: "This trips people up because it feels like it should be one consistent rule. It isn't — three separate behaviors apply depending on what you're typing.",
+    table: {
+      headers: ["What", "Case-sensitive?"],
+      rows: [["Field NAMES", "YES, always — status and Status are different fields to Splunk"], ["Field VALUES", "NO, by default — status=\"error\" and status=\"ERROR\" match the same events"], ["Plain search keywords (no field=)", "NO — typing Error or error in the search bar returns the same results"]]
+    },
+    warning: "Lookup table values ARE case-sensitive by default. If a lookup value's case doesn't match the raw field value's case exactly, the lookup silently fails to match.",
+    tip: "If you ever need to force case-sensitive matching, Splunk has a CASE() wrapper function — and the word CASE itself is case-sensitive when used this way. Typing case() instead of CASE() will not work."
+  }, {
+    heading: "Job Inspector — what a search actually did",
+    body: "Job Inspector examines what a search actually did, not just what it returned. In the search window, click the small clock/job dropdown next to a running or completed search, then select Inspect Job.",
+    exercise: {
+      label: "Inspect a real search",
+      code: "index=tutorial sourcetype=access_combined_wcookie\n| stats count by status, clientip",
+      body: "Run it, click the job dropdown (clock icon near the search bar) → Inspect Job. Check the top bar first: scanCount, runDuration, job status, and any messages. Then look at the Execution Costs table to see where time was actually spent."
+    },
+    keyPoints: ["scanCount = how many raw events Splunk had to look at. resultCount = how many it returned after processing.", "A DENSE search (most events match) has scanCount and resultCount close together", "A SPARSE search (few events match a narrow filter) can have scanCount far higher than resultCount", "search.log is only visible through Job Inspector — useful for catching errors like regex extraction failures that don't show up at the top"],
+    tip: "A healthy scanCount/second rate typically falls between 10,000 and 20,000 events per second. Think of it as how efficiently the engine is working, not just how fast you got an answer."
+  }]
+}, {
+  id: "visualizations",
+  day: "Day 1",
+  accent: "#5b4b8a",
+  title: "Visualizations",
+  blurb: "Pie, chart, and timechart all have shape requirements — get them wrong and a chart can fail silently.",
+  sections: [{
+    heading: "Check the Statistics tab shape before trusting any chart",
+    body: "Every visualization type has specific requirements for the shape of the Statistics table feeding it. Get the shape wrong and the chart either won't render, or — more dangerously — it WILL render but silently drop data.",
+    exercise: {
+      label: "Watch a pie chart silently drop data",
+      code: "index=tutorial sourcetype=access_combined_wcookie\n| stats count by status, clientip, action",
+      predict: "What do you think happens when you chart this as a pie? Click to check.",
+      body: "Run this, then switch to the Visualization tab and select Pie Chart. The pie chart still renders — no error — but it silently ignores every column past the second one. A pie chart needs exactly 2 columns: column 1 for slice labels, column 2 for slice values.",
+      followups: [{
+        code: "index=tutorial sourcetype=access_combined_wcookie\n| stats count by status",
+        body: "Compare to a search that actually fits the 2-column shape — this one renders correctly as a pie chart."
+      }]
+    },
+    warning: "Most mistakes throw an error. A pie chart fed more than 2 columns doesn't — it just quietly shows a chart that looks correct but is built from incomplete data. Always check the Statistics tab shape BEFORE trusting any chart, especially pie charts.",
+    keyPoints: ["Line/area charts need 2+ columns with valid x-axis and y-axis values", "Line charts can represent a single data series. Area charts CANNOT — they require multiple series to render meaningfully", "Adding eval or fields after a transforming command can change the table shape enough to break a chart that was working before"]
+  }, {
+    heading: "stats vs chart vs timechart",
+    body: "This is the single most useful mental model for visualizations, and it connects directly to BY-clause habits from the foundations module.",
+    table: {
+      headers: ["Command", "BY clause limit", "Best for"],
+      rows: [["stats", "3+ fields allowed", "Granular statistical tables — detailed, not necessarily chart-ready"], ["chart", "Max 2 fields: one row-split, one column-split", "Consolidated tables built specifically for charting"], ["timechart", "1 field only (column-split) — row-split is ALWAYS _time", "Time-series charts — _time is automatically the first column"]]
+    },
+    exercise: {
+      label: "Compare the three commands on the same question",
+      code: "index=tutorial sourcetype=access_combined_wcookie\n| stats count by status, host",
+      body: "Check the Statistics tab, then the Visualization tab.",
+      followups: [{
+        code: "index=tutorial sourcetype=access_combined_wcookie\n| chart count by status, host",
+        body: "status becomes the row-split (x-axis), host values become separate data series — the consolidated, chart-ready shape chart is built for."
+      }, {
+        code: "index=tutorial sourcetype=access_combined_wcookie\n| timechart span=1h count by status",
+        body: "_time is automatically the first column; status is the ONLY by-clause field allowed."
+      }]
+    },
+    tip: "If you wanted to chart status by BOTH host AND action at once, only stats can even attempt it — chart and timechart both cap at one BY field beyond their fixed split."
+  }]
+}, {
+  id: "geo",
+  day: "Day 1",
+  accent: "#b4513f",
+  title: "Geo & Single-Value Commands",
+  blurb: "Turning an IP address into a country, and building the classic SOC attack map.",
+  sections: [{
+    heading: "iplocation — where is this traffic actually coming from?",
+    body: "Takes an IP address field and looks it up against a built-in geolocation database (no install needed), adding location fields to each event. By default it adds City, Country, lat, lon, and Region.",
+    exercise: {
+      label: "Add location data to web traffic",
+      code: "index=tutorial sourcetype=access_combined_wcookie status>=400\n| iplocation clientip\n| table clientip, status, City, Country",
+      body: "Run it. To request every available field, not just the defaults, try | iplocation allfields=true clientip."
+    },
+    warning: "Private/internal IP addresses (10.x.x.x, 192.168.x.x) get NO fields added at all — not blank values, simply nothing, since they're not in the geolocation database. If a search seems to silently 'lose' events after iplocation, check whether those clientips are internal.",
+    tip: "This is the command behind 'where is this attack coming from?' When a SOC analyst sees a spike in failed logins from an unfamiliar IP, iplocation turns a meaningless number into a country and city."
+  }, {
+    heading: "geostats — plotting points on a map",
+    body: "Aggregates geographic data for a map visualization. Works almost exactly like stats — same aggregation functions — but expects latitude/longitude fields and accepts only ONE by-clause field, unlike stats which allows several.",
+    exercise: {
+      label: "Build a point map of traffic by country",
+      code: "index=tutorial sourcetype=access_combined_wcookie\n| iplocation clientip\n| geostats count by Country",
+      body: "Switch to the Visualization tab → Cluster Map. Points appear sized and colored by count."
+    },
+    tip: "This is how a SOC builds the classic 'attack map' — a sudden cluster of activity from a country with no normal business presence is a fast visual red flag."
+  }, {
+    heading: "geom — shading entire regions",
+    body: "Adds polygon/shape data so Splunk can render a choropleth map — entire regions shaded based on a metric, rather than individual plotted points. Splunk ships two built-in shape files: geo_us_states and geo_countries.",
+    exercise: {
+      label: "Build a choropleth of traffic by country",
+      code: 'index=tutorial sourcetype=access_combined_wcookie\n| iplocation clientip\n| stats count by Country\n| geom geo_countries featureIdField="Country"',
+      body: "Switch to Visualization → Choropleth Map. Countries appear shaded by relative traffic volume."
+    },
+    keyPoints: ["geostats plots individual POINTS on a map (e.g. one dot per city)", "geom shades entire REGIONS based on a metric (e.g. an entire country colored by total traffic)"]
+  }, {
+    heading: "addtotals — a lightweight sanity-check command",
+    body: "Adds a total — either as a new field per row (the default) or as a new summary row at the bottom. If you don't specify which fields to sum, ALL numeric fields get summed automatically.",
+    exercise: {
+      label: "Add row and column totals",
+      code: 'index=tutorial sourcetype="vendor_sales/vendor_sales"\n| stats count by Code, VendorID\n| addtotals',
+      body: "Row totals (default). A new Total field appears on each row.",
+      followups: [{
+        code: "index=tutorial sourcetype=access_combined_wcookie\n| stats count by status\n| addtotals row=f col=t labelfield=status",
+        body: "Column total instead — explicitly set row=f col=t. One new summary row appears at the bottom."
+      }]
+    },
+    warning: "addtotals defaults to row=true. If you wanted one grand-total row instead, you must explicitly set row=f col=t."
+  }]
+}, {
+  id: "filtering",
+  day: "Day 1",
+  accent: "#2c6e8f",
+  title: "Filtering & Enrichment",
+  blurb: "eval, search vs where, fillnull, and turning raw codes into friendly labels with lookups.",
+  sections: [{
+    heading: "eval — the most versatile command in SPL",
+    body: "Creates NEW fields by calculating, transforming, or deriving values from existing ones — arithmetic, string manipulation, conditionals, type conversion, all live here.",
+    exercise: {
+      label: "Build a severity classification from scratch",
+      code: "index=tutorial sourcetype=access_combined_wcookie\n| eval bytes_kb=bytes/1024\n| table clientip, bytes, bytes_kb",
+      body: "A brand-new field, bytes_kb, calculated rather than extracted from raw data.",
+      followups: [{
+        code: 'index=tutorial sourcetype=access_combined_wcookie\n| eval traffic_type=if(status>=400, "Error", "Normal")\n| table clientip, status, traffic_type',
+        body: "Every event now gets labeled Error or Normal — a derived classification that didn't exist in the raw log."
+      }, {
+        code: 'index=tutorial sourcetype=access_combined_wcookie\n| eval severity=case(status>=500, "Critical", status>=400, "Warning", status<400, "OK")\n| table clientip, status, severity',
+        body: "case() builds multi-tier classification in one line, evaluated top to bottom — first matching condition wins."
+      }]
+    },
+    tip: "eval is how raw log noise becomes an analyst-readable severity label. Real SOC dashboards almost never show raw status codes to a triage analyst."
+  }, {
+    heading: "search vs where",
+    body: "These look similar but behave differently in two concrete, checkable ways.",
+    table: {
+      headers: ["", "search", "where"],
+      rows: [["Wildcards", "Supported directly, e.g. status=4*", "NOT supported — where evaluates expressions, it doesn't pattern-match raw text"], ["CIDR / IP range", "Supported directly, e.g. clientip=\"10.10.10.0/24\"", "Needs a function like cidrmatch()"], ["Typical use", "Filtering raw field values, early, for performance", "Comparing fields, or filtering on a field eval just created"]]
+    },
+    exercise: {
+      label: "See where search wins, and where where is required",
+      code: 'index=tutorial sourcetype=access_combined_wcookie\n| search clientip="10.10.10.0/24"',
+      body: "Direct CIDR match, no extra function needed.",
+      followups: [{
+        code: "index=tutorial sourcetype=access_combined_wcookie\n| eval bytes_kb=bytes/1024\n| where bytes_kb > 50",
+        body: "You CANNOT do this with search — bytes_kb doesn't exist until eval creates it mid-pipeline."
+      }]
+    },
+    tip: "Simple rule: filtering on a raw field, or want wildcards/CIDR → search. Filtering on something eval just calculated, or comparing two fields → where."
+  }, {
+    heading: "fillnull — making blank cells look intentional",
+    body: "Replaces empty/null field values with a default — either 0 (the default if unspecified) or any string you choose.",
+    exercise: {
+      label: "Replace blank geo fields with a readable label",
+      code: 'index=tutorial sourcetype=access_combined_wcookie\n| iplocation clientip\n| table clientip, City, Country\n| fillnull value="Unknown"',
+      body: "iplocation leaves blanks for internal IPs. fillnull value=\"Unknown\" turns those blanks into a clear label."
+    },
+    warning: "fillnull can't act on a field that is null in EVERY single event, because Splunk doesn't consider a field to exist in the schema at all unless it has at least one non-null value somewhere in the result set."
+  }, {
+    heading: "Lookups — bolting a friendly label onto raw codes",
+    body: "A lookup is a separate reference table (usually a CSV) that maps a raw value to a friendlier one. Three pieces are involved: the lookup table FILE (the CSV), the lookup DEFINITION (tells Splunk the file exists and which column is the key), and the AUTOMATIC LOOKUP (wires the definition to a sourcetype so the new field just appears).",
+    table: {
+      headers: ["Code", "category_name (a worked example)"],
+      rows: [["L", "Software License"], ["B", "Board Game"], ["D", "Digital Download"], ["F", "Figurine and Collectible"], ["N", "Novelty Item"]]
+    },
+    exercise: {
+      label: "Build a lookup end to end",
+      steps: ["Settings → Lookups → Lookup table files → Add new. Destination app: search. Upload the CSV with a destination filename that matches exactly.", "Settings → Lookups → Lookup definitions → Add new. Type: File-based. Select the uploaded CSV from the dropdown.", "Settings → Lookups → Automatic lookups → Add new. Apply to: sourcetype. Lookup input fields: status = status. Lookup output fields: status_description = status_description — fill this in explicitly, never leave it blank."],
+      code: "index=tutorial sourcetype=access_combined_wcookie\n| lookup http_status_lookup status OUTPUT status_description",
+      body: "Test it manually before automating. Then re-run the same search with no | lookup line at all — status_description should still appear automatically once the automatic lookup is saved."
+    },
+    warning: "Leaving output fields blank makes Splunk treat every non-match column as an implicit output, which can create lookup reference cycles. Always fill it in explicitly. Also: automatic lookups only take effect on searches run AFTER the automatic lookup is saved — re-run, don't just wait.",
+    tip: "Pick a small, closed-set field for your first lookup — something like a 10-value transaction code, not a field with hundreds of distinct values."
+  }]
+}, {
+  id: "correlation",
+  day: "Day 2",
+  accent: "#9c3848",
+  title: "Correlating Events",
+  blurb: "transaction vs stats — the most conceptually subtle decision in SPL, and why a brute-force attack is a sequence, not a single event.",
+  sections: [{
+    heading: "What a transaction actually is",
+    body: "A transaction is a group of conceptually related events treated as one unit — every web request a single visitor made during one browsing session, or every step of a single purchase. transaction marks a series of events as interrelated based on a shared piece of common information.",
+    warning: "A brute-force login attempt isn't one event — it's dozens of failed-login events that, taken together, represent one attack. A SOC analyst doesn't care about event #47 in isolation; they care that one IP made 40 failed attempts in 90 seconds, then succeeded."
+  }, {
+    heading: "Grouping events by field, then by field and time",
+    exercise: {
+      label: "Build transactions with increasing precision",
+      code: "index=tutorial sourcetype=access_combined_wcookie\n| transaction clientip",
+      body: "Simplest transaction — one shared field, no time constraint, groups ALL events from that IP across the entire search window.",
+      followups: [{
+        code: "index=tutorial sourcetype=access_combined_wcookie\n| transaction clientip host",
+        body: "Multiple fields — events must share BOTH to be grouped, a tighter result."
+      }, {
+        code: "index=tutorial sourcetype=access_combined_wcookie\n| transaction clientip maxspan=30s maxpause=5s",
+        body: "maxspan limits the TOTAL span (first to last event); maxpause limits the GAP between any two consecutive events."
+      }]
+    },
+    warning: "Events MUST be sorted in descending chronological order (newest first) before maxspan or maxpause are used, or the command silently returns INCORRECT results — not an error, just wrong groupings."
+  }, {
+    heading: "Defining a transaction by its content, not just time",
+    body: "Sometimes a transaction's boundaries are defined by content rather than duration — e.g. a session starts on a login event and ends on a logout event, regardless of how long that takes.",
+    exercise: {
+      label: "Group by content boundaries",
+      code: 'index=tutorial sourcetype=access_combined_wcookie\n| transaction JSESSIONID clientip startswith="view" endswith="purchase"\n| where duration>0',
+      body: "Note duration is filtered AFTER transaction, since transaction itself creates that field."
+    },
+    tip: "Attack chains are usually defined by startswith/endswith logic, not fixed time windows — regardless of whether the chain took 30 seconds or 30 minutes."
+  }, {
+    heading: "transaction vs stats — the decision that matters most",
+    body: "stats calculates statistical values on events grouped by field values, and DISCARDS the original events. transaction also groups events by field values, but does not compute statistics beyond duration — it KEEPS the raw events and their original field values, combined together.",
+    table: {
+      headers: ["Use transaction when...", "Use stats when..."],
+      rows: [["A shared ID alone isn't enough to tell transactions apart", "You have a genuinely unique identifier and just need numbers"], ["A transaction's boundaries are defined by CONTENT, not just an ID", "You don't need to see the original raw events afterward"], ["You need the actual combined raw text of the grouped events", "Performance matters — stats is faster in most cases"]]
+    },
+    warning: "In cases where either command could solve the problem, stats is usually faster, especially in distributed search environments. Don't reach for transaction by default — reach for it when stats genuinely can't express what you need.",
+    tip: "A genuinely cool capability stats cannot match: transaction recognizes transitive relationships — if events A and B share a field, and B and C share a different field, transaction can chain A, B, and C together even though A and C share nothing directly."
+  }]
+}, {
+  id: "knowledge-objects",
+  day: "Day 2",
+  accent: "#7a7321",
+  title: "Knowledge Objects & Governance",
+  blurb: "Naming, permissions, field extraction, aliases, and the tags/event-types layer a real team depends on.",
+  sections: [{
+    heading: "What counts as a knowledge object",
+    body: "If you've built and saved anything in Splunk, it was probably a knowledge object: saved searches and reports, alerts, dashboards, lookups, field extractions, field aliases, calculated fields, tags, event types, macros, workflow actions, and data models.",
+    tip: "A consistent naming convention helps a team differentiate between similar reports and identify what team owns it, what technology it involves, and what it's designed to do."
+  }, {
+    heading: "A real naming formula worth adopting",
+    table: {
+      headers: ["Component", "What it captures"],
+      rows: [["Group", "The team that owns this object (e.g. SOC, NetSec, IAM)"], ["Search type", "alert, report, or summary-index-populating"], ["Platform", "The technology/system the search targets"], ["Category", "The concern area (e.g. auth, malware, network)"], ["Time interval", "The window the search runs over, if scheduled"], ["Description", "1–2 words, meaningful, succinct"]]
+    },
+    body2: "Applied example: a SOC alert checking failed logins on the Windows platform over a 1-hour window might become SOC_alert_windows_auth_1h_FailedLogons.",
+    warning: "All objects within a knowledge object CATEGORY must have unique names. If two objects share a name, only ONE is actually applied — silently, with no warning. A shadowed duplicate can mean your team THINKS something is running, when an outdated version is actually executing."
+  }, {
+    heading: "Permissions — three sharing levels",
+    table: {
+      headers: ["Level", "Who can see / use it"],
+      rows: [["Private", "Only the object's owner — no one else"], ["App", "Anyone with Read permission, but only while using the same app the object was created in"], ["Global (All apps)", "Anyone with Read permission, across every app in the deployment"]]
+    },
+    keyPoints: ["By default, only admin and power roles can share or promote knowledge objects", "Admins can change permissions on ANY object. Power users can only change permissions on objects THEY own", "If neither Read nor Write is checked for a role, that role cannot see or use the object at all"],
+    tip: "The standard production pattern: Read on, Write off, for the Everyone role. Broad usability, controlled modification."
+  }, {
+    heading: "Orphaned objects — a real operational failure mode",
+    body: "An orphaned knowledge object occurs when its owner account becomes invalid — e.g. an analyst leaves the team.",
+    warning: "The Reassign Knowledge Objects page (Settings → All Configurations) cannot reassign objects that are both orphaned AND privately shared. This is a strong argument for not leaving important detection logic private long-term."
+  }, {
+    heading: "The Field Extractor — when Splunk doesn't already know your fields",
+    body: "Real-world log sources often don't come with built-in extraction rules. Entry path: run a search, click All Fields in the sidebar, click Extract New Fields.",
+    table: {
+      headers: ["Ask yourself", "Answer"],
+      rows: [["Is the data structured (table-like, consistent field order)?", "YES → Delimiters. NO → Regular Expression."], ["Even if delimiter-separated, is field POSITION consistent?", "If NO, use Regular Expression with Required Text instead."]]
+    },
+    warning: "Delimiter extraction assumes every event has the same number of fields in the same order. If positions don't line up, the extraction can silently pull the wrong value into the wrong slot."
+  }, {
+    heading: "Field aliases",
+    body: "An alias is an alternate name for a field that already exists — it does NOT replace or remove the original. This solves a real problem: different sourcetypes often use different names for the same concept.",
+    exercise: {
+      label: "Alias clientip to src_ip",
+      steps: ["Settings → Fields → Field Aliases → Add new.", "Source type: access_combined_wcookie. Existing field name: clientip. New alias name: src_ip."],
+      code: "index=tutorial sourcetype=access_combined_wcookie\n| table clientip, src_ip",
+      body: "Both columns show identical values, and the original clientip field is still there, untouched."
+    },
+    warning: "Two hard limits: you can't alias a calculated field, event type, tag, or lookup-added field. And one alias name can only map to ONE original field. Never name an alias the same as an internal field like _time."
+  }, {
+    heading: "Calculated fields",
+    body: "A calculated field performs a calculation using values of fields already present in events, computed at search time — a reusable shortcut for an eval expression.",
+    exercise: {
+      label: "Build a calculated field with coalesce()",
+      steps: ["Settings → Fields → Calculated Fields → Add new. Field name: unified_ip. Eval expression: coalesce(clientip, src_ip)."],
+      body: "This picks whichever field actually has a value, in priority order — the fix when an alias can't map one name to two fields."
+    },
+    warning: "You can't scope a calculated field to an ALIASED source/host/sourcetype — put conditional logic inside the eval expression using if() instead."
+  }, {
+    heading: "Tags and event types",
+    table: {
+      headers: ["", "Tag", "Event Type"],
+      rows: [["Bound to", "ONE single key=value pair, no wildcards", "A full search expression — many fields, wildcards, conjunctions"], ["Think of it as", "A sticky note on a specific field value", "A saved, reusable search condition"], ["Search syntax", "tag::fieldname=tagvalue", "eventtype=MyEventType"]]
+    },
+    exercise: {
+      label: "Build and search an event type",
+      steps: ["Run index=tutorial sourcetype=access_combined_wcookie status>=500.", "Save As → Event Type → name it server_errors, optionally tag it critical."],
+      code: "eventtype=server_errors",
+      body: "Search the saved category directly by name."
+    },
+    warning: "Event type definitions CANNOT contain a pipe or a subsearch — they categorize raw events, they don't transform or summarize them.",
+    tip: "Layer them: a broad event type (any error) tagged error, and a narrower one (status>=500) tagged BOTH error and critical. Searching tag=critical finds only the narrow set; tag=error finds both."
+  }]
+}, {
+  id: "automation",
+  day: "Day 3",
+  accent: "#3d6b4f",
+  title: "Automation, Workflow, and Data Models",
+  blurb: "Macros, clickable workflow actions, data model hierarchies, and the industry-wide vocabulary called CIM.",
+  sections: [{
+    heading: "Macros — stop retyping the same SPL fragment",
+    body: "A macro is a reusable chunk of SPL you insert into any search by name. It can be any part of a search — an eval statement, a search term, a whole pipeline.",
+    exercise: {
+      label: "Build macros with zero, one, and two arguments",
+      steps: ["Settings → Advanced Search → Search Macros → New. Name: server_errors_macro. Definition: index=tutorial sourcetype=access_combined_wcookie status>=500."],
+      code: "`server_errors_macro`",
+      body: "Invoke it with BACKTICKS, not single quotes.",
+      followups: [{
+        code: "`status_filter(500)`\n`status_filter(404)`",
+        body: "A one-argument macro named status_filter(1), with definition index=tutorial sourcetype=access_combined_wcookie status=$status_code$ — note the (1) in the name itself, which is part of the macro's identity."
+      }]
+    },
+    warning: "A macro with no arguments and a macro with one argument are genuinely different definitions — you cannot just add an argument to an existing zero-argument macro. Backtick (`) and single-quote (') look similar but are completely different keys."
+  }, {
+    heading: "Workflow actions — making field values clickable",
+    body: "Workflow actions create HTML links that run searches in external engines, generate HTTP POST requests, or launch secondary Splunk searches using a field value from a selected event.",
+    table: {
+      headers: ["Type", "What it does", "Real-world shape"],
+      rows: [["GET", "Opens an external resource, passing a field value in the URL", "Right-click an IP → jump to a WHOIS lookup"], ["POST", "Sends field values as form data to an external system, silently", "Right-click an error → auto-file a ticket"], ["Search", "Launches a new Splunk search using a field value", "Right-click an IP → see all its other activity"]]
+    },
+    exercise: {
+      label: "Build a GET workflow action for WHOIS lookups",
+      steps: ["Settings → Fields → Workflow Actions → New. Apply to: field clientip. Action type: Link.", "URI: https://www.whois.com/whois/$clientip$. Link method: get."],
+      body: "Run a search, click a clientip value in any event — your new WHOIS action appears in the field menu."
+    },
+    warning: "Variables in GET URIs are automatically URL-encoded. If a field value is itself already a full HTTP address, use $!fieldname$ instead of plain $fieldname$ to prevent escaping."
+  }, {
+    heading: "Data models — the menu that Pivot reads from",
+    body: "When you select a dataset for Pivot, the unhidden fields you define for that dataset are exactly the fields you get to choose from in Pivot. A data model IS the menu Pivot reads from.",
+    exercise: {
+      label: "Build a root event object and a child dataset",
+      steps: ["Settings → Data Models → New Data Model. Add Dataset → Root Event. Constraints: index=tutorial sourcetype=access_combined_wcookie. Add fields: clientip, status, method.", "Add Dataset → Child. Object Name: Server Errors. Additional Constraint: status>=500 — this automatically inherits everything from the parent, you don't redefine clientip or method."]
+    },
+    warning: "To accelerate a data model, it needs at least one root EVENT dataset, or a root SEARCH dataset using ONLY streaming commands. Root TRANSACTION datasets cannot be accelerated."
+  }, {
+    heading: "CIM — the same techniques you already know, at industry scale",
+    body: "Each data model in the Common Information Model defines the least common denominator of a domain of interest — the smallest, common set of fields every log of that type should be normalized down to, so they can all be searched and correlated the same way.",
+    keyPoints: ["This is exactly what field aliases and tags/event types already do, pre-built by Splunk and shared as a common vocabulary across the security industry", "Dashboards in CIM-compliant apps (Enterprise Security, PCI Compliance) display ONLY data normalized to CIM's tags and fields", "CIM data models do NOT tag your data automatically — they define a target schema and expect you to map your own data to it"],
+    warning: "If the CIM expects a string but your field is numeric, don't alias directly — alias to an intermediate name first, then use a lookup to produce the correctly typed final field.",
+    tip: "A SOC ingesting logs from three vendors normalizes all of them to the same CIM field names — one search, one dashboard works across every vendor at once."
+  }]
+}, {
+  id: "alerts",
+  day: "Day 3",
+  accent: "#a3461f",
+  title: "Scheduled Reports & Alerts",
+  blurb: "A standing newsletter vs a smoke detector.",
+  sections: [{
+    heading: "The one concept that must land first",
+    body: "A scheduled report is a standing newsletter — same delivery every time, regardless of what the data shows. An alert is a smoke detector — silent until something's actually wrong.",
+    table: {
+      headers: ["", "Scheduled Report", "Alert"],
+      rows: [["Runs", "On a fixed schedule, every time, no matter what", "On a fixed schedule, but only ACTS when results meet a condition"], ["Action behavior", "Fires its action every single run", "Fires only when triggered — silent otherwise"], ["Built from", "An existing saved report, via Schedule", "A search, via Save As → Alert"]]
+    }
+  }, {
+    heading: "Building an alert on a real event",
+    body: "An alert is built directly from a search, not from an existing report, and only fires its action when a trigger condition is met.",
+    exercise: {
+      label: "Build a scheduled alert on failed logons",
+      steps: ["Run index=wineventlog EventCode=4625 and confirm it returns real results with a recent time range.", "Save As → Alert. Alert type: Scheduled. Schedule: Run every 5 minutes. Trigger condition: Number of Results is greater than 0.", "Trigger: Once. Add Action: Add to Triggered Alerts (email requires SMTP setup Splunk doesn't ship by default)."],
+      body: "View fired alerts under Activity → Triggered Alerts — confirm the timestamp lines up with the event that should have triggered it."
+    },
+    warning: "Alert actions are NOT guaranteed to fire every run — only when the condition is true. If nothing appears after a triggering event, re-check the time range the underlying search uses before assuming something is broken."
+  }]
+}, {
+  id: "capstone",
+  day: "Capstone",
+  accent: "#1e6e5c",
+  title: "SOC Capstone — Investigate, Classify, Report",
+  blurb: "An end-to-end walkthrough: locate, classify, reconstruct, report — exactly how a real investigation runs.",
+  sections: [{
+    heading: "Your role",
+    body: "You are the on-shift SOC analyst for Buttercup Games. Leadership has asked for a single incident review dashboard covering web traffic for today's review window. Work through this the way a real investigation runs: locate, classify, reconstruct, report. Each phase builds on the previous one."
+  }, {
+    heading: "Phase 1 — Locate: where is the traffic coming from?",
+    body: "Before deciding what's worth investigating, you need geographic context. An IP address with a 3-digit country code means nothing to a manager — a country name does.",
+    exercise: {
+      label: "Find your top error-traffic countries",
+      code: "index=tutorial sourcetype=access_combined_wcookie\n| iplocation clientip\n| table _time, clientip, status, City, Country",
+      body: "Add location data to all web traffic.",
+      followups: [{
+        code: "index=tutorial sourcetype=access_combined_wcookie status>=400\n| iplocation clientip\n| stats count by Country\n| sort -count",
+        body: "Find which countries generate the MOST error traffic — your first real lead. Save as a report named \"Error Traffic by Country\"."
+      }]
+    },
+    tip: "Write down the top 2 countries by error count. One of these becomes your focus for the rest of the investigation."
+  }, {
+    heading: "Phase 2 — Classify: turn raw codes into analyst-readable severity",
+    body: "Numbers don't triage themselves. Before you can prioritize, every event needs a severity label a human can scan quickly.",
+    exercise: {
+      label: "Build the Critical Severity Events report",
+      code: 'index=tutorial sourcetype=access_combined_wcookie status>=400\n| iplocation clientip\n| eval severity=case(status>=500, "Critical", status>=400, "Warning")\n| where severity="Critical"\n| fillnull value="Unknown" City, Country\n| table _time, clientip, status, severity, City, Country',
+      body: "Save this as a report named \"Critical Severity Events\"."
+    },
+    tip: "Did fillnull catch any blank City/Country values? Internal/non-routable IPs showing up in public web traffic is sometimes worth flagging on its own.",
+    warning: "Everything from this point forward should work FROM this filtered, classified list — not from the full raw dataset."
+  }, {
+    heading: "Phase 3 — Reconstruct: what actually happened, session by session?",
+    body: "A single Critical event rarely tells the whole story. Real incidents are sequences — you need to see what an IP did before and after the event that caught your attention.",
+    exercise: {
+      label: "Reconstruct sessions for your critical clients",
+      code: 'index=tutorial sourcetype=access_combined_wcookie clientip="PASTE_YOUR_IP_HERE"\n| transaction clientip maxspan=30s maxpause=5s\n| table _time, duration, eventcount, status',
+      body: "Pick one clientip from Phase 2 and reconstruct its full session behavior.",
+      followups: [{
+        code: "index=tutorial sourcetype=access_combined_wcookie status>=500\n| transaction clientip maxspan=30s maxpause=5s\n| stats avg(duration) as avg_duration, avg(eventcount) as avg_events, count as session_count by clientip\n| sort -session_count",
+        body: "A summary across ALL clientips in your Critical list, to see if the pattern is isolated or widespread. Save as \"Session Reconstruction - Critical Clients\"."
+      }]
+    },
+    tip: "Decision check: could this summary have been built with stats alone, without transaction? Write 1–2 sentences justifying your answer."
+  }, {
+    heading: "Phase 4 & 5 — Build the dashboard, write the summary",
+    body: "Assemble everything into one dashboard a manager or shift lead could open and immediately understand.",
+    steps: ["Create a new dashboard named \"Web Traffic Incident Review\", with a short description of what it covers.", "Add all reports from Phases 1–3. Arrange panels in investigative order: geographic overview first, severity breakdown second, session reconstruction last.", "Write a 4–6 sentence incident summary as if handing this to your manager at shift handoff — what you found, where it's from, how severe it is, whether the session reconstruction supports your initial suspicion. Use your own real numbers."]
+  }, {
+    heading: "Self-check before you submit",
+    keyPoints: ["Does your dashboard tell a clear story in the order someone would actually investigate it?", "Did you use iplocation, eval/case, where, fillnull, AND transaction somewhere — not just one or two?", "Can you explain, out loud, WHY you chose transaction over stats (or vice versa) at the point you made that choice?", "Does your incident summary use real numbers from YOUR results, not guesses?"]
+  }]
+}];
+
+/* ============================================================
+   COMPONENTS
+   ============================================================ */
+
+/* ============================================================
+   COMPONENTS — v3: glossary popovers, per-module theming,
+   progress tracking, predict/reveal exercises, branding
+   ============================================================ */
+
+const STORAGE_KEY = "splunk-soc-guide-progress-v1";
+function loadProgress() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch (e) {
+    return {};
+  }
+}
+function saveProgress(obj) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(obj));
+  } catch (e) {}
+}
+
+/* ---------- Glossary popover system ---------- */
+/* A single shared popover, positioned near whatever command was clicked. */
+
+const GlossaryContext = React.createContext(null);
+function useGlossary() {
+  return React.useContext(GlossaryContext);
+}
+function GlossaryPopover({
+  term,
+  position,
+  onClose
+}) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const onDocClick = e => {
+      if (ref.current && !ref.current.contains(e.target)) onClose();
+    };
+    const onEsc = e => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("mousedown", onDocClick);
+    document.addEventListener("keydown", onEsc);
+    return () => {
+      document.removeEventListener("mousedown", onDocClick);
+      document.removeEventListener("keydown", onEsc);
+    };
+  }, [onClose]);
+  if (!term) return null;
+  const entry = glossary[term];
+  if (!entry) return null;
+  const style = {
+    position: "fixed",
+    left: Math.min(position.x, window.innerWidth - 340),
+    top: position.y
+  };
+  return React.createElement("div", {
+    className: "glossary-popover",
+    style,
+    ref
+  }, React.createElement("div", {
+    className: "glossary-popover-header"
+  }, React.createElement("code", null, term), React.createElement("span", {
+    className: "glossary-cat"
+  }, entry.category)), React.createElement("p", {
+    className: "glossary-short"
+  }, entry.short), React.createElement("p", {
+    className: "glossary-long"
+  }, entry.long), React.createElement("a", {
+    href: "#reference",
+    className: "glossary-more",
+    onClick: e => {
+      e.preventDefault();
+      onClose();
+      setTimeout(() => {
+        document.getElementById("ref-" + term)?.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
+      }, 50);
+    }
+  }, "See full reference \u2192"));
+}
+function GlossaryProvider({
+  children
+}) {
+  const [active, setActive] = useState(null); // { term, position }
+
+  const open = (term, e) => {
+    const rect = e.target.getBoundingClientRect();
+    setActive({
+      term,
+      position: {
+        x: rect.left,
+        y: rect.bottom + 8
+      }
+    });
+  };
+  const close = () => setActive(null);
+  return React.createElement(GlossaryContext.Provider, {
+    value: {
+      open,
+      close,
+      active
+    }
+  }, children, active && React.createElement(GlossaryPopover, {
+    term: active.term,
+    position: active.position,
+    onClose: close
+  }));
+}
+
+/* Tokenizes a line of SPL, wrapping recognized commands in clickable spans. */
+function tokenizeLine(line, onTermClick) {
+  const words = line.split(/(\s+|\||,)/);
+  return words.map((w, i) => {
+    const clean = w.trim();
+    if (glossary[clean]) {
+      return React.createElement("span", {
+        key: i,
+        className: "code-term",
+        onClick: e => {
+          e.stopPropagation();
+          onTermClick(clean, e);
+        }
+      }, w);
+    }
+    return w;
+  });
+}
+function CodeBlock({
+  code
+}) {
+  const [copied, setCopied] = useState(false);
+  const gloss = useGlossary();
+  const lines = code.split("\n");
+  return React.createElement("div", {
+    className: "code-block"
+  }, React.createElement("button", {
+    className: "copy-btn",
+    onClick: () => {
+      navigator.clipboard.writeText(code);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1400);
+    }
+  }, copied ? "Copied" : "Copy"), React.createElement("pre", null, lines.map((line, i) => React.createElement(React.Fragment, {
+    key: i
+  }, tokenizeLine(line, gloss.open), i < lines.length - 1 ? "\n" : null))));
+}
+
+/* ---------- Exercise block, with optional predict/reveal ---------- */
+
+function FollowUp({
+  f
+}) {
+  return React.createElement("div", {
+    className: "followup"
+  }, React.createElement(CodeBlock, {
+    code: f.code
+  }), f.predict ? React.createElement(Reveal, {
+    prompt: f.predict,
+    body: f.body
+  }) : React.createElement("p", {
+    className: "exercise-body"
+  }, f.body));
+}
+function Reveal({
+  prompt,
+  body
+}) {
+  const [open, setOpen] = useState(false);
+  return React.createElement("div", {
+    className: "reveal"
+  }, React.createElement("button", {
+    className: "reveal-btn",
+    onClick: () => setOpen(!open)
+  }, open ? "Hide explanation" : prompt || "What happens? Click to check"), open && React.createElement("p", {
+    className: "exercise-body reveal-body"
+  }, body));
+}
+function Exercise({
+  exercise
+}) {
+  return React.createElement("div", {
+    className: "exercise"
+  }, React.createElement("div", {
+    className: "exercise-label"
+  }, React.createElement("span", {
+    className: "exercise-tag"
+  }, "Try it"), exercise.label), exercise.steps && React.createElement("ol", {
+    className: "exercise-steps"
+  }, exercise.steps.map((s, i) => React.createElement("li", {
+    key: i
+  }, s))), exercise.code && React.createElement(CodeBlock, {
+    code: exercise.code
+  }), exercise.body && (exercise.predict ? React.createElement(Reveal, {
+    prompt: exercise.predict,
+    body: exercise.body
+  }) : React.createElement("p", {
+    className: "exercise-body"
+  }, exercise.body)), exercise.followups && exercise.followups.map((f, i) => React.createElement(FollowUp, {
+    f,
+    key: i
+  })));
+}
+function Callout({
+  type,
+  children
+}) {
+  const labels = {
+    warning: "Watch out",
+    tip: "Tip"
+  };
+  return React.createElement("div", {
+    className: "callout callout-" + type
+  }, React.createElement("span", {
+    className: "callout-label"
+  }, labels[type]), React.createElement("span", null, children));
+}
+function DataTable({
+  table
+}) {
+  return React.createElement("div", {
+    className: "table-wrap"
+  }, React.createElement("table", null, React.createElement("thead", null, React.createElement("tr", null, table.headers.map((h, i) => React.createElement("th", {
+    key: i
+  }, h)))), React.createElement("tbody", null, table.rows.map((row, i) => React.createElement("tr", {
+    key: i
+  }, row.map((cell, j) => React.createElement("td", {
+    key: j
+  }, cell)))))));
+}
+function Downloads({
+  items
+}) {
+  return React.createElement("div", {
+    className: "downloads"
+  }, items.map((d, i) => React.createElement("a", {
+    key: i,
+    href: d.url,
+    className: "download-btn",
+    target: "_blank",
+    rel: "noopener noreferrer"
+  }, React.createElement("span", {
+    className: "download-icon"
+  }, "\u2193"), d.label)));
+}
+function ContentSection({
+  section
+}) {
+  return React.createElement("div", {
+    className: "content-section"
+  }, React.createElement("h3", null, section.heading), section.body && React.createElement("p", null, section.body), section.downloads && React.createElement(Downloads, {
+    items: section.downloads
+  }), section.steps && !section.exercise && React.createElement("ol", {
+    className: "plain-steps"
+  }, section.steps.map((s, i) => React.createElement("li", {
+    key: i
+  }, s))), section.table && React.createElement(DataTable, {
+    table: section.table
+  }), section.body2 && React.createElement("p", null, section.body2), section.keyPoints && React.createElement("ul", {
+    className: "key-points"
+  }, section.keyPoints.map((kp, i) => React.createElement("li", {
+    key: i
+  }, kp))), section.warning && React.createElement(Callout, {
+    type: "warning"
+  }, section.warning), section.exercise && React.createElement(Exercise, {
+    exercise: section.exercise
+  }), section.tip && React.createElement(Callout, {
+    type: "tip"
+  }, section.tip));
+}
+
+/* ---------- Command Reference module (renders glossary as a list) ---------- */
+
+function ReferenceList() {
+  return React.createElement("div", {
+    className: "ref-list"
+  }, glossaryOrder.map(term => {
+    const entry = glossary[term];
+    return React.createElement("div", {
+      className: "ref-entry",
+      id: "ref-" + term,
+      key: term
+    }, React.createElement("div", {
+      className: "ref-entry-head"
+    }, React.createElement("code", null, term), React.createElement("span", {
+      className: "ref-cat"
+    }, entry.category)), React.createElement("p", {
+      className: "ref-short"
+    }, entry.short), React.createElement("p", {
+      className: "ref-long"
+    }, entry.long));
+  }));
+}
+
+/* ---------- Module ---------- */
+
+function ProgressToggle({
+  moduleId,
+  done,
+  onToggle
+}) {
+  return React.createElement("button", {
+    className: "progress-toggle" + (done ? " done" : ""),
+    onClick: () => onToggle(moduleId)
+  }, React.createElement("span", {
+    className: "progress-check"
+  }, done ? "\u2713" : ""), done ? "Marked complete" : "Mark this module complete");
+}
+function Module({
+  module,
+  registerRef,
+  done,
+  onToggleDone
+}) {
+  const ref = useRef(null);
+  useEffect(() => {
+    registerRef(module.id, ref.current);
+  }, []);
+  return React.createElement("section", {
+    className: "module",
+    id: module.id,
+    ref: ref,
+    style: {
+      "--module-accent": module.accent
+    }
+  }, React.createElement("div", {
+    className: "module-header"
+  }, React.createElement("div", {
+    className: "module-meta"
+  }, React.createElement("span", {
+    className: "module-day"
+  }, module.day), done && React.createElement("span", {
+    className: "module-done-pill"
+  }, "\u2713 Complete")), React.createElement("h2", null, module.title), React.createElement("p", {
+    className: "module-blurb"
+  }, module.blurb)), module.isReference ? [...module.sections.map((s, i) => React.createElement(ContentSection, {
+    section: s,
+    key: i
+  })), React.createElement(ReferenceList, {
+    key: "reflist"
+  })] : module.sections.map((s, i) => React.createElement(ContentSection, {
+    section: s,
+    key: i
+  })), !module.isReference && React.createElement(ProgressToggle, {
+    moduleId: module.id,
+    done,
+    onToggle: onToggleDone
+  }));
+}
+
+/* ---------- Brand banner ---------- */
+
+function BrandBanner() {
+  return React.createElement("a", {
+    className: "brand-banner",
+    href: "https://sarathg.me",
+    target: "_blank",
+    rel: "noopener noreferrer"
+  }, React.createElement("div", {
+    className: "brand-banner-text"
+  }, React.createElement("strong", null, "Want more guides like this?"), React.createElement("span", null, " Visit sarathg.me for OSINT, Splunk, and security learning resources.")), React.createElement("span", {
+    className: "brand-banner-arrow"
+  }, "\u2192"));
+}
+
+/* ---------- Side rail ---------- */
+
+function SideRail({
+  modules,
+  activeId,
+  progress,
+  doneMap
+}) {
+  const scrollRef = useRef(null);
+  useEffect(() => {
+    const el = document.getElementById("navlink-" + activeId);
+    if (el && scrollRef.current) {
+      const container = scrollRef.current;
+      const containerRect = container.getBoundingClientRect();
+      const elRect = el.getBoundingClientRect();
+      const isHorizontal = container.scrollWidth > container.clientWidth && container.scrollHeight <= container.clientHeight + 4;
+      if (isHorizontal) {
+        const elLeft = el.offsetLeft;
+        const elRight = elLeft + el.offsetWidth;
+        if (elLeft < container.scrollLeft || elRight > container.scrollLeft + container.offsetWidth) {
+          container.scrollTo({
+            left: elLeft - 40,
+            behavior: "smooth"
+          });
+        }
+      } else if (elRect.top < containerRect.top || elRect.bottom > containerRect.bottom) {
+        el.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
+      }
+    }
+  }, [activeId]);
+  const doneCount = Object.values(doneMap).filter(Boolean).length;
+
+  // Group modules by their "day" label, preserving first-seen order.
+  const groups = [];
+  const groupIndex = {};
+  modules.forEach(m => {
+    if (!(m.day in groupIndex)) {
+      groupIndex[m.day] = groups.length;
+      groups.push({
+        label: m.day,
+        items: []
+      });
+    }
+    groups[groupIndex[m.day]].items.push(m);
+  });
+  return React.createElement("aside", {
+    className: "siderail"
+  }, React.createElement("div", {
+    className: "progress-track"
+  }, React.createElement("div", {
+    className: "progress-fill",
+    style: {
+      width: progress + "%"
+    }
+  })), React.createElement("div", {
+    className: "siderail-head"
+  }, React.createElement("a", {
+    className: "brand",
+    href: "https://sarathg.me",
+    target: "_blank",
+    rel: "noopener noreferrer",
+    title: "More guides at sarathg.me"
+  }, React.createElement("span", {
+    className: "brand-mark"
+  }, "\u2733"), "Splunk for SOC Analysts"), React.createElement("div", {
+    className: "siderail-progress-count"
+  }, doneCount + " / " + (modules.length - 1) + " modules complete")), React.createElement("nav", {
+    className: "jumplinks",
+    ref: scrollRef
+  }, groups.map(g => React.createElement("div", {
+    className: "jumplink-group",
+    key: g.label
+  }, React.createElement("div", {
+    className: "jumplink-group-label"
+  }, g.label), g.items.map(m => React.createElement("a", {
+    key: m.id,
+    id: "navlink-" + m.id,
+    href: "#" + m.id,
+    className: "jumplink" + (activeId === m.id ? " active" : ""),
+    style: activeId === m.id ? {
+      background: m.accent
+    } : {
+      "--jl-accent": m.accent
+    },
+    onClick: e => {
+      e.preventDefault();
+      document.getElementById(m.id)?.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }
+  }, React.createElement("span", {
+    className: "jumplink-dot"
+  }), doneMap[m.id] && React.createElement("span", {
+    className: "navlink-check"
+  }, "\u2713"), m.title.split(" — ")[0].split(" — ")[0]))))));
+}
+
+/* ---------- App ---------- */
+
+function App() {
+  const [activeId, setActiveId] = useState(modules[0].id);
+  const [progress, setProgress] = useState(0);
+  const [doneMap, setDoneMap] = useState(loadProgress);
+  const refsMap = useRef({});
+  const registerRef = (id, el) => {
+    refsMap.current[id] = el;
+  };
+  const toggleDone = id => {
+    setDoneMap(prev => {
+      const next = {
+        ...prev,
+        [id]: !prev[id]
+      };
+      saveProgress(next);
+      return next;
+    });
+  };
+  useEffect(() => {
+    const onScroll = () => {
+      const doc = document.documentElement;
+      const scrollTop = doc.scrollTop || document.body.scrollTop;
+      const scrollHeight = doc.scrollHeight - doc.clientHeight;
+      setProgress(scrollHeight > 0 ? Math.min(100, scrollTop / scrollHeight * 100) : 0);
+      let current = modules[0].id;
+      for (const m of modules) {
+        const el = refsMap.current[m.id];
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= 140) current = m.id;
+        }
+      }
+      setActiveId(current);
+    };
+    window.addEventListener("scroll", onScroll, {
+      passive: true
+    });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  return React.createElement(GlossaryProvider, null, React.createElement("div", {
+    className: "app-shell"
+  }, React.createElement(SideRail, {
+    modules,
+    activeId,
+    progress,
+    doneMap
+  }), React.createElement("div", {
+    className: "page"
+  }, React.createElement("header", {
+    className: "hero"
+  }, React.createElement("p", {
+    className: "hero-eyebrow"
+  }, "A self-paced guide \u00B7 2026 Edition \u00B7 by Sarath G"), React.createElement("h1", null, "Learn Splunk for the SOC analyst job you actually want."), React.createElement("p", {
+    className: "hero-sub"
+  }, "Real SPL, real traps, and exercises right where each concept is taught — from your first search to a full incident-review capstone. Click any command in a code block to see what it does, anytime."), React.createElement("div", {
+    className: "hero-meta"
+  }, React.createElement("span", null, modules.length - 1 + " modules"), React.createElement("span", null, "\u00B7"), React.createElement("span", null, "Setup included"), React.createElement("span", null, "\u00B7"), React.createElement("span", null, "Clickable command reference"), React.createElement("span", null, "\u00B7"), React.createElement("a", {
+    href: "https://sarathg.me",
+    target: "_blank",
+    rel: "noopener noreferrer",
+    className: "hero-author-link"
+  }, "More by Sarath G \u2192"))), modules.map((m, i) => React.createElement(React.Fragment, {
+    key: m.id
+  }, React.createElement(Module, {
+    module: m,
+    registerRef,
+    done: !!doneMap[m.id],
+    onToggleDone: toggleDone
+  }), i === 0 && React.createElement(BrandBanner, null))), React.createElement("footer", {
+    className: "footer"
+  }, React.createElement("a", {
+    className: "footer-brand",
+    href: "https://sarathg.me",
+    target: "_blank",
+    rel: "noopener noreferrer"
+  }, React.createElement("span", {
+    className: "brand-mark"
+  }, "\u2733"), "sarathg.me"), React.createElement("p", null, "Splunk for SOC Analysts \u00B7 2026 Edition \u00B7 Guides on OSINT, Splunk, and security learning"), React.createElement("p", {
+    className: "footer-sub"
+  }, "All exercises run against index=tutorial (Buttercup Games sample data). Set your time range to All time if a search returns zero results.")))));
+}
+ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
+    </script>
+  </body>
+</html>
