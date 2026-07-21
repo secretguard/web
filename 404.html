@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 · Finding Not Reproducible — Sarath G</title>
+<meta name="description" content="Page not found. Recon came back empty — no exploitable page here.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --t-primary:#f5f5f5;
+    --t-secondary:#9a9a9a;
+    --bg-page:#0a0a0a;
+    --bg-card:#131313;
+    --b-subtle:#242424;
+    --red:#ef4444;
+    --red-dim:#7f1d1d;
+    --green:#22c55e;
+    --amber:#f59e0b;
+    --font-display:'Outfit', sans-serif;
+    --font-body:'Inter', sans-serif;
+    --font-mono:'JetBrains Mono', monospace;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--bg-page);
+    color:var(--t-primary);
+    font-family:var(--font-body);
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:80px 20px 40px;
+    line-height:1.5;
+    position:relative;
+    overflow-x:hidden;
+  }
+  /* faint scanline texture */
+  body::before{
+    content:'';
+    position:fixed; inset:0;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(239,68,68,0.08), transparent 60%);
+    pointer-events:none;
+    z-index:0;
+  }
+  .wrap{
+    position:relative;
+    z-index:1;
+    max-width:720px;
+    width:100%;
+  }
+  .glitch-row{
+    display:flex;
+    align-items:baseline;
+    gap:18px;
+    margin-bottom:8px;
+  }
+  .code{
+    font-family:var(--font-display);
+    font-weight:900;
+    font-size:clamp(64px, 14vw, 128px);
+    line-height:0.9;
+    letter-spacing:-0.03em;
+    color:var(--t-primary);
+    position:relative;
+    user-select:none;
+  }
+  .code .glitch-layer{
+    position:absolute;
+    inset:0;
+    color:var(--red);
+    opacity:0;
+    clip-path:inset(0 0 0 0);
+  }
+  .code:hover .glitch-layer{
+    animation:glitch 0.45s steps(2,end) 1;
+  }
+  @keyframes glitch{
+    0%{opacity:.85; clip-path:inset(10% 0 70% 0); transform:translate(-4px,0);}
+    30%{opacity:.85; clip-path:inset(60% 0 5% 0); transform:translate(4px,0);}
+    60%{opacity:.6; clip-path:inset(30% 0 40% 0); transform:translate(-2px,0);}
+    100%{opacity:0; clip-path:inset(0 0 0 0); transform:translate(0,0);}
+  }
+  .badge{
+    font-family:var(--font-mono);
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--t-secondary);
+    border:1px solid var(--b-subtle);
+    padding:5px 10px;
+    border-radius:4px;
+    white-space:nowrap;
+  }
+  h1.tagline{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:clamp(20px, 3vw, 26px);
+    margin:6px 0 28px;
+    color:var(--t-primary);
+  }
+  .tagline .accent{ color:var(--red); }
+
+  /* terminal card */
+  .terminal{
+    background:var(--bg-card);
+    border:1px solid var(--b-subtle);
+    border-radius:10px;
+    overflow:hidden;
+    box-shadow:0 20px 60px -20px rgba(0,0,0,0.6);
+  }
+  .term-bar{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:11px 14px;
+    background:#181818;
+    border-bottom:1px solid var(--b-subtle);
+  }
+  .dot{width:11px; height:11px; border-radius:50%;}
+  .dot.r{background:#ff5f57;}
+  .dot.y{background:#febc2e;}
+  .dot.g{background:#28c840;}
+  .term-title{
+    font-family:var(--font-mono);
+    font-size:12px;
+    color:var(--t-secondary);
+    margin-left:8px;
+  }
+  .term-body{
+    font-family:var(--font-mono);
+    font-size:13.5px;
+    padding:20px 22px 22px;
+    min-height:210px;
+  }
+  .term-line{
+    white-space:pre-wrap;
+    word-break:break-word;
+    opacity:0;
+    animation:fadeIn 0.15s forwards;
+  }
+  @keyframes fadeIn{ to{ opacity:1; } }
+  .prompt{ color:var(--green); }
+  .path{ color:#6ea8fe; }
+  .muted{ color:var(--t-secondary); }
+  .warn{ color:var(--amber); }
+  .fail{ color:var(--red); }
+  .cursor{
+    display:inline-block;
+    width:8px; height:15px;
+    background:var(--t-primary);
+    vertical-align:middle;
+    margin-left:2px;
+    animation:blink 1s steps(1) infinite;
+  }
+  @keyframes blink{ 50%{ opacity:0; } }
+
+  /* finding card, appears after scan */
+  .finding{
+    margin-top:22px;
+    border:1px solid var(--b-subtle);
+    border-left:3px solid var(--t-secondary);
+    background:var(--bg-card);
+    border-radius:0 8px 8px 0;
+    padding:18px 20px;
+    opacity:0;
+    transform:translateY(6px);
+    transition:opacity 0.5s ease, transform 0.5s ease, border-left-color 0.3s ease;
+  }
+  .finding.show{ opacity:1; transform:translateY(0); border-left-color:var(--t-secondary); }
+  .finding-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-bottom:10px;
+  }
+  .finding-id{
+    font-family:var(--font-mono);
+    font-size:12px;
+    color:var(--t-secondary);
+  }
+  .sev{
+    font-family:var(--font-mono);
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:0.05em;
+    text-transform:uppercase;
+    padding:3px 9px;
+    border-radius:4px;
+    background:rgba(154,154,154,0.12);
+    color:var(--t-secondary);
+    border:1px solid var(--b-subtle);
+  }
+  .finding-title{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:19px;
+    margin-bottom:6px;
+  }
+  .finding-desc{
+    font-size:14.5px;
+    color:var(--t-secondary);
+    margin-bottom:16px;
+  }
+  .finding-desc code{
+    font-family:var(--font-mono);
+    font-size:13px;
+    background:rgba(255,255,255,0.06);
+    padding:1px 6px;
+    border-radius:4px;
+    color:var(--t-primary);
+  }
+  .actions{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  .btn{
+    font-family:var(--font-mono);
+    font-size:13px;
+    font-weight:500;
+    text-decoration:none;
+    padding:10px 18px;
+    border-radius:6px;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    transition:transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  }
+  .btn-primary{
+    background:var(--red);
+    color:#fff;
+    border:1px solid var(--red);
+  }
+  .btn-primary:hover{ transform:translateY(-1px); background:#dc3737; }
+  .btn-ghost{
+    background:transparent;
+    color:var(--t-primary);
+    border:1px solid var(--b-subtle);
+  }
+  .btn-ghost:hover{ transform:translateY(-1px); border-color:var(--t-secondary); }
+
+  .footer-note{
+    margin-top:20px;
+    font-family:var(--font-mono);
+    font-size:12px;
+    color:var(--t-secondary);
+    text-align:center;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .term-line{ animation:none; opacity:1; }
+    .cursor{ animation:none; }
+    .finding{ transition:none; }
+    .code .glitch-layer{ animation:none !important; opacity:0 !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="glitch-row">
+    <div class="code" aria-label="404">
+      404
+      <span class="glitch-layer" aria-hidden="true">404</span>
+    </div>
+    <span class="badge">HTTP 404</span>
+  </div>
+
+  <h1 class="tagline">Recon came back empty. <span class="accent">No page here to exploit.</span></h1>
+
+  <div class="terminal">
+    <div class="term-bar">
+      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      <span class="term-title">sarath@recon:~</span>
+    </div>
+    <div class="term-body" id="termBody" aria-live="polite"></div>
+  </div>
+
+  <div class="finding" id="findingCard">
+    <div class="finding-head">
+      <span class="finding-id">CVE-2026-0004</span>
+      <span class="sev" id="sevBadge">SEVERITY: NONE</span>
+    </div>
+    <div class="finding-title">Page Not Found</div>
+    <div class="finding-desc">
+      The requested resource <code id="pathEcho">this URL</code> does not exist on this host.
+      No sensitive data was exposed, no server was harmed, and no bug bounty will be issued.
+      Recommended remediation: check the URL, or just go home.
+    </div>
+    <div class="actions">
+      <a href="/" class="btn btn-primary">Patch → Return home</a>
+      <a href="/services/" class="btn btn-ghost">View services</a>
+    </div>
+  </div>
+
+  <p class="footer-note">this incident has been logged. by nobody. it's fine.</p>
+</div>
+
+<script>
+(function(){
+  const body = document.getElementById('termBody');
+  const finding = document.getElementById('findingCard');
+  const pathEcho = document.getElementById('pathEcho');
+  const sevBadge = document.getElementById('sevBadge');
+
+  let target = 'this URL';
+  try {
+    const p = window.location.pathname;
+    if (p && p !== '/' ) target = p;
+  } catch(e){}
+  pathEcho.textContent = target;
+
+  const lines = [
+    { html: '<span class="prompt">$</span> nmap -p- <span class="path">' + escapeHtml(target) + '</span>', delay: 0 },
+    { html: '<span class="muted">Starting scan on 1 target...</span>', delay: 550 },
+    { html: '<span class="muted">Scanning 65535 ports...</span>', delay: 950 },
+    { html: '<span class="warn">0 ports open. 0 pages found.</span>', delay: 1500 },
+    { html: '<span class="prompt">$</span> find / -name <span class="path">"' + escapeHtml(target) + '"</span> 2&gt;/dev/null', delay: 2100 },
+    { html: '<span class="fail">find: nothing matched.</span>', delay: 2650 },
+    { html: '<span class="muted">Generating finding...</span>', delay: 3150 },
+  ];
+
+  lines.forEach((line) => {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'term-line';
+      el.innerHTML = line.html;
+      body.appendChild(el);
+    }, line.delay);
+  });
+
+  setTimeout(() => {
+    const cursorLine = document.createElement('div');
+    cursorLine.className = 'term-line';
+    cursorLine.innerHTML = '<span class="prompt">$</span><span class="cursor"></span>';
+    body.appendChild(cursorLine);
+  }, 3600);
+
+  setTimeout(() => {
+    finding.classList.add('show');
+  }, 3900);
+
+  function escapeHtml(str){
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+})();
+</script>
+
+</body>
+</html>

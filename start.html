@@ -828,30 +828,9 @@
         </div>
     </section>
 
-    <footer class="theme-footer py-10 sm:py-14">
-        <div class="container mx-auto px-4 sm:px-6 max-w-7xl">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-                <div class="flex items-center gap-2">
-                    <span class="font-display font-bold text-xl t-primary">Sarath</span>
-                    <span class="font-display font-bold text-xl text-red-500">G.</span>
-                    <span class="t-faint text-sm ml-2">&copy; <span id="year"></span></span>
-                </div>
-                <div class="flex items-center gap-5 sm:gap-6 text-sm">
-                    <a href="https://www.linkedin.com/in/sarathcybersec/" target="_blank" rel="noopener" class="footer-link">LinkedIn</a>
-                    <a href="https://github.com/secretguard" target="_blank" rel="noopener" class="footer-link">GitHub</a>
-                    <a href="https://www.instagram.com/i.sarathg/" target="_blank" rel="noopener" class="footer-link">Instagram</a>
-                    <a href="https://sarathg.medium.com/" target="_blank" rel="noopener" class="footer-link">Medium</a>
-                    <a href="https://chatgpt.com/g/g-688c937222c88191b1735af3a8aea4aa-ethan-your-cybersecurity-mentor" target="_blank" rel="noopener" class="t-muted hover:text-red-400 transition-colors">Ethan AI</a>
-                    <a href="./" class="footer-link">Portfolio</a>
-                </div>
-            </div>
-            <div class="mt-8 pt-8 border-t b-subtle text-center t-faint text-xs font-mono">Built with precision. Secured by design.</div>
-        </div>
-    </footer>
+    <script src="footer.js"></script>
 
     <script>
-        document.getElementById('year').textContent = new Date().getFullYear();
-
         gsap.registerPlugin(ScrollTrigger);
 
         const fadeUpElements = gsap.utils.toArray('.fade-up');
