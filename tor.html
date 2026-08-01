@@ -1,0 +1,1287 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How Tor Actually Works — A Visual Guide</title>
+<meta name="description" content="A scroll-through visual guide to crawling, the surface/deep/dark web, and exactly how Tor moves your traffic through relays, circuits, and layers of encryption.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --bg-void:#090c11;
+  --bg-panel:#10151d;
+  --bg-panel-2:#161d29;
+  --bg-panel-3:#1c2531;
+  --ink:#eef1f6;
+  --ink-dim:#93a0b4;
+  --ink-faint:#5b6678;
+  --line:rgba(255,255,255,0.09);
+  --line-bright:rgba(255,255,255,0.18);
+
+  --entry:#7c5cff;
+  --entry-dim:#7c5cff33;
+  --middle:#00d4b8;
+  --middle-dim:#00d4b833;
+  --exit:#ff8a3d;
+  --exit-dim:#ff8a3d33;
+  --signal:#4ade80;
+  --warn:#ff5470;
+
+  --f-display:'Space Grotesk',sans-serif;
+  --f-body:'Inter',sans-serif;
+  --f-mono:'JetBrains Mono',monospace;
+
+  --radius:14px;
+  --radius-sm:8px;
+  --maxw:920px;
+}
+
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--bg-void);
+  color:var(--ink);
+  font-family:var(--f-body);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(ellipse 900px 500px at 15% -5%, rgba(124,92,255,0.10), transparent 60%),
+    radial-gradient(ellipse 800px 600px at 90% 15%, rgba(0,212,184,0.07), transparent 55%),
+    radial-gradient(ellipse 700px 500px at 50% 95%, rgba(255,138,61,0.06), transparent 55%);
+  pointer-events:none;
+  z-index:0;
+}
+h1,h2,h3{font-family:var(--f-display);color:var(--ink);margin:0;font-weight:600;}
+p{margin:0;}
+a{color:inherit;}
+button{font-family:var(--f-body);cursor:pointer;}
+.mono{font-family:var(--f-mono);}
+
+::selection{background:var(--entry);color:#fff;}
+
+:focus-visible{outline:2px solid var(--middle);outline-offset:3px;border-radius:4px;}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; scroll-behavior:auto !important;}
+}
+
+/* ============ LAYOUT PRIMITIVES ============ */
+.section{
+  position:relative;
+  z-index:1;
+  padding:96px 20px;
+  max-width:var(--maxw);
+  margin:0 auto;
+}
+@media (max-width:640px){
+  .section{padding:56px 18px;}
+}
+.section-inner{position:relative;}
+.eyebrow{
+  font-family:var(--f-mono);
+  font-size:12.5px;
+  letter-spacing:0.11em;
+  text-transform:uppercase;
+  color:var(--middle);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:14px;
+}
+.eyebrow::before{
+  content:"";
+  width:22px;height:1px;
+  background:var(--middle);
+  display:inline-block;
+}
+h2.title{
+  font-size:clamp(28px,5.2vw,42px);
+  line-height:1.15;
+  letter-spacing:-0.01em;
+  margin-bottom:20px;
+  max-width:14ch;
+}
+.lede{
+  font-size:17.5px;
+  color:var(--ink-dim);
+  max-width:62ch;
+  margin-bottom:8px;
+}
+.lede b, .lede strong{color:var(--ink);font-weight:600;}
+.body-text{font-size:16px;color:var(--ink-dim);max-width:62ch;}
+.body-text + .body-text{margin-top:14px;}
+.body-text b, .body-text strong{color:var(--ink);font-weight:600;}
+
+.card{
+  background:var(--bg-panel);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:22px 24px;
+}
+.callout{
+  border-left:2px solid var(--middle);
+  background:linear-gradient(90deg, rgba(0,212,184,0.08), transparent 70%);
+  padding:16px 20px;
+  border-radius:0 var(--radius-sm) var(--radius-sm) 0;
+  font-size:15px;
+  color:var(--ink-dim);
+  margin:22px 0;
+}
+.callout b{color:var(--ink);}
+.callout.warn{border-left-color:var(--warn);background:linear-gradient(90deg, rgba(255,84,112,0.08), transparent 70%);}
+.callout.signal{border-left-color:var(--signal);background:linear-gradient(90deg, rgba(74,222,128,0.08), transparent 70%);}
+
+.reveal{opacity:0; transform:translateY(18px); transition:opacity 0.7s cubic-bezier(.2,.7,.2,1), transform 0.7s cubic-bezier(.2,.7,.2,1);}
+.reveal.is-visible{opacity:1; transform:translateY(0);}
+.reveal-stagger > * {transition-delay:calc(var(--i,0) * 90ms);}
+
+/* ============ TOP CHROME ============ */
+.progress-track{
+  position:fixed; top:0; left:0; right:0; height:2px;
+  background:rgba(255,255,255,0.06); z-index:100;
+}
+.progress-fill{
+  height:100%; width:0%;
+  background:linear-gradient(90deg, var(--entry), var(--middle), var(--exit));
+  transition:width 0.1s linear;
+}
+
+.pillnav{
+  position:fixed; top:2px; left:0; right:0; z-index:99;
+  display:flex; gap:6px; padding:10px 16px;
+  overflow-x:auto;
+  background:rgba(9,12,17,0.82);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+  scrollbar-width:none;
+}
+.pillnav::-webkit-scrollbar{display:none;}
+.pillnav a{
+  flex:none;
+  font-family:var(--f-mono);
+  font-size:12px;
+  letter-spacing:0.02em;
+  color:var(--ink-faint);
+  text-decoration:none;
+  padding:7px 13px;
+  border-radius:100px;
+  border:1px solid transparent;
+  white-space:nowrap;
+  transition:color .2s, border-color .2s, background .2s;
+}
+.pillnav a:hover{color:var(--ink-dim);}
+.pillnav a.is-active{
+  color:var(--ink);
+  border-color:var(--line-bright);
+  background:var(--bg-panel-2);
+}
+
+/* ============ HERO ============ */
+.hero{
+  min-height:100svh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding-top:140px;
+  max-width:1000px;
+}
+.hero-eyebrow{
+  font-family:var(--f-mono);
+  font-size:13px;
+  color:var(--ink-faint);
+  letter-spacing:0.04em;
+  margin-bottom:22px;
+}
+.hero-eyebrow .dot{color:var(--signal);}
+.hero h1{
+  font-size:clamp(32px,6.4vw,58px);
+  line-height:1.08;
+  letter-spacing:-0.02em;
+  max-width:16ch;
+}
+.hero h1 .accent{color:var(--middle);}
+.hero .sub{
+  margin-top:24px;
+  font-size:18px;
+  color:var(--ink-dim);
+  max-width:52ch;
+}
+.hero-rings{
+  margin:44px 0 8px;
+  width:150px;height:150px;
+}
+.scrollcue{
+  margin-top:40px;
+  display:flex;align-items:center;gap:10px;
+  font-family:var(--f-mono);
+  font-size:12.5px;
+  color:var(--ink-faint);
+}
+.scrollcue .arrow{
+  animation:bob 1.8s ease-in-out infinite;
+}
+@keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(6px);}}
+
+/* ============ ONION RINGS (signature motif) ============ */
+.rings-svg circle{fill:none;}
+.ring-anim circle{
+  animation:ringspin 40s linear infinite;
+  transform-origin:center;
+}
+.ring-anim circle:nth-child(2){animation-duration:55s;animation-direction:reverse;}
+.ring-anim circle:nth-child(3){animation-duration:70s;}
+@keyframes ringspin{to{transform:rotate(360deg);}}
+
+/* ============ CRAWLING SECTION ============ */
+.crawl-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  margin:36px 0;
+}
+@media (max-width:700px){.crawl-grid{grid-template-columns:1fr;}}
+.crawl-panel{
+  background:var(--bg-panel);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:22px;
+  overflow:hidden;
+}
+.crawl-panel h3{font-size:16px;margin-bottom:4px;}
+.crawl-panel .tag{font-family:var(--f-mono);font-size:11px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.08em;}
+.crawl-panel p{font-size:14.5px;color:var(--ink-dim);margin-top:10px;}
+
+.pagestack{
+  position:relative; height:110px; margin:18px 0 6px;
+  display:flex; align-items:flex-end; gap:6px;
+}
+.pagestack .page{
+  width:22px; height:60%;
+  background:var(--bg-panel-3);
+  border:1px solid var(--line-bright);
+  border-radius:3px;
+  position:relative;
+}
+.pagestack .page:nth-child(2){height:80%;}
+.pagestack .page:nth-child(3){height:45%;}
+.pagestack .page:nth-child(4){height:95%;}
+.pagestack .page:nth-child(5){height:65%;}
+.scanbot{
+  position:absolute; top:0; bottom:0; width:2px;
+  background:var(--middle);
+  box-shadow:0 0 12px 2px var(--middle);
+  left:0%;
+  animation:scan 3.4s ease-in-out infinite;
+}
+@keyframes scan{
+  0%{left:0%;}
+  45%{left:100%;}
+  50%{left:100%;}
+  95%{left:0%;}
+  100%{left:0%;}
+}
+.indexcard-list{margin:18px 0 6px; display:flex; flex-direction:column; gap:7px;}
+.indexcard-row{
+  display:flex; align-items:center; gap:10px;
+  font-family:var(--f-mono); font-size:12px;
+  background:var(--bg-panel-3);
+  border:1px solid var(--line);
+  border-radius:6px;
+  padding:7px 10px;
+  color:var(--ink-dim);
+}
+.indexcard-row .kw{color:var(--middle); min-width:64px;}
+.indexcard-row .arrow-i{color:var(--ink-faint);}
+
+/* ============ THREE WEBS RINGS ============ */
+.webrings-wrap{
+  display:grid;
+  grid-template-columns:280px 1fr;
+  gap:40px;
+  align-items:start;
+  margin:40px 0;
+}
+@media (max-width:760px){.webrings-wrap{grid-template-columns:1fr;}}
+.webrings-visual{
+  position:relative;
+  width:100%;
+  max-width:280px;
+  aspect-ratio:1/1;
+  margin:0 auto;
+}
+.webring{
+  position:absolute; border-radius:50%;
+  border:1.5px solid var(--line-bright);
+  display:flex; align-items:flex-start; justify-content:center;
+  cursor:pointer;
+  transition:border-color .25s, box-shadow .25s, background .25s;
+  background:transparent;
+}
+.webring .rlabel{
+  margin-top:14px;
+  font-family:var(--f-mono); font-size:11px;
+  letter-spacing:.05em; text-transform:uppercase;
+  color:var(--ink-faint);
+  transition:color .25s;
+  pointer-events:none;
+}
+#ring-surface{inset:0;}
+#ring-deep{inset:17%;}
+#ring-dark{inset:38%;}
+.webring.active{border-color:var(--ring-color,var(--middle)); box-shadow:0 0 0 1px var(--ring-color,var(--middle)) inset, 0 0 24px -4px var(--ring-color,var(--middle));}
+.webring.active .rlabel{color:var(--ink);}
+#ring-dark::after{
+  content:"";
+  position:absolute; top:14px; left:50%; transform:translateX(-50%);
+  width:6px;height:6px;border-radius:50%;
+  background:var(--ink-faint);
+}
+
+.webcards{display:flex; flex-direction:column; gap:12px;}
+.webcard{
+  background:var(--bg-panel);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:18px 20px;
+  cursor:pointer;
+  transition:border-color .2s, background .2s;
+}
+.webcard:hover{border-color:var(--line-bright);}
+.webcard.active{background:var(--bg-panel-2); border-color:var(--card-color,var(--middle));}
+.webcard-head{display:flex; align-items:center; gap:10px;}
+.webcard-dot{width:9px;height:9px;border-radius:50%;background:var(--card-color,var(--middle)); flex:none;}
+.webcard-head h3{font-size:16px;}
+.webcard-stat{
+  margin-left:auto; font-family:var(--f-mono); font-size:11.5px;
+  color:var(--ink-faint); background:var(--bg-panel-3); padding:3px 9px; border-radius:100px;
+}
+.webcard-body{
+  max-height:0; overflow:hidden;
+  transition:max-height .35s ease, opacity .3s ease, margin-top .35s ease;
+  opacity:0;
+}
+.webcard.active .webcard-body{max-height:600px; opacity:1; margin-top:12px;}
+.webcard-body p{font-size:14.5px; color:var(--ink-dim);}
+.webcard-body p + p{margin-top:10px;}
+.webcard-body .mini-example{
+  margin-top:12px; padding:10px 12px;
+  background:var(--bg-panel-3); border-radius:8px;
+  font-size:13px; color:var(--ink-dim);
+  border-left:2px solid var(--card-color,var(--middle));
+}
+
+/* ============ RELAY / CIRCUIT ============ */
+.relaychain{
+  display:flex; align-items:center; justify-content:center;
+  gap:0; margin:40px 0 18px; flex-wrap:wrap;
+}
+.relay-node{
+  width:64px;height:64px;
+  clip-path:polygon(25% 3%,75% 3%,100% 50%,75% 97%,25% 97%,0% 50%);
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--f-mono); font-size:11px; font-weight:600;
+  color:#fff; flex:none;
+  position:relative;
+}
+.relay-node.you{background:var(--bg-panel-3); border:1px solid var(--line-bright); color:var(--ink); clip-path:none; border-radius:12px; width:58px;height:58px;}
+.relay-node.entry{background:var(--entry);}
+.relay-node.middle{background:var(--middle); color:#03211c;}
+.relay-node.exit{background:var(--exit); color:#2a1502;}
+.relay-node.dest{background:var(--bg-panel-3); border:1px solid var(--line-bright); color:var(--ink); clip-path:none; border-radius:12px; width:58px;height:58px;}
+.relay-node .rn-label{position:absolute; top:74px; font-size:10px; text-align:center; width:90px; font-family:var(--f-mono); color:var(--ink-faint); text-transform:uppercase; letter-spacing:.04em;}
+.relaychain-seg{
+  flex:1 1 40px; min-width:24px; max-width:70px;
+  height:2px; background:repeating-linear-gradient(90deg, var(--line-bright) 0 6px, transparent 6px 11px);
+  position:relative;
+}
+.relaychain-seg .cid{
+  position:absolute; top:-22px; left:50%; transform:translateX(-50%);
+  font-family:var(--f-mono); font-size:9.5px; color:var(--ink-faint);
+  white-space:nowrap;
+}
+.relaychain-wrap{padding-bottom:56px; overflow-x:auto;}
+
+.statetable{
+  margin:34px 0 10px; overflow-x:auto;
+  border:1px solid var(--line); border-radius:var(--radius);
+}
+.statetable table{border-collapse:collapse; width:100%; min-width:520px; font-family:var(--f-mono); font-size:12.5px;}
+.statetable th{
+  text-align:left; padding:10px 14px; background:var(--bg-panel-2);
+  color:var(--ink-faint); font-weight:500; text-transform:uppercase; font-size:10.5px; letter-spacing:.06em;
+  border-bottom:1px solid var(--line);
+}
+.statetable td{padding:10px 14px; color:var(--ink-dim); border-bottom:1px solid var(--line);}
+.statetable tr:last-child td{border-bottom:none;}
+.statetable .hl{color:var(--middle);}
+.statetable-cap{font-family:var(--f-mono); font-size:11px; color:var(--ink-faint); padding:9px 14px; background:var(--bg-panel);}
+
+.fogtext{font-size:13.5px; color:var(--ink-faint); text-align:center; max-width:340px; margin:8px auto 0; font-style:italic;}
+
+/* ============ KEYS SECTION ============ */
+.keysteps{display:flex; flex-direction:column; gap:0; margin:36px 0;}
+.keystep{
+  display:grid; grid-template-columns:40px 1fr; gap:16px;
+  padding:20px 0;
+  border-bottom:1px solid var(--line);
+}
+.keystep:last-child{border-bottom:none;}
+.keystep-num{
+  width:34px;height:34px;border-radius:50%;
+  background:var(--bg-panel-2); border:1px solid var(--line-bright);
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--f-mono); font-size:13px; color:var(--ink-dim);
+}
+.keystep h4{font-size:15.5px; font-weight:600; color:var(--ink); margin-bottom:6px;}
+.keystep p{font-size:14.5px; color:var(--ink-dim);}
+.keybadges{display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;}
+.keybadge{
+  font-family:var(--f-mono); font-size:11px; padding:4px 10px; border-radius:100px;
+  border:1px solid var(--badge-color); color:var(--badge-color);
+  display:inline-flex; align-items:center; gap:5px;
+}
+.keybadge::before{content:"🔑"; font-size:10px; filter:grayscale(1) brightness(1.6);}
+
+.persist-note{
+  margin-top:28px; display:flex; gap:14px; align-items:flex-start;
+  background:var(--bg-panel); border:1px solid var(--line); border-radius:var(--radius);
+  padding:18px 20px;
+}
+.persist-note .pn-icon{font-family:var(--f-mono); font-size:18px; color:var(--signal); flex:none;}
+.persist-note p{font-size:14px; color:var(--ink-dim);}
+
+/* ============ STEPPER (shared: clearnet + onion) ============ */
+.stepper{margin:40px 0 0;}
+.stage{
+  background:var(--bg-panel);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:30px 22px 26px;
+  min-height:330px;
+  position:relative;
+  overflow:hidden;
+}
+.stage-bg-grid{
+  position:absolute; inset:0; opacity:.35; pointer-events:none;
+  background-image:linear-gradient(var(--line) 1px, transparent 1px);
+  background-size:100% 44px;
+  mask-image:linear-gradient(to bottom, black, transparent 90%);
+}
+.step-panel{display:none;}
+.step-panel.is-active{display:block; animation:panelin .45s cubic-bezier(.2,.7,.2,1);}
+@keyframes panelin{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);}}
+
+.flowcol{display:flex; flex-direction:column; align-items:center; gap:8px; position:relative; z-index:1;}
+.flow-node{
+  display:flex; flex-direction:column; align-items:center; gap:6px;
+  flex:0 0 auto;
+  width:96px;
+}
+.flow-hex{
+  width:52px;height:52px;
+  clip-path:polygon(25% 3%,75% 3%,100% 50%,75% 97%,25% 97%,0% 50%);
+  display:flex; align-items:center; justify-content:center;
+  transition:transform .35s, box-shadow .35s, background .35s;
+  flex:none;
+}
+.flow-hex.box{clip-path:none; border-radius:10px;}
+.flow-hex img,.flow-hex svg{width:60%;height:60%;}
+.flow-hex.dim{background:var(--bg-panel-3); box-shadow:none;}
+.flow-hex.lit{transform:scale(1.08);}
+.flow-hex.c-entry{background:var(--entry); box-shadow:0 0 22px -2px var(--entry);}
+.flow-hex.c-middle{background:var(--middle); box-shadow:0 0 22px -2px var(--middle);}
+.flow-hex.c-exit{background:var(--exit); box-shadow:0 0 22px -2px var(--exit);}
+.flow-hex.c-you{background:var(--bg-panel-3); border:1.5px solid var(--line-bright);}
+.flow-hex.c-you.lit{border-color:var(--ink);}
+.flow-hex.c-site{background:var(--bg-panel-3); border:1.5px solid var(--line-bright);}
+.flow-hex.c-site.lit{border-color:#fff;}
+.flow-hex.c-meet{background:var(--bg-panel-3); border:1.5px dashed var(--ink-faint);}
+.flow-hex.c-meet.lit{border-color:var(--signal); box-shadow:0 0 22px -4px var(--signal);}
+.flow-hex.c-intro{background:var(--bg-panel-3); border:1.5px dotted var(--ink-faint);}
+.flow-hex.c-intro.lit{border-color:var(--exit); box-shadow:0 0 20px -4px var(--exit);}
+.flow-label{font-family:var(--f-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-faint); text-align:center;}
+.flow-label.on{color:var(--ink);}
+
+.flow-arrow{
+  height:26px; width:2px; position:relative;
+  background:var(--line-bright);
+}
+.flow-arrow.vert{height:26px;}
+.flow-arrow::after{
+  content:""; position:absolute; left:50%; bottom:-1px; transform:translateX(-50%);
+  border-left:5px solid transparent; border-right:5px solid transparent; border-top:6px solid var(--line-bright);
+}
+.flow-arrow.up::after{bottom:auto; top:-1px; border-top:none; border-bottom:6px solid var(--line-bright);}
+.flow-arrow.lit{background:var(--flow-color,var(--middle));}
+.flow-arrow.lit::after{border-top-color:var(--flow-color,var(--middle));}
+.flow-arrow.up.lit::after{border-bottom-color:var(--flow-color,var(--middle));}
+.flow-arrow.horiz::after{
+  left:auto; right:-1px; top:50%; bottom:auto; transform:translateY(-50%);
+  border-top:5px solid transparent; border-bottom:5px solid transparent; border-left:6px solid var(--line-bright); border-right:none;
+}
+.flow-arrow.horiz.lit::after{border-left-color:var(--flow-color,var(--middle)); border-top-color:transparent;}
+
+/* envelope */
+.envelope{
+  position:relative; width:56px;height:56px; margin:6px auto;
+  display:flex; align-items:center; justify-content:center;
+}
+.env-ring{
+  position:absolute; border-radius:9px; border:2.5px solid;
+  transition:opacity .4s, transform .4s;
+}
+.env-ring.r-entry{inset:0; border-color:var(--entry);}
+.env-ring.r-middle{inset:7px; border-color:var(--middle);}
+.env-ring.r-exit{inset:14px; border-color:var(--exit);}
+.env-core{
+  position:absolute; inset:21px; border-radius:5px; background:var(--ink-faint);
+}
+.envelope.plain .env-core{background:var(--ink);}
+.env-ring.gone{opacity:0; transform:scale(1.5); pointer-events:none;}
+.env-caption{font-family:var(--f-mono); font-size:10px; color:var(--ink-faint); text-align:center; margin-top:4px;}
+
+.flowrow{display:flex; align-items:center; justify-content:center; gap:14px; flex-wrap:wrap;}
+.flowrow.between{justify-content:space-between;}
+
+.step-text{
+  margin-top:22px;
+  padding-top:20px;
+  border-top:1px solid var(--line);
+}
+.step-tag{font-family:var(--f-mono); font-size:11px; color:var(--middle); text-transform:uppercase; letter-spacing:.06em; margin-bottom:8px;}
+.step-tag.tag-back{color:var(--exit);}
+.step-headline{font-size:16.5px; font-weight:600; color:var(--ink); margin-bottom:6px; font-family:var(--f-display);}
+.step-desc{font-size:14.5px; color:var(--ink-dim);}
+.step-desc b{color:var(--ink);}
+
+.stepper-controls{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px; margin-top:18px;
+}
+.step-btn{
+  background:var(--bg-panel-2); border:1px solid var(--line-bright);
+  color:var(--ink); border-radius:100px; padding:9px 18px;
+  font-size:13.5px; font-weight:600; display:flex; align-items:center; gap:6px;
+  transition:background .2s, opacity .2s;
+}
+.step-btn:hover{background:var(--bg-panel-3);}
+.step-btn:disabled{opacity:.35; cursor:default;}
+.step-dots{display:flex; gap:6px; flex-wrap:wrap; justify-content:center;}
+.step-dot{
+  width:8px;height:8px;border-radius:50%; background:var(--line-bright); border:none; padding:0;
+  transition:background .2s, transform .2s;
+}
+.step-dot.is-active{background:var(--middle); transform:scale(1.35);}
+.step-counter{font-family:var(--f-mono); font-size:11.5px; color:var(--ink-faint); white-space:nowrap;}
+
+/* legend chips reused above steppers */
+.legend{display:flex; gap:16px; flex-wrap:wrap; margin:22px 0 6px;}
+.legend-item{display:flex; align-items:center; gap:8px; font-size:13px; color:var(--ink-dim);}
+.legend-swatch{width:12px;height:12px;border-radius:3px; flex:none;}
+
+/* ============ CLOSING ============ */
+.closing{text-align:left;}
+.credcard{
+  background:var(--bg-panel); border:1px solid var(--line); border-radius:var(--radius);
+  padding:26px 24px; margin:28px 0;
+}
+.credcard .credtag{font-family:var(--f-mono); font-size:11px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.06em; margin-bottom:10px;}
+.credlist{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px;}
+.credpill{
+  font-family:var(--f-mono); font-size:12px; color:var(--ink-dim);
+  border:1px solid var(--line-bright); border-radius:100px; padding:5px 12px;
+}
+.ctarow{display:flex; gap:12px; flex-wrap:wrap; margin-top:26px;}
+.cta{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:13px 22px; border-radius:100px;
+  font-weight:600; font-size:14.5px; text-decoration:none;
+  transition:transform .2s, box-shadow .2s;
+}
+.cta.primary{background:var(--ink); color:var(--bg-void);}
+.cta.primary:hover{transform:translateY(-2px); box-shadow:0 8px 24px -8px rgba(255,255,255,.3);}
+.cta.secondary{border:1px solid var(--line-bright); color:var(--ink);}
+.cta.secondary:hover{transform:translateY(-2px); border-color:var(--middle);}
+
+footer{
+  text-align:center; padding:40px 20px 60px; position:relative; z-index:1;
+  font-family:var(--f-mono); font-size:12px; color:var(--ink-faint);
+}
+
+/* util */
+.center{text-align:center;}
+.mt40{margin-top:40px;}
+.small-note{font-size:12.5px; color:var(--ink-faint); margin-top:10px;}
+</style>
+</head>
+<body>
+
+<div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+<nav class="pillnav" id="pillnav">
+  <a href="#crawling">Crawling &amp; Indexing</a>
+  <a href="#webs">The Three Webs</a>
+  <a href="#relays">Relays &amp; Circuits</a>
+  <a href="#keys">Setting Up Keys</a>
+  <a href="#clearnet">Clearnet Walkthrough</a>
+  <a href="#onion">Onion Walkthrough</a>
+  <a href="#closing">Why It Matters</a>
+</nav>
+
+<!-- ============ HERO ============ -->
+<section class="section hero" id="hero">
+  <div class="hero-eyebrow"><span class="dot">●</span>&nbsp; A visual field guide by Sarath G — Cybersecurity Trainer &amp; Consultant</div>
+  <h1>Here's how a website can become completely <span class="accent">untraceable</span> — and why Google only ever sees a fraction of the internet.</h1>
+  <p class="sub">Scroll through the actual mechanism: crawling, the three layers of the web, and exactly how Tor moves your traffic through relays, circuits, and layers of encryption — peeled apart step by step, with no jargon left undefined.</p>
+
+  <svg class="hero-rings ring-anim" viewBox="0 0 150 150" fill="none">
+    <circle cx="75" cy="75" r="70" stroke="var(--exit)" stroke-width="1.4" stroke-dasharray="4 7" opacity="0.55"/>
+    <circle cx="75" cy="75" r="47" stroke="var(--middle)" stroke-width="1.6" stroke-dasharray="3 6" opacity="0.7"/>
+    <circle cx="75" cy="75" r="24" stroke="var(--entry)" stroke-width="2" opacity="0.9"/>
+    <circle cx="75" cy="75" r="4" fill="var(--ink)"/>
+  </svg>
+
+  <div class="scrollcue"><span class="arrow">↓</span> Scroll to begin</div>
+</section>
+
+<!-- ============ CRAWLING & INDEXING ============ -->
+<section class="section" id="crawling">
+  <div class="section-inner reveal">
+    <div class="eyebrow">Before surface, deep, or dark web — two words</div>
+    <h2 class="title">How search engines even find anything</h2>
+    <p class="lede">Two mechanics explain everything that follows. Get these right and "deep web" and "dark web" stop being spooky terms — they're just answers to one plain question: <b>could a crawler get in here or not?</b></p>
+  </div>
+
+  <div class="crawl-grid">
+    <div class="crawl-panel reveal">
+      <span class="tag">Step 1</span>
+      <h3>Crawling</h3>
+      <p>An automated program — a <b style="color:var(--ink)">crawler</b> or <b style="color:var(--ink)">spider</b> — visits a webpage and reads through everything on it. Think of a librarian walking down every aisle of a library, opening every book, and reading every page.</p>
+      <div class="pagestack" aria-hidden="true">
+        <div class="scanbot"></div>
+        <div class="page"></div><div class="page"></div><div class="page"></div><div class="page"></div><div class="page"></div>
+      </div>
+    </div>
+    <div class="crawl-panel reveal">
+      <span class="tag">Step 2</span>
+      <h3>Indexing</h3>
+      <p>Organizing what was crawled by keyword into a searchable catalog. That same librarian writes down which books mention which topics, so next time you ask, she can point you straight to the right shelf — instantly.</p>
+      <div class="indexcard-list" aria-hidden="true">
+        <div class="indexcard-row"><span class="kw">"tor"</span><span class="arrow-i">→</span><span>page A, page D</span></div>
+        <div class="indexcard-row"><span class="kw">"relay"</span><span class="arrow-i">→</span><span>page B</span></div>
+        <div class="indexcard-row"><span class="kw">"onion"</span><span class="arrow-i">→</span><span>page A, page C</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout reveal">
+    <b>Indexing depends on crawling succeeding first.</b> You can't index a page that was never crawled. Keep that one fact in your back pocket — it's the seed that the entire surface / deep / dark web split grows out of.
+  </div>
+</section>
+
+<!-- ============ THE THREE WEBS ============ -->
+<section class="section" id="webs">
+  <div class="section-inner reveal">
+    <div class="eyebrow">Same internet, three different levels of visibility</div>
+    <h2 class="title">Surface web, deep web, dark web</h2>
+    <p class="lede">Same underlying internet. The difference is purely whether a crawler could get in, and how deliberately something is hidden. Tap a layer.</p>
+  </div>
+
+  <div class="webrings-wrap reveal">
+    <div class="webrings-visual">
+      <div class="webring" id="ring-surface" data-target="card-surface" style="--ring-color:var(--middle);"><span class="rlabel">Surface</span></div>
+      <div class="webring" id="ring-deep" data-target="card-deep" style="--ring-color:var(--entry);"><span class="rlabel">Deep</span></div>
+      <div class="webring" id="ring-dark" data-target="card-dark" style="--ring-color:var(--exit);"><span class="rlabel">Dark</span></div>
+    </div>
+
+    <div class="webcards">
+      <div class="webcard active" id="card-surface" data-ring="ring-surface" style="--card-color:var(--middle);">
+        <div class="webcard-head"><span class="webcard-dot"></span><h3>Surface web</h3><span class="webcard-stat">~4–10% of the internet</span></div>
+        <div class="webcard-body">
+          <p>Fully indexed by search engines <b>and</b> freely accessible to anyone — no login required. This is what you touch every time you Google something. Sources disagree on the exact share, so treat any single fixed percentage you see elsewhere with suspicion — the honest answer is "a small slice, roughly 4–10%."</p>
+          <div class="mini-example">Example: any public blog post, a news homepage, a Wikipedia article.</div>
+        </div>
+      </div>
+
+      <div class="webcard" id="card-deep" data-ring="ring-deep" style="--card-color:var(--entry);">
+        <div class="webcard-head"><span class="webcard-dot"></span><h3>Deep web</h3><span class="webcard-stat">the majority of the internet</span></div>
+        <div class="webcard-body">
+          <p><b>Not fully indexed, OR requires a login</b> — either condition on its own qualifies a page as deep web. It's usually unindexed for boring technical reasons: crawlers can't get past a login wall, can't follow a link that's generated on the fly, are told to stay out by a robots.txt file, or simply have no other page linking in to them.</p>
+          <p>Everyday examples: your online banking dashboard, a paywalled academic journal, a company's internal intranet, your email inbox.</p>
+          <div class="mini-example"><b style="color:var(--ink)">Edge case worth knowing:</b> a paywalled news article where Google can show you the headline and first paragraph, but not the full text. That's still deep web — Google can see the cover of the book, but was never allowed to read the pages inside.</div>
+        </div>
+      </div>
+
+      <div class="webcard" id="card-dark" data-ring="ring-dark" style="--card-color:var(--exit);">
+        <div class="webcard-head"><span class="webcard-dot"></span><h3>Dark web</h3><span class="webcard-stat">a hidden slice of the deep web</span></div>
+        <div class="webcard-body">
+          <p>A <b>deliberately</b> hidden subset of the deep web — you need special anonymizing software to even reach it. Tor is the most common route in, but it isn't the only one; I2P and Freenet are others.</p>
+          <p>The concealment here is different in <i>kind</i>, not just degree — it works at the network level. <b>.onion</b> addresses can't be looked up through normal DNS the way "google.com" can, and hidden services use a "meeting in the middle" system (more on that later) so that neither the visitor nor the website ever learns the other's real IP address.</p>
+          <p><b>Dark web ≠ automatically illegal.</b> It's an anonymity technology, not a content category. Legitimate uses include SecureDrop whistleblower drop-boxes, and .onion mirrors of outlets like the BBC and the New York Times used by journalists and activists under censorship. It also hosts illicit markets. Both of those things are simultaneously true.</p>
+          <div class="mini-example">Using Tor itself is legal in most countries. A handful — Russia, China, Iran among them — restrict or block it at the network level. What makes something illegal is what you do on it, not the software itself.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RELAYS & CIRCUITS ============ -->
+<section class="section" id="relays">
+  <div class="section-inner reveal">
+    <div class="eyebrow">The building blocks of Tor</div>
+    <h2 class="title">Relays, circuits, and the fog between neighbors</h2>
+    <p class="lede">Before we watch data move, four small words need to be nailed down — the rest of this page leans on them constantly.</p>
+  </div>
+
+  <div class="card reveal" style="margin-top:28px;">
+    <p class="body-text"><b>Relay</b> — a server that's part of the Tor network. Anyone can volunteer to run one.</p>
+    <p class="body-text"><b>Circuit</b> — a connection between two relays. Every circuit has its own <b>Circuit ID</b>.</p>
+    <p class="body-text"><b>Circuit ID</b> — a purely <i>local</i> label, only meaningful on one specific link between two neighboring relays. It is <b>not</b> one global ID that follows your traffic the whole way through. Client↔Entry has one Circuit ID, Entry↔Middle has a completely different one, Middle↔Exit has yet another. No single relay ever sees one ID spanning the full journey.</p>
+    <p class="body-text"><b>Circuit state</b> — the private bookkeeping table each relay keeps: "traffic on Circuit ID X, coming in from my left neighbor, maps to Circuit ID Y going out to my right neighbor — and here are the keys for this hop." That table is the mapping itself, distinct from a Circuit ID, which is just a label stamped on a packet.</p>
+  </div>
+
+  <div class="relaychain-wrap reveal">
+    <div class="relaychain" aria-hidden="true">
+      <div class="relay-node you">You<div class="rn-label">Browser</div></div>
+      <div class="relaychain-seg"><span class="cid">CID 41</span></div>
+      <div class="relay-node entry">EN<div class="rn-label">Entry relay</div></div>
+      <div class="relaychain-seg"><span class="cid">CID 9</span></div>
+      <div class="relay-node middle">MID<div class="rn-label">Middle relay</div></div>
+      <div class="relaychain-seg"><span class="cid">CID 77</span></div>
+      <div class="relay-node exit">EX<div class="rn-label">Exit relay</div></div>
+      <div class="relaychain-seg"><span class="cid">—</span></div>
+      <div class="relay-node dest">🌐<div class="rn-label">Website</div></div>
+    </div>
+  </div>
+  <p class="fogtext reveal">Three different Circuit IDs, three separate local labels. Each relay only ever knows its own two immediate neighbors — never the full path.</p>
+
+  <div class="statetable reveal">
+    <table>
+      <thead><tr><th>In: neighbor</th><th>In: Circuit ID</th><th>Out: neighbor</th><th>Out: Circuit ID</th></tr></thead>
+      <tbody>
+        <tr><td>You (browser)</td><td class="hl">41</td><td>Middle relay</td><td class="hl">9</td></tr>
+      </tbody>
+    </table>
+    <div class="statetable-cap">↑ this is the entry relay's <b style="color:var(--ink)">entire</b> private circuit-state table for your connection. It has no idea what's beyond the middle relay.</div>
+  </div>
+</section>
+
+<!-- ============ KEYS ============ -->
+<section class="section" id="keys">
+  <div class="section-inner reveal">
+    <div class="eyebrow">Before a single byte of your request moves</div>
+    <h2 class="title">How the tunnel and all six keys get built</h2>
+    <p class="lede">This is the part people usually get wrong: the entire three-relay tunnel — and every key it needs — is fully negotiated <b>before</b> your actual request is ever sent. Nothing is built on the fly, mid-journey.</p>
+  </div>
+
+  <div class="keysteps reveal reveal-stagger">
+    <div class="keystep" style="--i:0">
+      <div class="keystep-num">1</div>
+      <div><h4>Browser picks three relays</h4><p>One entry, one middle, one exit — chosen for this tunnel only.</p></div>
+    </div>
+    <div class="keystep" style="--i:1">
+      <div class="keystep-num">2</div>
+      <div><h4>Private handshake, directly with entry</h4><p>The browser negotiates two keys with the entry relay: a <b style="color:var(--ink)">forward key (Kf)</b> that encrypts client→relay traffic, and a <b style="color:var(--ink)">backward key (Kb)</b> for relay→client traffic. The entry relay never learns any other relay's keys.</p>
+        <div class="keybadges"><span class="keybadge" style="--badge-color:var(--entry);">Kf₁ · Kb₁ — Entry</span></div>
+      </div>
+    </div>
+    <div class="keystep" style="--i:2">
+      <div class="keystep-num">3</div>
+      <div><h4>Tunneling through entry, a separate handshake with middle</h4><p>Entry just relays the sealed handshake message without understanding it — it can't read the contents. Two more keys result, known only to the browser and the middle relay.</p>
+        <div class="keybadges"><span class="keybadge" style="--badge-color:var(--entry);">Kf₁ · Kb₁ — Entry</span><span class="keybadge" style="--badge-color:var(--middle);">Kf₂ · Kb₂ — Middle</span></div>
+      </div>
+    </div>
+    <div class="keystep" style="--i:3">
+      <div class="keystep-num">4</div>
+      <div><h4>Tunneling through both, a separate handshake with exit</h4><p>Same pattern, one hop further. Two more keys result.</p>
+        <div class="keybadges"><span class="keybadge" style="--badge-color:var(--entry);">Kf₁ · Kb₁ — Entry</span><span class="keybadge" style="--badge-color:var(--middle);">Kf₂ · Kb₂ — Middle</span><span class="keybadge" style="--badge-color:var(--exit);">Kf₃ · Kb₃ — Exit</span></div>
+      </div>
+    </div>
+    <div class="keystep" style="--i:4">
+      <div class="keystep-num">5</div>
+      <div><h4>Only now — all six keys in hand — does the real request go out</h4><p>Wrapped in three layers of encryption, one per relay.</p></div>
+    </div>
+  </div>
+
+  <div class="callout reveal">
+    <b>Critical accuracy point:</b> it is always browser ↔ individual relay, negotiated directly. Never relay-to-relay. No relay is ever "handed" a key by another relay or by any third party — each one builds its own unique key pair together with the browser, one-on-one.
+  </div>
+
+  <div class="persist-note reveal">
+    <span class="pn-icon">↻</span>
+    <p>This tunnel typically stays up and gets reused for multiple site visits in one session, then rotates — roughly every 10 minutes. It isn't rebuilt before every single click.</p>
+  </div>
+</section>
+
+<!-- ============ CLEARNET WALKTHROUGH ============ -->
+<section class="section" id="clearnet">
+  <div class="section-inner reveal">
+    <div class="eyebrow">Watch it happen · clearnet site (e.g. google.com)</div>
+    <h2 class="title">Full data flow to an ordinary website</h2>
+    <p class="lede">Same tunnel from the last section, now carrying real traffic. Step through it — watch the envelope pick up layers, then lose them one at a time.</p>
+  </div>
+
+  <div class="legend reveal">
+    <div class="legend-item"><span class="legend-swatch" style="background:var(--entry);"></span> Entry's layer</div>
+    <div class="legend-item"><span class="legend-swatch" style="background:var(--middle);"></span> Middle's layer</div>
+    <div class="legend-item"><span class="legend-swatch" style="background:var(--exit);"></span> Exit's layer</div>
+    <div class="legend-item"><span class="legend-swatch" style="background:var(--ink);"></span> Plaintext</div>
+  </div>
+
+  <div class="stepper reveal" id="clearnetStepper" data-total="9">
+    <div class="stage">
+      <div class="stage-bg-grid" aria-hidden="true"></div>
+
+      <!-- STEP 1 -->
+      <div class="step-panel is-active" data-step="1">
+        <div class="flowrow between">
+          <div class="flow-node"><div class="flow-hex c-you lit box">🖥</div><div class="flow-label on">You</div></div>
+          <div class="envelope" id="env1"><div class="env-ring r-entry"></div><div class="env-ring r-middle"></div><div class="env-ring r-exit"></div><div class="env-core"></div></div>
+          <div class="flow-node"><div class="flow-hex dim c-entry" style="opacity:.35"></div><div class="flow-label">Entry</div></div>
+        </div>
+        <div class="step-text">
+          <div class="step-tag">Step 1 · Wrapping</div>
+          <div class="step-headline">Browser wraps the request three times</div>
+          <div class="step-desc">Innermost layer = exit's key. Then middle's key. Then entry's key on the outside. It's sealed like a nesting doll before it ever leaves your device.</div>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="step-panel" data-step="2">
+        <div class="flowrow between">
+          <div class="flow-node"><div class="flow-hex c-entry lit">EN</div><div class="flow-label on">Entry relay</div></div>
+          <div class="envelope"><div class="env-ring r-entry gone"></div><div class="env-ring r-middle"></div><div class="env-ring r-exit"></div><div class="env-core"></div></div>
+          <div class="flow-node"><div class="flow-hex c-middle" style="opacity:.35"></div><div class="flow-label">Middle</div></div>
+        </div>
+        <div class="step-text">
+          <div class="step-tag">Step 2 · First peel</div>
+          <div class="step-headline">Entry relay peels only its own outer layer</div>
+          <div class="step-desc">It checks its private circuit-state table — "traffic from this real IP → forward via this Circuit ID to the middle relay" — and passes on what's left. <b>Entry is the only relay that ever knows your real IP.</b></div>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="step-panel" data-step="3">
+        <div class="flowrow between">
+          <div class="flow-node"><div class="flow-hex c-middle lit">MID</div><div class="flow-label on">Middle relay</div></div>
+          <div class="envelope"><div class="env-ring r-entry gone"></div><div class="env-ring r-middle gone"></div><div class="env-ring r-exit"></div><div class="env-core"></div></div>
+          <div class="flow-node"><div class="flow-hex c-exit" style="opacity:.35"></div><div class="flow-label">Exit</div></div>
+        </div>
+        <div class="step-text">
+          <div class="step-tag">Step 3 · Second peel</div>
+          <div class="step-headline">Middle relay peels its layer</div>
+          <div class="step-desc">Checks its own table — "traffic in on entry's Circuit ID → forward out on a <i>different</i> Circuit ID to exit" — and forwards it. The middle relay knows neither your IP nor the final destination.</div>
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="step-panel" data-step="4">
+        <div class="flowrow between">
+          <div class="flow-node"><div class="flow-hex c-exit lit">EX</div><div class="flow-label on">Exit relay</div></div>
+          <div class="envelope plain"><div class="env-ring r-entry gone"></div><div class="env-ring r-middle gone"></div><div class="env-ring r-exit gone"></div><div class="env-core"></div></div>
+          <div class="flow-node"><div class="flow-hex c-site" style="opacity:.6">🌐</div><div class="flow-label">google.com</div></div>
+        </div>
+        <div class="step-text">
+          <div class="step-tag">Step 4 · Final peel</div>
+          <div class="step-headline">Exit relay peels the last layer</div>
+          <div class="step-desc">The actual plain request is revealed. Exit relay knows the destination, but not who you are — it sends the plaintext request onward to the real website.</div>
+        </div>
+      </div>
+
+      <!-- STEP 5 -->
+      <div class="step-panel" data-step="5">
+        <div class="flowrow between">
+          <div class="flow-node"><div class="flow-hex c-site lit">🌐</div><div class="flow-label on">google.com</div></div>
+          <div class="envelope plain"><div class="env-core"></div></div>
+          <div class="flow-node"><div class="flow-hex c-exit lit">EX</div><div class="flow-label on">Exit relay</div></div>
+        </div>
+        <div class="step-text">
+          <div class="step-tag">Step 5 · Reply begins</div>
+          <div class="step-headline">Website replies — to the exit relay</div>
+          <div class="step-desc">The website only ever sees the exit relay's IP address. It never learns yours.</div>
+        </div>
+      </div>
+
+      <!-- STEP 6 -->
+      <div class="step-panel" data-step="6">
+        <div class="flowrow between">
+          <div class="flow-node"><div class="flow-hex c-exit lit">EX</div><div class="flow-label on">Exit relay</div></div>
+          <div class="envelope"><div class="env-ring r-exit"></div><div class="env-core"></div></div>
+          <div class="flow-node"><div class="flow-hex c-middle" style="opacity:.55">MID</div><div class="flow-label">Middle</div></div>
+        </div>
+        <div class="step-text">
+          <div class="step-tag tag-back">Step 6 · Re-wrapping begins</div>
+          <div class="step-headline">Exit encrypts the reply with its backward key</div>
+          <div class="step-desc">Sends it on to the middle relay, using the Circuit ID for that hop.</div>
+        </div>
+      </div>
+
+      <!-- STEP 7 -->
+      <div class="step-panel" data-step="7">
+        <div class="flowrow between">
+          <div class="flow-node"><div class="flow-hex c-middle lit">MID</div><div class="flow-label on">Middle relay</div></div>
+          <div class="envelope"><div class="env-ring r-exit"></div><div class="env-ring r-middle"></div><div class="env-core"></div></div>
+          <div class="flow-node"><div class="flow-hex c-entry" style="opacity:.55">EN</div><div class="flow-label">Entry</div></div>
+        </div>
+        <div class="step-text">
+          <div class="step-tag tag-back">Step 7 · Second wrap</div>
+          <div class="step-headline">Middle adds its own layer</div>
+          <div class="step-desc">Forwards it on to the entry relay.</div>
+        </div>
+      </div>
+
+      <!-- STEP 8 -->
+      <div class="step-panel" data-step="8">
+        <div class="flowrow between">
+          <div class="flow-node"><div class="flow-hex c-entry lit">EN</div><div class="flow-label on">Entry relay</div></div>
+          <div class="envelope"><div class="env-ring r-exit"></div><div class="env-ring r-middle"></div><div class="env-ring r-entry"></div><div class="env-core"></div></div>
+          <div class="flow-node"><div class="flow-hex c-you" style="opacity:.55">🖥</div><div class="flow-label">You</div></div>
+        </div>
+        <div class="step-text">
+          <div class="step-tag tag-back">Step 8 · Final wrap</div>
+          <div class="step-headline">Entry adds its layer</div>
+          <div class="step-desc">Sends the fully re-wrapped reply — three layers again — back to your browser.</div>
+        </div>
+      </div>
+
+      <!-- STEP 9 -->
+      <div class="step-panel" data-step="9">
+        <div class="flowrow between" style="justify-content:center;">
+          <div class="flow-node"><div class="flow-hex c-you lit box">🖥</div><div class="flow-label on">You</div></div>
+          <div class="envelope plain"><div class="env-core"></div></div>
+        </div>
+        <div class="step-text">
+          <div class="step-tag">Step 9 · Fully unwrapped</div>
+          <div class="step-headline">Browser peels all three layers and shows you the page</div>
+          <div class="step-desc">It's the only party holding all six keys, so it's the only party that can undo every layer in one shot. <b>No relay, at any point, needed to know the whole path</b> — each one only ever used its own local circuit-state table, forward and backward.</div>
+        </div>
+      </div>
+
+    </div>
+    <div class="stepper-controls">
+      <button class="step-btn" data-prev aria-label="Previous step">← Prev</button>
+      <div class="step-dots" role="tablist" aria-label="Clearnet flow steps"></div>
+      <button class="step-btn" data-next aria-label="Next step">Next →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ONION SERVICE WALKTHROUGH ============ -->
+<section class="section" id="onion">
+  <div class="section-inner reveal">
+    <div class="eyebrow">Watch it happen · a hidden .onion service</div>
+    <h2 class="title">Full data flow to a hidden service</h2>
+    <p class="lede">Same building blocks — relays, circuits, layered encryption — arranged differently. The one thing to hold onto: <b>your browser never learns the hidden service's real IP address, at any point.</b> That's the entire point of a hidden service.</p>
+  </div>
+
+  <div class="legend reveal">
+    <div class="legend-item"><span class="legend-swatch" style="background:var(--entry);border-radius:50%;"></span> Visitor's own tunnel relays</div>
+    <div class="legend-item"><span class="legend-swatch" style="background:var(--middle);border-radius:50%;"></span> Website's own tunnel relays</div>
+    <div class="legend-item"><span class="legend-swatch" style="background:var(--exit);border-radius:2px;"></span> Introduction point</div>
+    <div class="legend-item"><span class="legend-swatch" style="background:var(--signal);border-radius:2px;"></span> Meeting relay (rendezvous)</div>
+  </div>
+
+  <div class="stepper reveal" id="onionStepper" data-total="11">
+    <div class="stage">
+      <div class="stage-bg-grid" aria-hidden="true"></div>
+
+      <!-- STEP 1 -->
+      <div class="step-panel is-active" data-step="1">
+        <div class="flowrow" style="justify-content:center;">
+          <div class="flow-node"><div class="flow-hex c-site lit box">🕸</div><div class="flow-label on">Hidden website</div></div>
+          <div class="flow-arrow horiz lit" style="width:26px;height:2px;--flow-color:var(--exit);"></div>
+          <div class="flow-node"><div class="flow-hex c-intro lit">IP</div><div class="flow-label on">Introduction points</div></div>
+        </div>
+        <div class="step-text">
+          <div class="step-tag">Step 1 · Setup (in advance, no visitor yet)</div>
+          <div class="step-headline">The website picks a few introduction points</div>
+          <div class="step-desc">It builds long-term tunnels to each of them — before anyone has even tried to visit.</div>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="step-panel" data-step="2">
+        <div class="flowrow" style="justify-content:center;">
+          <div class="flow-node"><div class="flow-hex c-site lit box">🕸</div><div class="flow-label on">Hidden website</div></div>
+          <div class="flow-arrow horiz lit" style="width:26px;height:2px;"></div>
+          <div class="flow-node"><div class="flow-hex c-meet lit box">📇</div><div class="flow-label on">Lookup system</div></div>
+        </div>
+        <div class="step-text">
+          <div class="step-tag">Step 2 · Setup</div>
+          <div class="step-headline">Website publishes a small descriptor</div>
+          <div class="step-desc">Tied to its .onion address, listing <i>who its introduction points are</i> — nothing about its real IP.</div>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="step-panel" data-step="3">
+        <div class="flowrow" style="justify-content:center;">
+          <div class="flow-node"><div class="flow-hex c-you lit box">🖥</div><div class="flow-label on">You</div></div>
+          <div class="flow-arrow horiz lit" style="width:26px;height:2px;"></div>
+          <div class="flow-node"><div class="flow-hex c-meet lit box">📇</div><div class="flow-label on">Lookup system</div></div>
+        </div>
+        <div class="step-text">
+          <div class="step-tag">Step 3 · Visitor side begins</div>
+          <div class="step-headline">Browser looks up the .onion address</div>
+          <div class="step-desc">Retrieves the descriptor and learns who the introduction points are — <b>not</b> the website's IP. Only its introduction points.</div>
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="step-panel" data-step="4">
+        <div class="flowrow between">
+          <div class="flow-node"><div class="flow-hex c-you lit box">🖥</div><div class="flow-label on">You</div></div>
+          <div class="flow-node"><div class="flow-hex c-entry lit" style="background:var(--entry)">EN</div><div class="flow-label on">Entry</div></div>
+          <div class="flow-node"><div class="flow-hex c-middle lit" style="background:var(--entry);opacity:.75">MID</div><div class="flow-label on">Middle</div></div>
+          <div class="flow-node"><div class="flow-hex c-meet lit box">RP</div><div class="flow-label on">Meeting relay</div></div>
+        </div>
+        <div class="step-text">
+          <div class="step-tag">Step 4</div>
+          <div class="step-headline">Browser builds its own 3-hop tunnel</div>
+          <div class="step-desc">Entry → middle → a random relay it picks. No exit node here — this stays entirely inside Tor. That last relay becomes the <b>meeting relay (rendezvous point)</b>.</div>
+        </div>
+      </div>
+
+      <!-- STEP 5 -->
+      <div class="step-panel" data-step="5">
+        <div class="flowrow" style="justify-content:center;">
+          <div class="flow-node"><div class="flow-hex c-you lit box">🖥</div><div class="flow-label on">You</div></div>
+          <div class="envelope"><div class="env-ring r-entry"></div><div class="env-core"></div></div>
+          <div class="flow-node"><div class="flow-hex c-intro lit">IP</div><div class="flow-label on">Introduction point</div></div>
+        </div>
+        <div class="step-text">
+          <div class="step-tag">Step 5</div>
+          <div class="step-headline">Using a <i>different</i> tunnel, browser sends a note</div>
+          <div class="step-desc">To one of the website's introduction points: "here's my meeting relay's address, and a one-time secret code." A separate 3-hop tunnel from the one built in step 4.</div>
+        </div>
+      </div>
+
+      <!-- STEP 6 -->
+      <div class="step-panel" data-step="6">
+        <div class="flowrow" style="justify-content:center;">
+          <div class="flow-node"><div class="flow-hex c-intro lit">IP</div><div class="flow-label on">Introduction point</div></div>
+          <div class="flow-arrow horiz lit" style="width:26px;height:2px;--flow-color:var(--exit);"></div>
+          <div class="flow-node"><div class="flow-hex c-site lit box">🕸</div><div class="flow-label on">Hidden website</div></div>
+        </div>
+        <div class="step-text">
+          <div class="step-tag">Step 6</div>
+          <div class="step-headline">Introduction point forwards the note to the website</div>
+          <div class="step-desc">Via the long-term tunnel from step 1. Its one job in this whole flow, done.</div>
+        </div>
+      </div>
+
+      <!-- STEP 7 -->
+      <div class="step-panel" data-step="7">
+        <div class="flowrow" style="justify-content:center;">
+          <div class="flow-node"><div class="flow-hex c-site lit box">🕸</div><div class="flow-label on">Hidden website</div></div>
+        </div>
+        <div class="step-text">
+          <div class="step-tag">Step 7 · Website side, triggered</div>
+          <div class="step-headline">Website reads the note</div>
+          <div class="step-desc">Learns the meeting relay's address and the secret code. This note is the trigger — the website does nothing until it arrives.</div>
+        </div>
+      </div>
+
+      <!-- STEP 8 -->
+      <div class="step-panel" data-step="8">
+        <div class="flowrow between">
+          <div class="flow-node"><div class="flow-hex c-site lit box">🕸</div><div class="flow-label on">Website</div></div>
+          <div class="flow-node"><div class="flow-hex c-entry lit" style="background:var(--middle)">EN</div><div class="flow-label on">Its entry</div></div>
+          <div class="flow-node"><div class="flow-hex c-middle lit" style="background:var(--middle);opacity:.75">MID</div><div class="flow-label on">Its middle</div></div>
+          <div class="flow-node"><div class="flow-hex c-meet lit box">RP</div><div class="flow-label on">Meeting relay</div></div>
+        </div>
+        <div class="step-text">
+          <div class="step-tag">Step 8</div>
+          <div class="step-headline">Website builds its own fresh 3-hop tunnel</div>
+          <div class="step-desc">Its own entry → middle → last relay, straight to that same meeting relay. Again — no exit node, stays inside Tor.</div>
+        </div>
+      </div>
+
+      <!-- STEP 9 -->
+      <div class="step-panel" data-step="9">
+        <div class="flowrow" style="justify-content:center;">
+          <div class="flow-node"><div class="flow-hex c-site lit box">🕸</div><div class="flow-label on">Website</div></div>
+          <div class="envelope"><div class="env-ring r-middle"></div><div class="env-core"></div></div>
+          <div class="flow-node"><div class="flow-hex c-meet lit box">RP</div><div class="flow-label on">Meeting relay</div></div>
+        </div>
+        <div class="step-text">
+          <div class="step-tag">Step 9</div>
+          <div class="step-headline">Website sends the matching secret code</div>
+          <div class="step-desc">Proving to the meeting relay that it received the note correctly.</div>
+        </div>
+      </div>
+
+      <!-- STEP 10 -->
+      <div class="step-panel" data-step="10">
+        <div class="flowrow" style="justify-content:center;">
+          <div class="flow-node"><div class="flow-hex c-meet lit box" style="box-shadow:0 0 30px -2px var(--signal)">RP</div><div class="flow-label on">Meeting relay</div></div>
+        </div>
+        <div class="step-text">
+          <div class="step-tag">Step 10 · Connection established</div>
+          <div class="step-headline">Meeting relay checks that both secret codes match</div>
+          <div class="step-desc">One from the visitor's side (step 5), one from the website's side (step 9).</div>
+        </div>
+      </div>
+
+      <!-- STEP 11 -->
+      <div class="step-panel" data-step="11">
+        <div class="flowrow between">
+          <div class="flow-node"><div class="flow-hex c-entry lit" style="background:var(--entry)">EN</div><div class="flow-label on">Your tunnel</div></div>
+          <div class="flow-node"><div class="flow-hex c-meet lit box" style="box-shadow:0 0 30px -2px var(--signal)">RP</div><div class="flow-label on">Meeting relay</div></div>
+          <div class="flow-node"><div class="flow-hex c-entry lit" style="background:var(--middle)">EN</div><div class="flow-label on">Website's tunnel</div></div>
+        </div>
+        <div class="step-text">
+          <div class="step-tag">Step 11 · Live</div>
+          <div class="step-headline">Meeting relay just sits between the two tunnels</div>
+          <div class="step-desc">Passing encrypted messages back and forth. It never decrypts the content — it's a neutral joining point, nothing more. From here on, data flows with <b>identical mechanics</b> to the clearnet case: each relay only ever knows its own two neighbors and forwards using its local circuit-state table. The only structural difference — two separate tunnels meet in the middle instead of one tunnel ending at an exit node, and <b>neither side ever leaves the Tor network.</b></div>
+        </div>
+      </div>
+
+    </div>
+    <div class="stepper-controls">
+      <button class="step-btn" data-prev aria-label="Previous step">← Prev</button>
+      <div class="step-dots" role="tablist" aria-label="Onion service flow steps"></div>
+      <button class="step-btn" data-next aria-label="Next step">Next →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CLOSING ============ -->
+<section class="section closing" id="closing">
+  <div class="section-inner reveal">
+    <div class="eyebrow">Why this matters beyond trivia</div>
+    <h2 class="title">This is infrastructure knowledge, not folklore</h2>
+    <p class="lede">Understanding how relays, circuits, and hidden services actually work isn't just satisfying — it's directly useful for threat intelligence and pentesting work, where knowing what Tor can and can't hide (and where the actual weak points are) matters far more than treating it as a mysterious black box.</p>
+  </div>
+
+  <div class="credcard reveal">
+    <div class="credtag">Who wrote this</div>
+    <p class="body-text">I'm Sarath — a cybersecurity trainer and consultant with 8+ years in the field. I've trained teams at organizations including:</p>
+    <div class="credlist">
+      <span class="credpill">Indian Navy</span>
+      <span class="credpill">Samsung Electronics</span>
+      <span class="credpill">IIT Madras</span>
+      <span class="credpill">Central banks</span>
+    </div>
+  </div>
+
+  <div class="ctarow reveal">
+    <a class="cta primary" href="https://sarathg.me" target="_blank" rel="noopener">Visit sarathg.me →</a>
+    <a class="cta secondary" href="https://labs.sarathg.me" target="_blank" rel="noopener">Go hands-on at labs.sarathg.me →</a>
+  </div>
+</section>
+
+<footer>
+  Built to be understood, not memorized. · sarathg.me
+</footer>
+
+<script>
+(function(){
+  // ---------- progress bar ----------
+  var fill = document.getElementById('progressFill');
+  function updateProgress(){
+    var h = document.documentElement;
+    var scrolled = h.scrollTop || document.body.scrollTop;
+    var height = (h.scrollHeight || document.body.scrollHeight) - h.clientHeight;
+    var pct = height > 0 ? (scrolled / height) * 100 : 0;
+    fill.style.width = pct + '%';
+  }
+  document.addEventListener('scroll', updateProgress, {passive:true});
+  updateProgress();
+
+  // ---------- nav active state ----------
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll('.pillnav a'));
+  var navSections = navLinks.map(function(a){ return document.querySelector(a.getAttribute('href')); }).filter(Boolean);
+  var navObserver = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        var id = '#' + entry.target.id;
+        navLinks.forEach(function(a){ a.classList.toggle('is-active', a.getAttribute('href') === id); });
+      }
+    });
+  }, {rootMargin:'-45% 0px -50% 0px', threshold:0});
+  navSections.forEach(function(s){ navObserver.observe(s); });
+
+  // ---------- reveal on scroll ----------
+  var revealEls = document.querySelectorAll('.reveal');
+  var revealObserver = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        entry.target.classList.add('is-visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, {threshold:0.12});
+  revealEls.forEach(function(el){ revealObserver.observe(el); });
+
+  // ---------- three webs rings/cards ----------
+  var ringEls = document.querySelectorAll('.webring');
+  var cardEls = document.querySelectorAll('.webcard');
+  function activateWeb(key){
+    ringEls.forEach(function(r){ r.classList.toggle('active', r.id === key); });
+    cardEls.forEach(function(c){ c.classList.toggle('active', c.dataset.ring === key); });
+  }
+  ringEls.forEach(function(r){
+    r.addEventListener('click', function(){ activateWeb(r.id); });
+  });
+  cardEls.forEach(function(c){
+    c.addEventListener('click', function(){ activateWeb(c.dataset.ring); });
+  });
+
+  // ---------- generic stepper controller ----------
+  function initStepper(container){
+    var total = parseInt(container.dataset.total, 10);
+    var current = 1;
+    var panels = container.querySelectorAll('.step-panel');
+    var dotsWrap = container.querySelector('.step-dots');
+    var prevBtn = container.querySelector('[data-prev]');
+    var nextBtn = container.querySelector('[data-next]');
+
+    for(var i=1;i<=total;i++){
+      var dot = document.createElement('button');
+      dot.className = 'step-dot';
+      dot.type = 'button';
+      dot.setAttribute('aria-label', 'Go to step ' + i);
+      dot.dataset.step = i;
+      dotsWrap.appendChild(dot);
+    }
+    var dots = dotsWrap.querySelectorAll('.step-dot');
+
+    function render(){
+      panels.forEach(function(p){
+        p.classList.toggle('is-active', parseInt(p.dataset.step,10) === current);
+      });
+      dots.forEach(function(d){
+        d.classList.toggle('is-active', parseInt(d.dataset.step,10) === current);
+      });
+      prevBtn.disabled = current === 1;
+      nextBtn.disabled = current === total;
+    }
+
+    prevBtn.addEventListener('click', function(){ if(current>1){ current--; render(); } });
+    nextBtn.addEventListener('click', function(){ if(current<total){ current++; render(); } });
+    dots.forEach(function(d){
+      d.addEventListener('click', function(){ current = parseInt(d.dataset.step,10); render(); });
+    });
+
+    render();
+  }
+
+  initStepper(document.getElementById('clearnetStepper'));
+  initStepper(document.getElementById('onionStepper'));
+})();
+</script>
+
+</body>
+</html>
