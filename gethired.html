@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ML4GP9590F"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-ML4GP9590F');
+</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>GetHired — Free Career Readiness Tool for Cybersecurity Freshers | Sarath G</title>
+  <meta name="description" content="GetHired is a free, rule-based tool that screens your CV against real entry-level cybersecurity job postings, runs a checkpoint-based practical skills assessment, and builds you a sequenced roadmap — no AI, no cost, no login." />
+  <meta name="keywords" content="cybersecurity fresher jobs, entry level cybersecurity, CV screener cybersecurity, SOC analyst fresher, cybersecurity career roadmap, free cybersecurity assessment, GetHired" />
+  <meta name="author" content="Sarath G" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://www.sarathg.me/gethired.html" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="GetHired — Free Career Readiness Tool for Cybersecurity Freshers" />
+  <meta property="og:description" content="Screen your CV, take a checkpoint-based practical assessment, and get a sequenced roadmap into your first cybersecurity role. Free, rule-based, no AI grading." />
+  <meta property="og:url" content="https://www.sarathg.me/gethired.html" />
+  <meta property="og:image" content="https://www.sarathg.me/assets/og-image.jpg" />
+  <meta property="og:site_name" content="Sarath G Portfolio" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="GetHired — Free Career Readiness Tool for Cybersecurity Freshers" />
+  <meta name="twitter:description" content="Screen your CV, take a checkpoint-based practical assessment, and get a sequenced roadmap into your first cybersecurity role. Free, rule-based, no AI grading." />
+  <meta name="twitter:image" content="https://www.sarathg.me/assets/og-image.jpg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Fira+Code:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": "https://www.sarathg.me/#sarath",
+        "name": "Sarath G",
+        "url": "https://www.sarathg.me"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "GetHired",
+        "applicationCategory": "EducationalApplication",
+        "operatingSystem": "Web",
+        "url": "https://gethired.sarathg.me",
+        "description": "A free, rule-based career-readiness tool for cybersecurity job seekers: CV screening against real job-posting requirements, a checkpoint-based practical skills assessment, and a sequenced next-steps roadmap. No AI grading, no login required.",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "author": { "@id": "https://www.sarathg.me/#sarath" }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {"@type":"ListItem","position":1,"name":"Home","item":"https://www.sarathg.me/"},
+          {"@type":"ListItem","position":2,"name":"GetHired","item":"https://www.sarathg.me/gethired.html"}
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Is GetHired free to use?",
+            "acceptedAnswer": {"@type":"Answer","text":"Yes. There's no cost, no paywall, and no login required to screen a CV or take the practical assessment."}
+          },
+          {
+            "@type": "Question",
+            "name": "Does GetHired use AI to grade my CV or assessment?",
+            "acceptedAnswer": {"@type":"Answer","text":"No. GetHired is deliberately rule-based end to end — weighted keyword matching for the CV screener, exact-match checkpoint grading for the practical assessment, and config-driven logic for the roadmap. No LLM or external AI API is called anywhere in the product, by design."}
+          },
+          {
+            "@type": "Question",
+            "name": "What if I don't have hands-on experience yet?",
+            "acceptedAnswer": {"@type":"Answer","text":"That's exactly who GetHired is built for. The practical assessment doesn't require any lab setup or prior tooling — it's a set of static, self-contained scenarios you can attempt with no infrastructure of your own. The roadmap it produces is meant to be the starting point, not a gate you have to already pass."}
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg:         #0a0a0a;
+      --bg-2:       #111111;
+      --bg-card:    #161616;
+      --bg-card-h:  #1c1c1c;
+      --border:     rgba(255,255,255,0.06);
+      --border-h:   rgba(255,255,255,0.12);
+      --accent:     #4fffb0;
+      --accent-dim: rgba(79,255,176,0.08);
+      --t1:         #f5f5f5;
+      --t2:         #888888;
+      --t3:         #4a4a4a;
+      --font:       'Space Grotesk', sans-serif;
+      --mono:       'Fira Code', monospace;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--t1);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; display: block; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      padding: calc(64px + 90px) 5% 90px;
+      display: flex; flex-direction: column; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(79,255,176,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(79,255,176,0.025) 1px, transparent 1px);
+      background-size: 80px 80px;
+    }
+    .hero::after {
+      content: ''; position: absolute; pointer-events: none;
+      top: -10%; right: -5%; width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(79,255,176,0.04) 0%, transparent 65%);
+    }
+    .hero-inner { position: relative; z-index: 1; max-width: 880px; }
+
+    .breadcrumb {
+      display: flex; align-items: center; gap: .5rem; margin-bottom: 2.5rem;
+      font-family: var(--mono); font-size: .7rem; color: var(--t3); letter-spacing: .06em;
+    }
+    .breadcrumb a { color: var(--t3); transition: color .2s; }
+    .breadcrumb a:hover { color: var(--accent); }
+
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .28rem .8rem; border: 1px solid rgba(79,255,176,.22); border-radius: 2px;
+      font-family: var(--mono); font-size: .68rem; color: var(--accent);
+      letter-spacing: .1em; text-transform: uppercase; margin-bottom: 1.75rem;
+    }
+    .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); animation: blink 2s infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+    .hero h1 {
+      font-size: clamp(2.4rem, 5.5vw, 4rem);
+      font-weight: 700; letter-spacing: -.03em; line-height: 1.05; margin-bottom: 1.5rem;
+    }
+    .hero h1 .ac { color: var(--accent); }
+
+    .hero-desc {
+      font-size: 1.08rem; color: var(--t2); max-width: 620px;
+      line-height: 1.75; margin-bottom: 2.5rem; font-weight: 300;
+    }
+
+    .stats {
+      display: flex; flex-wrap: wrap; gap: 2.5rem;
+      padding: 1.75rem 0;
+      border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      margin-bottom: 2.5rem;
+    }
+    .stat-n { font-size: 1.7rem; font-weight: 700; color: var(--accent); letter-spacing: -.02em; line-height: 1; margin-bottom: .2rem; }
+    .stat-l { font-family: var(--mono); font-size: .65rem; color: var(--t3); letter-spacing: .08em; text-transform: uppercase; }
+
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
+    .btn-p {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .72rem 1.7rem; background: var(--accent);
+      color: var(--bg); border-radius: 3px;
+      font-weight: 600; font-size: .875rem; letter-spacing: .02em;
+      transition: opacity .2s, transform .2s;
+    }
+    .btn-p:hover { opacity: .88; transform: translateY(-1px); color: var(--bg); }
+    .btn-o {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .72rem 1.7rem; border: 1px solid var(--border-h);
+      border-radius: 3px; color: var(--t2); font-size: .875rem; font-weight: 500;
+      transition: border-color .2s, color .2s;
+    }
+    .btn-o:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── SECTION ── */
+    section { padding: 90px 5%; }
+    .sec { max-width: 1100px; margin: 0 auto; }
+
+    .eyebrow { font-family: var(--mono); font-size: .66rem; color: var(--accent); letter-spacing: .14em; text-transform: uppercase; margin-bottom: .7rem; }
+    .sec-title { font-size: clamp(1.75rem, 3vw, 2.4rem); font-weight: 700; letter-spacing: -.025em; line-height: 1.1; margin-bottom: 1rem; }
+    .sec-title .ac { color: var(--accent); }
+    .sec-desc { font-size: 1rem; color: var(--t2); max-width: 580px; line-height: 1.75; margin-bottom: 3rem; font-weight: 300; }
+
+    /* ── TOOLS GRID (what GetHired is) ── */
+    .svc-section { background: var(--bg-2); }
+    .svc-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1px; border: 1px solid var(--border); border-radius: 6px; overflow: hidden;
+    }
+    .svc-item { background: var(--bg-card); padding: 2rem; transition: background .2s; }
+    .svc-item:hover { background: var(--bg-card-h); }
+    .svc-num { font-family: var(--mono); font-size: .62rem; color: var(--t3); letter-spacing: .08em; margin-bottom: .9rem; }
+    .svc-item h3 { font-size: 1.05rem; font-weight: 600; letter-spacing: -.01em; margin-bottom: .55rem; line-height: 1.3; color: var(--t1); }
+    .svc-item p { font-size: .865rem; color: var(--t2); line-height: 1.7; font-weight: 300; margin-bottom: 1.2rem; }
+    .tags { display: flex; flex-wrap: wrap; gap: .35rem; }
+    .tag { padding: .18rem .6rem; border: 1px solid var(--border); border-radius: 2px; font-family: var(--mono); font-size: .62rem; color: var(--t3); letter-spacing: .04em; transition: border-color .2s, color .2s; }
+    .svc-item:hover .tag { border-color: rgba(79,255,176,.18); color: var(--t2); }
+
+    /* ── WHO THIS IS FOR ── */
+    .audience-section { background: var(--bg); }
+    .audience-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1px; border: 1px solid var(--border); border-radius: 6px; overflow: hidden;
+    }
+    .aud-item { background: var(--bg-card); padding: 1.75rem; transition: background .2s; }
+    .aud-item:hover { background: var(--bg-card-h); }
+    .aud-label { font-family: var(--mono); font-size: .62rem; color: var(--accent); letter-spacing: .08em; text-transform: uppercase; margin-bottom: .5rem; }
+    .aud-item h4 { font-size: .95rem; font-weight: 600; color: var(--t1); margin-bottom: .4rem; letter-spacing: -.01em; }
+    .aud-item p { font-size: .84rem; color: var(--t2); line-height: 1.65; font-weight: 300; }
+
+    /* ── HOW IT WORKS ── */
+    .method-section { background: var(--bg-2); }
+    .method-steps { display: flex; flex-direction: column; max-width: 640px; }
+    .m-step { display: grid; grid-template-columns: 38px 1fr; gap: 1.25rem; padding: 1.4rem 0; border-bottom: 1px solid var(--border); }
+    .m-step:last-child { border-bottom: none; }
+    .m-num { font-family: var(--mono); font-size: .62rem; color: var(--accent); letter-spacing: .06em; padding-top: .15rem; }
+    .m-body h4 { font-size: .95rem; font-weight: 600; color: var(--t1); margin-bottom: .35rem; letter-spacing: -.01em; }
+    .m-body p { font-size: .84rem; color: var(--t2); line-height: 1.7; font-weight: 300; }
+
+    /* ── RECOMMENDED READING ── */
+    .reading-section { background: var(--bg); }
+    .reading-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1px; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+    .reading-item { background: var(--bg-card); padding: 1.75rem 2rem; transition: background .2s; display: flex; flex-direction: column; }
+    .reading-item:hover { background: var(--bg-card-h); }
+    .reading-item .fw-lbl { font-family: var(--mono); font-size: .62rem; color: var(--accent); letter-spacing: .08em; text-transform: uppercase; margin-bottom: .5rem; }
+    .reading-item h4 { font-size: .95rem; font-weight: 600; color: var(--t1); margin-bottom: .4rem; }
+    .reading-item p { font-size: .82rem; color: var(--t2); line-height: 1.65; font-weight: 300; margin-bottom: 1rem; flex-grow: 1; }
+    .reading-item .go { font-family: var(--mono); font-size: .68rem; color: var(--t3); transition: color .2s; }
+    .reading-item:hover .go { color: var(--accent); }
+
+    /* ── FAQ ── */
+    .faq-section { background: var(--bg-2); }
+    .faq-wrap { max-width: 740px; }
+    .faq-item { border-bottom: 1px solid var(--border); }
+    .faq-q { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; padding: 1.35rem 0; cursor: pointer; user-select: none; }
+    .faq-q h4 { font-size: .93rem; font-weight: 600; color: var(--t1); letter-spacing: -.01em; line-height: 1.4; }
+    .faq-ico { font-family: var(--mono); font-size: 1.1rem; color: var(--t3); flex-shrink: 0; transition: color .2s, transform .2s; margin-top: 2px; }
+    .faq-item.open .faq-ico { color: var(--accent); transform: rotate(45deg); }
+    .faq-a { display: none; padding: 0 0 1.35rem; }
+    .faq-item.open .faq-a { display: block; }
+    .faq-a p { font-size: .875rem; color: var(--t2); line-height: 1.8; font-weight: 300; }
+
+    /* ── CTA ── */
+    .cta-section { background: var(--bg); padding: 100px 5%; text-align: center; position: relative; overflow: hidden; }
+    .cta-section::before {
+      content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+      width: 700px; height: 350px;
+      background: radial-gradient(ellipse, rgba(79,255,176,.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-inner { position: relative; z-index: 1; max-width: 560px; margin: 0 auto; }
+    .cta-section h2 { font-size: clamp(1.75rem, 3vw, 2.4rem); font-weight: 700; letter-spacing: -.03em; margin-bottom: 1rem; }
+    .cta-section h2 .ac { color: var(--accent); }
+    .cta-section p { font-size: 1rem; color: var(--t2); line-height: 1.75; margin-bottom: 2rem; font-weight: 300; }
+    .cta-row { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .cta-note { margin-top: 1.5rem; font-family: var(--mono); font-size: .63rem; color: var(--t3); letter-spacing: .06em; }
+
+    /* ── REVEAL ── */
+    .rv { opacity: 0; transform: translateY(18px); transition: opacity .5s ease, transform .5s ease; }
+    .rv.in { opacity: 1; transform: none; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 2.2rem; }
+      .cta-row { flex-direction: column; align-items: center; }
+      .btn-p, .btn-o { width: 100%; justify-content: center; }
+    }
+    @media (max-width: 480px) {
+      section { padding: 60px 5%; }
+      .hero { padding: calc(64px + 50px) 5% 50px; }
+    }
+  </style>
+</head>
+<body>
+<script src="navbar.js"></script>
+
+<!-- HERO -->
+<section class="hero" aria-labelledby="hero-h1">
+  <div class="hero-inner">
+
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="https://www.sarathg.me/">sarathg.me</a>
+      <span>›</span>
+      <span style="color:var(--t2)">gethired</span>
+    </nav>
+
+    <div class="hero-tag"><span class="dot"></span>Free · Rule-Based · No AI Grading</div>
+
+    <h1 id="hero-h1">
+      Know where you stand<br/>
+      <span class="ac">before a recruiter does.</span>
+    </h1>
+
+    <p class="hero-desc">
+      GetHired screens your CV against real entry-level cybersecurity job postings, runs a
+      checkpoint-based practical skills assessment, and turns both into a sequenced roadmap —
+      "start here, then this, then this." Built for freshers, career switchers, and anyone
+      self-taught trying to land their first cybersecurity role.
+    </p>
+
+    <div class="stats" role="list">
+      <div role="listitem"><div class="stat-n">6</div><div class="stat-l">CV Skill Categories</div></div>
+      <div role="listitem"><div class="stat-n">23</div><div class="stat-l">Assessment Checkpoints</div></div>
+      <div role="listitem"><div class="stat-n">0</div><div class="stat-l">AI API Calls</div></div>
+      <div role="listitem"><div class="stat-n">Free</div><div class="stat-l">No Login Required</div></div>
+    </div>
+
+    <div class="hero-actions">
+      <a href="https://gethired.sarathg.me" class="btn-p" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+        Try GetHired
+      </a>
+      <a href="#how-it-works" class="btn-o">How it works</a>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT GETHIRED IS -->
+<section class="svc-section" id="tools" aria-labelledby="tools-h">
+  <div class="sec">
+    <p class="eyebrow rv">What's Inside</p>
+    <h2 class="sec-title rv" id="tools-h">Three tools, <span class="ac">one path.</span></h2>
+    <p class="sec-desc rv">Each one produces real, structured gap data — not vague advice — and each one feeds the next.</p>
+
+    <div class="svc-grid">
+      <div class="svc-item rv">
+        <div class="svc-num">01 / CV Screener</div>
+        <h3>See what recruiters and ATS filters actually check for</h3>
+        <p>Upload a PDF or DOCX CV and get scored against certifications, tools, concepts &amp; frameworks, scripting, and soft skills pulled from real fresher-level SOC analyst, VAPT, and cybersecurity intern postings — with "worth adding" suggestions, not just a pass/fail.</p>
+        <div class="tags"><span class="tag">Weighted Keyword Match</span><span class="tag">No AI</span></div>
+      </div>
+      <div class="svc-item rv">
+        <div class="svc-num">02 / Practical Assessment</div>
+        <h3>Prove skill, not just resume keywords</h3>
+        <p>Static, checkpoint-based scenarios — a log excerpt, a vulnerable code snippet, a SOC alert — covering log analysis, networking, vulnerability identification, OWASP Top 10, and incident-response triage. No live lab infrastructure required; every answer is checked against a known-correct value.</p>
+        <div class="tags"><span class="tag">Exact-Match Grading</span><span class="tag">CTF-Style</span></div>
+      </div>
+      <div class="svc-item rv">
+        <div class="svc-num">03 / Roadmap</div>
+        <h3>A sequence, not a wall of suggestions</h3>
+        <p>Combines your CV and assessment gaps into an honest, ordered plan — fundamentals first, then hands-on practice, then certifications — so you know what to actually do next instead of facing a flat list of everything you're missing at once.</p>
+        <div class="tags"><span class="tag">Rule-Based</span><span class="tag">Sequenced</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHO THIS IS FOR -->
+<section class="audience-section" aria-labelledby="aud-h">
+  <div class="sec">
+    <p class="eyebrow rv">Who It's For</p>
+    <h2 class="sec-title rv" id="aud-h">Built for people <span class="ac">starting out.</span></h2>
+    <p class="sec-desc rv">Not another tool that assumes you already have three years of SOC experience.</p>
+
+    <div class="audience-grid">
+      <div class="aud-item rv">
+        <div class="aud-label">Fresh Graduates</div>
+        <h4>Final-year and recent CS/IT grads</h4>
+        <p>See exactly which certifications and tools show up most often in fresher postings before you apply.</p>
+      </div>
+      <div class="aud-item rv">
+        <div class="aud-label">Non-CS Backgrounds</div>
+        <h4>B.Sc, diploma, and self-taught candidates</h4>
+        <p>Education is shown as informational context only — never scored, never a gate. What matters is what you can demonstrate.</p>
+      </div>
+      <div class="aud-item rv">
+        <div class="aud-label">Career Switchers</div>
+        <h4>Moving into security from another field</h4>
+        <p>Get an honest read on real gaps instead of guessing which skills actually matter to hiring managers.</p>
+      </div>
+      <div class="aud-item rv">
+        <div class="aud-label">Self-Learners</div>
+        <h4>Been studying, not sure it's landing</h4>
+        <p>The practical assessment checks whether concepts you've read about actually translate to investigation reasoning.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="method-section" id="how-it-works" aria-labelledby="method-h">
+  <div class="sec">
+    <p class="eyebrow rv">Process</p>
+    <h2 class="sec-title rv" id="method-h">How it <span class="ac">works.</span></h2>
+    <p class="sec-desc rv">Three steps, all in one sitting — no account, no setup.</p>
+
+    <div class="method-steps">
+      <div class="m-step rv">
+        <div class="m-num">01</div>
+        <div class="m-body">
+          <h4>Upload your CV</h4>
+          <p>Get an instant score against real fresher cybersecurity job requirements, broken down by category, with advisory next-step suggestions — not a rejection letter in disguise.</p>
+        </div>
+      </div>
+      <div class="m-step rv">
+        <div class="m-num">02</div>
+        <div class="m-body">
+          <h4>Take the practical assessment</h4>
+          <p>Work through static, self-contained scenarios that mirror how an analyst actually investigates — no lab setup, no vulnerable VM to spin up.</p>
+        </div>
+      </div>
+      <div class="m-step rv">
+        <div class="m-num">03</div>
+        <div class="m-body">
+          <h4>Get your sequenced roadmap</h4>
+          <p>Both results combine into a step-by-step plan — fundamentals, then hands-on practice, then certifications — so you always know what to work on next.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RECOMMENDED READING -->
+<section class="reading-section" aria-labelledby="reading-h">
+  <div class="sec">
+    <p class="eyebrow rv">Go Deeper</p>
+    <h2 class="sec-title rv" id="reading-h">Recommended <span class="ac">reading.</span></h2>
+    <p class="sec-desc rv">If GetHired's assessment flags a gap, these free guides on this site are a good next stop for hands-on practice in that exact area.</p>
+
+    <div class="reading-grid">
+      <a href="/wazuh.html" class="reading-item rv">
+        <div class="fw-lbl">Pairs with: Log Analysis &amp; SIEM</div>
+        <h4>SOC Lab — Wazuh Log Monitoring</h4>
+        <p>A complete home-lab guide to deploying Wazuh, connecting an agent, running attacks, and reading the alerts they generate — the exact muscle the log-analysis checkpoints test.</p>
+        <span class="go">Read the guide →</span>
+      </a>
+      <a href="/osint.html" class="reading-item rv">
+        <div class="fw-lbl">Pairs with: Concepts &amp; Frameworks</div>
+        <h4>OSINT Framework — 2026 Edition</h4>
+        <p>Open-source intelligence and investigation workflows that underpin a lot of the "concepts &amp; frameworks" reasoning GetHired's CV screener and assessment both check for.</p>
+        <span class="go">Read the guide →</span>
+      </a>
+      <a href="/shopeasy.html" class="reading-item rv">
+        <div class="fw-lbl">Pairs with: OWASP Top 10 &amp; Vulnerability ID</div>
+        <h4>API Security Lab — ShopEasy</h4>
+        <p>A vulnerable and fixed version of the same app — attack BOLA, JWT flaws, and broken auth, then see what secure code does differently. Directly builds the pattern-recognition the vulnerability-ID checkpoints test.</p>
+        <span class="go">Read the guide →</span>
+      </a>
+      <a href="/pivoting.html" class="reading-item rv">
+        <div class="fw-lbl">Pairs with: Networking &amp; Incident Response</div>
+        <h4>Pivoting Lab — Port Forwarding &amp; Tunneling</h4>
+        <p>Hands-on networking, lateral movement, and investigation reasoning against a real two-network lab — good next step after the networking and incident-response checkpoints.</p>
+        <span class="go">Read the guide →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section" aria-labelledby="faq-h">
+  <div class="sec">
+    <p class="eyebrow rv">Questions</p>
+    <h2 class="sec-title rv" id="faq-h">Good to <span class="ac">know.</span></h2>
+
+    <div class="faq-wrap">
+      <div class="faq-item">
+        <div class="faq-q" tabindex="0" role="button" aria-expanded="false" onclick="faq(this)">
+          <h4>Is GetHired free to use?</h4>
+          <span class="faq-ico">+</span>
+        </div>
+        <div class="faq-a"><p>Yes. There's no cost, no paywall, and no login required to screen a CV or take the practical assessment.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" tabindex="0" role="button" aria-expanded="false" onclick="faq(this)">
+          <h4>Does GetHired use AI to grade my CV or assessment?</h4>
+          <span class="faq-ico">+</span>
+        </div>
+        <div class="faq-a"><p>No. GetHired is deliberately rule-based end to end — weighted keyword matching for the CV screener, exact-match checkpoint grading for the practical assessment, and config-driven logic for the roadmap. No LLM or external AI API is called anywhere in the product, by design — partly for cost reasons, partly so every score is explainable and reproducible.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" tabindex="0" role="button" aria-expanded="false" onclick="faq(this)">
+          <h4>What if I don't have hands-on experience yet?</h4>
+          <span class="faq-ico">+</span>
+        </div>
+        <div class="faq-a"><p>That's exactly who GetHired is built for. The practical assessment doesn't require any lab setup or prior tooling — it's a set of static, self-contained scenarios you can attempt with no infrastructure of your own. The roadmap it produces is meant to be the starting point, not a gate you have to already pass.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" tabindex="0" role="button" aria-expanded="false" onclick="faq(this)">
+          <h4>Does a non-CS or non-traditional background hurt my score?</h4>
+          <span class="faq-ico">+</span>
+        </div>
+        <div class="faq-a"><p>No. Education is shown as informational context only — it's explicitly excluded from the overall score and never generates a "get a different degree" recommendation. What's scored is skills, tools, and demonstrated concepts.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" aria-labelledby="cta-h">
+  <div class="cta-inner">
+    <p class="eyebrow">Ready When You Are</p>
+    <h2 id="cta-h">See your <span class="ac">real gaps.</span></h2>
+    <p>
+      Takes a few minutes. No login, no cost — just an honest read on where your
+      CV and skills stand today, and a sequenced plan for what's next.
+    </p>
+    <div class="cta-row">
+      <a href="https://gethired.sarathg.me" class="btn-p" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+        Start with GetHired
+      </a>
+      <a href="/start.html" class="btn-o">Read the Cybersec Guide</a>
+    </div>
+    <p class="cta-note">gethired.sarathg.me · Free · No login · Rule-based, not AI</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<script src="footer.js"></script>
+
+<script>
+  function faq(btn) {
+    const item = btn.closest('.faq-item');
+    const open = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(el => {
+      el.classList.remove('open');
+      el.querySelector('.faq-q').setAttribute('aria-expanded','false');
+    });
+    if (!open) { item.classList.add('open'); btn.setAttribute('aria-expanded','true'); }
+  }
+  document.querySelectorAll('.faq-q').forEach(b => {
+    b.addEventListener('keydown', e => { if(e.key==='Enter'||e.key===' '){e.preventDefault();faq(b);} });
+  });
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('in'), i * 55);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.07 });
+  document.querySelectorAll('.rv').forEach(el => obs.observe(el));
+</script>
+
+</body>
+</html>

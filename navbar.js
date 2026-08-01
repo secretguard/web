@@ -475,6 +475,8 @@
 
         <a href="/start.html" class="sg-link" data-sg-nav="guide">Cybersec Guide</a>
 
+        <a href="/gethired.html" class="sg-link" data-sg-nav="gethired" style="color:#4fffb0;">GetHired</a>
+
         <button onclick="SG.toggleMode()" class="sg-mode-btn"
           aria-label="Toggle dark/light mode" title="Toggle theme" id="sg-mode-btn">
           ☀
@@ -579,6 +581,7 @@
         </div>
 
         <a href="/start.html" class="sg-mobile-link" onclick="SG.toggleMobile()" data-sg-nav="guide">Cybersec Guide</a>
+        <a href="/gethired.html" class="sg-mobile-link" onclick="SG.toggleMobile()" data-sg-nav="gethired" style="color:#4fffb0;">GetHired</a>
         <a href="/#contact" class="sg-mobile-cta" onclick="SG.toggleMobile()">Contact Me</a>
       </div>
     </div>
