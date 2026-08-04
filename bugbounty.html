@@ -13,12 +13,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Getting Started with Bug Bounty — A Practical Guide</title>
-<meta name="description" content="A practical, honest guide to starting bug bounty hunting: which platform to pick, what to check before you test, how to write a report that doesn't get rejected, and the mistakes that get beginners banned instead of paid.">
+<meta name="description" content="A practical, honest guide to starting bug bounty hunting: what to learn first, how to pick a platform and a program that isn't already picked clean, how to find and report your first real bug, and an honest read on how long it actually takes.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ============ TOKENS ============ */
+/* ============ TOKENS (approved — do not change) ============ */
 :root{
   --bg-void:#090c11;
   --bg-panel:#10151d;
@@ -72,14 +72,14 @@ body::before{
   pointer-events:none;
   z-index:0;
 }
-h1,h2,h3{font-family:var(--f-display);color:var(--ink);margin:0;font-weight:600;}
+h1,h2,h3,h4{font-family:var(--f-display);color:var(--ink);margin:0;font-weight:600;}
 p{margin:0;}
 a{color:inherit;}
 button{font-family:var(--f-body);cursor:pointer;}
 .mono{font-family:var(--f-mono);}
+ul,ol{margin:0;padding:0;}
 
 ::selection{background:var(--gold);color:#2a1502;}
-
 :focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:4px;}
 
 @media (prefers-reduced-motion: reduce){
@@ -87,294 +87,207 @@ button{font-family:var(--f-body);cursor:pointer;}
 }
 
 /* ============ LAYOUT PRIMITIVES ============ */
-.section{
-  position:relative;
-  z-index:1;
-  padding:96px 20px;
-  max-width:var(--maxw);
-  margin:0 auto;
-}
-@media (max-width:640px){
-  .section{padding:56px 18px;}
-}
+.section{position:relative; z-index:1; padding:88px 20px; max-width:var(--maxw); margin:0 auto;}
+@media (max-width:640px){ .section{padding:52px 18px;} }
 .section-inner{position:relative;}
 .eyebrow{
-  font-family:var(--f-mono);
-  font-size:12.5px;
-  letter-spacing:0.11em;
-  text-transform:uppercase;
-  color:var(--gold);
-  display:flex;
-  align-items:center;
-  gap:10px;
-  margin-bottom:14px;
+  font-family:var(--f-mono); font-size:12.5px; letter-spacing:0.11em; text-transform:uppercase;
+  color:var(--gold); display:flex; align-items:center; gap:10px; margin-bottom:14px;
 }
-.eyebrow::before{
-  content:"";
-  width:22px;height:1px;
-  background:var(--gold);
-  display:inline-block;
-}
-h2.title{
-  font-size:clamp(28px,5.2vw,42px);
-  line-height:1.15;
-  letter-spacing:-0.01em;
-  margin-bottom:20px;
-  max-width:16ch;
-}
-.lede{
-  font-size:17.5px;
-  color:var(--ink-dim);
-  max-width:62ch;
-  margin-bottom:8px;
-}
-.lede b, .lede strong{color:var(--ink);font-weight:600;}
-.body-text{font-size:16px;color:var(--ink-dim);max-width:62ch;}
+.eyebrow::before{content:""; width:22px;height:1px; background:var(--gold); display:inline-block;}
+h2.title{font-size:clamp(26px,5vw,40px); line-height:1.15; letter-spacing:-0.01em; margin-bottom:18px; max-width:17ch;}
+.lede{font-size:17px; color:var(--ink-dim); max-width:62ch; margin-bottom:8px;}
+.lede b, .lede strong{color:var(--ink); font-weight:600;}
+.body-text{font-size:15.5px; color:var(--ink-dim); max-width:62ch;}
 .body-text + .body-text{margin-top:14px;}
-.body-text b, .body-text strong{color:var(--ink);font-weight:600;}
+.body-text b, .body-text strong{color:var(--ink); font-weight:600;}
 
-.card{
-  background:var(--bg-panel);
-  border:1px solid var(--line);
-  border-radius:var(--radius);
-  padding:22px 24px;
-}
+.card{background:var(--bg-panel); border:1px solid var(--line); border-radius:var(--radius); padding:22px 24px;}
+
 .callout{
   border-left:2px solid var(--gold);
   background:linear-gradient(90deg, rgba(255,184,77,0.08), transparent 70%);
-  padding:16px 20px;
-  border-radius:0 var(--radius-sm) var(--radius-sm) 0;
-  font-size:15px;
-  color:var(--ink-dim);
-  margin:22px 0;
+  padding:15px 19px; border-radius:0 var(--radius-sm) var(--radius-sm) 0;
+  font-size:14.5px; color:var(--ink-dim); margin:20px 0;
 }
 .callout b{color:var(--ink);}
-.callout.warn{border-left-color:var(--warn);background:linear-gradient(90deg, rgba(255,84,112,0.08), transparent 70%);}
-.callout.signal{border-left-color:var(--signal);background:linear-gradient(90deg, rgba(74,222,128,0.08), transparent 70%);}
+.callout.warn{border-left-color:var(--warn); background:linear-gradient(90deg, rgba(255,84,112,0.08), transparent 70%);}
+.callout.signal{border-left-color:var(--signal); background:linear-gradient(90deg, rgba(74,222,128,0.08), transparent 70%);}
 
 .reveal{opacity:0; transform:translateY(18px); transition:opacity 0.7s cubic-bezier(.2,.7,.2,1), transform 0.7s cubic-bezier(.2,.7,.2,1);}
 .reveal.is-visible{opacity:1; transform:translateY(0);}
-.reveal-stagger > * {transition-delay:calc(var(--i,0) * 90ms);}
+.reveal-stagger > * {transition-delay:calc(var(--i,0) * 80ms);}
 
 /* ============ TOP CHROME ============ */
-.progress-track{
-  position:fixed; top:0; left:0; right:0; height:2px;
-  background:rgba(255,255,255,0.06); z-index:100;
-}
-.progress-fill{
-  height:100%; width:0%;
-  background:linear-gradient(90deg, var(--gold), var(--signal), var(--warn));
-  transition:width 0.1s linear;
-}
+.progress-track{position:fixed; top:0; left:0; right:0; height:2px; background:rgba(255,255,255,0.06); z-index:100;}
+.progress-fill{height:100%; width:0%; background:linear-gradient(90deg, var(--signal), var(--gold), var(--warn)); transition:width 0.1s linear;}
 
 .pillnav{
   position:fixed; top:2px; left:0; right:0; z-index:99;
-  display:flex; gap:6px; padding:10px 16px;
-  overflow-x:auto;
-  background:rgba(9,12,17,0.82);
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
-  border-bottom:1px solid var(--line);
-  scrollbar-width:none;
+  display:flex; gap:6px; padding:10px 16px; overflow-x:auto;
+  background:rgba(9,12,17,0.85); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line); scrollbar-width:none;
 }
 .pillnav::-webkit-scrollbar{display:none;}
 .pillnav a{
-  flex:none;
-  font-family:var(--f-mono);
-  font-size:12px;
-  letter-spacing:0.02em;
-  color:var(--ink-faint);
-  text-decoration:none;
-  padding:7px 13px;
-  border-radius:100px;
-  border:1px solid transparent;
-  white-space:nowrap;
+  flex:none; font-family:var(--f-mono); font-size:11.5px; letter-spacing:0.02em; color:var(--ink-faint);
+  text-decoration:none; padding:7px 12px; border-radius:100px; border:1px solid transparent; white-space:nowrap;
   transition:color .2s, border-color .2s, background .2s;
 }
 .pillnav a:hover{color:var(--ink-dim);}
-.pillnav a.is-active{
-  color:var(--ink);
-  border-color:var(--line-bright);
-  background:var(--bg-panel-2);
-}
+.pillnav a.is-active{color:var(--ink); border-color:var(--line-bright); background:var(--bg-panel-2);}
 
 /* ============ HERO ============ */
-.hero{
-  min-height:100svh;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  padding-top:140px;
-  max-width:1000px;
-}
-.hero-eyebrow{
-  font-family:var(--f-mono);
-  font-size:13px;
-  color:var(--ink-faint);
-  letter-spacing:0.04em;
-  margin-bottom:22px;
-}
+.hero{min-height:100svh; display:flex; flex-direction:column; justify-content:center; padding-top:150px; max-width:1000px;}
+.hero-eyebrow{font-family:var(--f-mono); font-size:13px; color:var(--ink-faint); letter-spacing:0.04em; margin-bottom:22px;}
 .hero-eyebrow .dot{color:var(--signal);}
-.hero h1{
-  font-size:clamp(32px,6.4vw,58px);
-  line-height:1.08;
-  letter-spacing:-0.02em;
-  max-width:17ch;
-}
+.hero h1{font-size:clamp(32px,6.4vw,56px); line-height:1.1; letter-spacing:-0.02em; max-width:17ch;}
 .hero h1 .accent{color:var(--gold);}
-.hero .sub{
-  margin-top:24px;
-  font-size:18px;
-  color:var(--ink-dim);
-  max-width:56ch;
-}
-.hero-rings{
-  margin:44px 0 8px;
-  width:150px;height:150px;
-}
-.scrollcue{
-  margin-top:40px;
-  display:flex;align-items:center;gap:10px;
-  font-family:var(--f-mono);
-  font-size:12.5px;
-  color:var(--ink-faint);
-}
-.scrollcue .arrow{
-  animation:bob 1.8s ease-in-out infinite;
-}
+.hero .sub{margin-top:22px; font-size:17.5px; color:var(--ink-dim); max-width:58ch;}
+.hero-rings{margin:38px 0 6px; width:120px;height:120px;}
+.scrollcue{margin-top:34px; display:flex; align-items:center; gap:10px; font-family:var(--f-mono); font-size:12.5px; color:var(--ink-faint);}
+.scrollcue .arrow{animation:bob 1.8s ease-in-out infinite;}
 @keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(6px);}}
-
-/* ============ SCOPE RINGS (signature motif) ============ */
 .rings-svg circle{fill:none;}
-.ring-anim circle{
-  animation:ringspin 40s linear infinite;
-  transform-origin:center;
-}
+.ring-anim circle{animation:ringspin 40s linear infinite; transform-origin:center;}
 .ring-anim circle:nth-child(2){animation-duration:55s;animation-direction:reverse;}
 .ring-anim circle:nth-child(3){animation-duration:70s;}
 @keyframes ringspin{to{transform:rotate(360deg);}}
 
 /* ============ TWO-COLUMN DEFINITION PANELS ============ */
-.def-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:16px;
-  margin:36px 0;
-}
+.def-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:32px 0;}
 @media (max-width:700px){.def-grid{grid-template-columns:1fr;}}
-.def-panel{
-  background:var(--bg-panel);
-  border:1px solid var(--line);
-  border-radius:var(--radius);
-  padding:22px;
-}
-.def-panel .tag{font-family:var(--f-mono);font-size:11px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.08em;}
-.def-panel h3{font-size:16px;margin-top:6px;margin-bottom:8px;}
-.def-panel p{font-size:14.5px;color:var(--ink-dim);}
+.def-panel{background:var(--bg-panel); border:1px solid var(--line); border-radius:var(--radius); padding:20px 22px;}
+.def-panel .tag{font-family:var(--f-mono); font-size:11px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.08em;}
+.def-panel h3{font-size:16px; margin-top:6px; margin-bottom:8px;}
+.def-panel p{font-size:14px; color:var(--ink-dim);}
 
-/* ============ PLATFORM COMPARISON ============ */
-.platform-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:16px;
-  margin:32px 0;
-}
-@media (max-width:760px){.platform-grid{grid-template-columns:1fr;}}
-.platform-card{
-  position:relative;
-  background:var(--bg-panel);
-  border:1px solid var(--line);
-  border-radius:var(--radius);
-  padding:24px 22px 22px;
-  overflow:hidden;
-}
-.platform-card::before{
-  content:"";
-  position:absolute; top:0; left:0; right:0; height:3px;
-  background:var(--card-color,var(--gold));
-}
-.platform-head{display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:4px;}
-.platform-name{font-size:19px;}
-.platform-badge{
-  font-family:var(--f-mono); font-size:10px; font-weight:700; letter-spacing:.05em; text-transform:uppercase;
-  color:var(--bg-void); background:var(--gold);
-  padding:4px 9px; border-radius:100px; white-space:nowrap; flex:none;
-}
-.platform-sub{font-family:var(--f-mono); font-size:11px; color:var(--card-color,var(--ink-faint)); text-transform:uppercase; letter-spacing:.06em; margin-bottom:14px;}
-.platform-facts{list-style:none; margin:0 0 14px; padding:0; display:flex; flex-direction:column; gap:8px;}
-.platform-facts li{font-size:13.5px; line-height:1.55; color:var(--ink-dim); padding-left:18px; position:relative;}
-.platform-facts li::before{content:"→"; position:absolute; left:0; color:var(--card-color,var(--gold)); font-weight:700;}
-.platform-facts li b{color:var(--ink);}
-.platform-best{
-  font-size:13px; color:var(--ink); font-weight:600;
-  border-top:1px solid var(--line); padding-top:12px; margin-top:4px;
-}
-.platform-best span{color:var(--ink-faint); font-weight:400;}
-
-/* ============ CHECKLIST ============ */
-.checklist-progress{
-  display:flex; align-items:center; gap:12px;
-  font-family:var(--f-mono); font-size:12px; color:var(--ink-faint);
-  margin:28px 0 16px;
-}
+/* ============ CHECKLIST (What to learn first) ============ */
+.checklist-progress{display:flex; align-items:center; gap:12px; font-family:var(--f-mono); font-size:12px; color:var(--ink-faint); margin:26px 0 16px;}
 .checklist-progress-track{flex:1; height:4px; background:var(--bg-panel-3); border-radius:2px; overflow:hidden;}
 .checklist-progress-fill{height:100%; width:0%; background:var(--signal); transition:width .3s ease;}
-.checklist{display:flex; flex-direction:column; gap:10px; margin:0 0 8px;}
+.checklist{display:flex; flex-direction:column; gap:9px; margin:0 0 6px;}
 .check-item{
-  position:relative;
-  display:flex; align-items:flex-start; gap:14px;
-  padding:16px 18px;
-  background:var(--bg-panel);
-  border:1px solid var(--line);
-  border-radius:var(--radius);
-  cursor:pointer;
+  position:relative; display:flex; align-items:flex-start; gap:14px; padding:15px 17px;
+  background:var(--bg-panel); border:1px solid var(--line); border-radius:var(--radius); cursor:pointer;
   transition:border-color .2s, background .2s;
 }
 .check-item:hover{border-color:var(--line-bright);}
 .check-input{position:absolute; opacity:0; width:24px; height:24px; margin:0; cursor:pointer;}
 .check-box{
-  width:21px; height:21px; border-radius:6px; flex:none; margin-top:1px;
-  border:1.5px solid var(--line-bright);
-  display:flex; align-items:center; justify-content:center;
+  width:20px; height:20px; border-radius:6px; flex:none; margin-top:1px;
+  border:1.5px solid var(--line-bright); display:flex; align-items:center; justify-content:center;
   transition:background .2s, border-color .2s;
 }
 .check-box::after{
-  content:""; width:9px; height:5px;
-  border-left:2px solid var(--bg-void); border-bottom:2px solid var(--bg-void);
-  transform:rotate(-45deg) translate(1px,-1px);
-  opacity:0; transition:opacity .15s;
+  content:""; width:9px; height:5px; border-left:2px solid var(--bg-void); border-bottom:2px solid var(--bg-void);
+  transform:rotate(-45deg) translate(1px,-1px); opacity:0; transition:opacity .15s;
 }
 .check-input:checked ~ .check-box{background:var(--signal); border-color:var(--signal);}
 .check-input:checked ~ .check-box::after{opacity:1;}
 .check-input:focus-visible ~ .check-box{outline:2px solid var(--gold); outline-offset:2px;}
 .check-content{flex:1;}
-.check-title{display:block; font-weight:600; color:var(--ink); font-size:15px; margin-bottom:4px; transition:color .2s;}
+.check-title{display:block; font-weight:600; color:var(--ink); font-size:14.5px; margin-bottom:3px; transition:color .2s;}
 .check-input:checked ~ .check-content .check-title{color:var(--ink-faint); text-decoration:line-through; text-decoration-color:var(--line-bright);}
-.check-desc{display:block; font-size:13.5px; color:var(--ink-dim); line-height:1.6;}
+.check-desc{display:block; font-size:13px; color:var(--ink-dim); line-height:1.55;}
 
-/* ============ REPORT STEPPER (shared mechanism) ============ */
-.stepper{margin:36px 0 0;}
-.stage{
-  background:var(--bg-panel);
-  border:1px solid var(--line);
-  border-radius:var(--radius);
-  padding:26px 24px;
-  min-height:260px;
-  position:relative;
-  overflow:hidden;
+/* ============ LEARNING PATH — phase timeline ============ */
+.phase-timeline{position:relative; margin:34px 0 0; padding-left:38px;}
+.phase-timeline::before{content:""; position:absolute; left:13px; top:6px; bottom:6px; width:2px; background:var(--line-bright);}
+.phase{position:relative; margin-bottom:26px;}
+.phase:last-child{margin-bottom:0;}
+.phase-num{
+  position:absolute; left:-38px; top:0; width:28px; height:28px; border-radius:50%;
+  background:var(--bg-panel-2); border:1.5px solid var(--gold); color:var(--gold);
+  font-family:var(--f-mono); font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center;
 }
-.stage-bg-grid{
-  position:absolute; inset:0; opacity:.35; pointer-events:none;
-  background-image:linear-gradient(var(--line) 1px, transparent 1px);
-  background-size:100% 44px;
-  mask-image:linear-gradient(to bottom, black, transparent 90%);
+.phase-card{background:var(--bg-panel); border:1px solid var(--line); border-radius:var(--radius); padding:20px 22px;}
+.phase-label{font-family:var(--f-mono); font-size:11px; color:var(--gold); text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px;}
+.phase-title{font-size:18px; margin-bottom:10px;}
+.phase-body{font-size:14px; color:var(--ink-dim); line-height:1.6; margin-bottom:6px;}
+.phase-sub{font-family:var(--f-mono); font-size:10.5px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.06em; margin:16px 0 8px;}
+.phase-sub:first-of-type{margin-top:14px;}
+
+.chip-list{display:flex; flex-wrap:wrap; gap:8px; margin-top:6px;}
+.chip{font-family:var(--f-mono); font-size:12px; color:var(--ink-dim); background:var(--bg-panel-3); border:1px solid var(--line-bright); border-radius:100px; padding:6px 12px;}
+
+.owasp-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:6px; margin-top:6px;}
+@media(max-width:520px){.owasp-grid{grid-template-columns:1fr;}}
+.owasp-tag{display:flex; align-items:baseline; gap:8px; font-size:12.5px; color:var(--ink-dim); background:var(--bg-panel-3); border-radius:6px; padding:7px 10px;}
+.owasp-tag .on{font-family:var(--f-mono); font-size:10px; color:var(--gold); flex:none;}
+
+.progression-flow{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:6px;}
+.progression-node{font-family:var(--f-mono); font-size:12px; font-weight:600; color:var(--ink); background:var(--bg-panel-3); border:1px solid var(--line-bright); border-radius:100px; padding:8px 14px;}
+.progression-node.dim{color:var(--ink-faint); border-style:dashed;}
+.progression-arrow{color:var(--ink-faint); font-size:14px;}
+
+/* ============ PLATFORM COMPARISON ============ */
+.platform-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:30px 0;}
+@media (max-width:760px){.platform-grid{grid-template-columns:1fr;}}
+.platform-card{position:relative; background:var(--bg-panel); border:1px solid var(--line); border-radius:var(--radius); padding:22px 20px 20px; overflow:hidden;}
+.platform-card::before{content:""; position:absolute; top:0; left:0; right:0; height:3px; background:var(--card-color,var(--gold));}
+.platform-head{display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:4px;}
+.platform-name{font-size:18px;}
+.platform-badge{font-family:var(--f-mono); font-size:10px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--bg-void); background:var(--gold); padding:4px 9px; border-radius:100px; white-space:nowrap; flex:none;}
+.platform-sub{font-family:var(--f-mono); font-size:10.5px; color:var(--card-color,var(--ink-faint)); text-transform:uppercase; letter-spacing:.06em; margin-bottom:13px;}
+.platform-facts{list-style:none; margin:0 0 13px; padding:0; display:flex; flex-direction:column; gap:8px;}
+.platform-facts li{font-size:13px; line-height:1.55; color:var(--ink-dim); padding-left:18px; position:relative;}
+.platform-facts li::before{content:"→"; position:absolute; left:0; color:var(--card-color,var(--gold)); font-weight:700;}
+.platform-facts li b{color:var(--ink);}
+.platform-best{font-size:12.5px; color:var(--ink); font-weight:600; border-top:1px solid var(--line); padding-top:11px; margin-top:4px;}
+.platform-best span{color:var(--ink-faint); font-weight:400;}
+
+/* ============ SIGNATURE: PROGRAM-PICKING PANEL ============ */
+.program-panel{
+  background:linear-gradient(180deg, var(--bg-panel-2), var(--bg-panel));
+  border:1px solid var(--line-bright);
+  border-radius:calc(var(--radius) + 8px);
+  padding:8px 26px 34px;
+  position:relative; overflow:hidden;
 }
+.program-panel::before{content:""; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg, var(--signal), var(--gold), var(--warn));}
+.program-panel .section-inner{padding-top:30px;}
+.program-pullquote{font-family:var(--f-display); font-weight:600; font-size:clamp(21px,4.2vw,30px); line-height:1.28; color:var(--ink); max-width:19ch; margin:8px 0 16px;}
+.program-pullquote .hl{color:var(--warn);}
+
+.saturation-meter{margin:38px 0 12px; padding:0 6px;}
+.saturation-bar{height:12px; border-radius:100px; position:relative; background:linear-gradient(90deg, var(--signal), var(--gold) 45%, var(--warn));}
+.saturation-marker{position:absolute; top:-38px; transform:translateX(-50%); font-family:var(--f-mono); font-size:11px; text-align:center; white-space:nowrap;}
+.saturation-marker .num{display:block; font-size:16px; font-weight:700; margin-bottom:2px;}
+.saturation-marker.low{left:16%; color:var(--signal);}
+.saturation-marker.high{left:86%; color:var(--warn);}
+.saturation-cap{font-family:var(--f-mono); font-size:11px; color:var(--ink-faint); text-align:center; margin-top:36px; max-width:44ch; margin-left:auto; margin-right:auto;}
+
+.tip-card{margin-top:20px; padding:15px 17px; border-radius:var(--radius-sm); border:1.5px dashed var(--line-bright); background:var(--bg-panel-3);}
+.tip-card-label{font-family:var(--f-mono); font-size:10.5px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.06em; margin-bottom:8px;}
+.tip-card p{font-size:13px; color:var(--ink-dim); line-height:1.6;}
+.tip-card p b{color:var(--ink);}
+
+/* ============ WORKFLOW (find your first bug) ============ */
+.workflow-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:0; margin:30px 0;}
+@media(max-width:860px){.workflow-grid{grid-template-columns:1fr; gap:12px;}}
+.workflow-card{background:var(--bg-panel); border:1px solid var(--line); padding:20px 18px;}
+.workflow-grid .workflow-card{border-radius:0;}
+.workflow-grid .workflow-card:first-child{border-radius:var(--radius) 0 0 var(--radius);}
+.workflow-grid .workflow-card:last-child{border-radius:0 var(--radius) var(--radius) 0;}
+.workflow-grid .workflow-card:not(:last-child){border-right:none;}
+@media(max-width:860px){
+  .workflow-grid .workflow-card{border-radius:var(--radius) !important; border-right:1px solid var(--line) !important;}
+}
+.workflow-num{font-family:var(--f-mono); font-size:24px; font-weight:700; color:var(--gold); opacity:.55; margin-bottom:8px;}
+.workflow-card h4{font-size:14.5px; margin-bottom:7px;}
+.workflow-card p{font-size:12.5px; color:var(--ink-dim); line-height:1.6;}
+
+/* ============ REPORT STEPPER ============ */
+.stepper{margin:32px 0 0;}
+.stage{background:var(--bg-panel); border:1px solid var(--line); border-radius:var(--radius); padding:24px 22px; min-height:250px; position:relative; overflow:hidden;}
+.stage-bg-grid{position:absolute; inset:0; opacity:.35; pointer-events:none; background-image:linear-gradient(var(--line) 1px, transparent 1px); background-size:100% 44px; mask-image:linear-gradient(to bottom, black, transparent 90%);}
 .step-panel{display:none; position:relative; z-index:1;}
 .step-panel.is-active{display:block; animation:panelin .45s cubic-bezier(.2,.7,.2,1);}
 @keyframes panelin{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);}}
 .step-tag{font-family:var(--f-mono); font-size:11px; color:var(--gold); text-transform:uppercase; letter-spacing:.06em; margin-bottom:10px;}
-.step-headline{font-size:19px; font-weight:600; color:var(--ink); margin-bottom:10px; font-family:var(--f-display);}
-.step-desc{font-size:15px; color:var(--ink-dim); line-height:1.65;}
+.step-headline{font-size:18px; font-weight:600; color:var(--ink); margin-bottom:10px; font-family:var(--f-display);}
+.step-desc{font-size:14.5px; color:var(--ink-dim); line-height:1.65;}
 .step-desc b{color:var(--ink);}
 .example-row{display:flex; gap:12px; flex-wrap:wrap; margin-top:16px;}
 .example-row .callout{flex:1 1 220px; margin:0;}
@@ -382,82 +295,71 @@ h2.title{
 .example-row .callout.warn .example-label{color:var(--warn);}
 .example-row .callout.signal .example-label{color:var(--signal);}
 
-.stepper-controls{
-  display:flex; align-items:center; justify-content:space-between;
-  gap:12px; margin-top:18px; flex-wrap:wrap;
-}
-.step-btn{
-  background:var(--bg-panel-2); border:1px solid var(--line-bright);
-  color:var(--ink); border-radius:100px; padding:9px 18px;
-  font-size:13.5px; font-weight:600; display:flex; align-items:center; gap:6px;
-  transition:background .2s, opacity .2s;
-}
+.stepper-controls{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:18px; flex-wrap:wrap;}
+.step-btn{background:var(--bg-panel-2); border:1px solid var(--line-bright); color:var(--ink); border-radius:100px; padding:9px 18px; font-size:13px; font-weight:600; display:flex; align-items:center; gap:6px; transition:background .2s, opacity .2s;}
 .step-btn:hover{background:var(--bg-panel-3);}
 .step-btn:disabled{opacity:.35; cursor:default;}
 .step-dots{display:flex; gap:6px; flex-wrap:wrap; justify-content:center;}
-.step-dot{
-  width:8px;height:8px;border-radius:50%; background:var(--line-bright); border:none; padding:0;
-  transition:background .2s, transform .2s;
-}
+.step-dot{width:8px;height:8px;border-radius:50%; background:var(--line-bright); border:none; padding:0; transition:background .2s, transform .2s;}
 .step-dot.is-active{background:var(--gold); transform:scale(1.35);}
 .step-counter{font-family:var(--f-mono); font-size:11.5px; color:var(--ink-faint); white-space:nowrap;}
 
 /* ============ MISTAKES GRID ============ */
-.mistake-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px;
-  margin:32px 0;
-}
+.mistake-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:30px 0;}
 @media (max-width:700px){.mistake-grid{grid-template-columns:1fr;}}
-.mistake-card{
-  background:linear-gradient(180deg, rgba(255,84,112,0.06), transparent 40%), var(--bg-panel);
-  border:1px solid var(--line);
-  border-left:3px solid var(--warn);
-  border-radius:var(--radius-sm) var(--radius) var(--radius) var(--radius-sm);
-  padding:16px 18px;
-}
+.mistake-card{background:linear-gradient(180deg, rgba(255,84,112,0.06), transparent 40%), var(--bg-panel); border:1px solid var(--line); border-left:3px solid var(--warn); border-radius:var(--radius-sm) var(--radius) var(--radius) var(--radius-sm); padding:16px 18px;}
 .mistake-head{display:flex; align-items:center; gap:9px; margin-bottom:8px;}
-.mistake-x{
-  font-family:var(--f-mono); font-size:11px; font-weight:700; color:var(--warn);
-  border:1px solid var(--warn); border-radius:100px; padding:2px 8px; flex:none;
-}
-.mistake-card h4{font-size:14.5px; font-weight:600; color:var(--ink);}
-.mistake-card p{font-size:13.5px; color:var(--ink-dim); line-height:1.6;}
+.mistake-x{font-family:var(--f-mono); font-size:11px; font-weight:700; color:var(--warn); border:1px solid var(--warn); border-radius:100px; padding:2px 8px; flex:none;}
+.mistake-card h4{font-size:14px; font-weight:600; color:var(--ink);}
+.mistake-card p{font-size:13px; color:var(--ink-dim); line-height:1.6;}
 
-/* legend chips */
+/* ============ REALITY CHECK ============ */
+.reality-card{background:var(--bg-panel); border:1px solid var(--line); border-radius:var(--radius); padding:28px 24px; margin:30px 0 0;}
+.reality-quote{font-family:var(--f-display); font-weight:600; font-size:clamp(20px,3.6vw,25px); line-height:1.32; color:var(--ink); max-width:22ch; margin-bottom:16px;}
+.timeline-bar{display:flex; border-radius:100px; overflow:hidden; height:9px; margin:26px 0 10px;}
+.timeline-seg{flex:1;}
+.timeline-seg.t1{background:var(--ink-faint);}
+.timeline-seg.t2{background:var(--gold);}
+.timeline-seg.t3{background:var(--signal);}
+.timeline-labels{display:flex; gap:10px; font-family:var(--f-mono); font-size:10px; color:var(--ink-faint); text-align:left;}
+.timeline-labels span{flex:1;}
+.timeline-labels span:nth-child(2){text-align:center;}
+.timeline-labels span:last-child{text-align:right;}
+.reality-disclaimer{font-size:12px; color:var(--ink-faint); font-style:italic; margin-top:16px;}
+
+/* ============ RESOURCES ============ */
+.resource-group{margin:0 0 30px;}
+.resource-group:last-child{margin-bottom:0;}
+.resource-cat-label{font-family:var(--f-mono); font-size:11.5px; color:var(--gold); text-transform:uppercase; letter-spacing:.07em; margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid var(--line);}
+.resource-list{display:flex; flex-direction:column;}
+.resource-item{display:flex; align-items:flex-start; justify-content:space-between; gap:14px; padding:13px 4px; border-bottom:1px solid var(--line); text-decoration:none; color:inherit; transition:background .15s;}
+.resource-item:hover{background:var(--bg-panel);}
+.resource-item:last-child{border-bottom:none;}
+.resource-main{flex:1;}
+.resource-title{font-size:14px; font-weight:600; color:var(--ink); margin-bottom:3px;}
+.resource-desc{font-size:12.5px; color:var(--ink-dim); line-height:1.5;}
+.resource-arrow{font-family:var(--f-mono); font-size:14px; color:var(--ink-faint); flex:none; margin-top:2px; transition:transform .15s, color .15s;}
+.resource-item:hover .resource-arrow{color:var(--gold); transform:translate(2px,-2px);}
+
+/* legend chips (kept for potential inline use) */
 .legend{display:flex; gap:16px; flex-wrap:wrap; margin:22px 0 6px;}
 .legend-item{display:flex; align-items:center; gap:8px; font-size:13px; color:var(--ink-dim);}
 .legend-swatch{width:12px;height:12px;border-radius:3px; flex:none;}
 
 /* ============ CLOSING ============ */
 .closing{text-align:left;}
-.credcard{
-  background:var(--bg-panel); border:1px solid var(--line); border-radius:var(--radius);
-  padding:26px 24px; margin:28px 0;
-}
+.credcard{background:var(--bg-panel); border:1px solid var(--line); border-radius:var(--radius); padding:24px 22px; margin:26px 0;}
 .credcard .credtag{font-family:var(--f-mono); font-size:11px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.06em; margin-bottom:10px;}
 .credlist{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px;}
-.credpill{
-  font-family:var(--f-mono); font-size:12px; color:var(--ink-dim);
-  border:1px solid var(--line-bright); border-radius:100px; padding:5px 12px;
-}
-.ctarow{display:flex; gap:12px; flex-wrap:wrap; margin-top:26px;}
-.cta{
-  display:inline-flex; align-items:center; gap:8px;
-  padding:13px 22px; border-radius:100px;
-  font-weight:600; font-size:14.5px; text-decoration:none;
-  transition:transform .2s, box-shadow .2s;
-}
+.credpill{font-family:var(--f-mono); font-size:12px; color:var(--ink-dim); border:1px solid var(--line-bright); border-radius:100px; padding:5px 12px;}
+.ctarow{display:flex; gap:12px; flex-wrap:wrap; margin-top:24px;}
+.cta{display:inline-flex; align-items:center; gap:8px; padding:13px 22px; border-radius:100px; font-weight:600; font-size:14px; text-decoration:none; transition:transform .2s, box-shadow .2s;}
 .cta.primary{background:var(--ink); color:var(--bg-void);}
 .cta.primary:hover{transform:translateY(-2px); box-shadow:0 8px 24px -8px rgba(255,255,255,.3);}
 .cta.secondary{border:1px solid var(--line-bright); color:var(--ink);}
 .cta.secondary:hover{transform:translateY(-2px); border-color:var(--gold);}
 
-footer{
-  text-align:center; padding:40px 20px 60px; position:relative; z-index:1;
-  font-family:var(--f-mono); font-size:12px; color:var(--ink-faint);
-}
+footer{text-align:center; padding:36px 20px 56px; position:relative; z-index:1; font-family:var(--f-mono); font-size:12px; color:var(--ink-faint);}
 
 /* util */
 .center{text-align:center;}
@@ -470,19 +372,24 @@ footer{
 <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
 
 <nav class="pillnav" id="pillnav">
-  <a href="#what-is">The Basics</a>
+  <a href="#what-is">Basics</a>
+  <a href="#learn">What to Learn</a>
+  <a href="#path">Learning Path</a>
   <a href="#platforms">Platforms</a>
-  <a href="#checklist">Pre-Hunt Checklist</a>
+  <a href="#program">Pick a Program</a>
+  <a href="#findbugs">Find Bugs</a>
   <a href="#report">Report Writing</a>
   <a href="#mistakes">Mistakes</a>
-  <a href="#closing">Why It Matters</a>
+  <a href="#reality">Reality Check</a>
+  <a href="#resources">Resources</a>
+  <a href="#closing">Closing</a>
 </nav>
 
 <!-- ============ HERO ============ -->
 <section class="section hero" id="hero">
   <div class="hero-eyebrow"><span class="dot">●</span>&nbsp; A practical field guide by Sarath G — Cybersecurity Trainer &amp; Consultant</div>
   <h1>Bug bounty isn't a get-rich-quick scheme. It's a real skill you can start <span class="accent">building today</span>.</h1>
-  <p class="sub">Here's exactly what to check before you touch a target, which platform to start on, how to write a report that doesn't get rejected, and the mistakes that get beginners banned instead of paid.</p>
+  <p class="sub">What to learn first, how to pick a platform — and a program that isn't already picked clean — how to find and report your first real bug, and an honest read on how long it actually takes.</p>
 
   <svg class="hero-rings ring-anim" viewBox="0 0 150 150" fill="none">
     <circle cx="75" cy="75" r="70" stroke="var(--warn)" stroke-width="1.4" stroke-dasharray="4 7" opacity="0.55"/>
@@ -499,19 +406,19 @@ footer{
   <div class="section-inner reveal">
     <div class="eyebrow">30 seconds, no jargon</div>
     <h2 class="title">What bug bounty actually is</h2>
-    <p class="lede">A bug bounty platform connects companies with independent security researchers who get paid for finding and responsibly reporting real vulnerabilities in the company's own systems. It's legal, done with explicit permission — the opposite of unauthorized hacking, which is a crime regardless of your intent.</p>
+    <p class="lede">Companies pay independent security researchers to find and responsibly report real vulnerabilities in their own systems — legally, with explicit permission. That's the opposite of unauthorized hacking, which is a crime regardless of your intent.</p>
   </div>
 
   <div class="def-grid reveal">
     <div class="def-panel">
       <span class="tag">Term 1</span>
       <h3>In scope</h3>
-      <p>The exact list of domains, apps, and assets a company has given researchers written permission to test. Anything not on that list is off-limits. Testing it isn't a bonus find — it's a policy violation, and you'll see exactly why that matters in the checklist below.</p>
+      <p>The exact list of domains, apps, and assets a company has given researchers written permission to test. Anything not on that list is off-limits — a policy violation, not a bonus find. This term comes back constantly on this page.</p>
     </div>
     <div class="def-panel">
       <span class="tag">Term 2</span>
       <h3>Responsible disclosure</h3>
-      <p>Reporting a vulnerability privately to the company first, and giving them time to fix it — instead of publishing it publicly or exploiting it for your own use. This is the practice that makes the whole field legal and trusted.</p>
+      <p>Reporting a vulnerability privately to the company first, and giving them time to fix it — instead of publishing it publicly or exploiting it. This is the practice that makes the whole field legal and trusted.</p>
     </div>
   </div>
 
@@ -520,64 +427,187 @@ footer{
   </div>
 </section>
 
+<!-- ============ WHAT TO LEARN FIRST ============ -->
+<section class="section" id="learn">
+  <div class="section-inner reveal">
+    <div class="eyebrow">Before you open a single program</div>
+    <h2 class="title">What to learn first</h2>
+    <p class="lede">A short, honest list. Skipping straight to "finding bugs" without this underneath you is the fastest way to burn out on invalid reports.</p>
+  </div>
+
+  <div class="checklist-progress reveal">
+    <span id="checklistCount">0 / 5 checked</span>
+    <div class="checklist-progress-track"><div class="checklist-progress-fill" id="checklistFill"></div></div>
+  </div>
+
+  <div class="checklist reveal reveal-stagger" id="prereqChecklist">
+    <label class="check-item" style="--i:0">
+      <input type="checkbox" class="check-input" data-key="webworks">
+      <span class="check-box" aria-hidden="true"></span>
+      <span class="check-content">
+        <span class="check-title">How the web actually works</span>
+        <span class="check-desc">HTTP, DNS, cookies, and sessions — the plumbing every single vulnerability class eventually sits on top of.</span>
+      </span>
+    </label>
+    <label class="check-item" style="--i:1">
+      <input type="checkbox" class="check-input" data-key="htmlcssjs">
+      <span class="check-box" aria-hidden="true"></span>
+      <span class="check-content">
+        <span class="check-title">HTML, CSS, and JavaScript fundamentals</span>
+        <span class="check-desc">You don't need to be a front-end developer — you need to be able to read a page's source and understand what it's doing.</span>
+      </span>
+    </label>
+    <label class="check-item" style="--i:2">
+      <input type="checkbox" class="check-input" data-key="python">
+      <span class="check-box" aria-hidden="true"></span>
+      <span class="check-content">
+        <span class="check-title">Basic programming — Python is the common recommendation</span>
+        <span class="check-desc">Enough to read a script, tweak one, and eventually automate a repetitive check yourself.</span>
+      </span>
+    </label>
+    <label class="check-item" style="--i:3">
+      <input type="checkbox" class="check-input" data-key="linux">
+      <span class="check-box" aria-hidden="true"></span>
+      <span class="check-content">
+        <span class="check-title">Linux command line basics</span>
+        <span class="check-desc">Most of the tooling in this field lives in a terminal, not a GUI.</span>
+      </span>
+    </label>
+    <label class="check-item" style="--i:4">
+      <input type="checkbox" class="check-input" data-key="networking">
+      <span class="check-box" aria-hidden="true"></span>
+      <span class="check-content">
+        <span class="check-title">Networking fundamentals</span>
+        <span class="check-desc">TCP/IP, ports, and protocols — what's actually happening between your browser and the target.</span>
+      </span>
+    </label>
+  </div>
+
+  <div class="callout reveal">
+    <b>Honest mindset note:</b> most people who quit bug bounty quit in the first six months. Patience and consistency matter more than raw talent here — more on this in the reality-check section further down.
+  </div>
+</section>
+
+<!-- ============ LEARNING PATH ============ -->
+<section class="section" id="path">
+  <div class="section-inner reveal">
+    <div class="eyebrow">Three phases, in order</div>
+    <h2 class="title">The learning path</h2>
+    <p class="lede">Each phase exists to make the next one survivable. Skipping ahead is the single fastest route to frustration.</p>
+  </div>
+
+  <div class="phase-timeline reveal reveal-stagger">
+    <div class="phase" style="--i:0">
+      <div class="phase-num">1</div>
+      <div class="phase-card">
+        <div class="phase-label">Phase 1</div>
+        <h3 class="phase-title">Foundations</h3>
+        <p class="phase-body">Free, credible resources — no need to pay for anything at this stage.</p>
+        <div class="chip-list">
+          <span class="chip">PortSwigger Web Security Academy — free, the standard starting point</span>
+          <span class="chip">TryHackMe — Bug Bounty path</span>
+          <span class="chip">HackTheBox Academy</span>
+        </div>
+        <div class="phase-sub">Then learn the OWASP Top 10 categories</div>
+        <div class="owasp-grid">
+          <div class="owasp-tag"><span class="on">01</span> Injection</div>
+          <div class="owasp-tag"><span class="on">02</span> Broken authentication</div>
+          <div class="owasp-tag"><span class="on">03</span> Sensitive data exposure</div>
+          <div class="owasp-tag"><span class="on">04</span> XXE</div>
+          <div class="owasp-tag"><span class="on">05</span> Broken access control</div>
+          <div class="owasp-tag"><span class="on">06</span> Security misconfiguration</div>
+          <div class="owasp-tag"><span class="on">07</span> XSS</div>
+          <div class="owasp-tag"><span class="on">08</span> Insecure deserialization</div>
+          <div class="owasp-tag"><span class="on">09</span> Known-vulnerable components</div>
+          <div class="owasp-tag"><span class="on">10</span> Insufficient logging &amp; monitoring</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase" style="--i:1">
+      <div class="phase-num">2</div>
+      <div class="phase-card">
+        <div class="phase-label">Phase 2</div>
+        <h3 class="phase-title">Practice on legal, safe targets</h3>
+        <p class="phase-body">Before a single real program. This step exists so your first mistakes happen on a legal practice target — not a live scope where a mistake has real consequences.</p>
+        <div class="chip-list">
+          <span class="chip">DVWA</span>
+          <span class="chip">bWAPP</span>
+          <span class="chip">OWASP WebGoat</span>
+          <span class="chip">HackTheBox machines</span>
+          <span class="chip">TryHackMe rooms</span>
+          <span class="chip">PentesterLab</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase" style="--i:2">
+      <div class="phase-num">3</div>
+      <div class="phase-card">
+        <div class="phase-label">Phase 3</div>
+        <h3 class="phase-title">Real targets, in order</h3>
+        <p class="phase-body">Don't start at the right end of this list. Section below explains exactly why.</p>
+        <div class="progression-flow">
+          <span class="progression-node">VDPs</span>
+          <span class="progression-arrow">→</span>
+          <span class="progression-node">Paid public programs</span>
+          <span class="progression-arrow">→</span>
+          <span class="progression-node dim">Private / invite-only</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ PLATFORMS ============ -->
 <section class="section" id="platforms">
   <div class="section-inner reveal">
     <div class="eyebrow">Currently, as of 2026 — platforms shift over time</div>
     <h2 class="title">Which platform should you start on</h2>
-    <p class="lede"><b>Quick answer: start on HackerOne.</b> Add Intigriti or Bugcrowd once you've got your footing. Most active researchers end up running two or three platforms at once, not just one — details on all four below.</p>
+    <p class="lede"><b>Quick answer: start on HackerOne.</b> Add Intigriti or Bugcrowd once you've got your footing — most active researchers end up running two or three platforms at once, not just one.</p>
   </div>
 
   <div class="platform-grid reveal">
     <div class="platform-card" style="--card-color:var(--h1-color);">
-      <div class="platform-head">
-        <h3 class="platform-name">HackerOne</h3>
-        <span class="platform-badge">Start here</span>
-      </div>
+      <div class="platform-head"><h3 class="platform-name">HackerOne</h3><span class="platform-badge">Start here</span></div>
       <div class="platform-sub">Best overall for beginners</div>
       <ul class="platform-facts">
         <li>Largest researcher community — <b>1.5 million+ researchers</b> from <b>170 countries</b></li>
-        <li><b>Open registration</b> — no invite or approval needed, just sign up with an email</li>
+        <li><b>Open registration</b> — no invite needed, just sign up with an email</li>
         <li>Largest volume of active programs, and a transparent reputation system</li>
-        <li>India is the <b>second-largest contributor</b> of researchers on HackerOne — payouts go directly via <b>PayPal or wire transfer, no geographic restriction</b></li>
+        <li>India is the <b>second-largest contributor</b> of researchers — payouts go directly via <b>PayPal or wire transfer, no geographic restriction</b></li>
       </ul>
       <div class="platform-best">Best for: <span>your first platform, full stop.</span></div>
     </div>
 
     <div class="platform-card" style="--card-color:var(--bc-color);">
-      <div class="platform-head">
-        <h3 class="platform-name">Bugcrowd</h3>
-      </div>
+      <div class="platform-head"><h3 class="platform-name">Bugcrowd</h3></div>
       <div class="platform-sub">Broadest range of target types</div>
       <ul class="platform-facts">
         <li>Wide variety of targets — web, API, mobile, cloud, IoT</li>
-        <li><b>Fully managed triage</b> — a dedicated team validates every report before it reaches the company, which usually means clearer feedback for beginners</li>
-        <li>Uses the <b>VRT (Vulnerability Rating Taxonomy)</b> — a standardized scale that helps you understand how severe a bug actually is before you report it</li>
+        <li><b>Fully managed triage</b> — a dedicated team validates every report first, usually clearer feedback for beginners</li>
+        <li>Uses the <b>VRT (Vulnerability Rating Taxonomy)</b> — a standardized scale for how severe a bug actually is</li>
       </ul>
       <div class="platform-best">Best for: <span>once you want a broader mix of target types.</span></div>
     </div>
 
     <div class="platform-card" style="--card-color:var(--intg-color);">
-      <div class="platform-head">
-        <h3 class="platform-name">Intigriti</h3>
-      </div>
+      <div class="platform-head"><h3 class="platform-name">Intigriti</h3></div>
       <div class="platform-sub">Most beginner-friendly interface</div>
       <ul class="platform-facts">
-        <li>Widely considered one of the most beginner-friendly platforms — clean UI, simpler program pages, an easy reporting flow</li>
-        <li>Known for <b>fast triage feedback</b> — you're not left waiting for weeks to hear back</li>
-        <li>Europe-based, so it's often overlooked by Indian hunters — which can mean <b>less competition</b> on good programs</li>
+        <li>Widely considered the most beginner-friendly platform — clean UI, simpler program pages</li>
+        <li>Known for <b>fast triage feedback</b> — you're not left waiting weeks to hear back</li>
+        <li>Europe-based, so it's often overlooked by Indian hunters specifically — which can mean <b>less competition</b> on good programs</li>
       </ul>
       <div class="platform-best">Best for: <span>a strong, less crowded second platform.</span></div>
     </div>
 
     <div class="platform-card" style="--card-color:var(--obb-color);">
-      <div class="platform-head">
-        <h3 class="platform-name">Open Bug Bounty</h3>
-      </div>
+      <div class="platform-head"><h3 class="platform-name">Open Bug Bounty</h3></div>
       <div class="platform-sub">Free, for pure practice</div>
       <ul class="platform-facts">
         <li><b>Free and non-profit</b> — the lowest possible barrier for an absolute first-timer</li>
-        <li>Good for practicing the mechanics of reporting before you touch a paid platform</li>
+        <li>Good for practicing the mechanics of reporting itself, before a paid platform</li>
         <li>Distinct from the three commercial platforms above — don't expect the same payout structure</li>
       </ul>
       <div class="platform-best">Best for: <span>practicing your first report, zero barrier to entry.</span></div>
@@ -587,79 +617,73 @@ footer{
   <div class="callout signal reveal">
     <b>Payments to India, no geo-block.</b> HackerOne pays Indian researchers directly via PayPal or wire transfer — there's no rule stopping you from earning on these platforms as an Indian resident.
   </div>
+</section>
 
-  <div class="callout reveal">
-    Most active researchers eventually run <b>two or three platforms at once</b>. Get comfortable on HackerOne first, then add a second once your first few reports have gone well.
+<!-- ============ SIGNATURE SECTION: PICK A PROGRAM ============ -->
+<section class="section" id="program">
+  <div class="program-panel reveal">
+    <div class="section-inner">
+      <div class="eyebrow">The correction most beginner guides skip</div>
+      <p class="program-pullquote">The real beginner trap isn't the platform. It's the <span class="hl">program</span>.</p>
+      <p class="body-text">Jumping straight into flagship public programs — Google, Meta, Apple, Tesla, and similar massive-scope names — means competing against thousands of active hunters on programs that are largely picked clean. High duplicate rates and burnout follow. That's the actual source of most beginner frustration, not which platform you picked.</p>
+
+      <div class="callout signal">
+        <b>The fix practitioners actually use: start with VDPs</b> (Vulnerability Disclosure Programs). No cash reward, but dramatically less competition — and a real, higher chance of an actual valid first find. That first find builds the reputation and signal that gets you invited to paid private programs later.
+      </div>
+
+      <div class="saturation-meter">
+        <div class="saturation-bar">
+          <span class="saturation-marker low"><span class="num">10–50</span>names → real room</span>
+          <span class="saturation-marker high"><span class="num">200+</span>names → saturated</span>
+        </div>
+        <p class="saturation-cap">Check a program's Hall of Fame page before committing time. Roughly how many names are listed is a fast, checkable proxy for how picked-over a program already is.</p>
+      </div>
+
+      <div class="callout warn">
+        <b>Avoid wide wildcard scopes</b> (e.g. <span class="mono">*.company.com</span>) as a first target — the recon alone can eat weeks before real testing even starts. Prefer a smaller, well-defined scope for your first few attempts.
+      </div>
+
+      <div class="callout">
+        <b>Give one program real, sustained time — not a few hours across many.</b> At least a week of real attention before moving on. Most easy, obvious bugs get found and reported within the first hours after a program launches — arriving late means going deeper than everyone else already checked, not skimming the same surface.
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-card-label">Optional framework, not a universal rule</div>
+        <p>Some experienced hunters use a <b>"100-hour rule"</b> — capping themselves at roughly 100 hours on any single program before moving on if nothing reportable has turned up. It's specifically there to avoid the sunk-cost trap of endlessly grinding one bloated enterprise scope. Treat it as one practical approach, not gospel.</p>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- ============ PRE-HUNT CHECKLIST ============ -->
-<section class="section" id="checklist">
+<!-- ============ FIND YOUR FIRST BUG ============ -->
+<section class="section" id="findbugs">
   <div class="section-inner reveal">
-    <div class="eyebrow">Before you touch a single target</div>
-    <h2 class="title">The pre-hunting checklist</h2>
-    <p class="lede">This is arguably the most important section on this page. Skipping it is how beginners get <b>banned</b>, not just rejected. Save this, come back to it before every new program.</p>
+    <div class="eyebrow">The actual workflow</div>
+    <h2 class="title">How to find your first bug</h2>
+    <p class="lede">Four steps, in this order. Testing before you've mapped the target is how most wasted hours happen.</p>
   </div>
 
-  <div class="checklist-progress reveal">
-    <span id="checklistCount">0 / 6 checked</span>
-    <div class="checklist-progress-track"><div class="checklist-progress-fill" id="checklistFill"></div></div>
-  </div>
-
-  <div class="checklist reveal reveal-stagger" id="preHuntChecklist">
-    <label class="check-item" style="--i:0">
-      <input type="checkbox" class="check-input" data-key="scope">
-      <span class="check-box" aria-hidden="true"></span>
-      <span class="check-content">
-        <span class="check-title">Read the full program scope, start to finish</span>
-        <span class="check-desc">Know exactly which domains and assets are <b style="color:var(--ink)">in scope</b> — and which are explicitly <b style="color:var(--ink)">out of scope</b> — before you do anything else. Testing an out-of-scope asset can get you banned from the platform, or create real legal risk. It is not just a rejected report.</span>
-      </span>
-    </label>
-
-    <label class="check-item" style="--i:1">
-      <input type="checkbox" class="check-input" data-key="vulntypes">
-      <span class="check-box" aria-hidden="true"></span>
-      <span class="check-content">
-        <span class="check-title">Check the list of accepted vulnerability types</span>
-        <span class="check-desc">Some programs explicitly exclude certain bug classes. Report one anyway and it gets closed as "RTFS" (Read The Fine Scope) — and it can cost you reputation and signal points on the platform, not just that one report.</span>
-      </span>
-    </label>
-
-    <label class="check-item" style="--i:2">
-      <input type="checkbox" class="check-input" data-key="duplicates">
-      <span class="check-box" aria-hidden="true"></span>
-      <span class="check-content">
-        <span class="check-title">Search existing disclosed reports on that program first</span>
-        <span class="check-desc">If someone already found and reported it, yours is a duplicate — no reward, and time you could have spent elsewhere.</span>
-      </span>
-    </label>
-
-    <label class="check-item" style="--i:3">
-      <input type="checkbox" class="check-input" data-key="ownership">
-      <span class="check-box" aria-hidden="true"></span>
-      <span class="check-content">
-        <span class="check-title">Verify target ownership before testing</span>
-        <span class="check-desc">Especially on wildcard-scope programs. Use WHOIS data, SSL certificate logs, or the site's robots.txt / security.txt to confirm the asset actually belongs to the company running the program — not a look-alike or an unrelated third party.</span>
-      </span>
-    </label>
-
-    <label class="check-item" style="--i:4">
-      <input type="checkbox" class="check-input" data-key="scanners">
-      <span class="check-box" aria-hidden="true"></span>
-      <span class="check-content">
-        <span class="check-title">Never run automated scanners against production</span>
-        <span class="check-desc">Unless the program explicitly allows it. An uninvited scan can cause a real service disruption for the company — and get you banned, not just rejected.</span>
-      </span>
-    </label>
-
-    <label class="check-item" style="--i:5">
-      <input type="checkbox" class="check-input" data-key="severity">
-      <span class="check-box" aria-hidden="true"></span>
-      <span class="check-content">
-        <span class="check-title">Understand the platform's reward and severity system</span>
-        <span class="check-desc">For example, Bugcrowd's VRT framework. It gives you a rough, honest sense of what's actually worth prioritizing before you sink hours into something low-severity.</span>
-      </span>
-    </label>
+  <div class="workflow-grid reveal reveal-stagger">
+    <div class="workflow-card" style="--i:0">
+      <div class="workflow-num">01</div>
+      <h4>Reconnaissance</h4>
+      <p>Map the attack surface first — subdomain enumeration, HTTP probing. Recon comes <i>before</i> testing, not instead of it.</p>
+    </div>
+    <div class="workflow-card" style="--i:1">
+      <div class="workflow-num">02</div>
+      <h4>Map it manually</h4>
+      <p>Browse it like a real user. Note features, authentication mechanisms, every input field — forms, parameters, headers — and any APIs.</p>
+    </div>
+    <div class="workflow-card" style="--i:2">
+      <div class="workflow-num">03</div>
+      <h4>Choose what to hunt for</h4>
+      <p>Impact-first, not whatever's easiest to test: auth flaws, access control (IDOR, privilege escalation), injection, business logic (price manipulation, coupon reuse, race conditions).</p>
+    </div>
+    <div class="workflow-card" style="--i:3">
+      <div class="workflow-num">04</div>
+      <h4>Document as you go</h4>
+      <p>Screenshots, request/response captures, reproduction steps — before you ever start writing the actual report.</p>
+    </div>
   </div>
 </section>
 
@@ -767,12 +791,145 @@ footer{
   </div>
 </section>
 
+<!-- ============ REALITY CHECK ============ -->
+<section class="section" id="reality">
+  <div class="section-inner reveal">
+    <div class="eyebrow">Read this before you check your first payout</div>
+    <h2 class="title">A skill built over months, not a bug found in a weekend</h2>
+  </div>
+
+  <div class="reality-card reveal">
+    <p class="reality-quote">Most people who quit bug bounty quit in the first six months.</p>
+    <p class="body-text">Not because they lack ability — because early progress is slow: duplicate reports, invalid findings, programs that go quiet. That's normal, not a sign you're doing it wrong.</p>
+    <p class="body-text">If you're wondering about money: the honest, anecdotal pattern from practitioner blogs and community writeups — not verified industry data — looks roughly like this. The first several months are commonly $0 while you're still learning. Consistent income, if it comes at all, tends to build over one to several years, not weeks.</p>
+
+    <div class="timeline-bar">
+      <div class="timeline-seg t1"></div>
+      <div class="timeline-seg t2"></div>
+      <div class="timeline-seg t3"></div>
+    </div>
+    <div class="timeline-labels">
+      <span>Months 0–6 · mostly $0, learning</span>
+      <span>Year 1–2 · first consistent finds</span>
+      <span>Year 2+ · some build real income</span>
+    </div>
+    <p class="reality-disclaimer">Anecdotal, gathered from practitioner blogs and community writeups — not verified industry statistics. Individual results vary enormously.</p>
+
+    <p class="body-text mt40">This is a skill built over time, same as everything else on this site. No shortcut, no guaranteed outcome. Real people quit constantly — the ones who don't are the ones who eventually see results.</p>
+  </div>
+</section>
+
+<!-- ============ RESOURCES ============ -->
+<section class="section" id="resources">
+  <div class="section-inner reveal">
+    <div class="eyebrow">Curated, not exhaustive</div>
+    <h2 class="title">Resources worth your time</h2>
+    <p class="lede">Free and practitioner-respected only. No paid courses, no products — several surfaced during research and were deliberately left out.</p>
+  </div>
+
+  <div class="reveal">
+    <div class="resource-group">
+      <div class="resource-cat-label">Curated resource collections</div>
+      <div class="resource-list">
+        <a class="resource-item" href="https://github.com/nahamsec/resources-for-beginner-bug-bounty-hunters" target="_blank" rel="noopener">
+          <span class="resource-main"><span class="resource-title">nahamsec/Resources-for-Beginner-Bug-Bounty-Hunters</span><span class="resource-desc">A long-running, community-curated list of write-ups, tools, and beginner resources.</span></span>
+          <span class="resource-arrow">↗</span>
+        </a>
+        <a class="resource-item" href="https://github.com/penetestersquad/Bug-Bounty-Free-Resources" target="_blank" rel="noopener">
+          <span class="resource-main"><span class="resource-title">penetestersquad/Bug-Bounty-Free-Resources</span><span class="resource-desc">A free, no-paywall roundup of guides and tools for getting started.</span></span>
+          <span class="resource-arrow">↗</span>
+        </a>
+        <a class="resource-item" href="https://github.com/devanshbatham/Awesome-Bugbounty-Writeups" target="_blank" rel="noopener">
+          <span class="resource-main"><span class="resource-title">devanshbatham/Awesome-Bugbounty-Writeups</span><span class="resource-desc">Hundreds of real disclosed-bug write-ups, organized by vulnerability type.</span></span>
+          <span class="resource-arrow">↗</span>
+        </a>
+        <a class="resource-item" href="https://github.com/ngalongc/bug-bounty-reference" target="_blank" rel="noopener">
+          <span class="resource-main"><span class="resource-title">ngalongc/bug-bounty-reference</span><span class="resource-desc">A reference list of bug bounty write-ups, organized and searchable by bug class.</span></span>
+          <span class="resource-arrow">↗</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="resource-group">
+      <div class="resource-cat-label">Official platform resource hubs</div>
+      <div class="resource-list">
+        <a class="resource-item" href="https://www.bugcrowd.com/resources/" target="_blank" rel="noopener">
+          <span class="resource-main"><span class="resource-title">Bugcrowd Resources</span><span class="resource-desc">Bugcrowd's own guides, webinars, and researcher documentation.</span></span>
+          <span class="resource-arrow">↗</span>
+        </a>
+        <a class="resource-item" href="https://bughunters.google.com/" target="_blank" rel="noopener">
+          <span class="resource-main"><span class="resource-title">Google Bug Hunters</span><span class="resource-desc">Google's own vulnerability reward program hub — scope, rules, how the team runs it.</span></span>
+          <span class="resource-arrow">↗</span>
+        </a>
+        <a class="resource-item" href="https://bughunters.google.com/report/reports" target="_blank" rel="noopener">
+          <span class="resource-main"><span class="resource-title">Google Bug Hunters — Featured Reports</span><span class="resource-desc">Real, published example reports straight from Google's own program.</span></span>
+          <span class="resource-arrow">↗</span>
+        </a>
+        <a class="resource-item" href="https://www.intigriti.com/researchers/bug-bounty-programs" target="_blank" rel="noopener">
+          <span class="resource-main"><span class="resource-title">Intigriti — Public Bug Bounty Programs</span><span class="resource-desc">A live directory — good for practicing the Hall-of-Fame-size heuristic above.</span></span>
+          <span class="resource-arrow">↗</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="resource-group">
+      <div class="resource-cat-label">Real disclosed reports to study</div>
+      <div class="resource-list">
+        <a class="resource-item" href="https://hackerone.com/reports/188719" target="_blank" rel="noopener">
+          <span class="resource-main"><span class="resource-title">HackerOne Report #188719 — Information Disclosure</span><span class="resource-desc">A real accepted report — a good reference for structure and quality.</span></span>
+          <span class="resource-arrow">↗</span>
+        </a>
+        <a class="resource-item" href="https://www.bugbountyhunter.com/disclosed/" target="_blank" rel="noopener">
+          <span class="resource-main"><span class="resource-title">BugBountyHunter.com — Publicly Disclosed Findings</span><span class="resource-desc">A running archive of publicly disclosed findings across programs.</span></span>
+          <span class="resource-arrow">↗</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="resource-group">
+      <div class="resource-cat-label">Free learning platforms</div>
+      <div class="resource-list">
+        <a class="resource-item" href="https://portswigger.net/web-security" target="_blank" rel="noopener">
+          <span class="resource-main"><span class="resource-title">PortSwigger Web Security Academy</span><span class="resource-desc">Free, and widely considered the essential starting point.</span></span>
+          <span class="resource-arrow">↗</span>
+        </a>
+        <a class="resource-item" href="https://hackerone.com/hacktivity" target="_blank" rel="noopener">
+          <span class="resource-main"><span class="resource-title">HackerOne Hacktivity</span><span class="resource-desc">A public feed of disclosed reports — good for learning by example, for free.</span></span>
+          <span class="resource-arrow">↗</span>
+        </a>
+        <a class="resource-item" href="https://pentester.land/newsletter/" target="_blank" rel="noopener">
+          <span class="resource-main"><span class="resource-title">PentesterLand Newsletter</span><span class="resource-desc">Curated roundups of the week's best public write-ups.</span></span>
+          <span class="resource-arrow">↗</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="resource-group">
+      <div class="resource-cat-label">Further reading &amp; roadmaps</div>
+      <div class="resource-list">
+        <a class="resource-item" href="https://medium.com/@hackbynight/getting-started-with-bug-bounty-hunting-in-2025-a-real-world-guide-051a3fb36376" target="_blank" rel="noopener">
+          <span class="resource-main"><span class="resource-title">hackbynight — "Bug Bounty Hunting in 2025: A Real World Guide"</span><span class="resource-desc">A grounded, practitioner-written overview of the field. (Medium)</span></span>
+          <span class="resource-arrow">↗</span>
+        </a>
+        <a class="resource-item" href="https://infosecwriteups.com/bugbounty-mastering-the-basics-along-with-resources-part-4-f424a26c6ef6" target="_blank" rel="noopener">
+          <span class="resource-main"><span class="resource-title">Abhinav Pathak — "Mastering the Basics (along with Resources) [Part-4]"</span><span class="resource-desc">A basics-focused write-up with its own curated resource list. (InfoSec Write-ups)</span></span>
+          <span class="resource-arrow">↗</span>
+        </a>
+        <a class="resource-item" href="https://dev.to/krlz/bug-bounty-hunting-guide-2026-from-zero-to-paid-security-researcher-5c82" target="_blank" rel="noopener">
+          <span class="resource-main"><span class="resource-title">krlz — "Bug Bounty Hunting in 2026"</span><span class="resource-desc">Particularly thorough — tools, recon, and a report template in depth. Good for going deeper after this page. (DEV Community)</span></span>
+          <span class="resource-arrow">↗</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ CLOSING ============ -->
 <section class="section closing" id="closing">
   <div class="section-inner reveal">
     <div class="eyebrow">Why this actually matters</div>
     <h2 class="title">This is a skill you build, not a shortcut you take</h2>
-    <p class="lede">None of this works as a "learn it this weekend" shortcut — the researchers earning consistently on these platforms got there through real skill-building over time, not luck or a single lucky find. If you want a structured path into this and other cybersecurity domains before you jump into live targets, start with the fundamentals and get hands-on practice first.</p>
+    <p class="lede">None of this works as a "learn it this weekend" shortcut — the researchers earning consistently on these platforms got there through real skill-building over time, not luck or a single lucky find. If you want a structured path into this and other cybersecurity domains before you jump into live programs, start with the fundamentals and get hands-on practice first.</p>
   </div>
 
   <div class="credcard reveal">
@@ -835,8 +992,8 @@ footer{
   }, {threshold:0.12});
   revealEls.forEach(function(el){ revealObserver.observe(el); });
 
-  // ---------- pre-hunt checklist persistence ----------
-  var CHECK_KEY = 'bugbounty-prehunt-checklist-v1';
+  // ---------- prerequisite checklist persistence ----------
+  var CHECK_KEY = 'bugbounty-prereq-checklist-v2';
   function loadChecked(){
     try { var raw = localStorage.getItem(CHECK_KEY); return raw ? JSON.parse(raw) : {}; }
     catch(e){ return {}; }
@@ -844,7 +1001,7 @@ footer{
   function saveChecked(obj){
     try { localStorage.setItem(CHECK_KEY, JSON.stringify(obj)); } catch(e){}
   }
-  var checkInputs = Array.prototype.slice.call(document.querySelectorAll('#preHuntChecklist .check-input'));
+  var checkInputs = Array.prototype.slice.call(document.querySelectorAll('#prereqChecklist .check-input'));
   var checklistCount = document.getElementById('checklistCount');
   var checklistFill = document.getElementById('checklistFill');
   var savedChecks = loadChecked();
