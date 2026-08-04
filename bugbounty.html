@@ -1,0 +1,907 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Getting Started with Bug Bounty — A Practical Guide</title>
+<meta name="description" content="A practical, honest guide to starting bug bounty hunting: which platform to pick, what to check before you test, how to write a report that doesn't get rejected, and the mistakes that get beginners banned instead of paid.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --bg-void:#090c11;
+  --bg-panel:#10151d;
+  --bg-panel-2:#161d29;
+  --bg-panel-3:#1c2531;
+  --ink:#eef1f6;
+  --ink-dim:#93a0b4;
+  --ink-faint:#5b6678;
+  --line:rgba(255,255,255,0.09);
+  --line-bright:rgba(255,255,255,0.18);
+
+  --gold:#ffb84d;
+  --gold-dim:#ffb84d33;
+  --signal:#4ade80;
+  --signal-dim:#4ade8033;
+  --warn:#ff5470;
+  --warn-dim:#ff547033;
+  --h1-color:#7c5cff;
+  --bc-color:#00d4b8;
+  --intg-color:#ff8a3d;
+  --obb-color:#5b6678;
+
+  --f-display:'Space Grotesk',sans-serif;
+  --f-body:'Inter',sans-serif;
+  --f-mono:'JetBrains Mono',monospace;
+
+  --radius:14px;
+  --radius-sm:8px;
+  --maxw:920px;
+}
+
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--bg-void);
+  color:var(--ink);
+  font-family:var(--f-body);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(ellipse 900px 500px at 15% -5%, rgba(255,184,77,0.09), transparent 60%),
+    radial-gradient(ellipse 800px 600px at 90% 15%, rgba(74,222,128,0.06), transparent 55%),
+    radial-gradient(ellipse 700px 500px at 50% 95%, rgba(255,84,112,0.05), transparent 55%);
+  pointer-events:none;
+  z-index:0;
+}
+h1,h2,h3{font-family:var(--f-display);color:var(--ink);margin:0;font-weight:600;}
+p{margin:0;}
+a{color:inherit;}
+button{font-family:var(--f-body);cursor:pointer;}
+.mono{font-family:var(--f-mono);}
+
+::selection{background:var(--gold);color:#2a1502;}
+
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:4px;}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; scroll-behavior:auto !important;}
+}
+
+/* ============ LAYOUT PRIMITIVES ============ */
+.section{
+  position:relative;
+  z-index:1;
+  padding:96px 20px;
+  max-width:var(--maxw);
+  margin:0 auto;
+}
+@media (max-width:640px){
+  .section{padding:56px 18px;}
+}
+.section-inner{position:relative;}
+.eyebrow{
+  font-family:var(--f-mono);
+  font-size:12.5px;
+  letter-spacing:0.11em;
+  text-transform:uppercase;
+  color:var(--gold);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:14px;
+}
+.eyebrow::before{
+  content:"";
+  width:22px;height:1px;
+  background:var(--gold);
+  display:inline-block;
+}
+h2.title{
+  font-size:clamp(28px,5.2vw,42px);
+  line-height:1.15;
+  letter-spacing:-0.01em;
+  margin-bottom:20px;
+  max-width:16ch;
+}
+.lede{
+  font-size:17.5px;
+  color:var(--ink-dim);
+  max-width:62ch;
+  margin-bottom:8px;
+}
+.lede b, .lede strong{color:var(--ink);font-weight:600;}
+.body-text{font-size:16px;color:var(--ink-dim);max-width:62ch;}
+.body-text + .body-text{margin-top:14px;}
+.body-text b, .body-text strong{color:var(--ink);font-weight:600;}
+
+.card{
+  background:var(--bg-panel);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:22px 24px;
+}
+.callout{
+  border-left:2px solid var(--gold);
+  background:linear-gradient(90deg, rgba(255,184,77,0.08), transparent 70%);
+  padding:16px 20px;
+  border-radius:0 var(--radius-sm) var(--radius-sm) 0;
+  font-size:15px;
+  color:var(--ink-dim);
+  margin:22px 0;
+}
+.callout b{color:var(--ink);}
+.callout.warn{border-left-color:var(--warn);background:linear-gradient(90deg, rgba(255,84,112,0.08), transparent 70%);}
+.callout.signal{border-left-color:var(--signal);background:linear-gradient(90deg, rgba(74,222,128,0.08), transparent 70%);}
+
+.reveal{opacity:0; transform:translateY(18px); transition:opacity 0.7s cubic-bezier(.2,.7,.2,1), transform 0.7s cubic-bezier(.2,.7,.2,1);}
+.reveal.is-visible{opacity:1; transform:translateY(0);}
+.reveal-stagger > * {transition-delay:calc(var(--i,0) * 90ms);}
+
+/* ============ TOP CHROME ============ */
+.progress-track{
+  position:fixed; top:0; left:0; right:0; height:2px;
+  background:rgba(255,255,255,0.06); z-index:100;
+}
+.progress-fill{
+  height:100%; width:0%;
+  background:linear-gradient(90deg, var(--gold), var(--signal), var(--warn));
+  transition:width 0.1s linear;
+}
+
+.pillnav{
+  position:fixed; top:2px; left:0; right:0; z-index:99;
+  display:flex; gap:6px; padding:10px 16px;
+  overflow-x:auto;
+  background:rgba(9,12,17,0.82);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+  scrollbar-width:none;
+}
+.pillnav::-webkit-scrollbar{display:none;}
+.pillnav a{
+  flex:none;
+  font-family:var(--f-mono);
+  font-size:12px;
+  letter-spacing:0.02em;
+  color:var(--ink-faint);
+  text-decoration:none;
+  padding:7px 13px;
+  border-radius:100px;
+  border:1px solid transparent;
+  white-space:nowrap;
+  transition:color .2s, border-color .2s, background .2s;
+}
+.pillnav a:hover{color:var(--ink-dim);}
+.pillnav a.is-active{
+  color:var(--ink);
+  border-color:var(--line-bright);
+  background:var(--bg-panel-2);
+}
+
+/* ============ HERO ============ */
+.hero{
+  min-height:100svh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding-top:140px;
+  max-width:1000px;
+}
+.hero-eyebrow{
+  font-family:var(--f-mono);
+  font-size:13px;
+  color:var(--ink-faint);
+  letter-spacing:0.04em;
+  margin-bottom:22px;
+}
+.hero-eyebrow .dot{color:var(--signal);}
+.hero h1{
+  font-size:clamp(32px,6.4vw,58px);
+  line-height:1.08;
+  letter-spacing:-0.02em;
+  max-width:17ch;
+}
+.hero h1 .accent{color:var(--gold);}
+.hero .sub{
+  margin-top:24px;
+  font-size:18px;
+  color:var(--ink-dim);
+  max-width:56ch;
+}
+.hero-rings{
+  margin:44px 0 8px;
+  width:150px;height:150px;
+}
+.scrollcue{
+  margin-top:40px;
+  display:flex;align-items:center;gap:10px;
+  font-family:var(--f-mono);
+  font-size:12.5px;
+  color:var(--ink-faint);
+}
+.scrollcue .arrow{
+  animation:bob 1.8s ease-in-out infinite;
+}
+@keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(6px);}}
+
+/* ============ SCOPE RINGS (signature motif) ============ */
+.rings-svg circle{fill:none;}
+.ring-anim circle{
+  animation:ringspin 40s linear infinite;
+  transform-origin:center;
+}
+.ring-anim circle:nth-child(2){animation-duration:55s;animation-direction:reverse;}
+.ring-anim circle:nth-child(3){animation-duration:70s;}
+@keyframes ringspin{to{transform:rotate(360deg);}}
+
+/* ============ TWO-COLUMN DEFINITION PANELS ============ */
+.def-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  margin:36px 0;
+}
+@media (max-width:700px){.def-grid{grid-template-columns:1fr;}}
+.def-panel{
+  background:var(--bg-panel);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:22px;
+}
+.def-panel .tag{font-family:var(--f-mono);font-size:11px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.08em;}
+.def-panel h3{font-size:16px;margin-top:6px;margin-bottom:8px;}
+.def-panel p{font-size:14.5px;color:var(--ink-dim);}
+
+/* ============ PLATFORM COMPARISON ============ */
+.platform-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  margin:32px 0;
+}
+@media (max-width:760px){.platform-grid{grid-template-columns:1fr;}}
+.platform-card{
+  position:relative;
+  background:var(--bg-panel);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:24px 22px 22px;
+  overflow:hidden;
+}
+.platform-card::before{
+  content:"";
+  position:absolute; top:0; left:0; right:0; height:3px;
+  background:var(--card-color,var(--gold));
+}
+.platform-head{display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:4px;}
+.platform-name{font-size:19px;}
+.platform-badge{
+  font-family:var(--f-mono); font-size:10px; font-weight:700; letter-spacing:.05em; text-transform:uppercase;
+  color:var(--bg-void); background:var(--gold);
+  padding:4px 9px; border-radius:100px; white-space:nowrap; flex:none;
+}
+.platform-sub{font-family:var(--f-mono); font-size:11px; color:var(--card-color,var(--ink-faint)); text-transform:uppercase; letter-spacing:.06em; margin-bottom:14px;}
+.platform-facts{list-style:none; margin:0 0 14px; padding:0; display:flex; flex-direction:column; gap:8px;}
+.platform-facts li{font-size:13.5px; line-height:1.55; color:var(--ink-dim); padding-left:18px; position:relative;}
+.platform-facts li::before{content:"→"; position:absolute; left:0; color:var(--card-color,var(--gold)); font-weight:700;}
+.platform-facts li b{color:var(--ink);}
+.platform-best{
+  font-size:13px; color:var(--ink); font-weight:600;
+  border-top:1px solid var(--line); padding-top:12px; margin-top:4px;
+}
+.platform-best span{color:var(--ink-faint); font-weight:400;}
+
+/* ============ CHECKLIST ============ */
+.checklist-progress{
+  display:flex; align-items:center; gap:12px;
+  font-family:var(--f-mono); font-size:12px; color:var(--ink-faint);
+  margin:28px 0 16px;
+}
+.checklist-progress-track{flex:1; height:4px; background:var(--bg-panel-3); border-radius:2px; overflow:hidden;}
+.checklist-progress-fill{height:100%; width:0%; background:var(--signal); transition:width .3s ease;}
+.checklist{display:flex; flex-direction:column; gap:10px; margin:0 0 8px;}
+.check-item{
+  position:relative;
+  display:flex; align-items:flex-start; gap:14px;
+  padding:16px 18px;
+  background:var(--bg-panel);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  cursor:pointer;
+  transition:border-color .2s, background .2s;
+}
+.check-item:hover{border-color:var(--line-bright);}
+.check-input{position:absolute; opacity:0; width:24px; height:24px; margin:0; cursor:pointer;}
+.check-box{
+  width:21px; height:21px; border-radius:6px; flex:none; margin-top:1px;
+  border:1.5px solid var(--line-bright);
+  display:flex; align-items:center; justify-content:center;
+  transition:background .2s, border-color .2s;
+}
+.check-box::after{
+  content:""; width:9px; height:5px;
+  border-left:2px solid var(--bg-void); border-bottom:2px solid var(--bg-void);
+  transform:rotate(-45deg) translate(1px,-1px);
+  opacity:0; transition:opacity .15s;
+}
+.check-input:checked ~ .check-box{background:var(--signal); border-color:var(--signal);}
+.check-input:checked ~ .check-box::after{opacity:1;}
+.check-input:focus-visible ~ .check-box{outline:2px solid var(--gold); outline-offset:2px;}
+.check-content{flex:1;}
+.check-title{display:block; font-weight:600; color:var(--ink); font-size:15px; margin-bottom:4px; transition:color .2s;}
+.check-input:checked ~ .check-content .check-title{color:var(--ink-faint); text-decoration:line-through; text-decoration-color:var(--line-bright);}
+.check-desc{display:block; font-size:13.5px; color:var(--ink-dim); line-height:1.6;}
+
+/* ============ REPORT STEPPER (shared mechanism) ============ */
+.stepper{margin:36px 0 0;}
+.stage{
+  background:var(--bg-panel);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:26px 24px;
+  min-height:260px;
+  position:relative;
+  overflow:hidden;
+}
+.stage-bg-grid{
+  position:absolute; inset:0; opacity:.35; pointer-events:none;
+  background-image:linear-gradient(var(--line) 1px, transparent 1px);
+  background-size:100% 44px;
+  mask-image:linear-gradient(to bottom, black, transparent 90%);
+}
+.step-panel{display:none; position:relative; z-index:1;}
+.step-panel.is-active{display:block; animation:panelin .45s cubic-bezier(.2,.7,.2,1);}
+@keyframes panelin{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);}}
+.step-tag{font-family:var(--f-mono); font-size:11px; color:var(--gold); text-transform:uppercase; letter-spacing:.06em; margin-bottom:10px;}
+.step-headline{font-size:19px; font-weight:600; color:var(--ink); margin-bottom:10px; font-family:var(--f-display);}
+.step-desc{font-size:15px; color:var(--ink-dim); line-height:1.65;}
+.step-desc b{color:var(--ink);}
+.example-row{display:flex; gap:12px; flex-wrap:wrap; margin-top:16px;}
+.example-row .callout{flex:1 1 220px; margin:0;}
+.example-label{font-family:var(--f-mono); font-size:10px; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:6px;}
+.example-row .callout.warn .example-label{color:var(--warn);}
+.example-row .callout.signal .example-label{color:var(--signal);}
+
+.stepper-controls{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px; margin-top:18px; flex-wrap:wrap;
+}
+.step-btn{
+  background:var(--bg-panel-2); border:1px solid var(--line-bright);
+  color:var(--ink); border-radius:100px; padding:9px 18px;
+  font-size:13.5px; font-weight:600; display:flex; align-items:center; gap:6px;
+  transition:background .2s, opacity .2s;
+}
+.step-btn:hover{background:var(--bg-panel-3);}
+.step-btn:disabled{opacity:.35; cursor:default;}
+.step-dots{display:flex; gap:6px; flex-wrap:wrap; justify-content:center;}
+.step-dot{
+  width:8px;height:8px;border-radius:50%; background:var(--line-bright); border:none; padding:0;
+  transition:background .2s, transform .2s;
+}
+.step-dot.is-active{background:var(--gold); transform:scale(1.35);}
+.step-counter{font-family:var(--f-mono); font-size:11.5px; color:var(--ink-faint); white-space:nowrap;}
+
+/* ============ MISTAKES GRID ============ */
+.mistake-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+  margin:32px 0;
+}
+@media (max-width:700px){.mistake-grid{grid-template-columns:1fr;}}
+.mistake-card{
+  background:linear-gradient(180deg, rgba(255,84,112,0.06), transparent 40%), var(--bg-panel);
+  border:1px solid var(--line);
+  border-left:3px solid var(--warn);
+  border-radius:var(--radius-sm) var(--radius) var(--radius) var(--radius-sm);
+  padding:16px 18px;
+}
+.mistake-head{display:flex; align-items:center; gap:9px; margin-bottom:8px;}
+.mistake-x{
+  font-family:var(--f-mono); font-size:11px; font-weight:700; color:var(--warn);
+  border:1px solid var(--warn); border-radius:100px; padding:2px 8px; flex:none;
+}
+.mistake-card h4{font-size:14.5px; font-weight:600; color:var(--ink);}
+.mistake-card p{font-size:13.5px; color:var(--ink-dim); line-height:1.6;}
+
+/* legend chips */
+.legend{display:flex; gap:16px; flex-wrap:wrap; margin:22px 0 6px;}
+.legend-item{display:flex; align-items:center; gap:8px; font-size:13px; color:var(--ink-dim);}
+.legend-swatch{width:12px;height:12px;border-radius:3px; flex:none;}
+
+/* ============ CLOSING ============ */
+.closing{text-align:left;}
+.credcard{
+  background:var(--bg-panel); border:1px solid var(--line); border-radius:var(--radius);
+  padding:26px 24px; margin:28px 0;
+}
+.credcard .credtag{font-family:var(--f-mono); font-size:11px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.06em; margin-bottom:10px;}
+.credlist{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px;}
+.credpill{
+  font-family:var(--f-mono); font-size:12px; color:var(--ink-dim);
+  border:1px solid var(--line-bright); border-radius:100px; padding:5px 12px;
+}
+.ctarow{display:flex; gap:12px; flex-wrap:wrap; margin-top:26px;}
+.cta{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:13px 22px; border-radius:100px;
+  font-weight:600; font-size:14.5px; text-decoration:none;
+  transition:transform .2s, box-shadow .2s;
+}
+.cta.primary{background:var(--ink); color:var(--bg-void);}
+.cta.primary:hover{transform:translateY(-2px); box-shadow:0 8px 24px -8px rgba(255,255,255,.3);}
+.cta.secondary{border:1px solid var(--line-bright); color:var(--ink);}
+.cta.secondary:hover{transform:translateY(-2px); border-color:var(--gold);}
+
+footer{
+  text-align:center; padding:40px 20px 60px; position:relative; z-index:1;
+  font-family:var(--f-mono); font-size:12px; color:var(--ink-faint);
+}
+
+/* util */
+.center{text-align:center;}
+.mt40{margin-top:40px;}
+.small-note{font-size:12.5px; color:var(--ink-faint); margin-top:10px;}
+</style>
+</head>
+<body>
+
+<div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+<nav class="pillnav" id="pillnav">
+  <a href="#what-is">The Basics</a>
+  <a href="#platforms">Platforms</a>
+  <a href="#checklist">Pre-Hunt Checklist</a>
+  <a href="#report">Report Writing</a>
+  <a href="#mistakes">Mistakes</a>
+  <a href="#closing">Why It Matters</a>
+</nav>
+
+<!-- ============ HERO ============ -->
+<section class="section hero" id="hero">
+  <div class="hero-eyebrow"><span class="dot">●</span>&nbsp; A practical field guide by Sarath G — Cybersecurity Trainer &amp; Consultant</div>
+  <h1>Bug bounty isn't a get-rich-quick scheme. It's a real skill you can start <span class="accent">building today</span>.</h1>
+  <p class="sub">Here's exactly what to check before you touch a target, which platform to start on, how to write a report that doesn't get rejected, and the mistakes that get beginners banned instead of paid.</p>
+
+  <svg class="hero-rings ring-anim" viewBox="0 0 150 150" fill="none">
+    <circle cx="75" cy="75" r="70" stroke="var(--warn)" stroke-width="1.4" stroke-dasharray="4 7" opacity="0.55"/>
+    <circle cx="75" cy="75" r="47" stroke="var(--signal)" stroke-width="1.6" stroke-dasharray="3 6" opacity="0.7"/>
+    <circle cx="75" cy="75" r="24" stroke="var(--gold)" stroke-width="2" opacity="0.9"/>
+    <circle cx="75" cy="75" r="4" fill="var(--ink)"/>
+  </svg>
+
+  <div class="scrollcue"><span class="arrow">↓</span> Scroll to begin</div>
+</section>
+
+<!-- ============ THE BASICS ============ -->
+<section class="section" id="what-is">
+  <div class="section-inner reveal">
+    <div class="eyebrow">30 seconds, no jargon</div>
+    <h2 class="title">What bug bounty actually is</h2>
+    <p class="lede">A bug bounty platform connects companies with independent security researchers who get paid for finding and responsibly reporting real vulnerabilities in the company's own systems. It's legal, done with explicit permission — the opposite of unauthorized hacking, which is a crime regardless of your intent.</p>
+  </div>
+
+  <div class="def-grid reveal">
+    <div class="def-panel">
+      <span class="tag">Term 1</span>
+      <h3>In scope</h3>
+      <p>The exact list of domains, apps, and assets a company has given researchers written permission to test. Anything not on that list is off-limits. Testing it isn't a bonus find — it's a policy violation, and you'll see exactly why that matters in the checklist below.</p>
+    </div>
+    <div class="def-panel">
+      <span class="tag">Term 2</span>
+      <h3>Responsible disclosure</h3>
+      <p>Reporting a vulnerability privately to the company first, and giving them time to fix it — instead of publishing it publicly or exploiting it for your own use. This is the practice that makes the whole field legal and trusted.</p>
+    </div>
+  </div>
+
+  <div class="callout reveal">
+    <b>Legal only because of permission.</b> A bug bounty program is a company's explicit, written invitation to test specific systems. That permission — and staying inside the boundaries it sets — is the entire difference between this and unauthorized hacking.
+  </div>
+</section>
+
+<!-- ============ PLATFORMS ============ -->
+<section class="section" id="platforms">
+  <div class="section-inner reveal">
+    <div class="eyebrow">Currently, as of 2026 — platforms shift over time</div>
+    <h2 class="title">Which platform should you start on</h2>
+    <p class="lede"><b>Quick answer: start on HackerOne.</b> Add Intigriti or Bugcrowd once you've got your footing. Most active researchers end up running two or three platforms at once, not just one — details on all four below.</p>
+  </div>
+
+  <div class="platform-grid reveal">
+    <div class="platform-card" style="--card-color:var(--h1-color);">
+      <div class="platform-head">
+        <h3 class="platform-name">HackerOne</h3>
+        <span class="platform-badge">Start here</span>
+      </div>
+      <div class="platform-sub">Best overall for beginners</div>
+      <ul class="platform-facts">
+        <li>Largest researcher community — <b>1.5 million+ researchers</b> from <b>170 countries</b></li>
+        <li><b>Open registration</b> — no invite or approval needed, just sign up with an email</li>
+        <li>Largest volume of active programs, and a transparent reputation system</li>
+        <li>India is the <b>second-largest contributor</b> of researchers on HackerOne — payouts go directly via <b>PayPal or wire transfer, no geographic restriction</b></li>
+      </ul>
+      <div class="platform-best">Best for: <span>your first platform, full stop.</span></div>
+    </div>
+
+    <div class="platform-card" style="--card-color:var(--bc-color);">
+      <div class="platform-head">
+        <h3 class="platform-name">Bugcrowd</h3>
+      </div>
+      <div class="platform-sub">Broadest range of target types</div>
+      <ul class="platform-facts">
+        <li>Wide variety of targets — web, API, mobile, cloud, IoT</li>
+        <li><b>Fully managed triage</b> — a dedicated team validates every report before it reaches the company, which usually means clearer feedback for beginners</li>
+        <li>Uses the <b>VRT (Vulnerability Rating Taxonomy)</b> — a standardized scale that helps you understand how severe a bug actually is before you report it</li>
+      </ul>
+      <div class="platform-best">Best for: <span>once you want a broader mix of target types.</span></div>
+    </div>
+
+    <div class="platform-card" style="--card-color:var(--intg-color);">
+      <div class="platform-head">
+        <h3 class="platform-name">Intigriti</h3>
+      </div>
+      <div class="platform-sub">Most beginner-friendly interface</div>
+      <ul class="platform-facts">
+        <li>Widely considered one of the most beginner-friendly platforms — clean UI, simpler program pages, an easy reporting flow</li>
+        <li>Known for <b>fast triage feedback</b> — you're not left waiting for weeks to hear back</li>
+        <li>Europe-based, so it's often overlooked by Indian hunters — which can mean <b>less competition</b> on good programs</li>
+      </ul>
+      <div class="platform-best">Best for: <span>a strong, less crowded second platform.</span></div>
+    </div>
+
+    <div class="platform-card" style="--card-color:var(--obb-color);">
+      <div class="platform-head">
+        <h3 class="platform-name">Open Bug Bounty</h3>
+      </div>
+      <div class="platform-sub">Free, for pure practice</div>
+      <ul class="platform-facts">
+        <li><b>Free and non-profit</b> — the lowest possible barrier for an absolute first-timer</li>
+        <li>Good for practicing the mechanics of reporting before you touch a paid platform</li>
+        <li>Distinct from the three commercial platforms above — don't expect the same payout structure</li>
+      </ul>
+      <div class="platform-best">Best for: <span>practicing your first report, zero barrier to entry.</span></div>
+    </div>
+  </div>
+
+  <div class="callout signal reveal">
+    <b>Payments to India, no geo-block.</b> HackerOne pays Indian researchers directly via PayPal or wire transfer — there's no rule stopping you from earning on these platforms as an Indian resident.
+  </div>
+
+  <div class="callout reveal">
+    Most active researchers eventually run <b>two or three platforms at once</b>. Get comfortable on HackerOne first, then add a second once your first few reports have gone well.
+  </div>
+</section>
+
+<!-- ============ PRE-HUNT CHECKLIST ============ -->
+<section class="section" id="checklist">
+  <div class="section-inner reveal">
+    <div class="eyebrow">Before you touch a single target</div>
+    <h2 class="title">The pre-hunting checklist</h2>
+    <p class="lede">This is arguably the most important section on this page. Skipping it is how beginners get <b>banned</b>, not just rejected. Save this, come back to it before every new program.</p>
+  </div>
+
+  <div class="checklist-progress reveal">
+    <span id="checklistCount">0 / 6 checked</span>
+    <div class="checklist-progress-track"><div class="checklist-progress-fill" id="checklistFill"></div></div>
+  </div>
+
+  <div class="checklist reveal reveal-stagger" id="preHuntChecklist">
+    <label class="check-item" style="--i:0">
+      <input type="checkbox" class="check-input" data-key="scope">
+      <span class="check-box" aria-hidden="true"></span>
+      <span class="check-content">
+        <span class="check-title">Read the full program scope, start to finish</span>
+        <span class="check-desc">Know exactly which domains and assets are <b style="color:var(--ink)">in scope</b> — and which are explicitly <b style="color:var(--ink)">out of scope</b> — before you do anything else. Testing an out-of-scope asset can get you banned from the platform, or create real legal risk. It is not just a rejected report.</span>
+      </span>
+    </label>
+
+    <label class="check-item" style="--i:1">
+      <input type="checkbox" class="check-input" data-key="vulntypes">
+      <span class="check-box" aria-hidden="true"></span>
+      <span class="check-content">
+        <span class="check-title">Check the list of accepted vulnerability types</span>
+        <span class="check-desc">Some programs explicitly exclude certain bug classes. Report one anyway and it gets closed as "RTFS" (Read The Fine Scope) — and it can cost you reputation and signal points on the platform, not just that one report.</span>
+      </span>
+    </label>
+
+    <label class="check-item" style="--i:2">
+      <input type="checkbox" class="check-input" data-key="duplicates">
+      <span class="check-box" aria-hidden="true"></span>
+      <span class="check-content">
+        <span class="check-title">Search existing disclosed reports on that program first</span>
+        <span class="check-desc">If someone already found and reported it, yours is a duplicate — no reward, and time you could have spent elsewhere.</span>
+      </span>
+    </label>
+
+    <label class="check-item" style="--i:3">
+      <input type="checkbox" class="check-input" data-key="ownership">
+      <span class="check-box" aria-hidden="true"></span>
+      <span class="check-content">
+        <span class="check-title">Verify target ownership before testing</span>
+        <span class="check-desc">Especially on wildcard-scope programs. Use WHOIS data, SSL certificate logs, or the site's robots.txt / security.txt to confirm the asset actually belongs to the company running the program — not a look-alike or an unrelated third party.</span>
+      </span>
+    </label>
+
+    <label class="check-item" style="--i:4">
+      <input type="checkbox" class="check-input" data-key="scanners">
+      <span class="check-box" aria-hidden="true"></span>
+      <span class="check-content">
+        <span class="check-title">Never run automated scanners against production</span>
+        <span class="check-desc">Unless the program explicitly allows it. An uninvited scan can cause a real service disruption for the company — and get you banned, not just rejected.</span>
+      </span>
+    </label>
+
+    <label class="check-item" style="--i:5">
+      <input type="checkbox" class="check-input" data-key="severity">
+      <span class="check-box" aria-hidden="true"></span>
+      <span class="check-content">
+        <span class="check-title">Understand the platform's reward and severity system</span>
+        <span class="check-desc">For example, Bugcrowd's VRT framework. It gives you a rough, honest sense of what's actually worth prioritizing before you sink hours into something low-severity.</span>
+      </span>
+    </label>
+  </div>
+</section>
+
+<!-- ============ REPORT WRITING ============ -->
+<section class="section" id="report">
+  <div class="section-inner reveal">
+    <div class="eyebrow">The second most important section on this page</div>
+    <h2 class="title">How to write a report that doesn't get rejected</h2>
+    <p class="lede">Step through it like a template — this is close to what a genuinely good report looks like, field by field.</p>
+  </div>
+
+  <div class="stepper reveal" id="reportStepper" data-total="7">
+    <div class="stage">
+      <div class="stage-bg-grid" aria-hidden="true"></div>
+
+      <div class="step-panel is-active" data-step="1">
+        <div class="step-tag">1 / 7 · Title</div>
+        <div class="step-headline">Specific and descriptive, never generic</div>
+        <div class="step-desc">A vague title makes it hard for a triager to quickly assess your report and check for duplicates. Name the specific vulnerable parameter or endpoint, and the impact — not just the bug class.</div>
+        <div class="example-row">
+          <div class="callout warn"><span class="example-label">Bad</span>"XSS in app.example.com" · "IDOR vulnerability"</div>
+          <div class="callout signal"><span class="example-label">Good</span>"Reflected XSS via the redirect_to parameter on /login — allows session token theft"</div>
+        </div>
+      </div>
+
+      <div class="step-panel" data-step="2">
+        <div class="step-tag">2 / 7 · Reproduction steps</div>
+        <div class="step-headline">Write for a reader who has never seen the target before</div>
+        <div class="step-desc">One clear instruction per line — no skipped steps, no assumed context. Mention any prerequisites upfront, e.g. <b>"Requires a test account with admin rights."</b> If the triager has to guess a step, the report stalls.</div>
+      </div>
+
+      <div class="step-panel" data-step="3">
+        <div class="step-tag">3 / 7 · Proof of Concept</div>
+        <div class="step-headline">Enough detail that anyone can reproduce it — not just you</div>
+        <div class="step-desc">Include screenshots, the actual request/response data, or a short screen recording where it helps. A PoC that only makes sense to the person who found the bug isn't a PoC yet.</div>
+      </div>
+
+      <div class="step-panel" data-step="4">
+        <div class="step-tag">4 / 7 · Impact statement</div>
+        <div class="step-headline">This is where most of the reward decision actually happens</div>
+        <div class="step-desc">Explain concretely what could go wrong: what data could be exposed, what an attacker could actually do with this. Quantify it where you can. Don't stop at describing the technical mechanism and leave the "so what" unanswered.</div>
+      </div>
+
+      <div class="step-panel" data-step="5">
+        <div class="step-tag">5 / 7 · Formatting</div>
+        <div class="step-headline">Use markdown, headers, and bullet points</div>
+        <div class="step-desc">A clean, well-organized report gets triaged faster and leaves a better first impression — before the triager has read a single technical detail.</div>
+      </div>
+
+      <div class="step-panel" data-step="6">
+        <div class="step-tag">6 / 7 · Tone</div>
+        <div class="step-headline">Be polite, especially when following up</div>
+        <div class="step-desc">Most platforms have a "request support" or "ask a scope question" option — use it instead of guessing when you're unsure. A calm, professional tone tends to get faster, more useful responses.</div>
+      </div>
+
+      <div class="step-panel" data-step="7">
+        <div class="step-tag">7 / 7 · One bug, one report</div>
+        <div class="step-headline">Don't split one bug into multiple reports</div>
+        <div class="step-desc">Reporting the same underlying issue against slightly different parameters on the same endpoint reads as duplicates — and will likely be treated, and paid, as a single finding either way.</div>
+      </div>
+
+    </div>
+    <div class="stepper-controls">
+      <button class="step-btn" data-prev aria-label="Previous step">← Prev</button>
+      <div class="step-dots" role="tablist" aria-label="Report writing steps"></div>
+      <span class="step-counter" id="reportCounter"></span>
+      <button class="step-btn" data-next aria-label="Next step">Next →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MISTAKES ============ -->
+<section class="section" id="mistakes">
+  <div class="section-inner reveal">
+    <div class="eyebrow">The list every rejected report has in common</div>
+    <h2 class="title">Common beginner mistakes to avoid</h2>
+    <p class="lede">These aren't rare edge cases — they're the same handful of mistakes showing up across nearly every beginner's early reports.</p>
+  </div>
+
+  <div class="mistake-grid reveal reveal-stagger">
+    <div class="mistake-card" style="--i:0">
+      <div class="mistake-head"><span class="mistake-x">DON'T</span><h4>Skip the program policy</h4></div>
+      <p>Not reading the full scope before starting is the single most repeated mistake, across every source on this topic.</p>
+    </div>
+    <div class="mistake-card" style="--i:1">
+      <div class="mistake-head"><span class="mistake-x">DON'T</span><h4>Test out-of-scope assets</h4></div>
+      <p>Real risk here is a platform ban or legal exposure — not just a rejected report.</p>
+    </div>
+    <div class="mistake-card" style="--i:2">
+      <div class="mistake-head"><span class="mistake-x">DON'T</span><h4>Rush to report unverified issues</h4></div>
+      <p>A lot of "invalid" reports are theoretical problems nobody actually confirmed were exploitable.</p>
+    </div>
+    <div class="mistake-card" style="--i:3">
+      <div class="mistake-head"><span class="mistake-x">DON'T</span><h4>Skip the duplicate check</h4></div>
+      <p>Not searching existing reports first wastes time on something someone already found.</p>
+    </div>
+    <div class="mistake-card" style="--i:4">
+      <div class="mistake-head"><span class="mistake-x">DON'T</span><h4>Scan production without permission</h4></div>
+      <p>Running automated scanners against a live target without explicit permission can disrupt real service.</p>
+    </div>
+    <div class="mistake-card" style="--i:5">
+      <div class="mistake-head"><span class="mistake-x">DON'T</span><h4>Chase easy bugs over real impact</h4></div>
+      <p>Reward and reputation follow real impact — data leaks, account takeover, privilege escalation — not technical novelty.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CLOSING ============ -->
+<section class="section closing" id="closing">
+  <div class="section-inner reveal">
+    <div class="eyebrow">Why this actually matters</div>
+    <h2 class="title">This is a skill you build, not a shortcut you take</h2>
+    <p class="lede">None of this works as a "learn it this weekend" shortcut — the researchers earning consistently on these platforms got there through real skill-building over time, not luck or a single lucky find. If you want a structured path into this and other cybersecurity domains before you jump into live targets, start with the fundamentals and get hands-on practice first.</p>
+  </div>
+
+  <div class="credcard reveal">
+    <div class="credtag">Who wrote this</div>
+    <p class="body-text">I'm Sarath — a cybersecurity trainer and consultant with 8+ years in the field. I've trained teams at organizations including:</p>
+    <div class="credlist">
+      <span class="credpill">Indian Navy</span>
+      <span class="credpill">Samsung Electronics</span>
+      <span class="credpill">IIT Madras</span>
+      <span class="credpill">Central banks</span>
+    </div>
+  </div>
+
+  <div class="ctarow reveal">
+    <a class="cta primary" href="https://gethired.sarathg.me" target="_blank" rel="noopener">Build the fundamentals first →</a>
+    <a class="cta secondary" href="https://labs.sarathg.me" target="_blank" rel="noopener">Practice hands-on at labs.sarathg.me →</a>
+  </div>
+</section>
+
+<footer>
+  Built to be understood, not memorized. · sarathg.me
+</footer>
+
+<script>
+(function(){
+  // ---------- progress bar ----------
+  var fill = document.getElementById('progressFill');
+  function updateProgress(){
+    var h = document.documentElement;
+    var scrolled = h.scrollTop || document.body.scrollTop;
+    var height = (h.scrollHeight || document.body.scrollHeight) - h.clientHeight;
+    var pct = height > 0 ? (scrolled / height) * 100 : 0;
+    fill.style.width = pct + '%';
+  }
+  document.addEventListener('scroll', updateProgress, {passive:true});
+  updateProgress();
+
+  // ---------- nav active state ----------
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll('.pillnav a'));
+  var navSections = navLinks.map(function(a){ return document.querySelector(a.getAttribute('href')); }).filter(Boolean);
+  var navObserver = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        var id = '#' + entry.target.id;
+        navLinks.forEach(function(a){ a.classList.toggle('is-active', a.getAttribute('href') === id); });
+      }
+    });
+  }, {rootMargin:'-45% 0px -50% 0px', threshold:0});
+  navSections.forEach(function(s){ navObserver.observe(s); });
+
+  // ---------- reveal on scroll ----------
+  var revealEls = document.querySelectorAll('.reveal');
+  var revealObserver = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        entry.target.classList.add('is-visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, {threshold:0.12});
+  revealEls.forEach(function(el){ revealObserver.observe(el); });
+
+  // ---------- pre-hunt checklist persistence ----------
+  var CHECK_KEY = 'bugbounty-prehunt-checklist-v1';
+  function loadChecked(){
+    try { var raw = localStorage.getItem(CHECK_KEY); return raw ? JSON.parse(raw) : {}; }
+    catch(e){ return {}; }
+  }
+  function saveChecked(obj){
+    try { localStorage.setItem(CHECK_KEY, JSON.stringify(obj)); } catch(e){}
+  }
+  var checkInputs = Array.prototype.slice.call(document.querySelectorAll('#preHuntChecklist .check-input'));
+  var checklistCount = document.getElementById('checklistCount');
+  var checklistFill = document.getElementById('checklistFill');
+  var savedChecks = loadChecked();
+
+  function refreshChecklistUI(){
+    var total = checkInputs.length;
+    var done = checkInputs.filter(function(i){ return i.checked; }).length;
+    checklistCount.textContent = done + ' / ' + total + ' checked';
+    checklistFill.style.width = (total ? (done/total*100) : 0) + '%';
+  }
+
+  checkInputs.forEach(function(input){
+    var key = input.dataset.key;
+    if(savedChecks[key]) input.checked = true;
+    input.addEventListener('change', function(){
+      var state = loadChecked();
+      state[key] = input.checked;
+      saveChecked(state);
+      refreshChecklistUI();
+    });
+  });
+  refreshChecklistUI();
+
+  // ---------- generic stepper controller ----------
+  function initStepper(container, counterEl){
+    var total = parseInt(container.dataset.total, 10);
+    var current = 1;
+    var panels = container.querySelectorAll('.step-panel');
+    var dotsWrap = container.querySelector('.step-dots');
+    var prevBtn = container.querySelector('[data-prev]');
+    var nextBtn = container.querySelector('[data-next]');
+
+    for(var i=1;i<=total;i++){
+      var dot = document.createElement('button');
+      dot.className = 'step-dot';
+      dot.type = 'button';
+      dot.setAttribute('aria-label', 'Go to step ' + i);
+      dot.dataset.step = i;
+      dotsWrap.appendChild(dot);
+    }
+    var dots = dotsWrap.querySelectorAll('.step-dot');
+
+    function render(){
+      panels.forEach(function(p){
+        p.classList.toggle('is-active', parseInt(p.dataset.step,10) === current);
+      });
+      dots.forEach(function(d){
+        d.classList.toggle('is-active', parseInt(d.dataset.step,10) === current);
+      });
+      prevBtn.disabled = current === 1;
+      nextBtn.disabled = current === total;
+      if(counterEl) counterEl.textContent = current + ' / ' + total;
+    }
+
+    prevBtn.addEventListener('click', function(){ if(current>1){ current--; render(); } });
+    nextBtn.addEventListener('click', function(){ if(current<total){ current++; render(); } });
+    dots.forEach(function(d){
+      d.addEventListener('click', function(){ current = parseInt(d.dataset.step,10); render(); });
+    });
+
+    render();
+  }
+
+  initStepper(document.getElementById('reportStepper'), document.getElementById('reportCounter'));
+})();
+</script>
+
+</body>
+</html>
