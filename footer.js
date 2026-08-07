@@ -67,7 +67,10 @@
     + '#sg-footer .sgf-links a{ color:var(--t-secondary, #9a9a9a); text-decoration:none; font-size:13.5px; transition:color .15s ease; }'
     + '#sg-footer .sgf-links a:hover{ color:var(--accent, #ef4444); }'
     + '#sg-footer .sgf-cta-text{ font-size:13.5px; line-height:1.6; margin-bottom:16px; max-width:30ch; }'
-    + '#sg-footer .sgf-cta-btn{ display:inline-flex; align-items:center; gap:8px; background:var(--accent, #ef4444); color:#fff; text-decoration:none; font-family:var(--font-mono, "JetBrains Mono", monospace); font-size:13px; font-weight:500; padding:10px 16px; border-radius:7px; transition:transform .15s ease, opacity .15s ease; }'
+    /* #dc2626 fallback (red-600) on white text = 4.83:1, meets WCAG AA; the old
+       #ef4444 fallback only reached 3.76:1. Pages that define their own --accent
+       (e.g. the green services theme) still use that color here unchanged. */
+    + '#sg-footer .sgf-cta-btn{ display:inline-flex; align-items:center; gap:8px; background:var(--accent, #dc2626); color:#fff; text-decoration:none; font-family:var(--font-mono, "JetBrains Mono", monospace); font-size:13px; font-weight:500; padding:10px 16px; border-radius:7px; transition:transform .15s ease, opacity .15s ease; }'
     + '#sg-footer .sgf-cta-btn:hover{ transform:translateY(-1px); opacity:.92; }'
     + '#sg-footer .sgf-bottom{ border-top:1px solid var(--b-subtle, #242424); padding:18px 24px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; max-width:1180px; margin:0 auto; font-size:12px; }'
     + '#sg-footer .sgf-bottom a{ color:var(--t-secondary, #9a9a9a); text-decoration:none; }'

@@ -118,10 +118,12 @@
     .sg-link.sg-active        { color: var(--red, #ef4444); }
     .sg-link.sg-active::after { width: 100%; }
 
-    /* ── CTA button ── */
+    /* ── CTA button ──
+       #dc2626 (red-600) on white text = 4.83:1 contrast, meets WCAG AA (4.5:1).
+       The previous #ef4444 (red-500) only reached 3.76:1. */
     .sg-cta {
       padding: 0.55rem 1.25rem;
-      background: #ef4444;
+      background: #dc2626;
       color: #fff !important;
       border-radius: 100px;
       font-size: 0.875rem;
@@ -130,7 +132,7 @@
       white-space: nowrap;
     }
     .sg-cta:hover {
-      background: #dc2626;
+      background: #b91c1c;
       transform: scale(1.04);
     }
 
@@ -334,14 +336,14 @@
       margin-top: 1rem;
       text-align: center;
       padding: 0.65rem 1.25rem;
-      background: #ef4444;
+      background: #dc2626;
       color: #fff !important;
       border-radius: 100px;
       font-weight: 600;
       font-size: 0.875rem;
       transition: background 0.2s;
     }
-    .sg-mobile-cta:hover { background: #dc2626; }
+    .sg-mobile-cta:hover { background: #b91c1c; }
 
     /* Body offset so content isn't hidden under fixed navbar */
     body { padding-top: 64px; }
