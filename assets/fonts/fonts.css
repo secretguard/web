@@ -1,0 +1,37 @@
+/* ═══════════════════════════════════════════════════════════════
+   Self-hosted Google Fonts (index.html)
+   Replaces the fonts.googleapis.com/css2 request + its render-blocking
+   preconnect/gstatic round trip. Each family below is a single variable
+   woff2 file (that's what Google's own CSS2 API serves to modern
+   browsers for these weight ranges) — one file covers every weight
+   the page uses, subset to latin/latin-ext by Google at request time.
+   Source: fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700
+                                  &family=Outfit:wght@300;400;500;600;700;800;900
+                                  &family=JetBrains+Mono:wght@300;400;500
+   Licenses: Inter, Outfit, and JetBrains Mono are all SIL Open Font
+   License (OFL) — free to self-host and redistribute.
+═══════════════════════════════════════════════════════════════ */
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('inter-var.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Outfit';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('outfit-var.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 100 800;
+  font-display: swap;
+  src: url('jetbrains-mono-var.woff2') format('woff2');
+}

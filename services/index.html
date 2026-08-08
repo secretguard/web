@@ -339,8 +339,8 @@
     @media (max-width: 480px) { .hero { padding: calc(64px + 50px) 5% 50px; } }
   </style>
 </head>
-<body>
-<script src="../navbar.js"></script>
+<body style="padding-top:64px">
+<script src="../navbar.js" defer></script>
 
 
 <main>
@@ -575,7 +575,7 @@
 
 <!-- FOOTER -->
 </main>
-<script src="../footer.js"></script>
+<script src="../footer.js" defer></script>
 
 <script>
   const obs = new IntersectionObserver(entries => {
