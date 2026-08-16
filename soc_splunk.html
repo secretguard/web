@@ -1032,7 +1032,1088 @@ body {
   <body style="padding-top:64px">
     <script src="navbar.js" defer></script>
 <main>
-    <div id="root"></div>
+    <div id="root"><div style="font-family:-apple-system,'Segoe UI',sans-serif;background:#0a0e14;color:#e2e8f0;padding:32px 20px;max-width:860px;margin:0 auto;line-height:1.6">
+<h1 style="font-size:2rem;font-weight:800;margin:0 0 12px">Learn Splunk for the SOC analyst job you actually want.</h1>
+<section id="setup" style="margin-bottom:40px">
+  <h2 style="font-size:1.5rem;font-weight:700;color:#1e6e5c;margin:0 0 6px">Setup — Install Splunk and Load the Tutorial Data</h2>
+  <p style="color:#94a3b8;margin:0 0 20px">Everything in this guide runs against a sample dataset called index=tutorial. Do this once, before anything else.</p>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">1. Download Splunk Enterprise</h3>
+    <p style="margin:0 0 12px">Splunk offers a free trial of Splunk Enterprise, which is what every exercise in this guide assumes you're running. Download the Windows installer below, or visit splunk.com/download for macOS/Linux.</p>
+    <ol style="margin:0 0 12px;padding-left:20px">
+      <li>Run the downloaded .msi file.</li>
+      <li>Accept the license agreement.</li>
+      <li>Choose "Local System" account when prompted (default is fine for a learning install).</li>
+      <li>Set an admin username and password — you will use this to log into Splunk Web every time, so write it down somewhere safe.</li>
+      <li>Finish the install. It will automatically open Splunk Web in your browser at http://localhost:8000, or you can navigate there manually once setup completes.</li>
+    </ol>
+    <p style="margin:0 0 12px;color:#7dd3fc"><strong>Tip:</strong> If port 8000 is already in use by something else on your machine, the installer will tell you during setup — you can change it, but localhost:8000 is the default everyone's instructions (including this guide) assume.</p>
+    <ul style="margin:0 0 12px;padding-left:20px">
+      <li><a href="https://download.splunk.com/products/splunk/releases/10.4.0/windows/splunk-10.4.0-f798d4d49089-windows-x64.msi" style="color:#7dd3fc">Splunk 10.4.0 — Windows x64 (.msi)</a></li>
+    </ul>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">2. Download the tutorial data</h3>
+    <p style="margin:0 0 12px">This is the sample dataset — fictional company "Buttercup Games" — that every single exercise in this guide is written against. It's a single zip file containing several log file types.</p>
+    <p style="margin:0 0 12px;color:#7dd3fc"><strong>Tip:</strong> Don't unzip this file. Splunk reads it directly as a .zip during the upload step below — unzipping it first is unnecessary and won't cause anything to work better.</p>
+    <ul style="margin:0 0 12px;padding-left:20px">
+      <li><a href="https://docs.splunk.com/images/Tutorial/tutorialdata.zip" style="color:#7dd3fc">tutorialdata.zip</a></li>
+    </ul>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">3. Create the tutorial index</h3>
+    <p style="margin:0 0 12px">Before uploading any data, you need a destination for it: an index named tutorial. Every search example in this guide starts with index=tutorial — if you name it something else, you'll need to mentally substitute your own index name in every single search from here on, so it's worth just matching the name exactly.</p>
+    <ol style="margin:0 0 12px;padding-left:20px">
+      <li>Log into Splunk Web (http://localhost:8000).</li>
+      <li>Click Settings (top right) → Indexes.</li>
+      <li>Click New Index (top right of the indexes list).</li>
+      <li>Index Name: type tutorial exactly, all lowercase.</li>
+      <li>Leave every other setting at its default — Index Data Type: Events, Max Size, Home Path, etc. all default values are fine for a learning environment.</li>
+      <li>Click Save.</li>
+    </ol>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px">
+      <p style="margin:0 0 8px;font-weight:600">Exercise: Confirm the index exists</p>
+      <p style="margin:0 0 8px">Go back to Settings → Indexes and look for tutorial in the list. It should show 0 events for now — that's expected, you haven't loaded any data into it yet.</p>
+    </div>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">4. Upload tutorialdata.zip into the tutorial index</h3>
+    <p style="margin:0 0 12px">Now you'll point Splunk at the zip file and tell it specifically to load that data into the tutorial index you just created — not the default index, which is a mistake that quietly breaks every exercise later if it happens.</p>
+    <ol style="margin:0 0 12px;padding-left:20px">
+      <li>Click Settings → Add Data.</li>
+      <li>Click Upload (the "I want to upload a file" option, not monitor or forward).</li>
+      <li>Click Select File, browse to wherever you saved tutorialdata.zip, and select it.</li>
+      <li>Click Next at the bottom of the page.</li>
+      <li>On the "Set Source Type" screen, Splunk will try to auto-detect the format. You can leave this as-is and click Next — the three sourcetypes used in this guide (access_combined_wcookie, vendor_sales/vendor_sales, www1/secure) are bundled inside the zip with their formats already defined.</li>
+      <li>On the "Input Settings" screen, find the Index dropdown. Change it from default to tutorial.</li>
+      <li>Click Review, confirm the settings look correct (Index: tutorial), then click Submit.</li>
+    </ol>
+    <p style="margin:0 0 12px;color:#fca5a5"><strong>Warning:</strong> The single most common setup mistake: forgetting to change the Index dropdown away from default before submitting. If every search in this guide comes back with zero results, this is the first thing to check — go to Settings → Indexes, look at how many events default has versus tutorial, and re-upload correctly if needed.</p>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">5. Verify the data loaded correctly</h3>
+    <p style="margin:0 0 12px">Before trusting any exercise in this guide, confirm the data is actually there and Splunk can find it.</p>
+    <p style="margin:0 0 12px;color:#7dd3fc"><strong>Tip:</strong> Set your time range to All time as a habit for the rest of this guide, every time a search comes back empty before you assume something is broken.</p>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px">
+      <p style="margin:0 0 8px;font-weight:600">Exercise: Run your first search</p>
+      <p style="margin:0 0 8px">Go to the Search &amp; Reporting app, paste this into the search bar, and set the time range (top right of the search bar) to All time. You should see thousands of events appear. If you see zero, check the warning above about the Index dropdown, and double-check the time range — almost every "zero results" problem in this entire guide traces back to one of those two things.</p>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial</code></pre>
+    </div>
+  </article>
+</section>
+<section id="reference" style="margin-bottom:40px">
+  <h2 style="font-size:1.5rem;font-weight:700;color:#6b5e3c;margin:0 0 6px">SPL Command Reference</h2>
+  <p style="color:#94a3b8;margin:0 0 20px">Every command used in this guide, in one place. Click any command name inline, anywhere in this guide, to see this same definition pop up without losing your place.</p>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">How to use this module</h3>
+    <p style="margin:0 0 12px">Skim this once up front if you like, or skip it and come back later — every command name inside a code block elsewhere in this guide is clickable and shows the same short definition in place. This page exists for when you want the fuller explanation, or want to browse the full list at once.</p>
+  </article>
+</section>
+<section id="foundations" style="margin-bottom:40px">
+  <h2 style="font-size:1.5rem;font-weight:700;color:#1e6e5c;margin:0 0 6px">Search Fundamentals — table, rename, fields, dedup, sort</h2>
+  <p style="color:#94a3b8;margin:0 0 20px">Your first real SPL commands: turning a messy raw event into a clean, readable report.</p>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">The dataset you'll use throughout this guide</h3>
+    <p style="margin:0 0 12px">index=tutorial contains three sourcetypes. Knowing their shape up front saves a lot of guessing later.</p>
+    <table style="width:100%;border-collapse:collapse;margin:0 0 12px;font-size:0.9rem">
+      <thead><tr>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">Sourcetype</th>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">What it contains</th>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">Quoting needed?</th>
+      </tr></thead>
+      <tbody>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">access_combined_wcookie</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Web traffic — clientip, method, productId, status, bytes</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">No</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">vendor_sales/vendor_sales</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Vendor transactions — VendorID, Code, AcctID</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Yes — wrap in quotes</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">www1/secure</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Secure site activity — clientip, action, categoryId, itemId</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Yes — wrap in quotes</td>
+      </tr>
+      </tbody>
+    </table>
+    <p style="margin:0 0 12px;color:#fca5a5"><strong>Warning:</strong> Sourcetype names containing a slash (/) must be wrapped in double quotes — e.g. sourcetype="vendor_sales/vendor_sales". Forgetting this is the single most common syntax mistake newcomers make.</p>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">table and rename</h3>
+    <p style="margin:0 0 12px">table picks and orders the columns you want to see. rename changes a column's display label without touching the underlying field name or data — the data never changes, only what you see.</p>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px">
+      <p style="margin:0 0 8px;font-weight:600">Exercise: Build a clean web traffic report</p>
+      <p style="margin:0 0 8px">Run this first and just look at the raw results — don't build anything yet, get a feel for what fields exist.</p>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype=access_combined_wcookie
+| head 5</code></pre>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype=access_combined_wcookie
+| table _time, clientip, method, productId, status, bytes</code></pre>
+      <p style="margin:0 0 8px">You picked 6 fields out of a much messier raw event, displayed as clean columns in the order you listed them.</p>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype=access_combined_wcookie
+| table _time, clientip, method, productId, status, bytes
+| rename clientip as "Visitor IP", method as "HTTP Method", productId as "Product", status as "Response Code", bytes as "Response Size"</code></pre>
+      <p style="margin:0 0 8px">Every column header except _time now has a friendly name. Try renaming _time to "Visit Time" as well — type it yourself rather than copy-pasting.</p>
+    </div>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">The single most useful distinction in all of SPL</h3>
+    <p style="margin:0 0 12px">It's easy to assume any command's effect shows up on the Statistics tab. It doesn't. Splunk's commands split into two groups, and mixing them up causes confusion for weeks if it isn't corrected early.</p>
+    <table style="width:100%;border-collapse:collapse;margin:0 0 12px;font-size:0.9rem">
+      <thead><tr>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">Group</th>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">Commands</th>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">Behavior</th>
+      </tr></thead>
+      <tbody>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Display-only</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">table, fields, dedup, sort, rename</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Change what you SEE or how results are arranged. Do NOT populate the Statistics tab.</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Transforming</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">stats, top, rare, chart, timechart</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Actually aggregate or summarize data. DO populate the Statistics tab automatically.</td>
+      </tr>
+      </tbody>
+    </table>
+    <p style="margin:0 0 12px;color:#7dd3fc"><strong>Tip:</strong> Quick check: after running a search, look at the Statistics tab next to Events and Visualization. Empty or greyed out → display-only command. Populated with a summary table → transforming command.</p>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">fields, dedup, and sort</h3>
+    <p style="margin:0 0 12px">fields trims which fields are kept in the underlying result set — but on its own it changes nothing visible in the raw Events display. dedup keeps only the first event per unique value of a field. sort orders results (a leading minus sign means descending).</p>
+    <p style="margin:0 0 12px;color:#7dd3fc"><strong>Tip:</strong> Most finished, real-world reports look roughly like this: filter → trim → dedup → sort → table → rename.</p>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px">
+      <p style="margin:0 0 8px;font-weight:600">Exercise: Trim, deduplicate, and order a result set</p>
+      <p style="margin:0 0 8px">Run it, then check the Fields sidebar — only your 3 chosen fields are listed there now. Add | table clientip, method, productId to actually see it.</p>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype=access_combined_wcookie
+| fields clientip, method, productId</code></pre>
+      <p style="margin:0 0 8px;color:#fbbf24">What do you expect to see change in the Events tab? Click to check.</p>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype=access_combined_wcookie
+| dedup clientip
+| table _time, clientip, method, productId</code></pre>
+      <p style="margin:0 0 8px">Only the first event for each unique clientip is kept — compare the result count to a plain search without dedup.</p>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype=access_combined_wcookie
+| dedup clientip
+| table _time, clientip, method, productId
+| sort - _time</code></pre>
+      <p style="margin:0 0 8px">Descending (newest first). Remove the minus sign and rerun to see ascending order instead.</p>
+    </div>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">top, rare, and stats</h3>
+    <p style="margin:0 0 12px">Unlike fields/dedup/sort, these three ARE transforming commands — the Statistics tab populates the moment you use any of them. top finds the most common values (sorted descending, with an automatic percent column, top 10 by default). rare is its mirror image — least common values, same shape, opposite order. stats is the most flexible of the three; top and rare are really just shortcuts for specific stats patterns underneath.</p>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px">
+      <p style="margin:0 0 8px;font-weight:600">Exercise: Compare top, rare, and stats on the same field</p>
+      <p style="margin:0 0 8px">Most common product viewed.</p>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype=access_combined_wcookie
+| top productId</code></pre>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype="vendor_sales/vendor_sales"
+| rare Code</code></pre>
+      <p style="margin:0 0 8px">Least common transaction code. Rare events often matter more in real investigations than common ones — a rare status code or login pattern is often where problems hide.</p>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype=access_combined_wcookie
+| stats count by productId
+| sort - count</code></pre>
+      <p style="margin:0 0 8px">Run this and compare it directly to the top productId result above — they should show identical products in identical order. top is doing exactly what you just built manually with stats and sort.</p>
+    </div>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">From real-world questions to SPL queries</h3>
+    <p style="margin:0 0 12px">In a real SOC, nobody asks you to 'run a top.' They ask a business or security question, and you decide which command answers it. The pattern: read the question in plain English, decide whether you're counting, finding extremes, or just cleaning up a list, then pick the matching command.</p>
+    <table style="width:100%;border-collapse:collapse;margin:0 0 12px;font-size:0.9rem">
+      <thead><tr>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">The question sounds like...</th>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">Use this</th>
+      </tr></thead>
+      <tbody>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">"What's the most common / top / most frequent...?"</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">top</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">"What's the least common / rarest...?"</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">rare</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">"How many of each...?" / needs grouping by 2+ fields</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">stats count by</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">"Just show me a clean list, no duplicates, sorted, readable"</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">fields + dedup + sort + table + rename</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">"Only include records where X"</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Add a filter right after sourcetype=, before any other command</td>
+      </tr>
+      </tbody>
+    </table>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px">
+      <p style="margin:0 0 8px;font-weight:600">Exercise: Translate three real questions into SPL</p>
+      <p style="margin:0 0 8px">"Who visits us the most?" — a single winner, so limit=1.</p>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype=access_combined_wcookie
+| top limit=1 clientip
+| rename clientip as "Most Frequent Visitor", count as "Number of Visits"</code></pre>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype=access_combined_wcookie status!=200
+| stats count by productId
+| sort - count</code></pre>
+      <p style="margin:0 0 8px">"How many requests failed (non-200) per product?" — notice we filter with status!=200 BEFORE piping into stats. Filter early, aggregate after — this pattern shows up constantly.</p>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype="vendor_sales/vendor_sales"
+| fields VendorID, Code, AcctID
+| dedup VendorID
+| sort - AcctID
+| table VendorID, Code, AcctID</code></pre>
+      <p style="margin:0 0 8px">"Which vendors had the highest account numbers?" — no counting language at all, so reaching for stats/top here out of habit would be the wrong instinct.</p>
+    </div>
+  </article>
+</section>
+<section id="case-job" style="margin-bottom:40px">
+  <h2 style="font-size:1.5rem;font-weight:700;color:#a8632b;margin:0 0 6px">Case Sensitivity &amp; Job Inspector</h2>
+  <p style="color:#94a3b8;margin:0 0 20px">Three rules that aren't uniform, and the tool that shows you what a search actually did.</p>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">Case sensitivity has three different defaults</h3>
+    <p style="margin:0 0 12px">This trips people up because it feels like it should be one consistent rule. It isn't — three separate behaviors apply depending on what you're typing.</p>
+    <table style="width:100%;border-collapse:collapse;margin:0 0 12px;font-size:0.9rem">
+      <thead><tr>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">What</th>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">Case-sensitive?</th>
+      </tr></thead>
+      <tbody>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Field NAMES</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">YES, always — status and Status are different fields to Splunk</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Field VALUES</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">NO, by default — status="error" and status="ERROR" match the same events</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Plain search keywords (no field=)</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">NO — typing Error or error in the search bar returns the same results</td>
+      </tr>
+      </tbody>
+    </table>
+    <p style="margin:0 0 12px;color:#fca5a5"><strong>Warning:</strong> Lookup table values ARE case-sensitive by default. If a lookup value's case doesn't match the raw field value's case exactly, the lookup silently fails to match.</p>
+    <p style="margin:0 0 12px;color:#7dd3fc"><strong>Tip:</strong> If you ever need to force case-sensitive matching, Splunk has a CASE() wrapper function — and the word CASE itself is case-sensitive when used this way. Typing case() instead of CASE() will not work.</p>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">Job Inspector — what a search actually did</h3>
+    <p style="margin:0 0 12px">Job Inspector examines what a search actually did, not just what it returned. In the search window, click the small clock/job dropdown next to a running or completed search, then select Inspect Job.</p>
+    <ul style="margin:0 0 12px;padding-left:20px">
+      <li>scanCount = how many raw events Splunk had to look at. resultCount = how many it returned after processing.</li>
+      <li>A DENSE search (most events match) has scanCount and resultCount close together</li>
+      <li>A SPARSE search (few events match a narrow filter) can have scanCount far higher than resultCount</li>
+      <li>search.log is only visible through Job Inspector — useful for catching errors like regex extraction failures that don't show up at the top</li>
+    </ul>
+    <p style="margin:0 0 12px;color:#7dd3fc"><strong>Tip:</strong> A healthy scanCount/second rate typically falls between 10,000 and 20,000 events per second. Think of it as how efficiently the engine is working, not just how fast you got an answer.</p>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px">
+      <p style="margin:0 0 8px;font-weight:600">Exercise: Inspect a real search</p>
+      <p style="margin:0 0 8px">Run it, click the job dropdown (clock icon near the search bar) → Inspect Job. Check the top bar first: scanCount, runDuration, job status, and any messages. Then look at the Execution Costs table to see where time was actually spent.</p>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype=access_combined_wcookie
+| stats count by status, clientip</code></pre>
+    </div>
+  </article>
+</section>
+<section id="visualizations" style="margin-bottom:40px">
+  <h2 style="font-size:1.5rem;font-weight:700;color:#5b4b8a;margin:0 0 6px">Visualizations</h2>
+  <p style="color:#94a3b8;margin:0 0 20px">Pie, chart, and timechart all have shape requirements — get them wrong and a chart can fail silently.</p>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">Check the Statistics tab shape before trusting any chart</h3>
+    <p style="margin:0 0 12px">Every visualization type has specific requirements for the shape of the Statistics table feeding it. Get the shape wrong and the chart either won't render, or — more dangerously — it WILL render but silently drop data.</p>
+    <ul style="margin:0 0 12px;padding-left:20px">
+      <li>Line/area charts need 2+ columns with valid x-axis and y-axis values</li>
+      <li>Line charts can represent a single data series. Area charts CANNOT — they require multiple series to render meaningfully</li>
+      <li>Adding eval or fields after a transforming command can change the table shape enough to break a chart that was working before</li>
+    </ul>
+    <p style="margin:0 0 12px;color:#fca5a5"><strong>Warning:</strong> Most mistakes throw an error. A pie chart fed more than 2 columns doesn't — it just quietly shows a chart that looks correct but is built from incomplete data. Always check the Statistics tab shape BEFORE trusting any chart, especially pie charts.</p>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px">
+      <p style="margin:0 0 8px;font-weight:600">Exercise: Watch a pie chart silently drop data</p>
+      <p style="margin:0 0 8px">Run this, then switch to the Visualization tab and select Pie Chart. The pie chart still renders — no error — but it silently ignores every column past the second one. A pie chart needs exactly 2 columns: column 1 for slice labels, column 2 for slice values.</p>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype=access_combined_wcookie
+| stats count by status, clientip, action</code></pre>
+      <p style="margin:0 0 8px;color:#fbbf24">What do you think happens when you chart this as a pie? Click to check.</p>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype=access_combined_wcookie
+| stats count by status</code></pre>
+      <p style="margin:0 0 8px">Compare to a search that actually fits the 2-column shape — this one renders correctly as a pie chart.</p>
+    </div>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">stats vs chart vs timechart</h3>
+    <p style="margin:0 0 12px">This is the single most useful mental model for visualizations, and it connects directly to BY-clause habits from the foundations module.</p>
+    <table style="width:100%;border-collapse:collapse;margin:0 0 12px;font-size:0.9rem">
+      <thead><tr>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">Command</th>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">BY clause limit</th>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">Best for</th>
+      </tr></thead>
+      <tbody>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">stats</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">3+ fields allowed</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Granular statistical tables — detailed, not necessarily chart-ready</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">chart</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Max 2 fields: one row-split, one column-split</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Consolidated tables built specifically for charting</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">timechart</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">1 field only (column-split) — row-split is ALWAYS _time</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Time-series charts — _time is automatically the first column</td>
+      </tr>
+      </tbody>
+    </table>
+    <p style="margin:0 0 12px;color:#7dd3fc"><strong>Tip:</strong> If you wanted to chart status by BOTH host AND action at once, only stats can even attempt it — chart and timechart both cap at one BY field beyond their fixed split.</p>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px">
+      <p style="margin:0 0 8px;font-weight:600">Exercise: Compare the three commands on the same question</p>
+      <p style="margin:0 0 8px">Check the Statistics tab, then the Visualization tab.</p>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype=access_combined_wcookie
+| stats count by status, host</code></pre>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype=access_combined_wcookie
+| chart count by status, host</code></pre>
+      <p style="margin:0 0 8px">status becomes the row-split (x-axis), host values become separate data series — the consolidated, chart-ready shape chart is built for.</p>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype=access_combined_wcookie
+| timechart span=1h count by status</code></pre>
+      <p style="margin:0 0 8px">_time is automatically the first column; status is the ONLY by-clause field allowed.</p>
+    </div>
+  </article>
+</section>
+<section id="geo" style="margin-bottom:40px">
+  <h2 style="font-size:1.5rem;font-weight:700;color:#b4513f;margin:0 0 6px">Geo &amp; Single-Value Commands</h2>
+  <p style="color:#94a3b8;margin:0 0 20px">Turning an IP address into a country, and building the classic SOC attack map.</p>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">iplocation — where is this traffic actually coming from?</h3>
+    <p style="margin:0 0 12px">Takes an IP address field and looks it up against a built-in geolocation database (no install needed), adding location fields to each event. By default it adds City, Country, lat, lon, and Region.</p>
+    <p style="margin:0 0 12px;color:#fca5a5"><strong>Warning:</strong> Private/internal IP addresses (10.x.x.x, 192.168.x.x) get NO fields added at all — not blank values, simply nothing, since they're not in the geolocation database. If a search seems to silently 'lose' events after iplocation, check whether those clientips are internal.</p>
+    <p style="margin:0 0 12px;color:#7dd3fc"><strong>Tip:</strong> This is the command behind 'where is this attack coming from?' When a SOC analyst sees a spike in failed logins from an unfamiliar IP, iplocation turns a meaningless number into a country and city.</p>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px">
+      <p style="margin:0 0 8px;font-weight:600">Exercise: Add location data to web traffic</p>
+      <p style="margin:0 0 8px">Run it. To request every available field, not just the defaults, try | iplocation allfields=true clientip.</p>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype=access_combined_wcookie status&gt;=400
+| iplocation clientip
+| table clientip, status, City, Country</code></pre>
+    </div>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">geostats — plotting points on a map</h3>
+    <p style="margin:0 0 12px">Aggregates geographic data for a map visualization. Works almost exactly like stats — same aggregation functions — but expects latitude/longitude fields and accepts only ONE by-clause field, unlike stats which allows several.</p>
+    <p style="margin:0 0 12px;color:#7dd3fc"><strong>Tip:</strong> This is how a SOC builds the classic 'attack map' — a sudden cluster of activity from a country with no normal business presence is a fast visual red flag.</p>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px">
+      <p style="margin:0 0 8px;font-weight:600">Exercise: Build a point map of traffic by country</p>
+      <p style="margin:0 0 8px">Switch to the Visualization tab → Cluster Map. Points appear sized and colored by count.</p>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype=access_combined_wcookie
+| iplocation clientip
+| geostats count by Country</code></pre>
+    </div>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">geom — shading entire regions</h3>
+    <p style="margin:0 0 12px">Adds polygon/shape data so Splunk can render a choropleth map — entire regions shaded based on a metric, rather than individual plotted points. Splunk ships two built-in shape files: geo_us_states and geo_countries.</p>
+    <ul style="margin:0 0 12px;padding-left:20px">
+      <li>geostats plots individual POINTS on a map (e.g. one dot per city)</li>
+      <li>geom shades entire REGIONS based on a metric (e.g. an entire country colored by total traffic)</li>
+    </ul>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px">
+      <p style="margin:0 0 8px;font-weight:600">Exercise: Build a choropleth of traffic by country</p>
+      <p style="margin:0 0 8px">Switch to Visualization → Choropleth Map. Countries appear shaded by relative traffic volume.</p>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype=access_combined_wcookie
+| iplocation clientip
+| stats count by Country
+| geom geo_countries featureIdField="Country"</code></pre>
+    </div>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">addtotals — a lightweight sanity-check command</h3>
+    <p style="margin:0 0 12px">Adds a total — either as a new field per row (the default) or as a new summary row at the bottom. If you don't specify which fields to sum, ALL numeric fields get summed automatically.</p>
+    <p style="margin:0 0 12px;color:#fca5a5"><strong>Warning:</strong> addtotals defaults to row=true. If you wanted one grand-total row instead, you must explicitly set row=f col=t.</p>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px">
+      <p style="margin:0 0 8px;font-weight:600">Exercise: Add row and column totals</p>
+      <p style="margin:0 0 8px">Row totals (default). A new Total field appears on each row.</p>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype="vendor_sales/vendor_sales"
+| stats count by Code, VendorID
+| addtotals</code></pre>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype=access_combined_wcookie
+| stats count by status
+| addtotals row=f col=t labelfield=status</code></pre>
+      <p style="margin:0 0 8px">Column total instead — explicitly set row=f col=t. One new summary row appears at the bottom.</p>
+    </div>
+  </article>
+</section>
+<section id="filtering" style="margin-bottom:40px">
+  <h2 style="font-size:1.5rem;font-weight:700;color:#2c6e8f;margin:0 0 6px">Filtering &amp; Enrichment</h2>
+  <p style="color:#94a3b8;margin:0 0 20px">eval, search vs where, fillnull, and turning raw codes into friendly labels with lookups.</p>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">eval — the most versatile command in SPL</h3>
+    <p style="margin:0 0 12px">Creates NEW fields by calculating, transforming, or deriving values from existing ones — arithmetic, string manipulation, conditionals, type conversion, all live here.</p>
+    <p style="margin:0 0 12px;color:#7dd3fc"><strong>Tip:</strong> eval is how raw log noise becomes an analyst-readable severity label. Real SOC dashboards almost never show raw status codes to a triage analyst.</p>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px">
+      <p style="margin:0 0 8px;font-weight:600">Exercise: Build a severity classification from scratch</p>
+      <p style="margin:0 0 8px">A brand-new field, bytes_kb, calculated rather than extracted from raw data.</p>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype=access_combined_wcookie
+| eval bytes_kb=bytes/1024
+| table clientip, bytes, bytes_kb</code></pre>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype=access_combined_wcookie
+| eval traffic_type=if(status&gt;=400, "Error", "Normal")
+| table clientip, status, traffic_type</code></pre>
+      <p style="margin:0 0 8px">Every event now gets labeled Error or Normal — a derived classification that didn't exist in the raw log.</p>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype=access_combined_wcookie
+| eval severity=case(status&gt;=500, "Critical", status&gt;=400, "Warning", status&lt;400, "OK")
+| table clientip, status, severity</code></pre>
+      <p style="margin:0 0 8px">case() builds multi-tier classification in one line, evaluated top to bottom — first matching condition wins.</p>
+    </div>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">search vs where</h3>
+    <p style="margin:0 0 12px">These look similar but behave differently in two concrete, checkable ways.</p>
+    <table style="width:100%;border-collapse:collapse;margin:0 0 12px;font-size:0.9rem">
+      <thead><tr>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155"></th>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">search</th>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">where</th>
+      </tr></thead>
+      <tbody>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Wildcards</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Supported directly, e.g. status=4*</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">NOT supported — where evaluates expressions, it doesn't pattern-match raw text</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">CIDR / IP range</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Supported directly, e.g. clientip="10.10.10.0/24"</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Needs a function like cidrmatch()</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Typical use</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Filtering raw field values, early, for performance</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Comparing fields, or filtering on a field eval just created</td>
+      </tr>
+      </tbody>
+    </table>
+    <p style="margin:0 0 12px;color:#7dd3fc"><strong>Tip:</strong> Simple rule: filtering on a raw field, or want wildcards/CIDR → search. Filtering on something eval just calculated, or comparing two fields → where.</p>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px">
+      <p style="margin:0 0 8px;font-weight:600">Exercise: See where search wins, and where where is required</p>
+      <p style="margin:0 0 8px">Direct CIDR match, no extra function needed.</p>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype=access_combined_wcookie
+| search clientip="10.10.10.0/24"</code></pre>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype=access_combined_wcookie
+| eval bytes_kb=bytes/1024
+| where bytes_kb &gt; 50</code></pre>
+      <p style="margin:0 0 8px">You CANNOT do this with search — bytes_kb doesn't exist until eval creates it mid-pipeline.</p>
+    </div>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">fillnull — making blank cells look intentional</h3>
+    <p style="margin:0 0 12px">Replaces empty/null field values with a default — either 0 (the default if unspecified) or any string you choose.</p>
+    <p style="margin:0 0 12px;color:#fca5a5"><strong>Warning:</strong> fillnull can't act on a field that is null in EVERY single event, because Splunk doesn't consider a field to exist in the schema at all unless it has at least one non-null value somewhere in the result set.</p>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px">
+      <p style="margin:0 0 8px;font-weight:600">Exercise: Replace blank geo fields with a readable label</p>
+      <p style="margin:0 0 8px">iplocation leaves blanks for internal IPs. fillnull value="Unknown" turns those blanks into a clear label.</p>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype=access_combined_wcookie
+| iplocation clientip
+| table clientip, City, Country
+| fillnull value="Unknown"</code></pre>
+    </div>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">Lookups — bolting a friendly label onto raw codes</h3>
+    <p style="margin:0 0 12px">A lookup is a separate reference table (usually a CSV) that maps a raw value to a friendlier one. Three pieces are involved: the lookup table FILE (the CSV), the lookup DEFINITION (tells Splunk the file exists and which column is the key), and the AUTOMATIC LOOKUP (wires the definition to a sourcetype so the new field just appears).</p>
+    <table style="width:100%;border-collapse:collapse;margin:0 0 12px;font-size:0.9rem">
+      <thead><tr>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">Code</th>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">category_name (a worked example)</th>
+      </tr></thead>
+      <tbody>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">L</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Software License</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">B</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Board Game</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">D</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Digital Download</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">F</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Figurine and Collectible</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">N</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Novelty Item</td>
+      </tr>
+      </tbody>
+    </table>
+    <p style="margin:0 0 12px;color:#fca5a5"><strong>Warning:</strong> Leaving output fields blank makes Splunk treat every non-match column as an implicit output, which can create lookup reference cycles. Always fill it in explicitly. Also: automatic lookups only take effect on searches run AFTER the automatic lookup is saved — re-run, don't just wait.</p>
+    <p style="margin:0 0 12px;color:#7dd3fc"><strong>Tip:</strong> Pick a small, closed-set field for your first lookup — something like a 10-value transaction code, not a field with hundreds of distinct values.</p>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px">
+      <p style="margin:0 0 8px;font-weight:600">Exercise: Build a lookup end to end</p>
+      <p style="margin:0 0 8px">Test it manually before automating. Then re-run the same search with no | lookup line at all — status_description should still appear automatically once the automatic lookup is saved.</p>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype=access_combined_wcookie
+| lookup http_status_lookup status OUTPUT status_description</code></pre>
+      <ol style="margin:0 0 8px;padding-left:20px">
+        <li>Settings → Lookups → Lookup table files → Add new. Destination app: search. Upload the CSV with a destination filename that matches exactly.</li>
+        <li>Settings → Lookups → Lookup definitions → Add new. Type: File-based. Select the uploaded CSV from the dropdown.</li>
+        <li>Settings → Lookups → Automatic lookups → Add new. Apply to: sourcetype. Lookup input fields: status = status. Lookup output fields: status_description = status_description — fill this in explicitly, never leave it blank.</li>
+      </ol>
+    </div>
+  </article>
+</section>
+<section id="correlation" style="margin-bottom:40px">
+  <h2 style="font-size:1.5rem;font-weight:700;color:#9c3848;margin:0 0 6px">Correlating Events</h2>
+  <p style="color:#94a3b8;margin:0 0 20px">transaction vs stats — the most conceptually subtle decision in SPL, and why a brute-force attack is a sequence, not a single event.</p>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">What a transaction actually is</h3>
+    <p style="margin:0 0 12px">A transaction is a group of conceptually related events treated as one unit — every web request a single visitor made during one browsing session, or every step of a single purchase. transaction marks a series of events as interrelated based on a shared piece of common information.</p>
+    <p style="margin:0 0 12px;color:#fca5a5"><strong>Warning:</strong> A brute-force login attempt isn't one event — it's dozens of failed-login events that, taken together, represent one attack. A SOC analyst doesn't care about event #47 in isolation; they care that one IP made 40 failed attempts in 90 seconds, then succeeded.</p>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">Grouping events by field, then by field and time</h3>
+    <p style="margin:0 0 12px;color:#fca5a5"><strong>Warning:</strong> Events MUST be sorted in descending chronological order (newest first) before maxspan or maxpause are used, or the command silently returns INCORRECT results — not an error, just wrong groupings.</p>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px">
+      <p style="margin:0 0 8px;font-weight:600">Exercise: Build transactions with increasing precision</p>
+      <p style="margin:0 0 8px">Simplest transaction — one shared field, no time constraint, groups ALL events from that IP across the entire search window.</p>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype=access_combined_wcookie
+| transaction clientip</code></pre>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype=access_combined_wcookie
+| transaction clientip host</code></pre>
+      <p style="margin:0 0 8px">Multiple fields — events must share BOTH to be grouped, a tighter result.</p>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype=access_combined_wcookie
+| transaction clientip maxspan=30s maxpause=5s</code></pre>
+      <p style="margin:0 0 8px">maxspan limits the TOTAL span (first to last event); maxpause limits the GAP between any two consecutive events.</p>
+    </div>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">Defining a transaction by its content, not just time</h3>
+    <p style="margin:0 0 12px">Sometimes a transaction's boundaries are defined by content rather than duration — e.g. a session starts on a login event and ends on a logout event, regardless of how long that takes.</p>
+    <p style="margin:0 0 12px;color:#7dd3fc"><strong>Tip:</strong> Attack chains are usually defined by startswith/endswith logic, not fixed time windows — regardless of whether the chain took 30 seconds or 30 minutes.</p>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px">
+      <p style="margin:0 0 8px;font-weight:600">Exercise: Group by content boundaries</p>
+      <p style="margin:0 0 8px">Note duration is filtered AFTER transaction, since transaction itself creates that field.</p>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype=access_combined_wcookie
+| transaction JSESSIONID clientip startswith="view" endswith="purchase"
+| where duration&gt;0</code></pre>
+    </div>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">transaction vs stats — the decision that matters most</h3>
+    <p style="margin:0 0 12px">stats calculates statistical values on events grouped by field values, and DISCARDS the original events. transaction also groups events by field values, but does not compute statistics beyond duration — it KEEPS the raw events and their original field values, combined together.</p>
+    <table style="width:100%;border-collapse:collapse;margin:0 0 12px;font-size:0.9rem">
+      <thead><tr>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">Use transaction when...</th>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">Use stats when...</th>
+      </tr></thead>
+      <tbody>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">A shared ID alone isn't enough to tell transactions apart</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">You have a genuinely unique identifier and just need numbers</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">A transaction's boundaries are defined by CONTENT, not just an ID</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">You don't need to see the original raw events afterward</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">You need the actual combined raw text of the grouped events</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Performance matters — stats is faster in most cases</td>
+      </tr>
+      </tbody>
+    </table>
+    <p style="margin:0 0 12px;color:#fca5a5"><strong>Warning:</strong> In cases where either command could solve the problem, stats is usually faster, especially in distributed search environments. Don't reach for transaction by default — reach for it when stats genuinely can't express what you need.</p>
+    <p style="margin:0 0 12px;color:#7dd3fc"><strong>Tip:</strong> A genuinely cool capability stats cannot match: transaction recognizes transitive relationships — if events A and B share a field, and B and C share a different field, transaction can chain A, B, and C together even though A and C share nothing directly.</p>
+  </article>
+</section>
+<section id="knowledge-objects" style="margin-bottom:40px">
+  <h2 style="font-size:1.5rem;font-weight:700;color:#7a7321;margin:0 0 6px">Knowledge Objects &amp; Governance</h2>
+  <p style="color:#94a3b8;margin:0 0 20px">Naming, permissions, field extraction, aliases, and the tags/event-types layer a real team depends on.</p>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">What counts as a knowledge object</h3>
+    <p style="margin:0 0 12px">If you've built and saved anything in Splunk, it was probably a knowledge object: saved searches and reports, alerts, dashboards, lookups, field extractions, field aliases, calculated fields, tags, event types, macros, workflow actions, and data models.</p>
+    <p style="margin:0 0 12px;color:#7dd3fc"><strong>Tip:</strong> A consistent naming convention helps a team differentiate between similar reports and identify what team owns it, what technology it involves, and what it's designed to do.</p>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">A real naming formula worth adopting</h3>
+    <p style="margin:0 0 12px">Applied example: a SOC alert checking failed logins on the Windows platform over a 1-hour window might become SOC_alert_windows_auth_1h_FailedLogons.</p>
+    <table style="width:100%;border-collapse:collapse;margin:0 0 12px;font-size:0.9rem">
+      <thead><tr>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">Component</th>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">What it captures</th>
+      </tr></thead>
+      <tbody>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Group</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">The team that owns this object (e.g. SOC, NetSec, IAM)</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Search type</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">alert, report, or summary-index-populating</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Platform</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">The technology/system the search targets</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Category</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">The concern area (e.g. auth, malware, network)</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Time interval</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">The window the search runs over, if scheduled</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Description</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">1–2 words, meaningful, succinct</td>
+      </tr>
+      </tbody>
+    </table>
+    <p style="margin:0 0 12px;color:#fca5a5"><strong>Warning:</strong> All objects within a knowledge object CATEGORY must have unique names. If two objects share a name, only ONE is actually applied — silently, with no warning. A shadowed duplicate can mean your team THINKS something is running, when an outdated version is actually executing.</p>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">Permissions — three sharing levels</h3>
+    <ul style="margin:0 0 12px;padding-left:20px">
+      <li>By default, only admin and power roles can share or promote knowledge objects</li>
+      <li>Admins can change permissions on ANY object. Power users can only change permissions on objects THEY own</li>
+      <li>If neither Read nor Write is checked for a role, that role cannot see or use the object at all</li>
+    </ul>
+    <table style="width:100%;border-collapse:collapse;margin:0 0 12px;font-size:0.9rem">
+      <thead><tr>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">Level</th>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">Who can see / use it</th>
+      </tr></thead>
+      <tbody>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Private</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Only the object's owner — no one else</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">App</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Anyone with Read permission, but only while using the same app the object was created in</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Global (All apps)</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Anyone with Read permission, across every app in the deployment</td>
+      </tr>
+      </tbody>
+    </table>
+    <p style="margin:0 0 12px;color:#7dd3fc"><strong>Tip:</strong> The standard production pattern: Read on, Write off, for the Everyone role. Broad usability, controlled modification.</p>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">Orphaned objects — a real operational failure mode</h3>
+    <p style="margin:0 0 12px">An orphaned knowledge object occurs when its owner account becomes invalid — e.g. an analyst leaves the team.</p>
+    <p style="margin:0 0 12px;color:#fca5a5"><strong>Warning:</strong> The Reassign Knowledge Objects page (Settings → All Configurations) cannot reassign objects that are both orphaned AND privately shared. This is a strong argument for not leaving important detection logic private long-term.</p>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">The Field Extractor — when Splunk doesn't already know your fields</h3>
+    <p style="margin:0 0 12px">Real-world log sources often don't come with built-in extraction rules. Entry path: run a search, click All Fields in the sidebar, click Extract New Fields.</p>
+    <table style="width:100%;border-collapse:collapse;margin:0 0 12px;font-size:0.9rem">
+      <thead><tr>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">Ask yourself</th>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">Answer</th>
+      </tr></thead>
+      <tbody>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Is the data structured (table-like, consistent field order)?</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">YES → Delimiters. NO → Regular Expression.</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Even if delimiter-separated, is field POSITION consistent?</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">If NO, use Regular Expression with Required Text instead.</td>
+      </tr>
+      </tbody>
+    </table>
+    <p style="margin:0 0 12px;color:#fca5a5"><strong>Warning:</strong> Delimiter extraction assumes every event has the same number of fields in the same order. If positions don't line up, the extraction can silently pull the wrong value into the wrong slot.</p>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">Field aliases</h3>
+    <p style="margin:0 0 12px">An alias is an alternate name for a field that already exists — it does NOT replace or remove the original. This solves a real problem: different sourcetypes often use different names for the same concept.</p>
+    <p style="margin:0 0 12px;color:#fca5a5"><strong>Warning:</strong> Two hard limits: you can't alias a calculated field, event type, tag, or lookup-added field. And one alias name can only map to ONE original field. Never name an alias the same as an internal field like _time.</p>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px">
+      <p style="margin:0 0 8px;font-weight:600">Exercise: Alias clientip to src_ip</p>
+      <p style="margin:0 0 8px">Both columns show identical values, and the original clientip field is still there, untouched.</p>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype=access_combined_wcookie
+| table clientip, src_ip</code></pre>
+      <ol style="margin:0 0 8px;padding-left:20px">
+        <li>Settings → Fields → Field Aliases → Add new.</li>
+        <li>Source type: access_combined_wcookie. Existing field name: clientip. New alias name: src_ip.</li>
+      </ol>
+    </div>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">Calculated fields</h3>
+    <p style="margin:0 0 12px">A calculated field performs a calculation using values of fields already present in events, computed at search time — a reusable shortcut for an eval expression.</p>
+    <p style="margin:0 0 12px;color:#fca5a5"><strong>Warning:</strong> You can't scope a calculated field to an ALIASED source/host/sourcetype — put conditional logic inside the eval expression using if() instead.</p>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px">
+      <p style="margin:0 0 8px;font-weight:600">Exercise: Build a calculated field with coalesce()</p>
+      <p style="margin:0 0 8px">This picks whichever field actually has a value, in priority order — the fix when an alias can't map one name to two fields.</p>
+      <ol style="margin:0 0 8px;padding-left:20px">
+        <li>Settings → Fields → Calculated Fields → Add new. Field name: unified_ip. Eval expression: coalesce(clientip, src_ip).</li>
+      </ol>
+    </div>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">Tags and event types</h3>
+    <table style="width:100%;border-collapse:collapse;margin:0 0 12px;font-size:0.9rem">
+      <thead><tr>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155"></th>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">Tag</th>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">Event Type</th>
+      </tr></thead>
+      <tbody>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Bound to</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">ONE single key=value pair, no wildcards</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">A full search expression — many fields, wildcards, conjunctions</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Think of it as</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">A sticky note on a specific field value</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">A saved, reusable search condition</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Search syntax</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">tag::fieldname=tagvalue</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">eventtype=MyEventType</td>
+      </tr>
+      </tbody>
+    </table>
+    <p style="margin:0 0 12px;color:#fca5a5"><strong>Warning:</strong> Event type definitions CANNOT contain a pipe or a subsearch — they categorize raw events, they don't transform or summarize them.</p>
+    <p style="margin:0 0 12px;color:#7dd3fc"><strong>Tip:</strong> Layer them: a broad event type (any error) tagged error, and a narrower one (status&gt;=500) tagged BOTH error and critical. Searching tag=critical finds only the narrow set; tag=error finds both.</p>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px">
+      <p style="margin:0 0 8px;font-weight:600">Exercise: Build and search an event type</p>
+      <p style="margin:0 0 8px">Search the saved category directly by name.</p>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>eventtype=server_errors</code></pre>
+      <ol style="margin:0 0 8px;padding-left:20px">
+        <li>Run index=tutorial sourcetype=access_combined_wcookie status&gt;=500.</li>
+        <li>Save As → Event Type → name it server_errors, optionally tag it critical.</li>
+      </ol>
+    </div>
+  </article>
+</section>
+<section id="automation" style="margin-bottom:40px">
+  <h2 style="font-size:1.5rem;font-weight:700;color:#3d6b4f;margin:0 0 6px">Automation, Workflow, and Data Models</h2>
+  <p style="color:#94a3b8;margin:0 0 20px">Macros, clickable workflow actions, data model hierarchies, and the industry-wide vocabulary called CIM.</p>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">Macros — stop retyping the same SPL fragment</h3>
+    <p style="margin:0 0 12px">A macro is a reusable chunk of SPL you insert into any search by name. It can be any part of a search — an eval statement, a search term, a whole pipeline.</p>
+    <p style="margin:0 0 12px;color:#fca5a5"><strong>Warning:</strong> A macro with no arguments and a macro with one argument are genuinely different definitions — you cannot just add an argument to an existing zero-argument macro. Backtick (`) and single-quote (') look similar but are completely different keys.</p>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px">
+      <p style="margin:0 0 8px;font-weight:600">Exercise: Build macros with zero, one, and two arguments</p>
+      <p style="margin:0 0 8px">Invoke it with BACKTICKS, not single quotes.</p>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>`server_errors_macro`</code></pre>
+      <ol style="margin:0 0 8px;padding-left:20px">
+        <li>Settings → Advanced Search → Search Macros → New. Name: server_errors_macro. Definition: index=tutorial sourcetype=access_combined_wcookie status&gt;=500.</li>
+      </ol>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>`status_filter(500)`
+`status_filter(404)`</code></pre>
+      <p style="margin:0 0 8px">A one-argument macro named status_filter(1), with definition index=tutorial sourcetype=access_combined_wcookie status=$status_code$ — note the (1) in the name itself, which is part of the macro's identity.</p>
+    </div>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">Workflow actions — making field values clickable</h3>
+    <p style="margin:0 0 12px">Workflow actions create HTML links that run searches in external engines, generate HTTP POST requests, or launch secondary Splunk searches using a field value from a selected event.</p>
+    <table style="width:100%;border-collapse:collapse;margin:0 0 12px;font-size:0.9rem">
+      <thead><tr>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">Type</th>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">What it does</th>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">Real-world shape</th>
+      </tr></thead>
+      <tbody>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">GET</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Opens an external resource, passing a field value in the URL</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Right-click an IP → jump to a WHOIS lookup</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">POST</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Sends field values as form data to an external system, silently</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Right-click an error → auto-file a ticket</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Search</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Launches a new Splunk search using a field value</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Right-click an IP → see all its other activity</td>
+      </tr>
+      </tbody>
+    </table>
+    <p style="margin:0 0 12px;color:#fca5a5"><strong>Warning:</strong> Variables in GET URIs are automatically URL-encoded. If a field value is itself already a full HTTP address, use $!fieldname$ instead of plain $fieldname$ to prevent escaping.</p>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px">
+      <p style="margin:0 0 8px;font-weight:600">Exercise: Build a GET workflow action for WHOIS lookups</p>
+      <p style="margin:0 0 8px">Run a search, click a clientip value in any event — your new WHOIS action appears in the field menu.</p>
+      <ol style="margin:0 0 8px;padding-left:20px">
+        <li>Settings → Fields → Workflow Actions → New. Apply to: field clientip. Action type: Link.</li>
+        <li>URI: https://www.whois.com/whois/$clientip$. Link method: get.</li>
+      </ol>
+    </div>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">Data models — the menu that Pivot reads from</h3>
+    <p style="margin:0 0 12px">When you select a dataset for Pivot, the unhidden fields you define for that dataset are exactly the fields you get to choose from in Pivot. A data model IS the menu Pivot reads from.</p>
+    <p style="margin:0 0 12px;color:#fca5a5"><strong>Warning:</strong> To accelerate a data model, it needs at least one root EVENT dataset, or a root SEARCH dataset using ONLY streaming commands. Root TRANSACTION datasets cannot be accelerated.</p>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px">
+      <p style="margin:0 0 8px;font-weight:600">Exercise: Build a root event object and a child dataset</p>
+      <ol style="margin:0 0 8px;padding-left:20px">
+        <li>Settings → Data Models → New Data Model. Add Dataset → Root Event. Constraints: index=tutorial sourcetype=access_combined_wcookie. Add fields: clientip, status, method.</li>
+        <li>Add Dataset → Child. Object Name: Server Errors. Additional Constraint: status&gt;=500 — this automatically inherits everything from the parent, you don't redefine clientip or method.</li>
+      </ol>
+    </div>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">CIM — the same techniques you already know, at industry scale</h3>
+    <p style="margin:0 0 12px">Each data model in the Common Information Model defines the least common denominator of a domain of interest — the smallest, common set of fields every log of that type should be normalized down to, so they can all be searched and correlated the same way.</p>
+    <ul style="margin:0 0 12px;padding-left:20px">
+      <li>This is exactly what field aliases and tags/event types already do, pre-built by Splunk and shared as a common vocabulary across the security industry</li>
+      <li>Dashboards in CIM-compliant apps (Enterprise Security, PCI Compliance) display ONLY data normalized to CIM's tags and fields</li>
+      <li>CIM data models do NOT tag your data automatically — they define a target schema and expect you to map your own data to it</li>
+    </ul>
+    <p style="margin:0 0 12px;color:#fca5a5"><strong>Warning:</strong> If the CIM expects a string but your field is numeric, don't alias directly — alias to an intermediate name first, then use a lookup to produce the correctly typed final field.</p>
+    <p style="margin:0 0 12px;color:#7dd3fc"><strong>Tip:</strong> A SOC ingesting logs from three vendors normalizes all of them to the same CIM field names — one search, one dashboard works across every vendor at once.</p>
+  </article>
+</section>
+<section id="alerts" style="margin-bottom:40px">
+  <h2 style="font-size:1.5rem;font-weight:700;color:#a3461f;margin:0 0 6px">Scheduled Reports &amp; Alerts</h2>
+  <p style="color:#94a3b8;margin:0 0 20px">A standing newsletter vs a smoke detector.</p>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">The one concept that must land first</h3>
+    <p style="margin:0 0 12px">A scheduled report is a standing newsletter — same delivery every time, regardless of what the data shows. An alert is a smoke detector — silent until something's actually wrong.</p>
+    <table style="width:100%;border-collapse:collapse;margin:0 0 12px;font-size:0.9rem">
+      <thead><tr>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155"></th>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">Scheduled Report</th>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">Alert</th>
+      </tr></thead>
+      <tbody>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Runs</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">On a fixed schedule, every time, no matter what</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">On a fixed schedule, but only ACTS when results meet a condition</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Action behavior</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Fires its action every single run</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Fires only when triggered — silent otherwise</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Built from</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">An existing saved report, via Schedule</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">A search, via Save As → Alert</td>
+      </tr>
+      </tbody>
+    </table>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">Building an alert on a real event</h3>
+    <p style="margin:0 0 12px">An alert is built directly from a search, not from an existing report, and only fires its action when a trigger condition is met.</p>
+    <p style="margin:0 0 12px;color:#fca5a5"><strong>Warning:</strong> Alert actions are NOT guaranteed to fire every run — only when the condition is true. If nothing appears after a triggering event, re-check the time range the underlying search uses before assuming something is broken.</p>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px">
+      <p style="margin:0 0 8px;font-weight:600">Exercise: Build a scheduled alert on failed logons</p>
+      <p style="margin:0 0 8px">View fired alerts under Activity → Triggered Alerts — confirm the timestamp lines up with the event that should have triggered it.</p>
+      <ol style="margin:0 0 8px;padding-left:20px">
+        <li>Run index=wineventlog EventCode=4625 and confirm it returns real results with a recent time range.</li>
+        <li>Save As → Alert. Alert type: Scheduled. Schedule: Run every 5 minutes. Trigger condition: Number of Results is greater than 0.</li>
+        <li>Trigger: Once. Add Action: Add to Triggered Alerts (email requires SMTP setup Splunk doesn't ship by default).</li>
+      </ol>
+    </div>
+  </article>
+</section>
+<section id="capstone" style="margin-bottom:40px">
+  <h2 style="font-size:1.5rem;font-weight:700;color:#1e6e5c;margin:0 0 6px">SOC Capstone — Investigate, Classify, Report</h2>
+  <p style="color:#94a3b8;margin:0 0 20px">An end-to-end walkthrough: locate, classify, reconstruct, report — exactly how a real investigation runs.</p>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">Your role</h3>
+    <p style="margin:0 0 12px">You are the on-shift SOC analyst for Buttercup Games. Leadership has asked for a single incident review dashboard covering web traffic for today's review window. Work through this the way a real investigation runs: locate, classify, reconstruct, report. Each phase builds on the previous one.</p>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">Phase 1 — Locate: where is the traffic coming from?</h3>
+    <p style="margin:0 0 12px">Before deciding what's worth investigating, you need geographic context. An IP address with a 3-digit country code means nothing to a manager — a country name does.</p>
+    <p style="margin:0 0 12px;color:#7dd3fc"><strong>Tip:</strong> Write down the top 2 countries by error count. One of these becomes your focus for the rest of the investigation.</p>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px">
+      <p style="margin:0 0 8px;font-weight:600">Exercise: Find your top error-traffic countries</p>
+      <p style="margin:0 0 8px">Add location data to all web traffic.</p>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype=access_combined_wcookie
+| iplocation clientip
+| table _time, clientip, status, City, Country</code></pre>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype=access_combined_wcookie status&gt;=400
+| iplocation clientip
+| stats count by Country
+| sort -count</code></pre>
+      <p style="margin:0 0 8px">Find which countries generate the MOST error traffic — your first real lead. Save as a report named "Error Traffic by Country".</p>
+    </div>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">Phase 2 — Classify: turn raw codes into analyst-readable severity</h3>
+    <p style="margin:0 0 12px">Numbers don't triage themselves. Before you can prioritize, every event needs a severity label a human can scan quickly.</p>
+    <p style="margin:0 0 12px;color:#fca5a5"><strong>Warning:</strong> Everything from this point forward should work FROM this filtered, classified list — not from the full raw dataset.</p>
+    <p style="margin:0 0 12px;color:#7dd3fc"><strong>Tip:</strong> Did fillnull catch any blank City/Country values? Internal/non-routable IPs showing up in public web traffic is sometimes worth flagging on its own.</p>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px">
+      <p style="margin:0 0 8px;font-weight:600">Exercise: Build the Critical Severity Events report</p>
+      <p style="margin:0 0 8px">Save this as a report named "Critical Severity Events".</p>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype=access_combined_wcookie status&gt;=400
+| iplocation clientip
+| eval severity=case(status&gt;=500, "Critical", status&gt;=400, "Warning")
+| where severity="Critical"
+| fillnull value="Unknown" City, Country
+| table _time, clientip, status, severity, City, Country</code></pre>
+    </div>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">Phase 3 — Reconstruct: what actually happened, session by session?</h3>
+    <p style="margin:0 0 12px">A single Critical event rarely tells the whole story. Real incidents are sequences — you need to see what an IP did before and after the event that caught your attention.</p>
+    <p style="margin:0 0 12px;color:#7dd3fc"><strong>Tip:</strong> Decision check: could this summary have been built with stats alone, without transaction? Write 1–2 sentences justifying your answer.</p>
+    <div style="margin:0 0 12px;padding:12px;background:#0f172a;border-radius:6px">
+      <p style="margin:0 0 8px;font-weight:600">Exercise: Reconstruct sessions for your critical clients</p>
+      <p style="margin:0 0 8px">Pick one clientip from Phase 2 and reconstruct its full session behavior.</p>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype=access_combined_wcookie clientip="PASTE_YOUR_IP_HERE"
+| transaction clientip maxspan=30s maxpause=5s
+| table _time, duration, eventcount, status</code></pre>
+      <pre style="margin:0 0 8px;padding:8px;background:#020617;border-radius:4px;overflow-x:auto;white-space:pre-wrap"><code>index=tutorial sourcetype=access_combined_wcookie status&gt;=500
+| transaction clientip maxspan=30s maxpause=5s
+| stats avg(duration) as avg_duration, avg(eventcount) as avg_events, count as session_count by clientip
+| sort -session_count</code></pre>
+      <p style="margin:0 0 8px">A summary across ALL clientips in your Critical list, to see if the pattern is isolated or widespread. Save as "Session Reconstruction - Critical Clients".</p>
+    </div>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">Phase 4 &amp; 5 — Build the dashboard, write the summary</h3>
+    <p style="margin:0 0 12px">Assemble everything into one dashboard a manager or shift lead could open and immediately understand.</p>
+    <ol style="margin:0 0 12px;padding-left:20px">
+      <li>Create a new dashboard named "Web Traffic Incident Review", with a short description of what it covers.</li>
+      <li>Add all reports from Phases 1–3. Arrange panels in investigative order: geographic overview first, severity breakdown second, session reconstruction last.</li>
+      <li>Write a 4–6 sentence incident summary as if handing this to your manager at shift handoff — what you found, where it's from, how severe it is, whether the session reconstruction supports your initial suspicion. Use your own real numbers.</li>
+    </ol>
+  </article>
+  <article style="margin:0 0 24px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.1rem;font-weight:600;margin:0 0 8px">Self-check before you submit</h3>
+    <ul style="margin:0 0 12px;padding-left:20px">
+      <li>Does your dashboard tell a clear story in the order someone would actually investigate it?</li>
+      <li>Did you use iplocation, eval/case, where, fillnull, AND transaction somewhere — not just one or two?</li>
+      <li>Can you explain, out loud, WHY you chose transaction over stats (or vice versa) at the point you made that choice?</li>
+      <li>Does your incident summary use real numbers from YOUR results, not guesses?</li>
+    </ul>
+  </article>
+</section>
+<section id="glossary-reference" style="margin-bottom:40px">
+  <h2 style="font-size:1.5rem;font-weight:700;margin:0 0 6px">Command Reference</h2>
+  <article style="margin:0 0 16px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1rem;font-weight:600;margin:0 0 4px;font-family:monospace">search <span style="font-weight:400;color:#64748b;font-size:0.8rem">(Filtering)</span></h3>
+    <p style="margin:0 0 6px">Filters events using raw field matching, wildcards, and CIDR ranges.</p>
+    <p style="margin:0;color:#94a3b8;font-size:0.9rem">The implicit command at the start of every query. Matches raw field values directly — supports wildcards (status=4*) and CIDR notation (clientip="10.0.0.0/24") natively. Best for filtering on values exactly as they appear in the log, early in the pipeline, for performance.</p>
+  </article>
+  <article style="margin:0 0 16px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1rem;font-weight:600;margin:0 0 4px;font-family:monospace">where <span style="font-weight:400;color:#64748b;font-size:0.8rem">(Filtering)</span></h3>
+    <p style="margin:0 0 6px">Filters using evaluated expressions — required for fields eval just created.</p>
+    <p style="margin:0;color:#94a3b8;font-size:0.9rem">Evaluates a boolean expression rather than pattern-matching raw text. Does NOT support wildcards or CIDR the way search does. Use it when comparing two fields to each other, or filtering on a field that eval created earlier in the same pipeline.</p>
+  </article>
+  <article style="margin:0 0 16px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1rem;font-weight:600;margin:0 0 4px;font-family:monospace">table <span style="font-weight:400;color:#64748b;font-size:0.8rem">(Display)</span></h3>
+    <p style="margin:0 0 6px">Displays chosen fields as a clean grid, in the order you list them.</p>
+    <p style="margin:0;color:#94a3b8;font-size:0.9rem">A display-only command — it shows the fields you pick as columns, in the order given. Does not populate the Statistics tab. Often added after fields, dedup, or sort to actually see what those commands did.</p>
+  </article>
+  <article style="margin:0 0 16px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1rem;font-weight:600;margin:0 0 4px;font-family:monospace">fields <span style="font-weight:400;color:#64748b;font-size:0.8rem">(Display)</span></h3>
+    <p style="margin:0 0 6px">Trims the underlying field set, mostly invisible until you add table.</p>
+    <p style="margin:0;color:#94a3b8;font-size:0.9rem">Trims which fields are kept in the result set. Changes the sidebar's Interesting Fields list, but the Events tab still shows full raw text — the trimming is invisible until combined with table, or with a transforming command.</p>
+  </article>
+  <article style="margin:0 0 16px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1rem;font-weight:600;margin:0 0 4px;font-family:monospace">dedup <span style="font-weight:400;color:#64748b;font-size:0.8rem">(Display)</span></h3>
+    <p style="margin:0 0 6px">Keeps only the first event per unique value of a field.</p>
+    <p style="margin:0;color:#94a3b8;font-size:0.9rem">Removes duplicate events based on one or more fields, keeping the first (most recent, by default sort order) match. A display-only command — check the Statistics tab won't reflect it; pipe into table to see the effect directly.</p>
+  </article>
+  <article style="margin:0 0 16px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1rem;font-weight:600;margin:0 0 4px;font-family:monospace">sort <span style="font-weight:400;color:#64748b;font-size:0.8rem">(Display)</span></h3>
+    <p style="margin:0 0 6px">Orders results. A leading minus sign means descending.</p>
+    <p style="margin:0;color:#94a3b8;font-size:0.9rem">Sorts results by one or more fields. sort field is ascending; sort - field is descending. Order matters for downstream commands like transaction, which require descending chronological order to behave correctly.</p>
+  </article>
+  <article style="margin:0 0 16px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1rem;font-weight:600;margin:0 0 4px;font-family:monospace">rename <span style="font-weight:400;color:#64748b;font-size:0.8rem">(Display)</span></h3>
+    <p style="margin:0 0 6px">Changes a column's display label only — the underlying data is untouched.</p>
+    <p style="margin:0;color:#94a3b8;font-size:0.9rem">Purely cosmetic: relabels a field's header text for display. The original field name still works in later pipeline stages exactly as before — rename does not propagate the new name backward or forward into the field's identity.</p>
+  </article>
+  <article style="margin:0 0 16px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1rem;font-weight:600;margin:0 0 4px;font-family:monospace">top <span style="font-weight:400;color:#64748b;font-size:0.8rem">(Transforming)</span></h3>
+    <p style="margin:0 0 6px">Most common values for a field, with automatic count and percent.</p>
+    <p style="margin:0;color:#94a3b8;font-size:0.9rem">A transforming command — populates the Statistics tab automatically. Returns the top 10 most frequent values by default, sorted descending, with count and percent columns added. Functionally a shortcut for stats count by field | sort - count.</p>
+  </article>
+  <article style="margin:0 0 16px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1rem;font-weight:600;margin:0 0 4px;font-family:monospace">rare <span style="font-weight:400;color:#64748b;font-size:0.8rem">(Transforming)</span></h3>
+    <p style="margin:0 0 6px">Least common values for a field — the mirror image of top.</p>
+    <p style="margin:0;color:#94a3b8;font-size:0.9rem">Same output shape as top, but sorted ascending by count instead of descending. Rare values are often more interesting in security work than common ones — a rare status code or login pattern is frequently where real problems hide.</p>
+  </article>
+  <article style="margin:0 0 16px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1rem;font-weight:600;margin:0 0 4px;font-family:monospace">stats <span style="font-weight:400;color:#64748b;font-size:0.8rem">(Transforming)</span></h3>
+    <p style="margin:0 0 6px">Flexible aggregation — count, sum, avg, and more, grouped by any fields.</p>
+    <p style="margin:0;color:#94a3b8;font-size:0.9rem">The most flexible transforming command in SPL. Supports any number of BY-clause fields and a wide range of aggregation functions (count, sum, avg, min, max, dc, and more). top and rare are really just shortcuts for specific stats patterns.</p>
+  </article>
+  <article style="margin:0 0 16px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1rem;font-weight:600;margin:0 0 4px;font-family:monospace">chart <span style="font-weight:400;color:#64748b;font-size:0.8rem">(Transforming)</span></h3>
+    <p style="margin:0 0 6px">Builds a chart-ready table: one row-split, one column-split field.</p>
+    <p style="margin:0;color:#94a3b8;font-size:0.9rem">Like stats, but capped at two BY-clause fields specifically structured for charting — one field becomes the row-split (x-axis categories), the other becomes the column-split (separate data series).</p>
+  </article>
+  <article style="margin:0 0 16px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1rem;font-weight:600;margin:0 0 4px;font-family:monospace">timechart <span style="font-weight:400;color:#64748b;font-size:0.8rem">(Transforming)</span></h3>
+    <p style="margin:0 0 6px">Time-series aggregation — _time is always the row-split automatically.</p>
+    <p style="margin:0;color:#94a3b8;font-size:0.9rem">Builds a time-series table. _time is automatically the first column and row-split; only one additional BY-clause field (the column-split) is allowed. Use span= to control the time bucket size, e.g. span=1h.</p>
+  </article>
+  <article style="margin:0 0 16px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1rem;font-weight:600;margin:0 0 4px;font-family:monospace">eval <span style="font-weight:400;color:#64748b;font-size:0.8rem">(Calculation)</span></h3>
+    <p style="margin:0 0 6px">Creates new fields by calculating or deriving values from existing ones.</p>
+    <p style="margin:0;color:#94a3b8;font-size:0.9rem">The most versatile command in SPL — handles arithmetic, string manipulation, conditionals (if, case), and type conversion. eval only calculates; it doesn't filter. Pair it with where afterward if you need to remove non-matching results.</p>
+  </article>
+  <article style="margin:0 0 16px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1rem;font-weight:600;margin:0 0 4px;font-family:monospace">fillnull <span style="font-weight:400;color:#64748b;font-size:0.8rem">(Calculation)</span></h3>
+    <p style="margin:0 0 6px">Replaces empty/null values with a default — 0, or any string you choose.</p>
+    <p style="margin:0;color:#94a3b8;font-size:0.9rem">Fills blank field values, defaulting to 0 if no value is specified, or fillnull value="X" for a custom fill. Cannot act on a field that is null in every single event in the result set, since Splunk doesn't consider such a field to exist in the schema at all.</p>
+  </article>
+  <article style="margin:0 0 16px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1rem;font-weight:600;margin:0 0 4px;font-family:monospace">case <span style="font-weight:400;color:#64748b;font-size:0.8rem">(Calculation)</span></h3>
+    <p style="margin:0 0 6px">Multi-tier conditional logic inside eval — first match wins.</p>
+    <p style="margin:0;color:#94a3b8;font-size:0.9rem">An eval function: case(condition1, value1, condition2, value2, ...) evaluates conditions top to bottom and returns the value for the first one that's true. Note: the function name CASE() is itself case-sensitive when used for forced case-sensitive matching elsewhere.</p>
+  </article>
+  <article style="margin:0 0 16px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1rem;font-weight:600;margin:0 0 4px;font-family:monospace">coalesce <span style="font-weight:400;color:#64748b;font-size:0.8rem">(Calculation)</span></h3>
+    <p style="margin:0 0 6px">Returns the first non-null value from a list of fields.</p>
+    <p style="margin:0;color:#94a3b8;font-size:0.9rem">An eval function, not a standalone command — used inside eval or a calculated field definition. coalesce(fieldA, fieldB) returns whichever field actually has a value, useful when the same concept is split across differently-named fields.</p>
+  </article>
+  <article style="margin:0 0 16px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1rem;font-weight:600;margin:0 0 4px;font-family:monospace">lookup <span style="font-weight:400;color:#64748b;font-size:0.8rem">(Enrichment)</span></h3>
+    <p style="margin:0 0 6px">Adds fields from an external CSV by matching on a key field.</p>
+    <p style="margin:0;color:#94a3b8;font-size:0.9rem">Manually invokes a lookup definition, matching a key field against a reference CSV and pulling in output columns. Once an automatic lookup is configured for the same definition, this manual invocation becomes unnecessary — the fields just appear.</p>
+  </article>
+  <article style="margin:0 0 16px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1rem;font-weight:600;margin:0 0 4px;font-family:monospace">iplocation <span style="font-weight:400;color:#64748b;font-size:0.8rem">(Enrichment)</span></h3>
+    <p style="margin:0 0 6px">Adds City, Country, lat, lon, and Region from an IP address field.</p>
+    <p style="margin:0;color:#94a3b8;font-size:0.9rem">Looks up an IP field against Splunk's built-in geolocation database. Private/internal IPs (10.x.x.x, 192.168.x.x) get no fields added at all — not blank values, simply nothing — since they aren't present in the database.</p>
+  </article>
+  <article style="margin:0 0 16px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1rem;font-weight:600;margin:0 0 4px;font-family:monospace">geostats <span style="font-weight:400;color:#64748b;font-size:0.8rem">(Enrichment)</span></h3>
+    <p style="margin:0 0 6px">Aggregates geographic data for point-based map visualizations.</p>
+    <p style="margin:0;color:#94a3b8;font-size:0.9rem">Works like stats but expects latitude/longitude fields and accepts only one BY-clause field. Built specifically to feed map visualizations like Cluster Map — plots individual points, e.g. one dot per city.</p>
+  </article>
+  <article style="margin:0 0 16px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1rem;font-weight:600;margin:0 0 4px;font-family:monospace">geom <span style="font-weight:400;color:#64748b;font-size:0.8rem">(Enrichment)</span></h3>
+    <p style="margin:0 0 6px">Adds polygon/shape data for choropleth (region-shaded) maps.</p>
+    <p style="margin:0;color:#94a3b8;font-size:0.9rem">Adds featureCollection and geom fields containing JSON polygon data, used to shade entire regions (countries, states) on a Choropleth Map visualization, rather than plotting individual points the way geostats does.</p>
+  </article>
+  <article style="margin:0 0 16px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1rem;font-weight:600;margin:0 0 4px;font-family:monospace">addtotals <span style="font-weight:400;color:#64748b;font-size:0.8rem">(Calculation)</span></h3>
+    <p style="margin:0 0 6px">Adds a row or column total — defaults to a per-row total field.</p>
+    <p style="margin:0;color:#94a3b8;font-size:0.9rem">Defaults to row=true, adding a Total field summing all numeric fields in each row. Set row=f col=t for a single grand-total summary row instead. Restrict which fields get summed by listing them explicitly, e.g. addtotals count_*.</p>
+  </article>
+  <article style="margin:0 0 16px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1rem;font-weight:600;margin:0 0 4px;font-family:monospace">transaction <span style="font-weight:400;color:#64748b;font-size:0.8rem">(Correlation)</span></h3>
+    <p style="margin:0 0 6px">Groups conceptually related events into one unit, keeping raw events.</p>
+    <p style="margin:0;color:#94a3b8;font-size:0.9rem">Groups events sharing one or more fields (optionally constrained by maxspan, maxpause, or startswith/endswith content boundaries) into a single combined event. Unlike stats, it keeps the original raw events rather than discarding them — at a real performance cost.</p>
+  </article>
+  <article style="margin:0 0 16px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1rem;font-weight:600;margin:0 0 4px;font-family:monospace">head <span style="font-weight:400;color:#64748b;font-size:0.8rem">(Display)</span></h3>
+    <p style="margin:0 0 6px">Returns only the first N results.</p>
+    <p style="margin:0;color:#94a3b8;font-size:0.9rem">Limits output to the first N events (or results, if used after a transforming command). Commonly used early in exploration — head 5 — to preview raw data before building a real query.</p>
+  </article>
+</section>
+</div></div>
     <script>
 /* ============================================================
    SPL COMMAND GLOSSARY
