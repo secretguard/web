@@ -64,7 +64,11 @@
         "description": "Enterprise cybersecurity training delivered by a CEH Master, CPENT, and LPT Master certified international trainer. Programmes include CEH, CPENT, CHFI, Secure Coding, AppSec, AI Security, Red/Blue Team, and Security Awareness training — onsite and online across India, Gulf, and Africa.",
         "provider": {"@type":"Organization","name":"Tedora Hacker Academy Pvt Ltd","url":"https://sarathg.me"},
         "instructor": {"@id":"https://sarathg.me/#sarath"},
-        "courseMode": ["onsite","online","blended"],
+        "hasCourseInstance": [
+          {"@type": "CourseInstance", "courseMode": "onsite"},
+          {"@type": "CourseInstance", "courseMode": "online"},
+          {"@type": "CourseInstance", "courseMode": "blended"}
+        ],
         "educationalLevel": "Professional",
         "teaches": "CEH, CPENT, CHFI, Application Security, Secure Coding, AI Security, Red Team, Blue Team, Security Awareness",
         "url": "https://sarathg.me/services/corporate-training.html",
