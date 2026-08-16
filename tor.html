@@ -452,7 +452,7 @@ h2.title{
   display:flex; align-items:center; justify-content:center;
   font-family:var(--f-mono); font-size:13px; color:var(--ink-dim);
 }
-.keystep h4{font-size:15.5px; font-weight:600; color:var(--ink); margin-bottom:6px;}
+.keystep h3{font-size:15.5px; font-weight:600; color:var(--ink); margin-bottom:6px;}
 .keystep p{font-size:14.5px; color:var(--ink-dim);}
 .keybadges{display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;}
 .keybadge{
@@ -799,29 +799,29 @@ footer{
   <div class="keysteps reveal reveal-stagger">
     <div class="keystep" style="--i:0">
       <div class="keystep-num">1</div>
-      <div><h4>Browser picks three relays</h4><p>One entry, one middle, one exit — chosen for this tunnel only.</p></div>
+      <div><h3>Browser picks three relays</h3><p>One entry, one middle, one exit — chosen for this tunnel only.</p></div>
     </div>
     <div class="keystep" style="--i:1">
       <div class="keystep-num">2</div>
-      <div><h4>Private handshake, directly with entry</h4><p>The browser negotiates two keys with the entry relay: a <b style="color:var(--ink)">forward key (Kf)</b> that encrypts client→relay traffic, and a <b style="color:var(--ink)">backward key (Kb)</b> for relay→client traffic. The entry relay never learns any other relay's keys.</p>
+      <div><h3>Private handshake, directly with entry</h3><p>The browser negotiates two keys with the entry relay: a <b style="color:var(--ink)">forward key (Kf)</b> that encrypts client→relay traffic, and a <b style="color:var(--ink)">backward key (Kb)</b> for relay→client traffic. The entry relay never learns any other relay's keys.</p>
         <div class="keybadges"><span class="keybadge" style="--badge-color:var(--entry);">Kf₁ · Kb₁ — Entry</span></div>
       </div>
     </div>
     <div class="keystep" style="--i:2">
       <div class="keystep-num">3</div>
-      <div><h4>Tunneling through entry, a separate handshake with middle</h4><p>Entry just relays the sealed handshake message without understanding it — it can't read the contents. Two more keys result, known only to the browser and the middle relay.</p>
+      <div><h3>Tunneling through entry, a separate handshake with middle</h3><p>Entry just relays the sealed handshake message without understanding it — it can't read the contents. Two more keys result, known only to the browser and the middle relay.</p>
         <div class="keybadges"><span class="keybadge" style="--badge-color:var(--entry);">Kf₁ · Kb₁ — Entry</span><span class="keybadge" style="--badge-color:var(--middle);">Kf₂ · Kb₂ — Middle</span></div>
       </div>
     </div>
     <div class="keystep" style="--i:3">
       <div class="keystep-num">4</div>
-      <div><h4>Tunneling through both, a separate handshake with exit</h4><p>Same pattern, one hop further. Two more keys result.</p>
+      <div><h3>Tunneling through both, a separate handshake with exit</h3><p>Same pattern, one hop further. Two more keys result.</p>
         <div class="keybadges"><span class="keybadge" style="--badge-color:var(--entry);">Kf₁ · Kb₁ — Entry</span><span class="keybadge" style="--badge-color:var(--middle);">Kf₂ · Kb₂ — Middle</span><span class="keybadge" style="--badge-color:var(--exit);">Kf₃ · Kb₃ — Exit</span></div>
       </div>
     </div>
     <div class="keystep" style="--i:4">
       <div class="keystep-num">5</div>
-      <div><h4>Only now — all six keys in hand — does the real request go out</h4><p>Wrapped in three layers of encryption, one per relay.</p></div>
+      <div><h3>Only now — all six keys in hand — does the real request go out</h3><p>Wrapped in three layers of encryption, one per relay.</p></div>
     </div>
   </div>
 

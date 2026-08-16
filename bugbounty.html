@@ -13,7 +13,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Getting Started with Bug Bounty — A Practical Guide</title>
-<meta name="description" content="A practical, honest guide to starting bug bounty hunting: what to learn first, how to pick a platform and a program that isn't already picked clean, how to find and report your first real bug, and an honest read on how long it actually takes.">
+<meta name="description" content="A practical, honest guide to starting bug bounty hunting — what to learn first, how to pick a platform, and how to find and report your first real bug.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -275,7 +275,7 @@ h2.title{font-size:clamp(26px,5vw,40px); line-height:1.15; letter-spacing:-0.01e
   .workflow-grid .workflow-card{border-radius:var(--radius) !important; border-right:1px solid var(--line) !important;}
 }
 .workflow-num{font-family:var(--f-mono); font-size:24px; font-weight:700; color:var(--gold); opacity:.55; margin-bottom:8px;}
-.workflow-card h4{font-size:14.5px; margin-bottom:7px;}
+.workflow-card h3{font-size:14.5px; margin-bottom:7px;}
 .workflow-card p{font-size:12.5px; color:var(--ink-dim); line-height:1.6;}
 
 /* ============ REPORT STEPPER ============ */
@@ -310,7 +310,7 @@ h2.title{font-size:clamp(26px,5vw,40px); line-height:1.15; letter-spacing:-0.01e
 .mistake-card{background:linear-gradient(180deg, rgba(255,84,112,0.06), transparent 40%), var(--bg-panel); border:1px solid var(--line); border-left:3px solid var(--warn); border-radius:var(--radius-sm) var(--radius) var(--radius) var(--radius-sm); padding:16px 18px;}
 .mistake-head{display:flex; align-items:center; gap:9px; margin-bottom:8px;}
 .mistake-x{font-family:var(--f-mono); font-size:11px; font-weight:700; color:var(--warn); border:1px solid var(--warn); border-radius:100px; padding:2px 8px; flex:none;}
-.mistake-card h4{font-size:14px; font-weight:600; color:var(--ink);}
+.mistake-card h3{font-size:14px; font-weight:600; color:var(--ink);}
 .mistake-card p{font-size:13px; color:var(--ink-dim); line-height:1.6;}
 
 /* ============ REALITY CHECK ============ */
@@ -668,22 +668,22 @@ footer{text-align:center; padding:36px 20px 56px; position:relative; z-index:1; 
   <div class="workflow-grid reveal reveal-stagger">
     <div class="workflow-card" style="--i:0">
       <div class="workflow-num">01</div>
-      <h4>Reconnaissance</h4>
+      <h3>Reconnaissance</h3>
       <p>Map the attack surface first — subdomain enumeration, HTTP probing. Recon comes <i>before</i> testing, not instead of it.</p>
     </div>
     <div class="workflow-card" style="--i:1">
       <div class="workflow-num">02</div>
-      <h4>Map it manually</h4>
+      <h3>Map it manually</h3>
       <p>Browse it like a real user. Note features, authentication mechanisms, every input field — forms, parameters, headers — and any APIs.</p>
     </div>
     <div class="workflow-card" style="--i:2">
       <div class="workflow-num">03</div>
-      <h4>Choose what to hunt for</h4>
+      <h3>Choose what to hunt for</h3>
       <p>Impact-first, not whatever's easiest to test: auth flaws, access control (IDOR, privilege escalation), injection, business logic (price manipulation, coupon reuse, race conditions).</p>
     </div>
     <div class="workflow-card" style="--i:3">
       <div class="workflow-num">04</div>
-      <h4>Document as you go</h4>
+      <h3>Document as you go</h3>
       <p>Screenshots, request/response captures, reproduction steps — before you ever start writing the actual report.</p>
     </div>
   </div>
@@ -767,27 +767,27 @@ footer{text-align:center; padding:36px 20px 56px; position:relative; z-index:1; 
 
   <div class="mistake-grid reveal reveal-stagger">
     <div class="mistake-card" style="--i:0">
-      <div class="mistake-head"><span class="mistake-x">DON'T</span><h4>Skip the program policy</h4></div>
+      <div class="mistake-head"><span class="mistake-x">DON'T</span><h3>Skip the program policy</h3></div>
       <p>Not reading the full scope before starting is the single most repeated mistake, across every source on this topic.</p>
     </div>
     <div class="mistake-card" style="--i:1">
-      <div class="mistake-head"><span class="mistake-x">DON'T</span><h4>Test out-of-scope assets</h4></div>
+      <div class="mistake-head"><span class="mistake-x">DON'T</span><h3>Test out-of-scope assets</h3></div>
       <p>Real risk here is a platform ban or legal exposure — not just a rejected report.</p>
     </div>
     <div class="mistake-card" style="--i:2">
-      <div class="mistake-head"><span class="mistake-x">DON'T</span><h4>Rush to report unverified issues</h4></div>
+      <div class="mistake-head"><span class="mistake-x">DON'T</span><h3>Rush to report unverified issues</h3></div>
       <p>A lot of "invalid" reports are theoretical problems nobody actually confirmed were exploitable.</p>
     </div>
     <div class="mistake-card" style="--i:3">
-      <div class="mistake-head"><span class="mistake-x">DON'T</span><h4>Skip the duplicate check</h4></div>
+      <div class="mistake-head"><span class="mistake-x">DON'T</span><h3>Skip the duplicate check</h3></div>
       <p>Not searching existing reports first wastes time on something someone already found.</p>
     </div>
     <div class="mistake-card" style="--i:4">
-      <div class="mistake-head"><span class="mistake-x">DON'T</span><h4>Scan production without permission</h4></div>
+      <div class="mistake-head"><span class="mistake-x">DON'T</span><h3>Scan production without permission</h3></div>
       <p>Running automated scanners against a live target without explicit permission can disrupt real service.</p>
     </div>
     <div class="mistake-card" style="--i:5">
-      <div class="mistake-head"><span class="mistake-x">DON'T</span><h4>Chase easy bugs over real impact</h4></div>
+      <div class="mistake-head"><span class="mistake-x">DON'T</span><h3>Chase easy bugs over real impact</h3></div>
       <p>Reward and reputation follow real impact — data leaks, account takeover, privilege escalation — not technical novelty.</p>
     </div>
   </div>
