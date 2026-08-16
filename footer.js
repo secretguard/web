@@ -109,7 +109,7 @@
     + '  <div class="sgf-col">'
     + '    <div class="sgf-heading">Work together</div>'
     + '    <p class="sgf-cta-text">Have a project, an assessment, or a training need? Let\'s talk it through.</p>'
-    + '    <a class="sgf-cta-btn" href="/booking.html">Book a consultation →</a>'
+    + '    <a class="sgf-cta-btn" href="https://meet.sarathg.me/" target="_blank" rel="noopener">Book a consultation →</a>'
     + '  </div>'
     + '</div>'
     + '<div class="sgf-bottom">'

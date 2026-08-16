@@ -145,14 +145,6 @@
     <priority>0.6</priority>
   </url>
 
-  <!-- ── BOOKING ── -->
-  <url>
-    <loc>https://sarathg.me/booking.html</loc>
-    <lastmod>2026-06-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-
   <!-- ── EXTERNAL PRODUCT SUBDOMAINS (separate repos, same domain family) ── -->
   <url>
     <loc>https://gethired.sarathg.me/</loc>
