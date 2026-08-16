@@ -468,6 +468,14 @@
               <span class="sg-drop-item-title">Pivoting &amp; Tunneling</span>
               <span class="sg-drop-item-desc">Port forwarding &amp; lateral movement lab</span>
             </a>
+            <a href="/pandora.html" class="sg-drop-item" role="menuitem" data-sg-nav="pandora">
+              <span class="sg-drop-item-title">Pandora SAST/DAST Lab</span>
+              <span class="sg-drop-item-desc">Self-hosted SAST &amp; DAST security testing lab</span>
+            </a>
+            <a href="/soc_splunk.html" class="sg-drop-item" role="menuitem" data-sg-nav="splunk">
+              <span class="sg-drop-item-title">Splunk SOC Guide</span>
+              <span class="sg-drop-item-desc">Hands-on Splunk guide for security operations</span>
+            </a>
             <a href="https://labs.sarathg.me" class="sg-drop-item sg-all" role="menuitem" data-sg-nav="alllabs" target="_blank" rel="noopener">
               <span class="sg-drop-item-title">All Labs →</span>
               <span class="sg-drop-item-desc">Full lab directory · labs.sarathg.me</span>
@@ -575,6 +583,14 @@
           <a href="/pivoting.html" onclick="SG.toggleMobile()" data-sg-nav="pivoting">
             Pivoting &amp; Tunneling
             <span class="sg-sub-label">Port forwarding &amp; lateral movement lab</span>
+          </a>
+          <a href="/pandora.html" onclick="SG.toggleMobile()" data-sg-nav="pandora">
+            Pandora SAST/DAST Lab
+            <span class="sg-sub-label">Self-hosted SAST &amp; DAST security testing lab</span>
+          </a>
+          <a href="/soc_splunk.html" onclick="SG.toggleMobile()" data-sg-nav="splunk">
+            Splunk SOC Guide
+            <span class="sg-sub-label">Hands-on Splunk guide for security operations</span>
           </a>
           <a href="https://labs.sarathg.me" onclick="SG.toggleMobile()" data-sg-nav="alllabs" target="_blank" rel="noopener" style="color:#ef4444;">
             All Labs →
