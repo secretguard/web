@@ -216,7 +216,774 @@ for t in ["A","MX","TXT","NS"]:
   <body style="margin:0;background:#060a13; padding-top:64px">
     <script src="navbar.js" defer></script>
 <main>
-    <div id="root"></div>
+    <div id="root"><div style="font-family:-apple-system,'Segoe UI',sans-serif;background:#060a13;color:#e2e8f0;padding:32px 20px;max-width:860px;margin:0 auto;line-height:1.6">
+<h1 style="font-size:2.2rem;font-weight:800;margin:0 0 12px">Learn to find anything online.</h1>
+<p style="font-size:1.05rem;color:#94a3b8;margin:0 0 28px;max-width:580px">A hands-on guide to Open-Source Intelligence &mdash; from search engine mastery to dark web investigation. Every tool verified and working. Every technique step-by-step.</p>
+<section id="foundations" style="margin-bottom:40px">
+  <h2 style="font-size:1.6rem;font-weight:700;color:#38bdf8;margin:0 0 6px">Foundations</h2>
+  <p style="color:#94a3b8;margin:0 0 20px">What OSINT is, how to set up your lab safely, and how to think like an investigator</p>
+  <article style="margin:0 0 28px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.15rem;font-weight:600;margin:0 0 8px">What is OSINT?</h3>
+    <p style="margin:0 0 12px">Open-Source Intelligence is the practice of collecting, analyzing, and acting on information gathered from publicly available sources. It's used by cybersecurity professionals, journalists, law enforcement, researchers, private investigators, and everyday people who want to understand their own digital footprint.</p>
+    <ul style="margin:0 0 12px;padding-left:20px">
+      <li>OSINT uses ONLY publicly accessible data — no hacking, no unauthorized access</li>
+      <li>Sources include: social media, public records, DNS/WHOIS, court filings, satellite imagery, breach databases, archived web pages, certificate transparency logs</li>
+      <li>The OSINT cycle: Requirements → Collection → Processing → Analysis → Reporting</li>
+      <li>Legal &amp; ethical boundaries matter — just because data is public doesn't mean every use is ethical</li>
+    </ul>
+  </article>
+  <article style="margin:0 0 28px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.15rem;font-weight:600;margin:0 0 8px">Setting Up a Secure OSINT Lab</h3>
+    <p style="margin:0 0 12px">Before investigating anything, you need an isolated environment that protects your real identity. Never conduct OSINT investigations from your personal browser or accounts.</p>
+    <ol style="margin:0 0 12px;padding-left:20px">
+      <li>Install a hypervisor: VirtualBox (free) or VMware Workstation</li>
+      <li>Download Kali Linux (kali.org/get-kali) — comes pre-loaded with most OSINT tools</li>
+      <li>Create sock puppet accounts on platforms you'll investigate — use a burner email (ProtonMail), never your real phone number, never your real name</li>
+      <li>Install Tor Browser for anonymous browsing:
+torbrowser-launcher</li>
+      <li>Set up a VPN as a baseline (Mullvad or ProtonVPN recommended for privacy)</li>
+      <li>Configure browser isolation: use separate Firefox profiles for each investigation</li>
+    </ol>
+    <p style="margin:0 0 12px;color:#fca5a5"><strong>Warning:</strong> NEVER mix personal and investigation accounts. The #1 OPSEC failure is cross-contamination — same password, same phone number, or logging into personal accounts from your investigation VM.</p>
+  </article>
+  <article style="margin:0 0 28px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.15rem;font-weight:600;margin:0 0 8px">Essential Browser Extensions</h3>
+    <ol style="margin:0 0 12px;padding-left:20px">
+      <li>Wappalyzer — identifies website technology stacks</li>
+      <li>InVID/WeVerify — video and image verification toolkit</li>
+      <li>SingleFile — saves complete web pages as evidence</li>
+      <li>User-Agent Switcher — change browser fingerprint</li>
+      <li>uBlock Origin — blocks tracking scripts during research</li>
+    </ol>
+    <p style="margin:0 0 12px;color:#7dd3fc"><strong>Tip:</strong> Install these in your investigation browser profile only. Keep your personal browser clean.</p>
+  </article>
+</section>
+<section id="search" style="margin-bottom:40px">
+  <h2 style="font-size:1.6rem;font-weight:700;color:#fb923c;margin:0 0 6px">Search Engine Mastery</h2>
+  <p style="color:#94a3b8;margin:0 0 20px">Google dorking, cached pages, and finding what search engines hide</p>
+  <article style="margin:0 0 28px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.15rem;font-weight:600;margin:0 0 8px">Advanced Google Dorking</h3>
+    <p style="margin:0 0 12px">Google indexes far more than most people realize. With the right operators, you can find exposed documents, admin panels, database dumps, and sensitive files that were never meant to be public.</p>
+    <ol style="margin:0 0 12px;padding-left:20px">
+      <li>Basic operators:
+site:example.com — restrict results to a domain
+filetype:pdf — find specific file types
+inurl:admin — find URLs containing "admin"
+intitle:"index of" — find open directory listings</li>
+      <li>Combine operators for precision:
+site:example.com filetype:xlsx "confidential"
+site:gov.in filetype:pdf "budget 2025"
+intitle:"index of" "backup" site:example.com</li>
+      <li>Find exposed login pages:
+inurl:login site:example.com
+inurl:wp-admin site:example.com</li>
+      <li>Find exposed documents:
+filetype:doc OR filetype:docx OR filetype:pdf site:target.com "internal"</li>
+      <li>Google Hacking Database (GHDB):
+Visit exploit-db.com/google-hacking-database for pre-built dorks</li>
+    </ol>
+    <p style="margin:0 0 12px;color:#7dd3fc"><strong>Tip:</strong> Yandex, Bing, and DuckDuckGo index different content than Google. Always run your queries across multiple search engines — you'll find things Google filters out.</p>
+  </article>
+  <article style="margin:0 0 28px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.15rem;font-weight:600;margin:0 0 8px">Cached &amp; Archived Pages</h3>
+    <p style="margin:0 0 12px">Websites change and pages disappear, but the internet remembers. Cached and archived versions let you see what a site looked like in the past — including pages the owner deleted.</p>
+    <ol style="margin:0 0 12px;padding-left:20px">
+      <li>Wayback Machine — the internet's memory:
+Visit web.archive.org → enter any URL → browse snapshots over time</li>
+      <li>Wayback CDX API for programmatic access:
+curl -s "http://web.archive.org/cdx/search/cdx?url=example.com/*&amp;output=json&amp;limit=20&amp;fl=timestamp,original,statuscode"</li>
+      <li>Hunt for deleted sensitive content in archives:
+Check old versions of /robots.txt — often reveals paths the owner later hid
+Look for /.env, /.git/config, /backup, /debug in archived snapshots</li>
+      <li>Google Cache: search for a page, click the three dots → Cached (when available)</li>
+      <li>Archive.today (archive.ph): independent archive service, often has pages Wayback missed</li>
+    </ol>
+  </article>
+</section>
+<section id="social" style="margin-bottom:40px">
+  <h2 style="font-size:1.6rem;font-weight:700;color:#a78bfa;margin:0 0 6px">Social Media Intelligence</h2>
+  <p style="color:#94a3b8;margin:0 0 20px">Investigating X/Twitter, Instagram, LinkedIn, and Facebook without alerting the target</p>
+  <article style="margin:0 0 28px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.15rem;font-weight:600;margin:0 0 8px">X / Twitter Investigation</h3>
+    <p style="margin:0 0 12px">X (formerly Twitter) remains one of the richest OSINT sources. Most scraping tools are dead in 2026 — here's what actually works.</p>
+    <ol style="margin:0 0 12px;padding-left:20px">
+      <li>X Advanced Search (works 100%, no tools needed):
+Visit x.com/search-advanced with your sock puppet account</li>
+      <li>Powerful search operators:
+from:target_handle since:2024-01-01 until:2024-12-31
+from:target_handle filter:media
+from:target_handle filter:links
+to:target_handle — replies TO them
+@target_handle -from:target_handle — mentions by others</li>
+      <li>Browser DevTools trick: open F12 → Network tab while scrolling through search results. The JSON responses contain structured data you can export and analyze</li>
+      <li>twscrape (authenticated scraping for advanced users):
+pip3 install twscrape
+Requires valid X accounts with session cookies — breaks periodically but is the best programmatic option</li>
+      <li>Analyze posting times to determine timezone and daily routine patterns</li>
+    </ol>
+    <p style="margin:0 0 12px;color:#fca5a5"><strong>Warning:</strong> Twint, snscrape, and Nitter are non-functional in 2026. X blocked guest tokens and hardened its API. Don't waste time on these.</p>
+    <ul style="margin:0 0 12px;padding-left:20px">
+      <li><a href="https://github.com/vladkens/twscrape" style="color:#7dd3fc">twscrape</a></li>
+    </ul>
+  </article>
+  <article style="margin:0 0 28px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.15rem;font-weight:600;margin:0 0 8px">Instagram Investigation</h3>
+    <ol style="margin:0 0 12px;padding-left:20px">
+      <li>Instaloader (actively maintained):
+pip3 install instaloader
+instaloader --login your_sockpuppet target_profile
+Downloads: posts, captions, comments, tagged locations, profile pic, stories</li>
+      <li>Epieos for quick account discovery:
+Visit epieos.com → enter target's email → checks 140+ services including Instagram</li>
+      <li>Manual browser approach: View Page Source on any public profile → search for "biography", "follower_count" in the embedded JSON</li>
+    </ol>
+    <ul style="margin:0 0 12px;padding-left:20px">
+      <li><a href="https://github.com/instaloader/instaloader" style="color:#7dd3fc">Instaloader</a></li>
+      <li><a href="https://epieos.com" style="color:#7dd3fc">Epieos</a></li>
+    </ul>
+  </article>
+  <article style="margin:0 0 28px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.15rem;font-weight:600;margin:0 0 8px">LinkedIn &amp; Facebook Investigation</h3>
+    <ol style="margin:0 0 12px;padding-left:20px">
+      <li>LinkedIn: use Google dorking instead of LinkedIn's search (which filters results):
+site:linkedin.com/in "Firstname Lastname" "Company"</li>
+      <li>CrossLinked — enumerate employee names from LinkedIn via search engines:
+pip3 install crosslinked
+crosslinked -f "{first}.{last}@company.com" "Company Name"</li>
+      <li>Facebook: use the Graph Search remnants via URL manipulation:
+https://www.facebook.com/search/posts/?q=keyword
+https://www.facebook.com/search/people/?q=name</li>
+      <li>Facebook ID lookup: enter a profile URL at lookup-id.com to get the numeric ID, then use it for deeper searches</li>
+    </ol>
+    <ul style="margin:0 0 12px;padding-left:20px">
+      <li><a href="https://github.com/m8sec/CrossLinked" style="color:#7dd3fc">CrossLinked</a></li>
+    </ul>
+  </article>
+  <article style="margin:0 0 28px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.15rem;font-weight:600;margin:0 0 8px">Image Metadata from Social Media</h3>
+    <p style="margin:0 0 12px">Every platform strips metadata differently. Knowing what survives upload is critical for investigations.</p>
+    <p style="margin:0 0 12px;color:#7dd3fc"><strong>Tip:</strong> Telegram preserves original file metadata unless the sender explicitly compresses. Always check Telegram-forwarded images — they're a goldmine.</p>
+    <table style="width:100%;border-collapse:collapse;margin:0 0 12px;font-size:0.9rem">
+      <thead><tr>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">Platform</th>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">GPS Data</th>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">Camera Model</th>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">Timestamp</th>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">Software</th>
+      </tr></thead>
+      <tbody>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">X / Twitter</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Stripped</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Stripped</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Stripped</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Stripped</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Instagram</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Stripped</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Partial</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Stripped</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Stripped</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">LinkedIn</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Stripped</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Stripped</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Stripped</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Stripped</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Facebook</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Stripped</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Partial</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Partial</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Stripped</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Telegram</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">PRESERVED</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">PRESERVED</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">PRESERVED</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">PRESERVED</td>
+      </tr>
+      </tbody>
+    </table>
+  </article>
+</section>
+<section id="email" style="margin-bottom:40px">
+  <h2 style="font-size:1.6rem;font-weight:700;color:#34d399;margin:0 0 6px">Email &amp; Username Intelligence</h2>
+  <p style="color:#94a3b8;margin:0 0 20px">From one email address or username, map an entire digital identity</p>
+  <article style="margin:0 0 28px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.15rem;font-weight:600;margin:0 0 8px">Email Account Enumeration</h3>
+    <p style="margin:0 0 12px">Given an email address, determine which platforms have accounts registered with it — without alerting the target.</p>
+    <ol style="margin:0 0 12px;padding-left:20px">
+      <li>user-scanner (modern replacement for Holehe — combines email + username scanning):
+pip3 install user-scanner
+user-scanner -e "target@example.com" -v</li>
+      <li>Bulk scanning:
+user-scanner -ef emails.txt -o results.json</li>
+      <li>Epieos (web-based, free tier, 140+ services):
+Visit epieos.com → enter email → get linked accounts, Google ID, Skype</li>
+      <li>GHunt — deep Google account OSINT (if target uses Gmail):
+pip3 install ghunt
+ghunt login  # one-time browser auth
+ghunt email target@gmail.com</li>
+      <li>GHunt extracts: Google Maps reviews (with GPS locations!), Photos albums, YouTube channels, Calendar events, profile pictures, last edit dates</li>
+      <li>Gravatar check:
+echo -n "target@example.com" | md5sum
+Visit gravatar.com/avatar/&lt;md5hash&gt;</li>
+    </ol>
+    <p style="margin:0 0 12px;color:#7dd3fc"><strong>Tip:</strong> GHunt's Google Maps review data is incredibly powerful. A target's review history can reveal home location, workplace, travel patterns, and daily routines — all from a Gmail address.</p>
+    <ul style="margin:0 0 12px;padding-left:20px">
+      <li><a href="https://github.com/kaifcodec/user-scanner" style="color:#7dd3fc">user-scanner</a></li>
+      <li><a href="https://github.com/mxrch/GHunt" style="color:#7dd3fc">GHunt</a></li>
+      <li><a href="https://epieos.com" style="color:#7dd3fc">Epieos</a></li>
+    </ul>
+  </article>
+  <article style="margin:0 0 28px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.15rem;font-weight:600;margin:0 0 8px">Username Footprint Tracing</h3>
+    <p style="margin:0 0 12px">A single username can unlock accounts across hundreds of platforms. Most people reuse usernames.</p>
+    <ol style="margin:0 0 12px;padding-left:20px">
+      <li>user-scanner (handles both email and username):
+user-scanner -u "target_username" -v</li>
+      <li>Maigret — deep search across 3000+ sites with HTML report:
+pip3 install maigret
+maigret target_username --all-sites --reports-type html</li>
+      <li>WhatsMyName (web-based verification):
+Visit whatsmyname.app → enter username → compare with tool results</li>
+      <li>Google with quotes for results tools miss:
+"target_username"
+"target_username" site:github.com
+"target_username" site:reddit.com
+"target_username" site:medium.com</li>
+      <li>For each confirmed platform: document creation date, profile photo, bio, linked accounts, connections</li>
+    </ol>
+    <ul style="margin:0 0 12px;padding-left:20px">
+      <li><a href="https://github.com/soxoj/maigret" style="color:#7dd3fc">Maigret</a></li>
+      <li><a href="https://whatsmyname.app" style="color:#7dd3fc">WhatsMyName</a></li>
+    </ul>
+  </article>
+  <article style="margin:0 0 28px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.15rem;font-weight:600;margin:0 0 8px">Identifying Disposable &amp; Fake Emails</h3>
+    <p style="margin:0 0 12px">When investigating phishing campaigns or fraud, you need to quickly classify email addresses.</p>
+    <ol style="margin:0 0 12px;padding-left:20px">
+      <li>Check against disposable domain list:
+git clone https://github.com/disposable-email-domains/disposable-email-domains.git
+grep -i "mailinator.com" disposable-email-domains/disposable_email_blocklist.conf</li>
+      <li>Email reputation check:
+curl -s https://emailrep.io/target@example.com | python3 -m json.tool</li>
+      <li>MX record analysis (disposable services have distinctive patterns):
+dig MX mailinator.com +short
+dig MX gmail.com +short</li>
+      <li>Breach exposure: haveibeenpwned.com → search each email</li>
+      <li>Domain email pattern discovery:
+Visit phonebook.cz → search domain → all indexed emails, subdomains, URLs</li>
+      <li>Hunter.io (free tier, 50 searches/mo): verify corporate email naming conventions</li>
+    </ol>
+    <ul style="margin:0 0 12px;padding-left:20px">
+      <li><a href="https://github.com/disposable-email-domains/disposable-email-domains" style="color:#7dd3fc">Disposable Email Domains</a></li>
+      <li><a href="https://phonebook.cz" style="color:#7dd3fc">Phonebook.cz</a></li>
+      <li><a href="https://haveibeenpwned.com" style="color:#7dd3fc">HaveIBeenPwned</a></li>
+      <li><a href="https://hunter.io" style="color:#7dd3fc">Hunter.io</a></li>
+    </ul>
+  </article>
+</section>
+<section id="domain" style="margin-bottom:40px">
+  <h2 style="font-size:1.6rem;font-weight:700;color:#38bdf8;margin:0 0 6px">Website &amp; Domain Intelligence</h2>
+  <p style="color:#94a3b8;margin:0 0 20px">WHOIS, DNS, subdomains, technology fingerprinting, and infrastructure mapping</p>
+  <article style="margin:0 0 28px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.15rem;font-weight:600;margin:0 0 8px">WHOIS &amp; DNS Reconnaissance</h3>
+    <p style="margin:0 0 12px">Every domain has a registration trail and DNS configuration that reveals infrastructure, ownership, and sometimes the identity of the operator.</p>
+    <ol style="margin:0 0 12px;padding-left:20px">
+      <li>WHOIS lookup:
+whois example.com
+Document: registrar, registration/expiry dates, nameservers, registrant info</li>
+      <li>Historical WHOIS:
+Visit whois.domaintools.com for current + historical records</li>
+      <li>Reverse WHOIS — find other domains by the same owner:
+Visit viewdns.info/reversewhois/ → search by email or name</li>
+      <li>DNS deep dive:
+dig example.com A +short
+dig example.com MX +short
+dig example.com TXT +short
+dig example.com NS +short</li>
+      <li>Email security posture:
+dig _dmarc.example.com TXT +short
+dig default._domainkey.example.com TXT +short</li>
+      <li>Visual DNS mapping:
+Visit dnsdumpster.com → enter domain → download network map</li>
+      <li>Historical DNS records:
+Visit securitytrails.com (free account) → view IP changes over time</li>
+      <li>Instant domain dump:
+Visit phonebook.cz → search domain → returns ALL indexed emails, subdomains, URLs</li>
+    </ol>
+    <p style="margin:0 0 12px;color:#7dd3fc"><strong>Tip:</strong> Phonebook.cz is massively underrated — faster than theHarvester for initial domain recon and often returns more results.</p>
+    <ul style="margin:0 0 12px;padding-left:20px">
+      <li><a href="https://viewdns.info" style="color:#7dd3fc">ViewDNS</a></li>
+      <li><a href="https://dnsdumpster.com" style="color:#7dd3fc">DNSDumpster</a></li>
+      <li><a href="https://securitytrails.com" style="color:#7dd3fc">SecurityTrails</a></li>
+      <li><a href="https://phonebook.cz" style="color:#7dd3fc">Phonebook.cz</a></li>
+    </ul>
+  </article>
+  <article style="margin:0 0 28px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.15rem;font-weight:600;margin:0 0 8px">Subdomain Enumeration</h3>
+    <p style="margin:0 0 12px">Subdomains reveal an organization's hidden attack surface: dev servers, staging environments, internal tools, and forgotten services.</p>
+    <ol style="margin:0 0 12px;padding-left:20px">
+      <li>Subfinder (passive, fast):
+sudo apt install subfinder -y
+subfinder -d example.com -o subs_subfinder.txt</li>
+      <li>Amass (comprehensive):
+sudo apt install amass -y
+amass enum -passive -d example.com -o subs_amass.txt</li>
+      <li>Certificate Transparency logs:
+curl -s "https://crt.sh/?q=%25.example.com&amp;output=json" | python3 -m json.tool | grep name_value | sort -u</li>
+      <li>theHarvester (built into Kali):
+theHarvester -d example.com -b all -l 200</li>
+      <li>Merge &amp; deduplicate:
+cat subs_subfinder.txt subs_amass.txt | sort -u &gt; all_subs.txt</li>
+      <li>Probe which are live:
+sudo apt install httpx-toolkit -y
+cat all_subs.txt | httpx -silent -status-code -title &gt; live_subs.txt</li>
+      <li>Categorize by function: dev, staging, api, mail, vpn, admin, etc.</li>
+    </ol>
+    <ul style="margin:0 0 12px;padding-left:20px">
+      <li><a href="https://github.com/projectdiscovery/subfinder" style="color:#7dd3fc">Subfinder</a></li>
+      <li><a href="https://github.com/owasp-amass/amass" style="color:#7dd3fc">Amass</a></li>
+      <li><a href="https://crt.sh" style="color:#7dd3fc">crt.sh</a></li>
+      <li><a href="https://github.com/laramies/theHarvester" style="color:#7dd3fc">theHarvester</a></li>
+      <li><a href="https://github.com/projectdiscovery/httpx" style="color:#7dd3fc">httpx</a></li>
+    </ul>
+  </article>
+  <article style="margin:0 0 28px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.15rem;font-weight:600;margin:0 0 8px">Technology Fingerprinting</h3>
+    <p style="margin:0 0 12px">Knowing what software a website runs reveals potential vulnerabilities, and for OSINT, tells you about the organization's technical sophistication.</p>
+    <ol style="margin:0 0 12px;padding-left:20px">
+      <li>WhatWeb (CLI, pre-installed on Kali):
+whatweb example.com -v</li>
+      <li>Wappalyzer: install as Firefox extension for real-time detection</li>
+      <li>Manual header analysis:
+curl -I https://example.com
+Look for: Server, X-Powered-By, X-Generator, Set-Cookie naming patterns</li>
+      <li>Source code fingerprinting:
+curl -s https://example.com | grep -i "generator\|wp-content\|drupal\|react\|next\|angular"</li>
+      <li>robots.txt and sitemap analysis:
+curl -s https://example.com/robots.txt
+curl -s https://example.com/sitemap.xml | head -50</li>
+      <li>BuiltWith: visit builtwith.com for comprehensive tech profiling</li>
+      <li>Censys — internet infrastructure search:
+Visit search.censys.io → search by domain or IP → TLS certs, ports, cloud provider, OS</li>
+    </ol>
+    <p style="margin:0 0 12px;color:#7dd3fc"><strong>Tip:</strong> Censys is the modern complement to Shodan — it focuses on TLS certificates and cloud assets, invaluable for finding shadow IT in multi-cloud environments.</p>
+    <ul style="margin:0 0 12px;padding-left:20px">
+      <li><a href="https://github.com/urbanadventurer/WhatWeb" style="color:#7dd3fc">WhatWeb</a></li>
+      <li><a href="https://www.wappalyzer.com" style="color:#7dd3fc">Wappalyzer</a></li>
+      <li><a href="https://builtwith.com" style="color:#7dd3fc">BuiltWith</a></li>
+      <li><a href="https://search.censys.io" style="color:#7dd3fc">Censys</a></li>
+      <li><a href="https://www.shodan.io" style="color:#7dd3fc">Shodan</a></li>
+    </ul>
+  </article>
+</section>
+<section id="darkweb" style="margin-bottom:40px">
+  <h2 style="font-size:1.6rem;font-weight:700;color:#c084fc;margin:0 0 6px">Dark Web &amp; Breach Intelligence</h2>
+  <p style="color:#94a3b8;margin:0 0 20px">Tor, dark web search engines, breach databases, infostealer exposure, and crypto tracing</p>
+  <article style="margin:0 0 28px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.15rem;font-weight:600;margin:0 0 8px">Navigating the Dark Web Safely</h3>
+    <p style="margin:0 0 12px">The dark web is a small portion of the internet accessible only through special software like Tor. It has legitimate uses (whistleblowing, censorship circumvention) and illegitimate ones. For OSINT, we stay on search engines and public forums.</p>
+    <ol style="margin:0 0 12px;padding-left:20px">
+      <li>Install and launch Tor Browser:
+torbrowser-launcher
+Or download from torproject.org</li>
+      <li>Set security to maximum: Shield icon → Safest</li>
+      <li>Verify your connection: visit check.torproject.org</li>
+      <li>Understand the circuit: padlock icon → view Guard → Middle → Exit relay path</li>
+    </ol>
+    <p style="margin:0 0 12px;color:#fca5a5"><strong>Warning:</strong> NEVER maximize the Tor window (fingerprinting risk). Never install extensions. Never log into personal accounts. Never open downloaded files while connected.</p>
+  </article>
+  <article style="margin:0 0 28px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.15rem;font-weight:600;margin:0 0 8px">Dark Web Search &amp; Breach Hunting</h3>
+    <p style="margin:0 0 12px">You don't need to visit illegal marketplaces to get intelligence from the dark web. Several powerful tools index dark web content and make it searchable from the clearnet.</p>
+    <ol style="margin:0 0 12px;padding-left:20px">
+      <li>Ahmia (clearnet access to dark web search):
+Visit ahmia.fi → search for organization names, domains, keywords</li>
+      <li>IntelX (paste sites, dark web, leaks):
+Visit intelx.io → search for @yourdomain.com
+Free tier: limited daily searches but covers a huge range of sources</li>
+      <li>DeHashed (breach credential search):
+Visit dehashed.com → search by email, domain, username, IP, phone</li>
+      <li>Hudson Rock (free infostealer exposure check):
+Visit cavalier.hudsonrock.com
+Checks if employees were infected by infostealer malware (RedLine, Raccoon, Vidar)</li>
+      <li>Clearnet search for dark web reposts:
+site:pastebin.com "@yourdomain.com"
+"yourdomain.com" AND ("leaked" OR "dump" OR "breach")</li>
+    </ol>
+    <p style="margin:0 0 12px;color:#7dd3fc"><strong>Tip:</strong> Hudson Rock's infostealer check is a 2026 game-changer. Infostealer malware dumps browser-saved credentials en masse — this tells you if your organization has been compromised.</p>
+    <ul style="margin:0 0 12px;padding-left:20px">
+      <li><a href="https://ahmia.fi" style="color:#7dd3fc">Ahmia</a></li>
+      <li><a href="https://intelx.io" style="color:#7dd3fc">IntelX</a></li>
+      <li><a href="https://dehashed.com" style="color:#7dd3fc">DeHashed</a></li>
+      <li><a href="https://cavalier.hudsonrock.com" style="color:#7dd3fc">Hudson Rock Cavalier</a></li>
+    </ul>
+  </article>
+  <article style="margin:0 0 28px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.15rem;font-weight:600;margin:0 0 8px">Cryptocurrency &amp; Blockchain OSINT</h3>
+    <p style="margin:0 0 12px">Ransomware payments, fraud proceeds, and darknet market transactions all leave trails on public blockchains.</p>
+    <ol style="margin:0 0 12px;padding-left:20px">
+      <li>Bitcoin explorer:
+Visit blockchain.com/explorer → enter address → trace transaction graph</li>
+      <li>Arkham Intelligence (modern crypto OSINT, free):
+Visit platform.arkhamintelligence.com → wallet search → known entity labels, flow analysis</li>
+      <li>Etherscan for Ethereum:
+Visit etherscan.io → enter address → transaction history, token transfers</li>
+      <li>Blockchair — multi-chain explorer:
+Visit blockchair.com → supports BTC, ETH, and many other chains</li>
+    </ol>
+    <ul style="margin:0 0 12px;padding-left:20px">
+      <li><a href="https://platform.arkhamintelligence.com" style="color:#7dd3fc">Arkham Intelligence</a></li>
+      <li><a href="https://www.blockchain.com/explorer" style="color:#7dd3fc">Blockchain Explorer</a></li>
+      <li><a href="https://etherscan.io" style="color:#7dd3fc">Etherscan</a></li>
+      <li><a href="https://blockchair.com" style="color:#7dd3fc">Blockchair</a></li>
+    </ul>
+  </article>
+</section>
+<section id="geoint" style="margin-bottom:40px">
+  <h2 style="font-size:1.6rem;font-weight:700;color:#f472b6;margin:0 0 6px">Geolocation &amp; Media Verification</h2>
+  <p style="color:#94a3b8;margin:0 0 20px">Reverse image search, video verification, EXIF analysis, audio geolocation, and satellite imagery</p>
+  <article style="margin:0 0 28px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.15rem;font-weight:600;margin:0 0 8px">Reverse Image Search</h3>
+    <p style="margin:0 0 12px">Given a photo, find its source, earlier uploads, different contexts, and sometimes the exact location where it was taken.</p>
+    <ol style="margin:0 0 12px;padding-left:20px">
+      <li>Google Images: images.google.com → camera icon → upload image</li>
+      <li>Yandex Images (BEST for facial recognition &amp; non-English sources):
+yandex.com/images → camera icon → upload</li>
+      <li>TinEye (best for finding the EARLIEST upload date):
+tineye.com → upload → sort by oldest</li>
+      <li>Always use all three — each indexes different content and has different strengths</li>
+      <li>Bing Visual Search: bing.com/images → camera icon — occasionally finds things others miss</li>
+    </ol>
+    <p style="margin:0 0 12px;color:#7dd3fc"><strong>Tip:</strong> Yandex consistently outperforms Google for OSINT reverse image search. Its facial recognition is more aggressive and it indexes Russian/Eastern European sources that Google misses.</p>
+    <ul style="margin:0 0 12px;padding-left:20px">
+      <li><a href="https://tineye.com" style="color:#7dd3fc">TinEye</a></li>
+      <li><a href="https://yandex.com/images" style="color:#7dd3fc">Yandex Images</a></li>
+    </ul>
+  </article>
+  <article style="margin:0 0 28px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.15rem;font-weight:600;margin:0 0 8px">Image &amp; Video Metadata Extraction</h3>
+    <ol style="margin:0 0 12px;padding-left:20px">
+      <li>ExifTool — the gold standard for metadata extraction:
+sudo apt install exiftool -y
+exiftool photo.jpg
+exiftool video.mp4</li>
+      <li>MediaInfo for detailed video/audio metadata:
+sudo apt install mediainfo -y
+mediainfo video.mp4</li>
+      <li>Key metadata to look for: GPS coordinates, camera make/model, creation timestamp, software used, serial numbers</li>
+      <li>Extract keyframes from video with ffmpeg:
+sudo apt install ffmpeg -y
+ffmpeg -i video.mp4 -vf "fps=1/5" keyframe_%04d.jpg</li>
+      <li>Extract frame at specific timestamp:
+ffmpeg -i video.mp4 -ss 00:00:30 -frames:v 1 frame.jpg</li>
+      <li>Then reverse-search each keyframe on Google/Yandex/TinEye</li>
+    </ol>
+    <ul style="margin:0 0 12px;padding-left:20px">
+      <li><a href="https://exiftool.org" style="color:#7dd3fc">ExifTool</a></li>
+      <li><a href="https://mediaarea.net/en/MediaInfo" style="color:#7dd3fc">MediaInfo</a></li>
+      <li><a href="https://ffmpeg.org" style="color:#7dd3fc">ffmpeg</a></li>
+    </ul>
+  </article>
+  <article style="margin:0 0 28px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.15rem;font-weight:600;margin:0 0 8px">Video Verification with InVID/WeVerify</h3>
+    <p style="margin:0 0 12px">The professional standard for verifying social media videos. Used by major news organizations worldwide.</p>
+    <ol style="margin:0 0 12px;padding-left:20px">
+      <li>Install: Firefox Add-ons → search "InVID WeVerify" → Install</li>
+      <li>Open any video on social media → click the extension icon</li>
+      <li>Keyframes: auto-extracts key frames and reverse-searches them</li>
+      <li>Magnifier: zoom into details — signs, reflections, shadows, uniforms</li>
+      <li>Forensic tab: Error Level Analysis (ELA) detects image manipulation, clone detection finds copy-pasted regions</li>
+    </ol>
+    <ul style="margin:0 0 12px;padding-left:20px">
+      <li><a href="https://www.invid-project.eu/tools-and-services/invid-verification-plugin/" style="color:#7dd3fc">InVID/WeVerify</a></li>
+    </ul>
+  </article>
+  <article style="margin:0 0 28px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.15rem;font-weight:600;margin:0 0 8px">Geolocation Techniques</h3>
+    <ol style="margin:0 0 12px;padding-left:20px">
+      <li>Shadow analysis: sun position + shadow length = time of day + latitude. Use SunCalc (suncalc.org) to verify</li>
+      <li>Google Earth Pro (free): match terrain, buildings, road layouts to geolocate photos/videos</li>
+      <li>OpenStreetMap: cross-reference landmarks, road names, building shapes</li>
+      <li>Sentinel Hub (sentinel-hub.com): free satellite imagery for verifying locations and timelines</li>
+      <li>Audio geolocation: extract audio from video, use Audacity spectral analysis to identify background sounds — call to prayer timing, train announcements, bird species, language fragments</li>
+    </ol>
+    <ul style="margin:0 0 12px;padding-left:20px">
+      <li><a href="https://www.suncalc.org" style="color:#7dd3fc">SunCalc</a></li>
+      <li><a href="https://earth.google.com" style="color:#7dd3fc">Google Earth</a></li>
+      <li><a href="https://www.sentinel-hub.com" style="color:#7dd3fc">Sentinel Hub</a></li>
+      <li><a href="https://www.audacityteam.org" style="color:#7dd3fc">Audacity</a></li>
+    </ul>
+  </article>
+</section>
+<section id="people" style="margin-bottom:40px">
+  <h2 style="font-size:1.6rem;font-weight:700;color:#fbbf24;margin:0 0 6px">People &amp; Identity Investigations</h2>
+  <p style="color:#94a3b8;margin:0 0 20px">Building complete digital profiles from a single starting point</p>
+  <article style="margin:0 0 28px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.15rem;font-weight:600;margin:0 0 8px">The Investigation Chain</h3>
+    <p style="margin:0 0 12px">Real OSINT investigations start with one data point and expand outward. Here's the modern workflow for building a complete digital identity map.</p>
+    <ol style="margin:0 0 12px;padding-left:20px">
+      <li>Start with email → Epieos (epieos.com) for linked accounts across 140+ services</li>
+      <li>If Gmail → GHunt for deep Google intelligence:
+ghunt email target@gmail.com
+Maps reviews, Photos albums, YouTube, Calendar, profile pic</li>
+      <li>Email enumeration → user-scanner:
+user-scanner -e "target@example.com" -v</li>
+      <li>Extract username from email → run username search:
+user-scanner -u "username" -v
+maigret username --all-sites --reports-type html</li>
+      <li>Check code repositories — git commit history often reveals real email addresses:
+github.com/search?q=username&amp;type=users</li>
+      <li>Google with context:
+"Firstname Lastname" "City" site:linkedin.com</li>
+      <li>Build visual identity map using draw.io or Maltego CE showing all connections and pivot points</li>
+    </ol>
+  </article>
+  <article style="margin:0 0 28px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.15rem;font-weight:600;margin:0 0 8px">Public Records &amp; Corporate Intelligence</h3>
+    <p style="margin:0 0 12px">Governments and regulatory bodies publish enormous amounts of data that most people never think to search.</p>
+    <ol style="margin:0 0 12px;padding-left:20px">
+      <li>OpenCorporates — global company officer search:
+Visit opencorporates.com → search by company or person name</li>
+      <li>India: eCourts (ecourts.gov.in) for case search by party name</li>
+      <li>India: MCA (mca.gov.in) for company/director registration data</li>
+      <li>India: Indian Kanoon (indiankanoon.org) for case law search</li>
+      <li>US: PACER (pacer.uscourts.gov) for federal court records</li>
+      <li>UK: Companies House (find-and-update.company-information.service.gov.uk)</li>
+      <li>SEC filings: sec.gov/cgi-bin/browse-edgar for US public company data</li>
+    </ol>
+    <ul style="margin:0 0 12px;padding-left:20px">
+      <li><a href="https://opencorporates.com" style="color:#7dd3fc">OpenCorporates</a></li>
+      <li><a href="https://indiankanoon.org" style="color:#7dd3fc">Indian Kanoon</a></li>
+    </ul>
+  </article>
+  <article style="margin:0 0 28px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.15rem;font-weight:600;margin:0 0 8px">Network Mapping &amp; Link Analysis</h3>
+    <p style="margin:0 0 12px">When you need to see how people, organizations, and infrastructure connect, visual link analysis tools make hidden patterns visible.</p>
+    <ol style="margin:0 0 12px;padding-left:20px">
+      <li>Maltego CE (free community edition):
+sudo apt install maltego -y
+Drag entities → Run Transforms → build connection graph</li>
+      <li>Maltego CE limits: 12 results per transform (enough for learning, not production)</li>
+      <li>Gephi (free graph visualization):
+sudo apt install gephi -y
+Import CSV data (Node1, Node2 pairs) → apply ForceAtlas2 layout → color by modularity</li>
+      <li>draw.io / diagrams.net — free diagramming for simpler investigations</li>
+    </ol>
+    <ul style="margin:0 0 12px;padding-left:20px">
+      <li><a href="https://www.maltego.com/maltego-community/" style="color:#7dd3fc">Maltego CE</a></li>
+      <li><a href="https://gephi.org" style="color:#7dd3fc">Gephi</a></li>
+    </ul>
+  </article>
+</section>
+<section id="cti" style="margin-bottom:40px">
+  <h2 style="font-size:1.6rem;font-weight:700;color:#ef4444;margin:0 0 6px">Cyber Threat Intelligence</h2>
+  <p style="color:#94a3b8;margin:0 0 20px">APT profiling, malware analysis, IOC collection, breach monitoring, and threat hunting</p>
+  <article style="margin:0 0 28px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.15rem;font-weight:600;margin:0 0 8px">Threat Actor Profiling</h3>
+    <p style="margin:0 0 12px">When you encounter an intrusion, OSINT helps you identify who's behind it, what their objectives are, and what they'll do next.</p>
+    <ol style="margin:0 0 12px;padding-left:20px">
+      <li>MITRE ATT&amp;CK — the knowledge base of adversary TTPs:
+Visit attack.mitre.org/groups/ → explore APT profiles</li>
+      <li>ATT&amp;CK Navigator — visual TTP mapping:
+Visit mitre-attack.github.io/attack-navigator/
+Create a layer → search a group → highlight their techniques → export</li>
+      <li>Cross-reference vendor reports:
+• Mandiant: mandiant.com/resources/apt-groups
+• CrowdStrike threat intelligence reports
+• Microsoft Threat Intelligence blog</li>
+      <li>IOC databases:
+• AlienVault OTX: otx.alienvault.com
+• ThreatFox: threatfox.abuse.ch
+• URLhaus: urlhaus.abuse.ch
+• MalwareBazaar: bazaar.abuse.ch</li>
+    </ol>
+    <ul style="margin:0 0 12px;padding-left:20px">
+      <li><a href="https://attack.mitre.org" style="color:#7dd3fc">MITRE ATT&amp;CK</a></li>
+      <li><a href="https://mitre-attack.github.io/attack-navigator/" style="color:#7dd3fc">ATT&amp;CK Navigator</a></li>
+      <li><a href="https://otx.alienvault.com" style="color:#7dd3fc">AlienVault OTX</a></li>
+      <li><a href="https://threatfox.abuse.ch" style="color:#7dd3fc">ThreatFox</a></li>
+      <li><a href="https://bazaar.abuse.ch" style="color:#7dd3fc">MalwareBazaar</a></li>
+    </ul>
+  </article>
+  <article style="margin:0 0 28px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.15rem;font-weight:600;margin:0 0 8px">Malware Investigation with OSINT</h3>
+    <p style="margin:0 0 12px">You don't need a malware lab to get intelligence about a suspicious file. Hash-based lookups give you instant analysis from sandboxes worldwide.</p>
+    <ol style="margin:0 0 12px;padding-left:20px">
+      <li>Calculate file hashes:
+md5sum suspicious_file
+sha256sum suspicious_file</li>
+      <li>VirusTotal — paste the hash, get 70+ AV results + behavioral analysis:
+Visit virustotal.com → Search tab → paste SHA256</li>
+      <li>Cross-reference:
+• Hybrid Analysis: hybrid-analysis.com → search hash
+• Any.Run: any.run → browse public sandbox results
+• MalwareBazaar: bazaar.abuse.ch → search hash</li>
+      <li>Extract IOCs from results: C2 domains, contacted IPs, dropped files, mutex names, registry changes</li>
+      <li>Format for SIEM ingestion:
+type,value,description
+domain,evil.example.com,C2 server
+ip,203.0.113.45,Secondary C2
+hash-sha256,abc123...,Payload dropper</li>
+    </ol>
+    <ul style="margin:0 0 12px;padding-left:20px">
+      <li><a href="https://www.virustotal.com" style="color:#7dd3fc">VirusTotal</a></li>
+      <li><a href="https://www.hybrid-analysis.com" style="color:#7dd3fc">Hybrid Analysis</a></li>
+      <li><a href="https://any.run" style="color:#7dd3fc">Any.Run</a></li>
+    </ul>
+  </article>
+  <article style="margin:0 0 28px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.15rem;font-weight:600;margin:0 0 8px">Breach Monitoring Setup</h3>
+    <p style="margin:0 0 12px">Proactive monitoring catches exposures before attackers exploit them.</p>
+    <ol style="margin:0 0 12px;padding-left:20px">
+      <li>HaveIBeenPwned domain search:
+haveibeenpwned.com/DomainSearch → enter your domain</li>
+      <li>Google Alerts:
+google.com/alerts → create alerts for your domain + breach-related keywords</li>
+      <li>IntelX: intelx.io → search your domain across paste sites and dark web</li>
+      <li>Hudson Rock: cavalier.hudsonrock.com → check for infostealer malware exposure</li>
+    </ol>
+    <p style="margin:0 0 12px;color:#7dd3fc"><strong>Tip:</strong> Set up ALL four monitoring sources. IntelX and Hudson Rock catch things HIBP misses — especially infostealer dumps, which are the #1 initial access vector in 2026.</p>
+    <ul style="margin:0 0 12px;padding-left:20px">
+      <li><a href="https://haveibeenpwned.com" style="color:#7dd3fc">HaveIBeenPwned</a></li>
+      <li><a href="https://www.google.com/alerts" style="color:#7dd3fc">Google Alerts</a></li>
+    </ul>
+  </article>
+</section>
+<section id="opsec" style="margin-bottom:40px">
+  <h2 style="font-size:1.6rem;font-weight:700;color:#22d3ee;margin:0 0 6px">OPSEC &amp; Reporting</h2>
+  <p style="color:#94a3b8;margin:0 0 20px">Protecting your identity, preserving evidence, writing actionable reports, and automating collection</p>
+  <article style="margin:0 0 28px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.15rem;font-weight:600;margin:0 0 8px">Investigator OPSEC Self-Audit</h3>
+    <p style="margin:0 0 12px">Before investigating anyone else, make sure your own setup doesn't leak your real identity.</p>
+    <ol style="margin:0 0 12px;padding-left:20px">
+      <li>Browser fingerprint check:
+Visit amiunique.org/fingerprint
+Visit browserleaks.com</li>
+      <li>DNS leak test:
+Visit dnsleaktest.com — run extended test with and without VPN/Tor</li>
+      <li>WebRTC leak test:
+Visit browserleaks.com/webrtc — WebRTC can leak your real IP even behind a VPN</li>
+      <li>Check YOUR file metadata:
+exiftool test_document.docx
+exiftool test_photo.jpg
+Your name, device, and GPS may be embedded!</li>
+      <li>Scrub metadata before sharing anything:
+exiftool -all= image.jpg
+sudo apt install mat2 -y
+mat2 document.docx</li>
+      <li>Audit sock puppet accounts: any cross-links to your real identity? Same phone? Same email? Same password? Same profile photo?</li>
+    </ol>
+    <p style="margin:0 0 12px;color:#7dd3fc"><strong>Tip:</strong> The #1 OPSEC failure is cross-contamination between personal and investigation accounts. Use separate VMs, browsers, and credentials for EVERY investigation.</p>
+    <ul style="margin:0 0 12px;padding-left:20px">
+      <li><a href="https://amiunique.org" style="color:#7dd3fc">Am I Unique</a></li>
+      <li><a href="https://browserleaks.com" style="color:#7dd3fc">BrowserLeaks</a></li>
+      <li><a href="https://dnsleaktest.com" style="color:#7dd3fc">DNS Leak Test</a></li>
+      <li><a href="https://0xacab.org/jvoisin/mat2" style="color:#7dd3fc">mat2</a></li>
+    </ul>
+  </article>
+  <article style="margin:0 0 28px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.15rem;font-weight:600;margin:0 0 8px">Evidence Preservation</h3>
+    <ol style="margin:0 0 12px;padding-left:20px">
+      <li>Hunchly (paid, ~$130/yr):
+Visit hunchly.com — Chrome extension that auto-captures every page with timestamps, URLs, full page snapshots</li>
+      <li>SingleFile (free alternative):
+Firefox/Chrome extension — saves complete web pages as single .html files</li>
+      <li>Always screenshot with URL bar visible + timestamp</li>
+      <li>Archive.today: submit URLs to archive.ph for independent preservation</li>
+      <li>For legal proceedings: hash your evidence files (sha256sum) and document chain of custody</li>
+    </ol>
+    <ul style="margin:0 0 12px;padding-left:20px">
+      <li><a href="https://www.hunchly.com" style="color:#7dd3fc">Hunchly</a></li>
+      <li><a href="https://github.com/gildas-lormeau/SingleFile" style="color:#7dd3fc">SingleFile</a></li>
+      <li><a href="https://archive.ph" style="color:#7dd3fc">Archive.today</a></li>
+    </ul>
+  </article>
+  <article style="margin:0 0 28px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.15rem;font-weight:600;margin:0 0 8px">Writing OSINT Reports</h3>
+    <p style="margin:0 0 12px">Your investigation is only as good as your report. Use the Admiralty/NATO confidence system to rate every finding.</p>
+    <ol style="margin:0 0 12px;padding-left:20px">
+      <li>Report structure:
+1. Executive Summary — 1 paragraph, key finding + significance
+2. Scope — what, when, authorization
+3. Methodology — tools, queries, data sources
+4. Findings — each with source, date, confidence level, evidence
+5. Attribution — who, confidence, evidence chain
+6. Recommendations — actionable next steps
+7. Appendices — raw data, IOC lists, tool output</li>
+    </ol>
+    <table style="width:100%;border-collapse:collapse;margin:0 0 12px;font-size:0.9rem">
+      <thead><tr>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">Confidence Level</th>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">Meaning</th>
+        <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #334155">When to Use</th>
+      </tr></thead>
+      <tbody>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Confirmed</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Multiple independent sources agree</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">2+ tools/sources corroborate</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Probable</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Strong evidence from 1–2 sources</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Single reliable source</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Possible</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Some evidence but incomplete</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Indirect indicators only</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Doubtful</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Weak or contradictory evidence</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Conflicting information</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Improbable</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Evidence contradicts the claim</td>
+        <td style="padding:6px 10px;border-bottom:1px solid #1e293b">Likely a false positive</td>
+      </tr>
+      </tbody>
+    </table>
+  </article>
+  <article style="margin:0 0 28px;padding-left:14px;border-left:2px solid #1e293b">
+    <h3 style="font-size:1.15rem;font-weight:600;margin:0 0 8px">Automating OSINT Collection</h3>
+    <p style="margin:0 0 12px">Once you understand manual techniques, automation lets you scale investigations and monitor continuously.</p>
+    <ol style="margin:0 0 12px;padding-left:20px">
+      <li>SpiderFoot — automated OSINT framework, 200+ data sources:
+pip3 install spiderfoot
+spiderfoot -l 127.0.0.1:5001
+Open browser → create scan → enter target → review results</li>
+      <li>Recon-ng — modular framework (built into Kali):
+recon-ng
+marketplace install all
+workspaces create investigation1
+db insert domains example.com
+modules load recon/domains-hosts/hackertarget
+run
+show hosts</li>
+      <li>Custom Python — combine tools programmatically:
+import subprocess
+target = "example.com"
+for t in ["A","MX","TXT","NS"]:
+    r = subprocess.run(["dig",target,t,"+short"], capture_output=True, text=True)
+    print(f"{t}: {r.stdout.strip()}")</li>
+    </ol>
+    <ul style="margin:0 0 12px;padding-left:20px">
+      <li><a href="https://github.com/smicallef/spiderfoot" style="color:#7dd3fc">SpiderFoot</a></li>
+      <li><a href="https://github.com/lanmaster53/recon-ng" style="color:#7dd3fc">Recon-ng</a></li>
+    </ul>
+  </article>
+</section>
+</div></div>
 </main>
     <script src="footer.js" defer></script>
   </body>
