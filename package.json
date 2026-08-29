@@ -5,7 +5,9 @@
   "description": "Static site for sarathg.me — Tailwind CSS build (replaces the cdn.tailwindcss.com script tag).",
   "scripts": {
     "build:css": "tailwindcss -i ./src/tailwind.css -o ./assets/tailwind.css --minify",
-    "watch:css": "tailwindcss -i ./src/tailwind.css -o ./assets/tailwind.css --watch"
+    "watch:css": "tailwindcss -i ./src/tailwind.css -o ./assets/tailwind.css --watch",
+    "build:blog": "node blog/build-index.mjs",
+    "check:blog": "node blog/build-index.mjs --check"
   },
   "devDependencies": {
     "tailwindcss": "3.4.17"

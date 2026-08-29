@@ -61,6 +61,43 @@
     <priority>0.9</priority>
   </url>
 
+  <!-- ── BLOG ── -->
+  <url>
+    <loc>https://sarathg.me/blog/</loc>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- ── BLOG POSTS ── -->
+  <url>
+    <loc>https://sarathg.me/blog/zero-background-beginner.html</loc>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://sarathg.me/blog/it-to-cybersecurity.html</loc>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://sarathg.me/blog/soc-grc-to-offensive.html</loc>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://sarathg.me/blog/certified-not-capable.html</loc>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
   <!-- ── TOOLS / LAB PAGES ── -->
   <url>
     <loc>https://sarathg.me/start.html</loc>

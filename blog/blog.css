@@ -1,0 +1,367 @@
+/* ═══════════════════════════════════════════════════════════════
+   sarathg.me/blog/ — shared stylesheet for the index and every post.
+
+   One file rather than a per-page <style> block, because unlike the
+   one-off lab pages every page in this section must look identical and
+   the set grows. Adding a post means adding an HTML file, not a theme.
+
+   THEME. Same contract as index.html: dark is :root, light is the
+   html.light override, and navbar.js owns the switch (it toggles
+   .light on <html> and stores 'theme' in localStorage). Token names
+   are deliberately identical to index.html's so navbar.js and
+   footer.js — which read --t-primary, --t-secondary, --red, --accent,
+   --bg-card, --b-subtle and the --font-* family off :root — render
+   here exactly as they do on the homepage.
+═══════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Brand */
+  --red:              #ef4444;
+  --red-dark:         #dc2626;
+  --accent:           #ef4444;   /* footer.js reads this for its CTA + link hovers */
+
+  /* Page / section backgrounds */
+  --bg-page:          #050505;
+  --bg-section:       #0a0a0a;
+  --bg-card:          rgba(255,255,255,0.035);
+  --bg-card-solid:    #111111;
+
+  /* Text */
+  --t-primary:        rgba(255,255,255,0.92);
+  --t-secondary:      rgba(255,255,255,0.65);
+  --t-muted:          rgba(255,255,255,0.44);
+  --t-faint:          rgba(255,255,255,0.22);
+  /* Dates, read times, breadcrumbs and list numbers. These are small
+     (0.7-0.75rem), so WCAG counts them as normal text and they need 4.5:1
+     -- --t-muted only reaches 4.30:1 here, so the section carries its own
+     meta tone rather than inheriting one that fails. 5.67:1 on --bg-page. */
+  --t-meta:           rgba(255,255,255,0.52);
+  /* Long-form prose sits a step below --t-primary: 0.92 white is right for a
+     headline and slightly harsh held for 800 words. 12:1 on --bg-page. */
+  --t-prose:          rgba(255,255,255,0.80);
+
+  /* Borders */
+  --b-subtle:         rgba(255,255,255,0.06);
+  --b-card:           rgba(255,255,255,0.09);
+  --b-medium:         rgba(255,255,255,0.15);
+
+  /* Inline links in prose. 5.6:1 on --bg-page. */
+  --link:             #ef4444;
+
+  /* Faces — self-hosted, see assets/fonts/fonts.css. Declared as --font-*
+     so the injected chrome picks up the site's real faces instead of
+     falling back to its hardcoded Space Grotesk default. */
+  --font-display:     'Outfit', system-ui, sans-serif;
+  --font-sans:        'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-body:        'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono:        'JetBrains Mono', ui-monospace, monospace;
+
+  --measure:          34rem;   /* ~68 characters at the body size below */
+  --transition:       0.3s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* ── LIGHT THEME ── */
+html.light {
+  --bg-page:          #f2f0ec;
+  --bg-section:       #e8e5df;
+  --bg-card:          rgba(255,255,255,0.90);
+  --bg-card-solid:    #ffffff;
+
+  --t-primary:        #1a1a1a;
+  --t-secondary:      rgba(0,0,0,0.62);
+  --t-muted:          rgba(0,0,0,0.44);
+  --t-faint:          rgba(0,0,0,0.24);
+  /* 5.13:1 on the paper ground; --t-muted is only 3.18:1 there. */
+  --t-meta:           rgba(0,0,0,0.58);
+  --t-prose:          #2a2a2a;
+
+  --b-subtle:         rgba(0,0,0,0.07);
+  --b-card:           rgba(0,0,0,0.10);
+  --b-medium:         rgba(0,0,0,0.16);
+
+  /* #ef4444 is only 3.1:1 on the paper ground — below AA for body text.
+     This is the same deepened red index.html uses for light-theme text. */
+  --link:             #b91c1c;
+  --accent:           #dc2626;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 88px;   /* fixed navbar is 64px */
+}
+
+body {
+  padding-top: 64px;
+  background: var(--bg-page);
+  color: var(--t-prose);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+  transition: background 0.4s ease, color 0.4s ease;
+}
+
+::selection { background: var(--red); color: #fff; }
+
+:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SHARED CHROME — breadcrumb, eyebrow, wrapper
+═══════════════════════════════════════════════════════════════ */
+
+.wrap {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+.wrap-wide {
+  max-width: 68rem;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  color: var(--t-meta);
+  margin-bottom: 2rem;
+}
+.breadcrumb a { color: var(--t-meta); text-decoration: none; transition: color var(--transition); }
+.breadcrumb a:hover { color: var(--link); }
+.breadcrumb span[aria-current] { color: var(--t-secondary); }
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--link);
+  margin-bottom: 1.25rem;
+}
+.eyebrow::before {
+  content: '';
+  width: 22px;
+  height: 1px;
+  background: var(--link);
+  opacity: 0.6;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   POST PAGE
+═══════════════════════════════════════════════════════════════ */
+
+.post-header {
+  padding: 3.5rem 0 0;
+  border-bottom: 1px solid var(--b-subtle);
+  margin-bottom: 3rem;
+}
+.post-header .wrap { padding-bottom: 2.5rem; }
+
+.post-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.9rem, 5vw, 2.9rem);
+  line-height: 1.14;
+  letter-spacing: -0.025em;
+  color: var(--t-primary);
+  margin-bottom: 1.25rem;
+  text-wrap: balance;
+}
+
+.post-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--t-meta);
+}
+.post-meta .sep { opacity: 0.65; }
+
+/* ── Prose ─────────────────────────────────────────────────────
+   The markdown body renders into .prose. Every rule below is
+   presentation only — the source text is unchanged.             */
+
+.prose > * + * { margin-top: 1.35rem; }
+
+.prose h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.35rem, 3vw, 1.7rem);
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  color: var(--t-primary);
+  margin-top: 3rem;
+  text-wrap: balance;
+}
+.prose h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.15rem;
+  line-height: 1.35;
+  color: var(--t-primary);
+  margin-top: 2.25rem;
+}
+
+.prose p { color: var(--t-prose); }
+
+.prose strong { color: var(--t-primary); font-weight: 650; }
+
+.prose a {
+  color: var(--link);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  text-decoration-color: color-mix(in srgb, var(--link) 45%, transparent);
+  transition: text-decoration-color var(--transition), color var(--transition);
+}
+.prose a:hover {
+  text-decoration-color: var(--link);
+}
+/* No color-mix in older engines — the underline just renders solid. */
+
+.prose ul, .prose ol { padding-left: 1.35rem; }
+.prose ul { list-style: disc; }
+.prose ol { list-style: decimal; }
+.prose li { color: var(--t-prose); margin-top: 0.7rem; }
+.prose li::marker { color: var(--t-faint); }
+.prose ol li::marker { color: var(--t-meta); font-family: var(--font-mono); font-size: 0.9em; }
+
+/* ── Post footer nav ── */
+.post-nav {
+  margin-top: 4rem;
+  padding: 2rem 0 4.5rem;
+  border-top: 1px solid var(--b-subtle);
+}
+.post-nav a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--t-secondary);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+.post-nav a:hover { color: var(--link); }
+.post-nav svg { width: 14px; height: 14px; }
+
+/* ═══════════════════════════════════════════════════════════════
+   INDEX PAGE
+═══════════════════════════════════════════════════════════════ */
+
+.index-header {
+  padding: 4rem 0 3rem;
+  border-bottom: 1px solid var(--b-subtle);
+  margin-bottom: 3rem;
+}
+.index-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.1rem, 5.5vw, 3.2rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--t-primary);
+  margin-bottom: 1rem;
+}
+.index-lede {
+  color: var(--t-secondary);
+  font-size: 1.05rem;
+  max-width: 36rem;
+}
+
+.post-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 5rem;
+  max-width: 46rem;
+}
+.post-list li + li { margin-top: 0.75rem; }
+
+.post-card {
+  display: block;
+  padding: 1.75rem;
+  border: 1px solid var(--b-card);
+  border-radius: 14px;
+  background: var(--bg-card);
+  text-decoration: none;
+  position: relative;
+  transition: border-color var(--transition), background var(--transition), transform var(--transition);
+}
+.post-card:hover {
+  border-color: var(--b-medium);
+  transform: translateY(-2px);
+}
+html.light .post-card:hover { box-shadow: 0 6px 22px rgba(0,0,0,0.07); }
+
+.post-card-meta {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  color: var(--t-meta);
+  margin-bottom: 0.65rem;
+}
+.post-card-meta .sep { opacity: 0.65; }
+
+.post-card-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.2rem;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--t-primary);
+  margin-bottom: 0.6rem;
+  transition: color var(--transition);
+}
+.post-card:hover .post-card-title { color: var(--link); }
+
+.post-card-desc {
+  color: var(--t-secondary);
+  font-size: 0.94rem;
+  line-height: 1.65;
+}
+
+.post-card-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--link);
+}
+.post-card-more svg { width: 12px; height: 12px; transition: transform var(--transition); }
+.post-card:hover .post-card-more svg { transform: translateX(3px); }
+
+@media (max-width: 640px) {
+  body { font-size: 1rem; }
+  .post-header { padding-top: 2.5rem; }
+  .index-header { padding: 2.5rem 0 2rem; }
+  .post-card { padding: 1.35rem; }
+}

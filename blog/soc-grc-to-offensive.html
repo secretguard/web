@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ML4GP9590F"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-ML4GP9590F');
+</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Moving From SOC or GRC Into Offensive Security: A Practical Roadmap | Sarath G</title>
+  <meta name="description" content="A concrete, mostly free roadmap for SOC analysts and GRC professionals moving into penetration testing or red team work, including what actually transfers and what to build from scratch." />
+  <meta name="author" content="Sarath G" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://sarathg.me/blog/soc-grc-to-offensive.html" />
+
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Moving From SOC or GRC Into Offensive Security: A Practical Roadmap" />
+  <meta property="og:description" content="A concrete, mostly free roadmap for SOC analysts and GRC professionals moving into penetration testing or red team work, including what actually transfers and what to build from scratch." />
+  <meta property="og:url" content="https://sarathg.me/blog/soc-grc-to-offensive.html" />
+  <meta property="og:image" content="https://sarathg.me/assets/og-image.jpg" />
+  <meta property="og:site_name" content="Sarath G Portfolio" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Moving From SOC or GRC Into Offensive Security: A Practical Roadmap" />
+  <meta name="twitter:description" content="A concrete, mostly free roadmap for SOC analysts and GRC professionals moving into penetration testing or red team work, including what actually transfers and what to build from scratch." />
+  <meta name="twitter:image" content="https://sarathg.me/assets/og-image.jpg" />
+
+  <!-- Theme resolved before first paint so there is no flash of the wrong one.
+       navbar.js owns the switch (toggles html.light, stores 'theme' in
+       localStorage). Site default is dark when no preference is stored. -->
+  <script>
+  (function(){try{
+    if (localStorage.getItem('theme') === 'light') document.documentElement.classList.add('light');
+  }catch(e){}})();
+  </script>
+
+  <link rel="icon" type="image/x-icon" href="../favicon.ico" />
+  <link rel="stylesheet" href="../assets/fonts/fonts.css" />
+  <link rel="stylesheet" href="blog.css" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BlogPosting",
+        "headline": "Moving From SOC or GRC Into Offensive Security: A Practical Roadmap",
+        "description": "A concrete, mostly free roadmap for SOC analysts and GRC professionals moving into penetration testing or red team work, including what actually transfers and what to build from scratch.",
+        "author": {"@id": "https://sarathg.me/#sarath"},
+        "publisher": {"@id": "https://sarathg.me/#sarath"},
+        "url": "https://sarathg.me/blog/soc-grc-to-offensive.html",
+        "mainEntityOfPage": "https://sarathg.me/blog/soc-grc-to-offensive.html",
+        "image": "https://sarathg.me/assets/og-image.jpg",
+        "datePublished": "2026-08-30",
+        "dateModified": "2026-08-30",
+        "wordCount": 757,
+        "isPartOf": {"@id": "https://sarathg.me/blog/#blog"}
+      },
+      {
+        "@type": "Person",
+        "@id": "https://sarathg.me/#sarath",
+        "name": "Sarath G",
+        "jobTitle": "Application Security Consultant & International Cybersecurity Trainer",
+        "url": "https://sarathg.me",
+        "sameAs": [
+          "https://www.linkedin.com/in/sarathcybersec/",
+          "https://github.com/secretguard",
+          "https://sarathg.medium.com/"
+        ]
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {"@type":"ListItem","position":1,"name":"Home","item":"https://sarathg.me/"},
+          {"@type":"ListItem","position":2,"name":"Blog","item":"https://sarathg.me/blog/"},
+          {"@type":"ListItem","position":3,"name":"Moving From SOC or GRC Into Offensive Security: A Practical Roadmap","item":"https://sarathg.me/blog/soc-grc-to-offensive.html"}
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <header class="post-header">
+    <div class="wrap">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/">Home</a>
+        <span aria-hidden="true">/</span>
+        <a href="/blog/">Blog</a>
+      </nav>
+      <h1 class="post-title">Moving from SOC or GRC into offensive security: a practical roadmap</h1>
+      <div class="post-meta">
+        <time datetime="2026-08-30">30 August 2026</time>
+        <span class="sep" aria-hidden="true">·</span>
+        <span>4 min read</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <article class="prose">
+
+      <p>If you work in a Security Operations Center (SOC) or in Governance, Risk and Compliance (GRC), you're not starting from zero. But the specific thing that gets you hired for offensive work, penetration testing, red team, VAPT (Vulnerability Assessment and Penetration Testing), is not the thing your current role has been building. Here's what actually transfers, what doesn't, and a concrete plan to close the gap.</p>
+
+      <h2>What genuinely carries over</h2>
+
+      <p>From SOC work: you already understand what an attack looks like from the defending side, which log sources catch what, which techniques trigger which alerts. This is a real advantage. Map what you already know against the <a href="https://attack.mitre.org/" target="_blank" rel="noopener">MITRE ATT&amp;CK framework</a>, it's free and it's the shared vocabulary between blue and red teams. Going through it deliberately, technique by technique, and noting which ones you've seen fire in real alerts is a genuinely useful exercise, not busywork.</p>
+
+      <p>From GRC work: you're usually already comfortable writing clearly under pressure and communicating risk to a business audience. That is a real head start on report writing, which is a bigger part of pentest work than people expect, and something plenty of purely technical learners struggle with.</p>
+
+      <h2>What doesn't transfer, and has to be built</h2>
+
+      <p>The offensive method itself. Recognizing a technique in a log is not the same as independently finding a way in against a target that gives you no hints. This has to be built through direct practice, not inferred from adjacent experience.</p>
+
+      <p><strong>If you're coming from SOC</strong>, your main gap is usually offensive tooling and hands-on technique. Start with:</p>
+
+      <ul>
+        <li><strong>TryHackHouse's or TryHackMe's "SOC Level" or blue-to-red transition content</strong> (TryHackMe specifically has paths aimed at exactly this move), which frames offensive technique in terms you already have context for.</li>
+        <li><strong>HackTheBox's free retired machines</strong>, worked blind, to build the live decision-making SOC work doesn't require.</li>
+        <li><strong>eJPT (eLearnSecurity Junior Penetration Tester)</strong> as a reasonably priced, practically-oriented first offensive certification if you want a structured curriculum, it's less theory-heavy than some alternatives.</li>
+      </ul>
+
+      <p><strong>If you're coming from GRC</strong>, the gap is larger and more foundational. Before offensive technique, you need the hands-on technical base GRC roles don't typically require day to day:</p>
+
+      <ul>
+        <li><strong>Networking and Linux fundamentals</strong> if these are genuinely shaky, TryHackMe's "Pre Security" path and OverTheWire's Bandit wargame (both free or nearly free) are the standard, well-tested starting points.</li>
+        <li><strong>Then the same live-target practice</strong> described above, once the fundamentals are solid enough that you're not fighting the basics and the target at the same time.</li>
+      </ul>
+
+      <h2>Turn your reporting skill into pentest-specific reporting practice</h2>
+
+      <p>This is the one place your existing skill set gives you a genuine shortcut, if you use it deliberately. Find a real, public penetration test report template, PTES (Penetration Testing Execution Standard) has a widely used structure, or look at published sample reports from firms like Offensive Security. Practice writing a full report against your own HackTheBox or lab attempts using that structure, not just notes for yourself, a report as if a client will read it. Most technical learners never practice this deliberately. You already have the underlying communication skill, you just need to aim it at the right format.</p>
+
+      <h2>A realistic sequence</h2>
+
+      <ol>
+        <li>Fill any genuine gaps in networking and Linux fundamentals (skip this step if you're already solid here, most SOC analysts are).</li>
+        <li>Work through MITRE ATT&amp;CK deliberately, connecting it to what you already recognize from the defensive side.</li>
+        <li>Start live, hint-free practice on retired HackTheBox machines or a free platform like <a href="https://sarathg.me/shopeasy.html">ShopEasy</a> (a lab I built and maintain, free either way), on a real time limit, writing up every attempt.</li>
+        <li>Practice writing a full report against your own attempts using a real report template, not just notes.</li>
+        <li>Only then look at a formal offensive certification, if you want one, so the certification confirms a skill you're already building rather than substituting for the practice.</li>
+      </ol>
+
+      <h2>If you've worked through this and you're still stuck</h2>
+
+      <p>Some people go through this exact sequence and the transition still doesn't click, usually because nobody is reviewing whether the specific plan fits what they actually bring in from SOC or GRC, versus what a generic beginner path assumes. That's the point where <a href="https://sarathg.me/coaching/">1:1 mentorship</a> tends to help, an honest read of what you already have, and a plan built from that rather than from scratch. The <a href="https://sarathg.me/coaching/">mentorship page</a> explains how that diagnosis works, and it costs nothing to find out if it's a fit.</p>
+
+    </article>
+
+    <nav class="post-nav">
+      <a href="/blog/">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        All posts
+      </a>
+    </nav>
+  </main>
+
+  <script src="../navbar.js" defer></script>
+  <script src="../footer.js" defer></script>
+</body>
+</html>

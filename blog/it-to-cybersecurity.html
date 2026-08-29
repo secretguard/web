@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ML4GP9590F"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-ML4GP9590F');
+</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>From IT Support to Cybersecurity: A Concrete Starting Plan | Sarath G</title>
+  <meta name="description" content="A practical, mostly free roadmap for moving from IT support, helpdesk, or development into cybersecurity, including exactly where to start and how to build a lab habit that actually sticks." />
+  <meta name="author" content="Sarath G" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://sarathg.me/blog/it-to-cybersecurity.html" />
+
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="From IT Support to Cybersecurity: A Concrete Starting Plan" />
+  <meta property="og:description" content="A practical, mostly free roadmap for moving from IT support, helpdesk, or development into cybersecurity, including exactly where to start and how to build a lab habit that actually sticks." />
+  <meta property="og:url" content="https://sarathg.me/blog/it-to-cybersecurity.html" />
+  <meta property="og:image" content="https://sarathg.me/assets/og-image.jpg" />
+  <meta property="og:site_name" content="Sarath G Portfolio" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="From IT Support to Cybersecurity: A Concrete Starting Plan" />
+  <meta name="twitter:description" content="A practical, mostly free roadmap for moving from IT support, helpdesk, or development into cybersecurity, including exactly where to start and how to build a lab habit that actually sticks." />
+  <meta name="twitter:image" content="https://sarathg.me/assets/og-image.jpg" />
+
+  <!-- Theme resolved before first paint so there is no flash of the wrong one.
+       navbar.js owns the switch (toggles html.light, stores 'theme' in
+       localStorage). Site default is dark when no preference is stored. -->
+  <script>
+  (function(){try{
+    if (localStorage.getItem('theme') === 'light') document.documentElement.classList.add('light');
+  }catch(e){}})();
+  </script>
+
+  <link rel="icon" type="image/x-icon" href="../favicon.ico" />
+  <link rel="stylesheet" href="../assets/fonts/fonts.css" />
+  <link rel="stylesheet" href="blog.css" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BlogPosting",
+        "headline": "From IT Support to Cybersecurity: A Concrete Starting Plan",
+        "description": "A practical, mostly free roadmap for moving from IT support, helpdesk, or development into cybersecurity, including exactly where to start and how to build a lab habit that actually sticks.",
+        "author": {"@id": "https://sarathg.me/#sarath"},
+        "publisher": {"@id": "https://sarathg.me/#sarath"},
+        "url": "https://sarathg.me/blog/it-to-cybersecurity.html",
+        "mainEntityOfPage": "https://sarathg.me/blog/it-to-cybersecurity.html",
+        "image": "https://sarathg.me/assets/og-image.jpg",
+        "datePublished": "2026-08-30",
+        "dateModified": "2026-08-30",
+        "wordCount": 671,
+        "isPartOf": {"@id": "https://sarathg.me/blog/#blog"}
+      },
+      {
+        "@type": "Person",
+        "@id": "https://sarathg.me/#sarath",
+        "name": "Sarath G",
+        "jobTitle": "Application Security Consultant & International Cybersecurity Trainer",
+        "url": "https://sarathg.me",
+        "sameAs": [
+          "https://www.linkedin.com/in/sarathcybersec/",
+          "https://github.com/secretguard",
+          "https://sarathg.medium.com/"
+        ]
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {"@type":"ListItem","position":1,"name":"Home","item":"https://sarathg.me/"},
+          {"@type":"ListItem","position":2,"name":"Blog","item":"https://sarathg.me/blog/"},
+          {"@type":"ListItem","position":3,"name":"From IT Support to Cybersecurity: A Concrete Starting Plan","item":"https://sarathg.me/blog/it-to-cybersecurity.html"}
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <header class="post-header">
+    <div class="wrap">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/">Home</a>
+        <span aria-hidden="true">/</span>
+        <a href="/blog/">Blog</a>
+      </nav>
+      <h1 class="post-title">From IT support to cybersecurity: a concrete starting plan</h1>
+      <div class="post-meta">
+        <time datetime="2026-08-30">30 August 2026</time>
+        <span class="sep" aria-hidden="true">·</span>
+        <span>4 min read</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <article class="prose">
+
+      <p>If you work in IT support, helpdesk, sysadmin work, or general development, you already understand how systems behave, how networks are put together, how software gets deployed and breaks. That's a real advantage, most beginner security material spends weeks building exactly that context, and you can skip past it. Here's a concrete plan for what to build next, and how to make it stick.</p>
+
+      <h2>Step 1: Security fundamentals, specifically</h2>
+
+      <p>Knowing how a network works is not the same as knowing how it's attacked. This layer has to be built deliberately.</p>
+
+      <p><strong>TryHackMe's "Pre Security" and "Complete Beginner" paths</strong> are free or very low cost, and structured specifically for this transition, they assume general IT knowledge and build security-specific concepts on top of it, which fits your starting point better than a path built for someone with zero technical background.</p>
+
+      <p>Work through this before touching offensive tooling. It's tempting to skip straight to "hacking" content, resist that, the fundamentals underneath it are what make the tooling make sense later instead of feeling like memorized commands.</p>
+
+      <h2>Step 2: Build a lab habit that survives past week one</h2>
+
+      <p>This is the more common failure point than knowledge gaps. People start strong, do a few guided labs, then the habit falls apart once the material stops being guided.</p>
+
+      <p>A structure that actually holds up:</p>
+
+      <ul>
+        <li><strong>Fix a specific day and time each week</strong>, not "whenever I have time". Treat it like a recurring meeting with yourself.</li>
+        <li><strong>Start with HackTheBox's "Starting Point" tier</strong>, free, built as a genuinely guided on-ramp before the harder unguided machines. Do these fully, including writing up what you did, before moving to retired machines without guidance.</li>
+        <li><strong>Track it somewhere visible</strong>, a simple log of what you attempted and what happened, even a plain text file. The habit dies quietly when there's no record and no visible streak to protect.</li>
+      </ul>
+
+      <h2>Step 3: Notes that would survive someone else reading them</h2>
+
+      <p>Not notes for remembering commands. Notes structured well enough that another engineer, or a future interviewer, could follow your reasoning: what the target was, what you tried, what worked, why. Publish some of these publicly if you're comfortable, a personal blog or GitHub is enough, this is also, separately, how you start building a visible track record before you have a job title that does it for you.</p>
+
+      <h2>Step 4: The real milestone to aim for</h2>
+
+      <p>Not a certificate. Being able to take a target you've genuinely never seen before, work it within a reasonable time, and explain clearly afterward why what you found matters and how you got there, without a guide open in another tab.</p>
+
+      <p>If you want a target built specifically to give no obvious hint of what's wrong, once the basics above feel solid, I built and maintain <a href="https://sarathg.me/shopeasy.html">ShopEasy</a>, a free vulnerable API lab, and my broader public labs are at <a href="https://labs.sarathg.me" target="_blank" rel="noopener">labs.sarathg.me</a>. Both are free whether or not you ever talk to me.</p>
+
+      <h2>Why certifications alone don't get you past this</h2>
+
+      <p>A certification validates that you covered the material in a controlled format. It doesn't validate that you can apply it to something you haven't seen before, because that isn't what a certification exam is built to test. This is why "I got certified and still can't get past the technical interview" is such a common experience specifically for people coming from IT backgrounds, the certification did its job, it just was never the whole job.</p>
+
+      <h2>If you've done this and you're still stuck</h2>
+
+      <p>Some people build the lab habit, do the fundamentals, and still hit a wall they can't diagnose on their own, usually because nobody is reviewing the actual approach, not just whether the exercise got completed. That's the specific point where <a href="https://sarathg.me/coaching/">1:1 mentorship</a> tends to help, not as a substitute for the steps above, but for when the practice alone isn't surfacing what's actually going wrong. The <a href="https://sarathg.me/coaching/">mentorship page</a> has the details, and the first conversation costs nothing.</p>
+
+    </article>
+
+    <nav class="post-nav">
+      <a href="/blog/">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        All posts
+      </a>
+    </nav>
+  </main>
+
+  <script src="../navbar.js" defer></script>
+  <script src="../footer.js" defer></script>
+</body>
+</html>

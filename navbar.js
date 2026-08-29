@@ -483,6 +483,8 @@
           </div>
         </div>
 
+        <a href="/blog/" class="sg-link" data-sg-nav="blog">Blog</a>
+
         <a href="/start.html" class="sg-link" data-sg-nav="guide">Cybersec Guide</a>
 
         <a href="/gethired.html" class="sg-link" data-sg-nav="gethired">GetHired</a>
@@ -600,6 +602,7 @@
           </a>
         </div>
 
+        <a href="/blog/" class="sg-mobile-link" onclick="SG.toggleMobile()" data-sg-nav="blog">Blog</a>
         <a href="/start.html" class="sg-mobile-link" onclick="SG.toggleMobile()" data-sg-nav="guide">Cybersec Guide</a>
         <a href="/gethired.html" class="sg-mobile-link" onclick="SG.toggleMobile()" data-sg-nav="gethired">GetHired</a>
         <a href="/coaching/" class="sg-mobile-link" onclick="SG.toggleMobile()" data-sg-nav="coaching" style="color:#4fffb0;">1:1 Mentorship</a>
@@ -643,6 +646,9 @@
     const path = window.location.pathname.replace(/\/$/, '') || '/';
     const isServices = path.startsWith('/services');
     const isGuide    = path === '/start' || path === '/start.html';
+    // Every post lives at /blog/<slug>.html, so the section link stays lit
+    // on posts as well as on the index — same idea as isServices above.
+    const isBlog     = path === '/blog' || path.startsWith('/blog/');
     const isOsint    = path === '/osint' || path === '/osint.html';
     const isLabs     = isOsint
                     || path === '/shopeasy' || path === '/shopeasy.html'
@@ -661,6 +667,9 @@
     }
     if (isGuide) {
       document.querySelectorAll('[data-sg-nav="guide"]').forEach(el => el.classList.add('sg-active'));
+    }
+    if (isBlog) {
+      document.querySelectorAll('[data-sg-nav="blog"]').forEach(el => el.classList.add('sg-active'));
     }
     if (isLabs) {
       const btn = document.querySelector('#sg-labs-dd .sg-dropdown-btn');
