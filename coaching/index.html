@@ -915,5 +915,64 @@
 })();
 </script>
 
+<script>
+/* GA4 conversion tracking for the two primary CTAs.
+
+   Uses the gtag.js already loaded in <head> (G-ML4GP9590F). gtag() is defined
+   inline up there and pushes into dataLayer, so it exists before the async
+   library finishes loading and early clicks queue rather than being dropped.
+
+   WHY THESE EXIST ALONGSIDE ENHANCED MEASUREMENT. GA4's enhanced measurement
+   almost certainly already records these clicks as its automatic `click` event
+   with outbound=true. That is not directly usable as a conversion: `click` is
+   one shared event name across every outbound link on the page (footer socials,
+   labs, GitHub), so isolating a CTA means filtering on link_url; link_url is
+   collected but does not appear in standard reports until it is registered as a
+   custom dimension, and registration is not retroactive; and marking it as a key
+   event needs a derived Create-event rule anyway. Enhanced measurement also
+   cannot say WHICH of the four "Book a call" placements was clicked. These named
+   events can be marked as key events directly and carry that placement.
+
+   Navigation is never blocked: no preventDefault, and every CTA is
+   target="_blank", so the page stays alive to flush the request.
+
+   Listener is on the capture phase so it still runs if another handler
+   stops propagation. */
+(function () {
+  var HOSTS = [
+    { domain: 'meet.sarathg.me', event: 'book_call_click' },
+    { domain: 'forms.gle',       event: 'questionnaire_click' }
+  ];
+
+  function eventFor(link) {
+    var host;
+    try { host = new URL(link.href, location.href).hostname.toLowerCase(); }
+    catch (e) { return null; }
+    for (var i = 0; i < HOSTS.length; i++) {
+      var d = HOSTS[i].domain;
+      if (host === d || host.slice(-(d.length + 1)) === '.' + d) return HOSTS[i].event;
+    }
+    return null;
+  }
+
+  document.addEventListener('click', function (e) {
+    var t = e.target;
+    var a = (t && t.closest) ? t.closest('a[href]') : null;
+    if (!a) return;
+
+    var name = eventFor(a);
+    if (!name) return;
+    if (typeof window.gtag !== 'function') return;
+
+    /* data-cta is already on every CTA ("hero-call", "final-form", ...);
+       the suffix is the destination, the prefix is the placement. */
+    var tag = a.getAttribute('data-cta') || '';
+    gtag('event', name, {
+      cta_location: tag.replace(/-(call|form|whatsapp)$/, '') || 'unknown',
+      link_url: a.href
+    });
+  }, true);
+})();
+</script>
 </body>
 </html>
