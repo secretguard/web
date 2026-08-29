@@ -485,12 +485,14 @@
 
         <a href="/start.html" class="sg-link" data-sg-nav="guide">Cybersec Guide</a>
 
-        <a href="/gethired.html" class="sg-link" data-sg-nav="gethired" style="color:#4fffb0;">GetHired</a>
+        <a href="/gethired.html" class="sg-link" data-sg-nav="gethired">GetHired</a>
 
         <button onclick="SG.toggleMode()" class="sg-mode-btn"
           aria-label="Toggle dark/light mode" title="Toggle theme" id="sg-mode-btn">
           ☀
         </button>
+
+        <a href="/coaching/" class="sg-link" data-sg-nav="coaching" style="color:#4fffb0;">1:1 Mentorship</a>
 
         <a href="/#contact" class="sg-cta">Contact Me</a>
       </div>
@@ -599,7 +601,8 @@
         </div>
 
         <a href="/start.html" class="sg-mobile-link" onclick="SG.toggleMobile()" data-sg-nav="guide">Cybersec Guide</a>
-        <a href="/gethired.html" class="sg-mobile-link" onclick="SG.toggleMobile()" data-sg-nav="gethired" style="color:#4fffb0;">GetHired</a>
+        <a href="/gethired.html" class="sg-mobile-link" onclick="SG.toggleMobile()" data-sg-nav="gethired">GetHired</a>
+        <a href="/coaching/" class="sg-mobile-link" onclick="SG.toggleMobile()" data-sg-nav="coaching" style="color:#4fffb0;">1:1 Mentorship</a>
         <a href="/#contact" class="sg-mobile-cta" onclick="SG.toggleMobile()">Contact Me</a>
       </div>
     </div>

@@ -99,7 +99,7 @@
     + '<div class="sgf-inner">'
     + '  <div class="sgf-col">'
     + '    <div class="sgf-brand">Sarath G</div>'
-    + '    <p class="sgf-tagline">Penetration testing, application security, and corporate training — built from 8+ years in the field.</p>'
+    + '    <p class="sgf-tagline">Penetration testing, application security, and corporate training — built from 9+ years in the field.</p>'
     + '    <div class="sgf-socials">' + socialsHtml + '</div>'
     + '  </div>'
     + '  <div class="sgf-col">'
