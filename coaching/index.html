@@ -54,23 +54,45 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&display=swap">
 
-  <!-- The Offer node deliberately carries no `price`. Validators will warn; that is expected —
-       the position is that the plan determines the price and the plan follows the intake. -->
+  <!-- Typed Service + EducationalOccupationalProgram. Service alone cannot say that this
+       leads to an occupation; EducationalOccupationalProgram alone understates that it is a
+       commercial service, so the node carries both. Neither type produces a Google rich
+       result, so this markup is for entity understanding, not for a SERP feature.
+       The Offer carries no `price` on purpose: schema.org has no "quote on request" term,
+       and inventing a price or a priceRange would be false. The custom-quote nature is
+       stated in Offer.description instead, which is a valid inherited property. -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "Service",
+        "@type": ["Service", "EducationalOccupationalProgram"],
         "@id": "https://sarathg.me/coaching/#service",
         "name": "1-on-1 Cybersecurity Career Mentorship by Sarath G",
         "serviceType": "Penetration Testing / VAPT / Red Team Career Mentorship",
+        "programType": "1:1 mentorship",
+        "educationalProgramMode": "online",
+        "occupationalCategory": {
+          "@type": "CategoryCode",
+          "codeValue": "15-1212.00",
+          "name": "Information Security Analysts",
+          "inCodeSet": {
+            "@type": "CategoryCodeSet",
+            "name": "O*NET-SOC",
+            "url": "https://www.onetcenter.org/taxonomy.html"
+          }
+        },
         "description": "Individualized 1-on-1 mentorship for anyone moving into pentest, VAPT, and red team roles, from complete beginners with no technical background to working professionals already partway there. Structured intake and diagnosis before any curriculum decisions, live mentorship, accountability check-ins, and interview and portfolio preparation. There is no fixed syllabus, duration, or price. Each plan is built from the learner's intake.",
         "provider": {"@id": "https://sarathg.me/#sarath"},
         "areaServed": {"@type": "Country", "name": "India"},
         "audience": {"@type": "Audience", "audienceType": "Beginners, students, career changers and working professionals moving into penetration testing, VAPT, or red team roles"},
         "url": "https://sarathg.me/coaching/",
-        "offers": {"@type": "Offer", "availability": "https://schema.org/InStock", "url": "https://meet.sarathg.me/"}
+        "offers": {
+          "@type": "Offer",
+          "availability": "https://schema.org/InStock",
+          "url": "https://meet.sarathg.me/",
+          "description": "Individually quoted. The price is set after a written intake, so no fixed price or price range is published."
+        }
       },
       {
         "@type": "Person",
