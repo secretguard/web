@@ -15,29 +15,70 @@
     <meta name="description" content="A hands-on, reading-optimized guide to learning Splunk for security operations, with a clickable command reference. By Sarath G — sarathg.me" />
     <link rel="canonical" href="https://sarathg.me/soc_splunk.html" />
     <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
     {
-      "@context": "https://schema.org",
-      "@graph": [
+      "@type": "TechArticle",
+      "headline": "Splunk for SOC Analysts — 2026 Edition",
+      "description": "A hands-on, reading-optimized guide to learning Splunk for security operations, with a clickable command reference. By Sarath G — sarathg.me",
+      "image": "https://sarathg.me/assets/og-image.jpg",
+      "url": "https://sarathg.me/soc_splunk.html",
+      "mainEntityOfPage": "https://sarathg.me/soc_splunk.html",
+      "datePublished": "2026-06-25",
+      "dateModified": "2026-09-04",
+      "author": {
+        "@id": "https://sarathg.me/#sarath"
+      },
+      "publisher": {
+        "@id": "https://sarathg.me/#org"
+      }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://sarathg.me/#sarath",
+      "name": "Sarath G",
+      "jobTitle": "Application Security Consultant & International Cybersecurity Trainer",
+      "url": "https://sarathg.me/",
+      "image": "https://sarathg.me/assets/og-image.jpg",
+      "sameAs": [
+        "https://www.linkedin.com/in/sarathcybersec/",
+        "https://github.com/secretguard",
+        "https://sarathg.medium.com/",
+        "https://youtube.com/@i_sarathg",
+        "https://www.instagram.com/i.sarathg/"
+      ]
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://sarathg.me/#org",
+      "name": "Sarath G",
+      "url": "https://sarathg.me/",
+      "logo": "https://sarathg.me/assets/og-image.jpg",
+      "founder": {
+        "@id": "https://sarathg.me/#sarath"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
         {
-          "@type": "Article",
-          "headline": "Splunk for SOC Analysts — 2026 Edition | sarathg.me",
-          "description": "A hands-on, reading-optimized guide to learning Splunk for security operations, with a clickable command reference. By Sarath G — sarathg.me",
-          "author": {"@id": "https://sarathg.me/#sarath"},
-          "url": "https://sarathg.me/soc_splunk.html",
-          "mainEntityOfPage": "https://sarathg.me/soc_splunk.html",
-          "datePublished": "2026-06-25",
-          "dateModified": "2026-08-16"
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://sarathg.me/"
         },
         {
-          "@type": "BreadcrumbList",
-          "itemListElement": [
-            {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://sarathg.me/"},
-            {"@type": "ListItem", "position": 2, "name": "Splunk for SOC Analysts — 2026 Edition | sarathg.me", "item": "https://sarathg.me/soc_splunk.html"}
-          ]
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Splunk for SOC Analysts — 2026 Edition | sarathg.me",
+          "item": "https://sarathg.me/soc_splunk.html"
         }
       ]
     }
-    </script>
+  ]
+}
+  </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -569,7 +610,12 @@ td:first-child { font-weight: 600; color: var(--heading); }
 /* ---------- Responsive ---------- */
 
 @media (max-width: 900px) {
-  .app-shell { flex-direction: column; }
+  /* Stretch (not flex-start) so the column fills the viewport instead of
+     sizing to its widest child, which pushed the page sideways on phones. */
+  .app-shell { flex-direction: column; align-items: stretch; min-width: 0; }
+  .app-shell > .page { max-width: 100%; }
+  /* The meta row was nowrap, so its min-content set the whole column's width. */
+  .hero-meta { flex-wrap: wrap; }
   .siderail {
     position: sticky;
     top: 0;
@@ -1053,10 +1099,31 @@ body {
     </style>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  </head>
+  <style id="sg-theme">
+/* Second theme, driven by navbar.js toggling html.light. Absent class = dark, the site default. */
+html:not(.light) body{background:#0f1218 !important}
+html:not(.light) #root{filter:invert(1) hue-rotate(180deg)}
+html:not(.light) #root img, html:not(.light) #root video, html:not(.light) #root iframe, html:not(.light) #root canvas{filter:invert(1) hue-rotate(180deg)}
+html:not(.light) #root #coaching-cta-strip{
+  --sgc-accent:#0B6B4A; --sgc-accent-hi:#085239; --sgc-on-accent:#FFFFFF;
+  --sgc-panel:#F2FAF6; --sgc-border:#A8D8C1; --sgc-bar:#0B6B4A;
+  --sgc-ink:#101614; --sgc-ink-2:#41504A; --sgc-ink-3:#5C6B65;
+}
+</style>
+  <!-- Social sharing (added 2026-09-04) -->
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Splunk for SOC Analysts — 2026 Edition | sarathg.me" />
+  <meta property="og:description" content="A hands-on, reading-optimized guide to learning Splunk for security operations, with a clickable command reference. By Sarath G — sarathg.me" />
+  <meta property="og:url" content="https://sarathg.me/soc_splunk.html" />
+  <meta property="og:image" content="https://sarathg.me/assets/og-image.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Splunk for SOC Analysts — 2026 Edition | sarathg.me" />
+  <meta name="twitter:description" content="A hands-on, reading-optimized guide to learning Splunk for security operations, with a clickable command reference. By Sarath G — sarathg.me" />
+  <meta name="twitter:image" content="https://sarathg.me/assets/og-image.jpg" />
+</head>
   <body style="padding-top:64px">
     <script src="navbar.js" defer></script>
-<main>
+<main data-sg-strip-after="#setup" data-lead="Aiming for a SOC analyst role?" data-tail="I mentor people into SOC and offensive roles, 1:1. Free intake call first.">
     <div id="root"><div style="font-family:-apple-system,'Segoe UI',sans-serif;background:#0a0e14;color:#e2e8f0;padding:32px 20px;max-width:860px;margin:0 auto;line-height:1.6">
 <h1 style="font-size:2rem;font-weight:800;margin:0 0 12px">Learn Splunk for the SOC analyst job you actually want.</h1>
 <section id="setup" style="margin-bottom:40px">

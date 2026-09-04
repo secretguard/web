@@ -20,25 +20,66 @@
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "Article",
+      "@type": "TechArticle",
       "headline": "The DARE Framework — Sarath G",
       "description": "The DARE Framework — Deconstruct, Attack, Remediate, Exchange. A design constraint for cybersecurity training that produces real understanding.",
-      "author": {"@id": "https://sarathg.me/#sarath"},
+      "image": "https://sarathg.me/assets/og-image.jpg",
       "url": "https://sarathg.me/dare.html",
       "mainEntityOfPage": "https://sarathg.me/dare.html",
       "datePublished": "2026-06-09",
-      "dateModified": "2026-08-16"
+      "dateModified": "2026-09-04",
+      "author": {
+        "@id": "https://sarathg.me/#sarath"
+      },
+      "publisher": {
+        "@id": "https://sarathg.me/#org"
+      }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://sarathg.me/#sarath",
+      "name": "Sarath G",
+      "jobTitle": "Application Security Consultant & International Cybersecurity Trainer",
+      "url": "https://sarathg.me/",
+      "image": "https://sarathg.me/assets/og-image.jpg",
+      "sameAs": [
+        "https://www.linkedin.com/in/sarathcybersec/",
+        "https://github.com/secretguard",
+        "https://sarathg.medium.com/",
+        "https://youtube.com/@i_sarathg",
+        "https://www.instagram.com/i.sarathg/"
+      ]
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://sarathg.me/#org",
+      "name": "Sarath G",
+      "url": "https://sarathg.me/",
+      "logo": "https://sarathg.me/assets/og-image.jpg",
+      "founder": {
+        "@id": "https://sarathg.me/#sarath"
+      }
     },
     {
       "@type": "BreadcrumbList",
       "itemListElement": [
-        {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://sarathg.me/"},
-        {"@type": "ListItem", "position": 2, "name": "The DARE Framework — Sarath G", "item": "https://sarathg.me/dare.html"}
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://sarathg.me/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "The DARE Framework — Sarath G",
+          "item": "https://sarathg.me/dare.html"
+        }
       ]
     }
   ]
 }
-</script>
+  </script>
 <link rel="canonical" href="https://sarathg.me/dare.html">
 <meta property="og:title" content="The DARE Framework — Sarath G">
 <meta property="og:description" content="A design constraint for cybersecurity training. Four stages. One learner. The same environment. No stage skipped.">
@@ -950,6 +991,27 @@
     clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
   }
 </style>
+<style id="sg-theme">
+/* Second theme, driven by navbar.js toggling html.light. Absent class = dark, the site default. */
+html.light{
+  --bg:#f2f0ec; --bg2:#e8e5df; --bg3:#ffffff;
+  --border:rgba(0,0,0,.08); --border-h:rgba(0,0,0,.16);
+  --text:#1a1a1a; --muted:rgba(0,0,0,.6);
+  --accent:#0B6B4A; --accent-dim:rgba(11,107,74,.08);
+  --t1:#1a1a1a; --t2:rgba(0,0,0,.6); --t3:rgba(0,0,0,.38);
+  --d:#2f7fb8; --a:#c94444; --r:#2a8f5c; --e:#a8652a;
+  --d-bg:rgba(47,127,184,.08); --a-bg:rgba(201,68,68,.08); --r-bg:rgba(42,143,92,.08); --e-bg:rgba(168,101,42,.08);
+}
+html.light .btn-primary{color:#ffffff}
+html.light .btn-primary:hover{background:#0d7f58;box-shadow:0 8px 24px rgba(11,107,74,.2)}
+</style>
+  <!-- Social sharing (added 2026-09-04) -->
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="https://sarathg.me/assets/og-image.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="The DARE Framework — Sarath G" />
+  <meta name="twitter:description" content="The DARE Framework — Deconstruct, Attack, Remediate, Exchange. A design constraint for cybersecurity training that produces real understanding." />
+  <meta name="twitter:image" content="https://sarathg.me/assets/og-image.jpg" />
 </head>
 <body style="padding-top:64px">
 <script src="/navbar.js" defer></script>
@@ -981,6 +1043,7 @@
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
       Explore the Framework
     </a>
+    <a href="https://dare.sarathg.me/" class="btn btn-secondary">Worksheets &amp; planning tool ↗</a>
     <a href="https://sarathg.medium.com/why-most-cybersecurity-training-produces-people-who-can-pass-exams-and-fail-incidents-7ca2d3d75020" target="_blank" class="btn btn-secondary">Read the Article ↗</a>
   </div>
   <div class="scroll-hint"><div class="scroll-arrow"></div></div>
@@ -993,6 +1056,7 @@
   <div class="belief rv">
     <p>A learner who can describe SQL injection has not understood SQL injection. A learner who has executed it, watched it fail against a patched version, and then defended against it — that learner understands it. Most training stops after the first step. DARE does not stop until all four are complete.</p>
   </div>
+  <div id="coaching-cta-strip" data-lead="Designing training with DARE?" data-tail="I mentor trainers and learners through it, 1:1. Free intake call first." style="min-height:64px;margin:28px 0 36px"></div>
 </div>
 
 <!-- FOUR STAGES — interactive tiles -->

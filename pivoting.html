@@ -16,29 +16,70 @@
     <meta name="description" content="An interactive explainer plus hands-on lab guide to port forwarding, tunneling, and lateral movement — practiced on a free two-network VulnHub lab." />
     <link rel="canonical" href="https://sarathg.me/pivoting.html" />
     <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
     {
-      "@context": "https://schema.org",
-      "@graph": [
+      "@type": "TechArticle",
+      "headline": "Pivoting & Tunneling Lab",
+      "description": "An interactive explainer plus hands-on lab guide to port forwarding, tunneling, and lateral movement — practiced on a free two-network VulnHub lab.",
+      "image": "https://sarathg.me/assets/og-image.jpg",
+      "url": "https://sarathg.me/pivoting.html",
+      "mainEntityOfPage": "https://sarathg.me/pivoting.html",
+      "datePublished": "2026-07-21",
+      "dateModified": "2026-09-04",
+      "author": {
+        "@id": "https://sarathg.me/#sarath"
+      },
+      "publisher": {
+        "@id": "https://sarathg.me/#org"
+      }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://sarathg.me/#sarath",
+      "name": "Sarath G",
+      "jobTitle": "Application Security Consultant & International Cybersecurity Trainer",
+      "url": "https://sarathg.me/",
+      "image": "https://sarathg.me/assets/og-image.jpg",
+      "sameAs": [
+        "https://www.linkedin.com/in/sarathcybersec/",
+        "https://github.com/secretguard",
+        "https://sarathg.medium.com/",
+        "https://youtube.com/@i_sarathg",
+        "https://www.instagram.com/i.sarathg/"
+      ]
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://sarathg.me/#org",
+      "name": "Sarath G",
+      "url": "https://sarathg.me/",
+      "logo": "https://sarathg.me/assets/og-image.jpg",
+      "founder": {
+        "@id": "https://sarathg.me/#sarath"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
         {
-          "@type": "SoftwareApplication",
-          "name": "Pivoting & Tunneling Lab | sarathg.me",
-          "applicationCategory": "EducationalApplication",
-          "operatingSystem": "Web",
-          "url": "https://sarathg.me/pivoting.html",
-          "description": "An interactive explainer plus hands-on lab guide to port forwarding, tunneling, and lateral movement — practiced on a free two-network VulnHub lab.",
-          "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
-          "author": {"@id": "https://sarathg.me/#sarath"}
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://sarathg.me/"
         },
         {
-          "@type": "BreadcrumbList",
-          "itemListElement": [
-            {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://sarathg.me/"},
-            {"@type": "ListItem", "position": 2, "name": "Pivoting & Tunneling Lab | sarathg.me", "item": "https://sarathg.me/pivoting.html"}
-          ]
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Pivoting & Tunneling Lab | sarathg.me",
+          "item": "https://sarathg.me/pivoting.html"
         }
       ]
     }
-    </script>
+  ]
+}
+  </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -333,10 +374,31 @@ td:first-child { font-weight: 600; color: var(--heading); }
     </style>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  </head>
+  <style id="sg-theme">
+/* Second theme, driven by navbar.js toggling html.light. Absent class = dark, the site default. */
+html:not(.light) body{background:#0f1218 !important}
+html:not(.light) #root{filter:invert(1) hue-rotate(180deg)}
+html:not(.light) #root img, html:not(.light) #root video, html:not(.light) #root iframe, html:not(.light) #root canvas{filter:invert(1) hue-rotate(180deg)}
+html:not(.light) #root #coaching-cta-strip{
+  --sgc-accent:#0B6B4A; --sgc-accent-hi:#085239; --sgc-on-accent:#FFFFFF;
+  --sgc-panel:#F2FAF6; --sgc-border:#A8D8C1; --sgc-bar:#0B6B4A;
+  --sgc-ink:#101614; --sgc-ink-2:#41504A; --sgc-ink-3:#5C6B65;
+}
+</style>
+  <!-- Social sharing (added 2026-09-04) -->
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Pivoting &amp; Tunneling Lab | sarathg.me" />
+  <meta property="og:description" content="An interactive explainer plus hands-on lab guide to port forwarding, tunneling, and lateral movement — practiced on a free two-network VulnHub lab." />
+  <meta property="og:url" content="https://sarathg.me/pivoting.html" />
+  <meta property="og:image" content="https://sarathg.me/assets/og-image.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Pivoting &amp; Tunneling Lab | sarathg.me" />
+  <meta name="twitter:description" content="An interactive explainer plus hands-on lab guide to port forwarding, tunneling, and lateral movement — practiced on a free two-network VulnHub lab." />
+  <meta name="twitter:image" content="https://sarathg.me/assets/og-image.jpg" />
+</head>
   <body style="padding-top:64px">
     <script src="navbar.js" defer></script>
-<main>
+<main data-sg-strip-in=".concepts-inner" data-lead="Working this lab on your own?" data-tail="I mentor people through pivoting and AD labs, 1:1, and mark the write-ups. Free intake call first.">
     <div id="root"><div style="font-family:-apple-system,'Segoe UI',sans-serif;background:#0a0e14;color:#e2e8f0;padding:32px 20px;max-width:860px;margin:0 auto;line-height:1.6">
 <h1 style="font-size:2rem;font-weight:800;margin:0 0 12px">Pivoting, tunneling &amp; lateral movement</h1>
 <p style="font-size:1.05rem;color:#94a3b8;margin:0 0 28px;max-width:640px">Toggle between the four modes below and watch what actually changes.</p>

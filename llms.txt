@@ -1,0 +1,46 @@
+# Sarath G
+
+> Sarath G is an application security consultant and international
+> cybersecurity trainer. 9+ years, 1,600+ instruction hours, corporate
+> training delivered to 20+ organisations across 10+ countries onsite in
+> Southeast Asia, Europe, Africa and the Middle East, including central
+> banks, government agencies and Fortune 500 firms. 30,000+ people trained
+> across a career of corporate, college, bootcamp and public sessions.
+> Certifications: CEH Master, CPENT, LPT Master, CHFI, CEI, ISC2 CC, WAHS.
+> Author of "Certified and Clueless" and the DARE training framework.
+
+## Services
+- [Services overview](https://sarathg.me/services/)
+- [Application Security](https://sarathg.me/services/application-security.html)
+- [Offensive Security](https://sarathg.me/services/offensive-security.html)
+- [Security Architecture](https://sarathg.me/services/security-architecture.html)
+- [GRC Advisory](https://sarathg.me/services/grc-advisory.html)
+- [Corporate Training](https://sarathg.me/services/corporate-training.html)
+- [1:1 Coaching](https://sarathg.me/coaching/)
+
+## Free guides and labs
+- [OSINT Guide, 2026 edition](https://sarathg.me/osint.html)
+- [ShopEasy API security lab](https://sarathg.me/shopeasy.html)
+- [Wazuh SOC lab](https://sarathg.me/wazuh.html)
+- [Splunk SOC guide](https://sarathg.me/soc_splunk.html)
+- [Pivoting and tunnelling lab](https://sarathg.me/pivoting.html)
+- [MEDTECH Active Directory attack path](https://sarathg.me/offsec_medtech.html)
+- [How Tor works](https://sarathg.me/tor.html)
+- [Bug bounty for beginners](https://sarathg.me/bugbounty.html)
+- [Pandora SAST and DAST lab](https://sarathg.me/pandora.html)
+- [Start here: cybersecurity career roadmap](https://sarathg.me/start.html)
+- [All labs](https://labs.sarathg.me/)
+- [DARE Framework](https://dare.sarathg.me/)
+- [Parallax attack and defend game](https://parallax.sarathg.me/)
+- [Blockchain lab](https://blockchain.sarathg.me/)
+- [Blog](https://sarathg.me/blog/)
+
+## Tools
+- [GetHired career readiness tool](https://gethired.sarathg.me/)
+
+## Contact
+- [Book a call](https://meet.sarathg.me/)
+- [LinkedIn](https://www.linkedin.com/in/sarathcybersec/)
+- [GitHub](https://github.com/secretguard)
+- [Medium](https://sarathg.medium.com/)
+- [YouTube](https://youtube.com/@i_sarathg)

@@ -314,6 +314,30 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem}
 .port-badge.vuln{background:var(--red-dim);color:var(--red);border-color:rgba(244,63,94,0.25)}
 .port-badge.secure{background:var(--green-dim);color:var(--green);border-color:var(--green-b)}
 </style>
+<style id="sg-theme">
+/* Second theme, driven by navbar.js toggling html.light. Absent class = dark, the site default. */
+html.light{
+  --bg:#f5f6f8; --surface:#ffffff; --surface2:#eef0f4;
+  --border:rgba(0,0,0,.08); --border2:rgba(0,0,0,.14);
+  --text:#14161c; --muted:#5b6472;
+  --green:#0a9f70; --green-dim:rgba(10,159,112,.08); --green-b:rgba(10,159,112,.22);
+  --amber:#b7791f; --amber-dim:rgba(183,121,31,.08);
+  --red:#d0364f; --red-dim:rgba(208,54,79,.08);
+  --blue:#2563eb; --blue-dim:rgba(37,99,235,.08);
+  --purple:#7c3aed; --purple-dim:rgba(124,58,237,.1);
+}
+@media(max-width:600px){.tbl,.summary-tbl{display:block;overflow-x:auto;max-width:100%;white-space:nowrap}}
+</style>
+  <!-- Social sharing (added 2026-09-04) -->
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="API Security Lab — ShopEasy" />
+  <meta property="og:description" content="Free hands-on API security lab: two versions of the same e-commerce app, one vulnerable, one fixed. Attack BOLA, JWT flaws, broken auth &amp; debug leaks." />
+  <meta property="og:url" content="https://sarathg.me/shopeasy.html" />
+  <meta property="og:image" content="https://sarathg.me/assets/og-image.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="API Security Lab — ShopEasy" />
+  <meta name="twitter:description" content="Free hands-on API security lab: two versions of the same e-commerce app, one vulnerable, one fixed. Attack BOLA, JWT flaws, broken auth &amp; debug leaks." />
+  <meta name="twitter:image" content="https://sarathg.me/assets/og-image.jpg" />
 </head>
 <body style="padding-top:64px">
 <script src="navbar.js" defer></script>
@@ -383,6 +407,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 2rem}
       </ul>
     </div>
   </div>
+  <div id="coaching-cta-strip" data-lead="Want your findings reviewed by a pentester?" data-tail="I mentor people through API security work like this, 1:1. Free intake call first." style="min-height:64px;margin:28px 0 36px"></div>
 </section>
 
 <hr class="div">

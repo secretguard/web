@@ -41,7 +41,8 @@
     display:flex;
     align-items:center;
     justify-content:center;
-    padding:80px 20px 40px;
+    padding:80px 20px 0;
+    flex-direction:column;
     line-height:1.5;
     position:relative;
     overflow-x:hidden;
@@ -270,8 +271,27 @@
     .code .glitch-layer{ animation:none !important; opacity:0 !important; }
   }
 </style>
+<style id="sg-theme">
+/* Second theme, driven by navbar.js toggling html.light. Absent class = dark, the site default. */
+html.light{
+  --t-primary:#1a1a1a; --t-secondary:rgba(0,0,0,.62);
+  --bg-page:#f2f0ec; --bg-card:#ffffff; --b-subtle:#d9d5cd;
+  --red:#dc2626; --red-dim:#fca5a5; --green:#15803d; --amber:#b45309;
+}
+</style>
+  <!-- Social sharing (added 2026-09-04) -->
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="404 · Finding Not Reproducible — Sarath G" />
+  <meta property="og:description" content="Page not found. Recon came back empty — no exploitable page here." />
+  <meta property="og:url" content="https://sarathg.me/404.html" />
+  <meta property="og:image" content="https://sarathg.me/assets/og-image.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="404 · Finding Not Reproducible — Sarath G" />
+  <meta name="twitter:description" content="Page not found. Recon came back empty — no exploitable page here." />
+  <meta name="twitter:image" content="https://sarathg.me/assets/og-image.jpg" />
 </head>
 <body>
+<script src="/navbar.js"></script>
 
 <main>
 <div class="wrap">
@@ -365,5 +385,8 @@
 })();
 </script>
 
+<style>#sg-footer{width:100%;align-self:stretch;margin-top:auto}</style>
+<div id="footer-placeholder"></div>
+<script src="/footer.js" defer></script>
 </body>
 </html>

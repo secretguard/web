@@ -19,25 +19,66 @@
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "SoftwareApplication",
-      "name": "SAST & DAST Lab — Pandora",
-      "applicationCategory": "EducationalApplication",
-      "operatingSystem": "Web",
-      "url": "https://sarathg.me/pandora.html",
+      "@type": "TechArticle",
+      "headline": "SAST & DAST Lab — Pandora",
       "description": "Pandora: a self-hosted SAST & DAST lab. One script installs SonarQube, OWASP ZAP, and Nessus alongside DVWA and a custom-built vulnerable app.",
-      "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
-      "author": {"@id": "https://sarathg.me/#sarath"}
+      "image": "https://sarathg.me/assets/og-image.jpg",
+      "url": "https://sarathg.me/pandora.html",
+      "mainEntityOfPage": "https://sarathg.me/pandora.html",
+      "datePublished": "2026-07-21",
+      "dateModified": "2026-09-04",
+      "author": {
+        "@id": "https://sarathg.me/#sarath"
+      },
+      "publisher": {
+        "@id": "https://sarathg.me/#org"
+      }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://sarathg.me/#sarath",
+      "name": "Sarath G",
+      "jobTitle": "Application Security Consultant & International Cybersecurity Trainer",
+      "url": "https://sarathg.me/",
+      "image": "https://sarathg.me/assets/og-image.jpg",
+      "sameAs": [
+        "https://www.linkedin.com/in/sarathcybersec/",
+        "https://github.com/secretguard",
+        "https://sarathg.medium.com/",
+        "https://youtube.com/@i_sarathg",
+        "https://www.instagram.com/i.sarathg/"
+      ]
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://sarathg.me/#org",
+      "name": "Sarath G",
+      "url": "https://sarathg.me/",
+      "logo": "https://sarathg.me/assets/og-image.jpg",
+      "founder": {
+        "@id": "https://sarathg.me/#sarath"
+      }
     },
     {
       "@type": "BreadcrumbList",
       "itemListElement": [
-        {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://sarathg.me/"},
-        {"@type": "ListItem", "position": 2, "name": "SAST & DAST Lab — Pandora", "item": "https://sarathg.me/pandora.html"}
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://sarathg.me/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "SAST & DAST Lab — Pandora",
+          "item": "https://sarathg.me/pandora.html"
+        }
       ]
     }
   ]
 }
-</script>
+  </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -243,6 +284,30 @@ footer{border-top:1px solid var(--border);padding:2.5rem 1.5rem;margin-top:2rem}
   .footer-inner{justify-content:center;text-align:center}
 }
 </style>
+<style id="sg-theme">
+/* Second theme, driven by navbar.js toggling html.light. Absent class = dark, the site default. */
+html.light{
+  --bg:#f4f5f8; --surface:#ffffff; --surface2:#eceef3;
+  --border:rgba(0,0,0,.08); --border2:rgba(0,0,0,.14);
+  --text:#14161c; --muted:#5c6473; --muted2:#454c5c;
+  --blue:#2f6fd6; --blue-dim:rgba(47,111,214,.10); --blue-b:rgba(47,111,214,.28);
+  --amber:#b7791f; --amber-dim:rgba(183,121,31,.10); --amber-b:rgba(183,121,31,.28);
+  --violet:#7c4dcc; --violet-dim:rgba(124,77,204,.11); --violet-b:rgba(124,77,204,.32);
+  --green:#1f9d55; --green-dim:rgba(31,157,85,.10); --green-b:rgba(31,157,85,.28);
+  --red:#d0364f; --red-dim:rgba(208,54,79,.10); --red-b:rgba(208,54,79,.28);
+}
+html.light .btn-primary{color:#ffffff}
+</style>
+  <!-- Social sharing (added 2026-09-04) -->
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="SAST &amp; DAST Lab — Pandora" />
+  <meta property="og:description" content="Pandora: a self-hosted SAST &amp; DAST lab. One script installs SonarQube, OWASP ZAP, and Nessus alongside DVWA and a custom-built vulnerable app." />
+  <meta property="og:url" content="https://sarathg.me/pandora.html" />
+  <meta property="og:image" content="https://sarathg.me/assets/og-image.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="SAST &amp; DAST Lab — Pandora" />
+  <meta name="twitter:description" content="Pandora: a self-hosted SAST &amp; DAST lab. One script installs SonarQube, OWASP ZAP, and Nessus alongside DVWA and a custom-built vulnerable app." />
+  <meta name="twitter:image" content="https://sarathg.me/assets/og-image.jpg" />
 </head>
 <body style="padding-top:64px">
 <script src="navbar.js" defer></script>
@@ -321,6 +386,7 @@ footer{border-top:1px solid var(--border);padding:2.5rem 1.5rem;margin-top:2rem}
       <p>A custom-built Laravel e-commerce app with ten documented, intentional vulnerabilities — the dataset behind the coverage matrix further down this page.</p>
     </div>
   </div>
+  <div id="coaching-cta-strip" data-lead="Want someone to check your SAST and DAST findings?" data-tail="I mentor people through AppSec work like this, 1:1. Free intake call first." style="min-height:64px;margin:28px 0 36px"></div>
 </section>
 
 <hr class="div">

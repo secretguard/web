@@ -27,7 +27,9 @@
     { label: 'Projects', href: '/#projects' },
     { label: 'Services',  href: '/services/' },
     { label: 'Labs',      href: 'https://labs.sarathg.me' },
-    { label: 'Cybersec Guide', href: '/start.html' }
+    { label: 'Blog',      href: '/blog/' },
+    { label: 'Cybersec Guide', href: '/start.html' },
+    { label: '1:1 Mentorship', href: '/coaching/', placement: 'footer-site' }
   ];
 
   var ICONS = {
@@ -72,6 +74,10 @@
        (e.g. the green services theme) still use that color here unchanged. */
     + '#sg-footer .sgf-cta-btn{ display:inline-flex; align-items:center; gap:8px; background:var(--accent, #dc2626); color:#fff; text-decoration:none; font-family:var(--font-mono, "JetBrains Mono", monospace); font-size:13px; font-weight:500; padding:10px 16px; border-radius:7px; transition:transform .15s ease, opacity .15s ease; }'
     + '#sg-footer .sgf-cta-btn:hover{ transform:translateY(-1px); opacity:.92; }'
+    + '#sg-footer .sgf-alt{ margin:14px 0 0; font-size:13px; line-height:1.5; }'
+    + '#sg-footer .sgf-alt a{ color:var(--t-secondary, #9a9a9a); text-decoration:none; border-bottom:1px solid var(--b-subtle, #242424); transition:color .15s ease, border-color .15s ease; }'
+    + '#sg-footer .sgf-alt a:hover{ color:#4fffb0; border-color:#4fffb0; }'
+    + 'html.light #sg-footer .sgf-alt a:hover{ color:#0B6B4A; border-color:#0B6B4A; }'
     + '#sg-footer .sgf-bottom{ border-top:1px solid var(--b-subtle, #242424); padding:18px 24px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; max-width:1180px; margin:0 auto; font-size:12px; }'
     + '#sg-footer .sgf-bottom a{ color:var(--t-secondary, #9a9a9a); text-decoration:none; }'
     + '#sg-footer .sgf-bottom a:hover{ color:var(--accent, #ef4444); }'
@@ -90,7 +96,8 @@
   }).join('');
 
   var navHtml = NAV_LINKS.map(function (l) {
-    return '<li><a href="' + l.href + '">' + l.label + '</a></li>';
+    var extra = l.placement ? ' data-sg-placement="' + l.placement + '"' : '';
+    return '<li><a href="' + l.href + '"' + extra + '>' + l.label + '</a></li>';
   }).join('');
 
   var year = new Date().getFullYear();
@@ -99,7 +106,7 @@
     + '<div class="sgf-inner">'
     + '  <div class="sgf-col">'
     + '    <div class="sgf-brand">Sarath G</div>'
-    + '    <p class="sgf-tagline">Penetration testing, application security, and corporate training — built from 9+ years in the field.</p>'
+    + '    <p class="sgf-tagline">Penetration testing, application security, and corporate training — built from 9+ years in the field. Author of <em>Certified and Clueless</em>.</p>'
     + '    <div class="sgf-socials">' + socialsHtml + '</div>'
     + '  </div>'
     + '  <div class="sgf-col">'
@@ -110,6 +117,7 @@
     + '    <div class="sgf-heading">Work together</div>'
     + '    <p class="sgf-cta-text">Have a project, an assessment, or a training need? Let\'s talk it through.</p>'
     + '    <a class="sgf-cta-btn" href="https://meet.sarathg.me/" target="_blank" rel="noopener">Book a consultation →</a>'
+    + '    <p class="sgf-alt"><a href="/coaching/" data-sg-placement="footer-alt">Looking for 1:1 mentorship instead? →</a></p>'
     + '  </div>'
     + '</div>'
     + '<div class="sgf-bottom">'

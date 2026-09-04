@@ -12,7 +12,7 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SOC Lab Guide — Monitoring Logs in Wazuh</title>
+<title>Wazuh SOC Lab: Build a Home SIEM and Detect Attacks | Sarath G</title>
 <meta name="description" content="A complete SOC home lab guide using Wazuh on VirtualBox — deploy the OVA, connect a Windows agent, run Kali attacks, and detect it all. Free, no licence.">
 <link rel="canonical" href="https://sarathg.me/wazuh.html">
 <script type="application/ld+json">
@@ -20,25 +20,66 @@
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "SoftwareApplication",
-      "name": "SOC Lab Guide — Monitoring Logs in Wazuh",
-      "applicationCategory": "EducationalApplication",
-      "operatingSystem": "Web",
-      "url": "https://sarathg.me/wazuh.html",
+      "@type": "TechArticle",
+      "headline": "Wazuh SOC Lab: Build a Home SIEM and Detect Attacks",
       "description": "A complete SOC home lab guide using Wazuh on VirtualBox — deploy the OVA, connect a Windows agent, run Kali attacks, and detect it all. Free, no licence.",
-      "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
-      "author": {"@id": "https://sarathg.me/#sarath"}
+      "image": "https://sarathg.me/assets/og-image.jpg",
+      "url": "https://sarathg.me/wazuh.html",
+      "mainEntityOfPage": "https://sarathg.me/wazuh.html",
+      "datePublished": "2026-07-21",
+      "dateModified": "2026-09-04",
+      "author": {
+        "@id": "https://sarathg.me/#sarath"
+      },
+      "publisher": {
+        "@id": "https://sarathg.me/#org"
+      }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://sarathg.me/#sarath",
+      "name": "Sarath G",
+      "jobTitle": "Application Security Consultant & International Cybersecurity Trainer",
+      "url": "https://sarathg.me/",
+      "image": "https://sarathg.me/assets/og-image.jpg",
+      "sameAs": [
+        "https://www.linkedin.com/in/sarathcybersec/",
+        "https://github.com/secretguard",
+        "https://sarathg.medium.com/",
+        "https://youtube.com/@i_sarathg",
+        "https://www.instagram.com/i.sarathg/"
+      ]
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://sarathg.me/#org",
+      "name": "Sarath G",
+      "url": "https://sarathg.me/",
+      "logo": "https://sarathg.me/assets/og-image.jpg",
+      "founder": {
+        "@id": "https://sarathg.me/#sarath"
+      }
     },
     {
       "@type": "BreadcrumbList",
       "itemListElement": [
-        {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://sarathg.me/"},
-        {"@type": "ListItem", "position": 2, "name": "SOC Lab Guide — Monitoring Logs in Wazuh", "item": "https://sarathg.me/wazuh.html"}
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://sarathg.me/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Wazuh SOC Lab: Build a Home SIEM and Detect Attacks | Sarath G",
+          "item": "https://sarathg.me/wazuh.html"
+        }
       ]
     }
   ]
 }
-</script>
+  </script>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Fraunces:ital,wght@0,300;0,600;0,700;1,300;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -67,7 +108,7 @@ h1.hero-title em { font-style:italic; color:var(--blue); font-weight:300; }
 .ht-g { background:rgba(66,217,122,.1); color:var(--green); border:1px solid rgba(66,217,122,.2); }
 .ht-r { background:rgba(244,112,104,.1); color:var(--red); border:1px solid rgba(244,112,104,.2); }
 
-.nav { position:sticky; top:0; z-index:200; background:rgba(14,17,23,.95); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); }
+.nav { position:sticky; top:64px; z-index:200; background:rgba(14,17,23,.95); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); }
 .nav-inner { max-width:900px; margin:0 auto; padding:0 40px; display:flex; overflow-x:auto; scrollbar-width:none; gap:2px; }
 .nav-inner::-webkit-scrollbar { display:none; }
 .nav-btn { font-family:var(--mono); font-size:11px; font-weight:600; color:var(--text3); padding:15px 18px; cursor:pointer; white-space:nowrap; user-select:none; border:none; border-bottom:2px solid transparent; background:none; transition:color .15s,border-color .15s; letter-spacing:.04em; }
@@ -175,6 +216,26 @@ tr:nth-child(even) td { background:rgba(255,255,255,.015); }
 .footer { border-top:1px solid var(--border); padding:36px 40px; text-align:center; font-family:var(--mono); font-size:11px; color:var(--text3); letter-spacing:.04em; }
 @media(max-width:640px) { .wrap,.content{padding-left:20px;padding-right:20px;} .tool-row{grid-template-columns:1fr;} .arch-cols{flex-direction:column;} .arch-conn{flex-direction:row;} }
 </style>
+<style id="sg-theme">
+/* Second theme, driven by navbar.js toggling html.light. Absent class = dark, the site default. */
+html.light{
+  --bg:#f5f7fa; --surface:#ffffff; --surface2:#eef2f7;
+  --border:#d5dde8; --border2:#bfcad9;
+  --blue:#2f6fd6; --green:#1f9d55; --amber:#b7791f; --red:#d0453c; --teal:#1c9a9a; --purple:#7c5ccf;
+  --text:#101828; --text2:#4a5c78; --text3:#8593a8;
+}
+html.light .nav{background:rgba(245,247,250,.95)}
+</style>
+  <!-- Social sharing (added 2026-09-04) -->
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Wazuh SOC Lab: Build a Home SIEM and Detect Attacks | Sarath G" />
+  <meta property="og:description" content="A complete SOC home lab guide using Wazuh on VirtualBox — deploy the OVA, connect a Windows agent, run Kali attacks, and detect it all. Free, no licence." />
+  <meta property="og:url" content="https://sarathg.me/wazuh.html" />
+  <meta property="og:image" content="https://sarathg.me/assets/og-image.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Wazuh SOC Lab: Build a Home SIEM and Detect Attacks | Sarath G" />
+  <meta name="twitter:description" content="A complete SOC home lab guide using Wazuh on VirtualBox — deploy the OVA, connect a Windows agent, run Kali attacks, and detect it all. Free, no licence." />
+  <meta name="twitter:image" content="https://sarathg.me/assets/og-image.jpg" />
 </head>
 <body>
 <script src="navbar.js" defer></script>
@@ -272,6 +333,7 @@ tr:nth-child(even) td { background:rgba(255,255,255,.015); }
       <p><strong>RAM:</strong> 8 GB minimum — 4 GB allocated to Wazuh VM, rest for Windows + WSL2 &nbsp;·&nbsp; <strong>Disk:</strong> 50 GB free (OVA is ~4 GB, expands to ~20 GB) &nbsp;·&nbsp; <strong>OS:</strong> Windows 10/11 64-bit &nbsp;·&nbsp; <strong>CPU:</strong> Hardware virtualisation enabled in BIOS (Intel VT-x or AMD-V) &nbsp;·&nbsp; WSL2 with Kali installed</p>
     </div>
   </div>
+  <div id="coaching-cta-strip" data-lead="Building this SOC lab alone?" data-tail="I mentor people through exactly this, 1:1, and review what you build. Free intake call first." style="min-height:64px;margin:28px 0 36px"></div>
 </div>
 
 

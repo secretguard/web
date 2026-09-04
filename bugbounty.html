@@ -12,7 +12,7 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Getting Started with Bug Bounty — A Practical Guide</title>
+<title>Bug Bounty for Beginners: A Practical Getting-Started Guide | Sarath G</title>
 <meta name="description" content="A practical, honest guide to starting bug bounty hunting — what to learn first, how to pick a platform, and how to find and report your first real bug.">
 <link rel="canonical" href="https://sarathg.me/bugbounty.html">
 <script type="application/ld+json">
@@ -20,25 +20,66 @@
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "Article",
-      "headline": "Getting Started with Bug Bounty — A Practical Guide",
+      "@type": "TechArticle",
+      "headline": "Bug Bounty for Beginners: A Practical Getting-Started Guide",
       "description": "A practical, honest guide to starting bug bounty hunting — what to learn first, how to pick a platform, and how to find and report your first real bug.",
-      "author": {"@id": "https://sarathg.me/#sarath"},
+      "image": "https://sarathg.me/assets/og-image.jpg",
       "url": "https://sarathg.me/bugbounty.html",
       "mainEntityOfPage": "https://sarathg.me/bugbounty.html",
       "datePublished": "2026-08-04",
-      "dateModified": "2026-08-16"
+      "dateModified": "2026-09-04",
+      "author": {
+        "@id": "https://sarathg.me/#sarath"
+      },
+      "publisher": {
+        "@id": "https://sarathg.me/#org"
+      }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://sarathg.me/#sarath",
+      "name": "Sarath G",
+      "jobTitle": "Application Security Consultant & International Cybersecurity Trainer",
+      "url": "https://sarathg.me/",
+      "image": "https://sarathg.me/assets/og-image.jpg",
+      "sameAs": [
+        "https://www.linkedin.com/in/sarathcybersec/",
+        "https://github.com/secretguard",
+        "https://sarathg.medium.com/",
+        "https://youtube.com/@i_sarathg",
+        "https://www.instagram.com/i.sarathg/"
+      ]
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://sarathg.me/#org",
+      "name": "Sarath G",
+      "url": "https://sarathg.me/",
+      "logo": "https://sarathg.me/assets/og-image.jpg",
+      "founder": {
+        "@id": "https://sarathg.me/#sarath"
+      }
     },
     {
       "@type": "BreadcrumbList",
       "itemListElement": [
-        {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://sarathg.me/"},
-        {"@type": "ListItem", "position": 2, "name": "Getting Started with Bug Bounty — A Practical Guide", "item": "https://sarathg.me/bugbounty.html"}
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://sarathg.me/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Bug Bounty for Beginners: A Practical Getting-Started Guide | Sarath G",
+          "item": "https://sarathg.me/bugbounty.html"
+        }
       ]
     }
   ]
 }
-</script>
+  </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -144,11 +185,11 @@ h2.title{font-size:clamp(26px,5vw,40px); line-height:1.15; letter-spacing:-0.01e
 .reveal-stagger > * {transition-delay:calc(var(--i,0) * 80ms);}
 
 /* ============ TOP CHROME ============ */
-.progress-track{position:fixed; top:0; left:0; right:0; height:2px; background:rgba(255,255,255,0.06); z-index:100;}
+.progress-track{position:fixed; top:64px; left:0; right:0; height:2px; background:rgba(255,255,255,0.06); z-index:100;}
 .progress-fill{height:100%; width:0%; background:linear-gradient(90deg, var(--signal), var(--gold), var(--warn)); transition:width 0.1s linear;}
 
 .pillnav{
-  position:fixed; top:2px; left:0; right:0; z-index:99;
+  position:fixed; top:66px; left:0; right:0; z-index:99;
   display:flex; gap:6px; padding:10px 16px; overflow-x:auto;
   background:rgba(9,12,17,0.85); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
   border-bottom:1px solid var(--line); scrollbar-width:none;
@@ -391,8 +432,31 @@ footer{text-align:center; padding:36px 20px 56px; position:relative; z-index:1; 
 .mt40{margin-top:40px;}
 .small-note{font-size:12.5px; color:var(--ink-faint); margin-top:10px;}
 </style>
+<style id="sg-theme">
+/* Second theme, driven by navbar.js toggling html.light. Absent class = dark, the site default. */
+html.light{
+  --bg-void:#f4f6f9; --bg-panel:#ffffff; --bg-panel-2:#eef1f6; --bg-panel-3:#e4e8ef;
+  --ink:#121722; --ink-dim:#4c5a6e; --ink-faint:#7b8799;
+  --line:rgba(0,0,0,.09); --line-bright:rgba(0,0,0,.18);
+  --gold:#b7791f; --gold-dim:#b7791f22; --signal:#1f9d55; --signal-dim:#1f9d5522;
+  --warn:#d63b57; --warn-dim:#d63b5722;
+  --h1-color:#5b3fe0; --bc-color:#0a9e8a; --intg-color:#d9641c; --obb-color:#5b6678;
+}
+html.light .progress-track{background:rgba(0,0,0,.06)}
+</style>
+  <!-- Social sharing (added 2026-09-04) -->
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Bug Bounty for Beginners: A Practical Getting-Started Guide | Sarath G" />
+  <meta property="og:description" content="A practical, honest guide to starting bug bounty hunting — what to learn first, how to pick a platform, and how to find and report your first real bug." />
+  <meta property="og:url" content="https://sarathg.me/bugbounty.html" />
+  <meta property="og:image" content="https://sarathg.me/assets/og-image.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Bug Bounty for Beginners: A Practical Getting-Started Guide | Sarath G" />
+  <meta name="twitter:description" content="A practical, honest guide to starting bug bounty hunting — what to learn first, how to pick a platform, and how to find and report your first real bug." />
+  <meta name="twitter:image" content="https://sarathg.me/assets/og-image.jpg" />
 </head>
 <body>
+<script src="/navbar.js"></script>
 
 <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
 
@@ -452,6 +516,7 @@ footer{text-align:center; padding:36px 20px 56px; position:relative; z-index:1; 
   <div class="callout reveal">
     <b>Legal only because of permission.</b> A bug bounty program is a company's explicit, written invitation to test specific systems. That permission — and staying inside the boundaries it sets — is the entire difference between this and unauthorized hacking.
   </div>
+  <div id="coaching-cta-strip" data-lead="Want a plan instead of guessing?" data-tail="I mentor beginners through their first real bug, 1:1. Free intake call first." style="min-height:64px;margin:28px 0 36px"></div>
 </section>
 
 <!-- ============ WHAT TO LEARN FIRST ============ -->
@@ -961,7 +1026,7 @@ footer{text-align:center; padding:36px 20px 56px; position:relative; z-index:1; 
 
   <div class="credcard reveal">
     <div class="credtag">Who wrote this</div>
-    <p class="body-text">I'm Sarath — a cybersecurity trainer and consultant with 8+ years in the field. I've trained teams at organizations including:</p>
+    <p class="body-text">I'm Sarath — a cybersecurity trainer and consultant with 9+ years in the field. I've trained teams at organizations including:</p>
     <div class="credlist">
       <span class="credpill">Indian Navy</span>
       <span class="credpill">Samsung Electronics</span>
@@ -979,7 +1044,7 @@ footer{text-align:center; padding:36px 20px 56px; position:relative; z-index:1; 
 </main>
 
 <footer>
-  Built to be understood, not memorized. · sarathg.me
+  Built to be understood, not memorized. · <a href="https://sarathg.me/">sarathg.me</a> · <a href="/coaching/" data-sg-placement="footer-local">1:1 Mentorship</a>
 </footer>
 
 <script>
@@ -1099,5 +1164,7 @@ footer{text-align:center; padding:36px 20px 56px; position:relative; z-index:1; 
 </script>
 
 <script src="cta-coaching.js" defer></script>
+<div id="footer-placeholder"></div>
+<script src="/footer.js" defer></script>
 </body>
 </html>

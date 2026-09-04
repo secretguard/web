@@ -29,6 +29,14 @@
      correct on services pages that don't load the home page tokens.
   ═══════════════════════════════════════════════════════════════ */
   const CSS = `
+    /* ── Site-wide guard: never let a page scroll sideways ──
+       overflow-x:clip caps the document to the viewport width without creating
+       a scroll container, so position:sticky and fixed elements keep working
+       and inner overflow-x:auto strips (tab bars, marquees) still scroll. This
+       neutralises stray decorative blobs and off-by-a-few-pixels leaks on every
+       page that loads the navbar. */
+    html, body { overflow-x: clip; }
+
     /* ── Reset / base for navbar only ── */
     #sg-navbar * { box-sizing: border-box; }
     #sg-navbar a { text-decoration: none; }
@@ -255,6 +263,28 @@
     }
     .sg-hamburger:hover { color: #f5f5f5; }
 
+    /* Mentorship pill: the one nav destination that stays visible on phones
+       without opening the menu. Outline only, so it does not compete with
+       the red Contact CTA inside the menu. */
+    .sg-mob-pill {
+      display: inline-flex; align-items: center;
+      padding: 5px 11px; border-radius: 100px;
+      border: 1px solid rgba(79,255,176,0.55); color: #4fffb0;
+      font-size: 12px; font-weight: 600; letter-spacing: 0.01em;
+      white-space: nowrap; line-height: 1; text-decoration: none;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .sg-mob-pill:hover, .sg-mob-pill:focus-visible {
+      background: rgba(79,255,176,0.12); border-color: #4fffb0;
+    }
+    /* The inline mint on the two mentorship links is unreadable on the light
+       theme (2.1:1); drop it to the same green the CTA panel uses (6.2:1). */
+    .sg-link-coach { color: #4fffb0; }
+    html.light .sg-link-coach { color: #0B6B4A; }
+    html.light .sg-mob-pill { color: #0B6B4A; border-color: rgba(11,107,74,0.5); }
+    html.light .sg-mob-pill:hover, html.light .sg-mob-pill:focus-visible { background: rgba(11,107,74,0.08); border-color: #0B6B4A; }
+    @media (max-width: 359px) { .sg-mob-pill { display: none; } }
+
     .sg-mobile-menu {
       display: none;
       position: absolute;
@@ -371,7 +401,8 @@
     html.light .sg-dropdown-menu::before { background: #fff; border-color: rgba(0,0,0,0.1); }
     html.light .sg-drop-item:hover { background: rgba(0,0,0,0.03); }
     html.light .sg-drop-item-title { color: #111; }
-    html.light .sg-drop-item-desc { color: #bbb; }
+    html.light .sg-drop-item-desc { color: #7a7a7a; }
+    html.light .sg-dropdown.sg-open .sg-dropdown-btn { color: #111 !important; }
     html.light .sg-drop-item.sg-all { background: rgba(239,68,68,0.04); }
   `;
 
@@ -390,17 +421,10 @@
 
       <!-- Desktop nav -->
       <div class="sg-desktop-links">
-        <a href="/#about"      class="sg-link" data-sg-page="home">About</a>
-        <a href="/#experience" class="sg-link" data-sg-page="home">Experience</a>
-        <a href="/#gallery"    class="sg-link" data-sg-page="home">Gallery</a>
-        <a href="/#projects"   class="sg-link" data-sg-page="home">Projects</a>
-        <a href="/#skills"     class="sg-link" data-sg-page="home">Skills</a>
-        <a href="/#footprint"  class="sg-link" data-sg-page="home">Footprint</a>
 
-        <!-- Services dropdown -->
         <div class="sg-dropdown" id="sg-services-dd">
           <div class="sg-dropdown-overlay" onclick="SG.closeDD()"></div>
-          <button class="sg-link sg-dropdown-btn" onclick="SG.toggleDD()"
+          <button class="sg-link sg-dropdown-btn" onclick="SG.toggleDD('sg-services-dd')"
             aria-haspopup="true" aria-expanded="false" aria-label="Services menu"
             data-sg-page="services">
             Services
@@ -438,7 +462,7 @@
           </div>
         </div>
 
-        <!-- Labs dropdown -->
+
         <div class="sg-dropdown" id="sg-labs-dd">
           <div class="sg-dropdown-overlay" onclick="SG.closeDD()"></div>
           <button class="sg-link sg-dropdown-btn" onclick="SG.toggleDD('sg-labs-dd')"
@@ -483,24 +507,93 @@
           </div>
         </div>
 
-        <a href="/blog/" class="sg-link" data-sg-nav="blog">Blog</a>
 
-        <a href="/start.html" class="sg-link" data-sg-nav="guide">Cybersec Guide</a>
+        <div class="sg-dropdown" id="sg-learn-dd">
+          <div class="sg-dropdown-overlay" onclick="SG.closeDD()"></div>
+          <button class="sg-link sg-dropdown-btn" onclick="SG.toggleDD('sg-learn-dd')"
+            aria-haspopup="true" aria-expanded="false" aria-label="Learn menu"
+            data-sg-page="learn">
+            Learn
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </button>
+          <div class="sg-dropdown-menu" role="menu">
+            <a href="/start.html" class="sg-drop-item" role="menuitem" data-sg-nav="guide">
+              <span class="sg-drop-item-title">Start Here</span>
+              <span class="sg-drop-item-desc">The cybersecurity career guide, by path</span>
+            </a>
+            <a href="/blog/" class="sg-drop-item" role="menuitem" data-sg-nav="blog">
+              <span class="sg-drop-item-title">Blog</span>
+              <span class="sg-drop-item-desc">Career roadmaps and practitioner notes</span>
+            </a>
+            <a href="/gethired.html" class="sg-drop-item" role="menuitem" data-sg-nav="gethired">
+              <span class="sg-drop-item-title">GetHired</span>
+              <span class="sg-drop-item-desc">Free CV screener, assessment and roadmap</span>
+            </a>
+            <a href="/dare.html" class="sg-drop-item" role="menuitem" data-sg-nav="dare">
+              <span class="sg-drop-item-title">DARE Framework</span>
+              <span class="sg-drop-item-desc">Training design from Certified and Clueless</span>
+            </a>
+          </div>
+        </div>
 
-        <a href="/gethired.html" class="sg-link" data-sg-nav="gethired">GetHired</a>
+
+        <div class="sg-dropdown" id="sg-about-dd">
+          <div class="sg-dropdown-overlay" onclick="SG.closeDD()"></div>
+          <button class="sg-link sg-dropdown-btn" onclick="SG.toggleDD('sg-about-dd')"
+            aria-haspopup="true" aria-expanded="false" aria-label="About menu"
+            data-sg-page="home">
+            About
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </button>
+          <div class="sg-dropdown-menu" role="menu">
+            <a href="/#about" class="sg-drop-item" role="menuitem" data-sg-nav="about">
+              <span class="sg-drop-item-title">About Sarath</span>
+              <span class="sg-drop-item-desc">Who I am and what I do</span>
+            </a>
+            <a href="/#experience" class="sg-drop-item" role="menuitem" data-sg-nav="experience">
+              <span class="sg-drop-item-title">Experience</span>
+              <span class="sg-drop-item-desc">Roles and engagements</span>
+            </a>
+            <a href="/#gallery" class="sg-drop-item" role="menuitem" data-sg-nav="gallery">
+              <span class="sg-drop-item-title">Gallery</span>
+              <span class="sg-drop-item-desc">From the training room</span>
+            </a>
+            <a href="/#projects" class="sg-drop-item" role="menuitem" data-sg-nav="projects">
+              <span class="sg-drop-item-title">Projects</span>
+              <span class="sg-drop-item-desc">Labs, tools and guides</span>
+            </a>
+            <a href="/#skills" class="sg-drop-item" role="menuitem" data-sg-nav="skills">
+              <span class="sg-drop-item-title">Skills</span>
+              <span class="sg-drop-item-desc">Where I work</span>
+            </a>
+            <a href="/#footprint" class="sg-drop-item" role="menuitem" data-sg-nav="footprint">
+              <span class="sg-drop-item-title">Footprint</span>
+              <span class="sg-drop-item-desc">Countries and clients</span>
+            </a>
+          </div>
+        </div>
+
+        <a href="/coaching/" class="sg-link sg-link-coach" data-sg-nav="coaching" data-sg-placement="nav-desktop">1:1 Mentorship</a>
 
         <button onclick="SG.toggleMode()" class="sg-mode-btn"
           aria-label="Toggle dark/light mode" title="Toggle theme" id="sg-mode-btn">
           ☀
         </button>
 
-        <a href="/coaching/" class="sg-link" data-sg-nav="coaching" style="color:#4fffb0;">1:1 Mentorship</a>
-
         <a href="/#contact" class="sg-cta">Contact Me</a>
       </div>
 
       <!-- Mobile controls -->
       <div class="sg-mobile-controls">
+        <a href="/coaching/" class="sg-mob-pill" data-sg-nav="coaching" data-sg-placement="nav-pill" aria-label="1:1 Mentorship">1:1 Mentorship</a>
         <button onclick="SG.toggleMode()" class="sg-mode-btn"
           aria-label="Toggle theme" id="sg-mode-btn-mob">☀</button>
         <button onclick="SG.toggleMobile()" class="sg-hamburger"
@@ -517,16 +610,8 @@
     <!-- Mobile menu -->
     <div class="sg-mobile-menu" id="sg-mobile-menu">
       <div class="sg-mobile-menu-inner">
-        <a href="/#about"      class="sg-mobile-link" onclick="SG.toggleMobile()" data-sg-page="home">About</a>
-        <a href="/#experience" class="sg-mobile-link" onclick="SG.toggleMobile()" data-sg-page="home">Experience</a>
-        <a href="/#gallery"    class="sg-mobile-link" onclick="SG.toggleMobile()" data-sg-page="home">Gallery</a>
-        <a href="/#projects"   class="sg-mobile-link" onclick="SG.toggleMobile()" data-sg-page="home">Projects</a>
-        <a href="/#skills"     class="sg-mobile-link" onclick="SG.toggleMobile()" data-sg-page="home">Skills</a>
-        <a href="/#footprint"  class="sg-mobile-link" onclick="SG.toggleMobile()" data-sg-page="home">Footprint</a>
 
-        <!-- Services accordion -->
-        <button class="sg-mob-svc-btn" id="sg-mob-svc-btn"
-          onclick="SG.toggleMobSvc()" aria-expanded="false">
+        <button class="sg-mob-svc-btn" id="sg-mob-svc-btn" onclick="SG.toggleMobSub('sg-mob-svc')" aria-expanded="false">
           Services
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2.5"
@@ -535,17 +620,17 @@
           </svg>
         </button>
         <div class="sg-mob-svc-sub" id="sg-mob-svc-sub">
-          <a href="/services/" onclick="SG.toggleMobile()" data-sg-nav="services">
+          <a href="/services/" onclick="SG.toggleMobile()" data-sg-nav="services" style="color:#ef4444;">
             All Services
-            <span class="sg-sub-label">Overview of all service areas</span>
+            <span class="sg-sub-label">Overview of all service areas →</span>
           </a>
           <a href="/services/application-security.html" onclick="SG.toggleMobile()" data-sg-nav="appsec">
             Application Security
-            <span class="sg-sub-label">SAST · DAST · Secure Code Review</span>
+            <span class="sg-sub-label">SAST · DAST · Secure Code Review · AppSec</span>
           </a>
           <a href="/services/offensive-security.html" onclick="SG.toggleMobile()" data-sg-nav="offsec">
             Offensive Security
-            <span class="sg-sub-label">Pentest · Red Team · VAPT</span>
+            <span class="sg-sub-label">Pentest · Red Team · Adversary Simulation</span>
           </a>
           <a href="/services/security-architecture.html" onclick="SG.toggleMobile()" data-sg-nav="arch">
             Security Architecture
@@ -553,7 +638,7 @@
           </a>
           <a href="/services/grc-advisory.html" onclick="SG.toggleMobile()" data-sg-nav="grc">
             GRC Advisory
-            <span class="sg-sub-label">ISO 27001 · NIST CSF · Policies</span>
+            <span class="sg-sub-label">ISO 27001 · NIST CSF · Policy Framework</span>
           </a>
           <a href="/services/corporate-training.html" onclick="SG.toggleMobile()" data-sg-nav="training">
             Corporate Training
@@ -561,9 +646,8 @@
           </a>
         </div>
 
-        <!-- Labs accordion -->
-        <button class="sg-mob-svc-btn" id="sg-mob-labs-btn"
-          onclick="SG.toggleMobLabs()" aria-expanded="false">
+
+        <button class="sg-mob-svc-btn" id="sg-mob-labs-btn" onclick="SG.toggleMobSub('sg-mob-labs')" aria-expanded="false">
           Labs
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2.5"
@@ -602,10 +686,71 @@
           </a>
         </div>
 
-        <a href="/blog/" class="sg-mobile-link" onclick="SG.toggleMobile()" data-sg-nav="blog">Blog</a>
-        <a href="/start.html" class="sg-mobile-link" onclick="SG.toggleMobile()" data-sg-nav="guide">Cybersec Guide</a>
-        <a href="/gethired.html" class="sg-mobile-link" onclick="SG.toggleMobile()" data-sg-nav="gethired">GetHired</a>
-        <a href="/coaching/" class="sg-mobile-link" onclick="SG.toggleMobile()" data-sg-nav="coaching" style="color:#4fffb0;">1:1 Mentorship</a>
+
+        <button class="sg-mob-svc-btn" id="sg-mob-learn-btn" onclick="SG.toggleMobSub('sg-mob-learn')" aria-expanded="false">
+          Learn
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+        <div class="sg-mob-svc-sub" id="sg-mob-learn-sub">
+          <a href="/start.html" onclick="SG.toggleMobile()" data-sg-nav="guide">
+            Start Here
+            <span class="sg-sub-label">The cybersecurity career guide, by path</span>
+          </a>
+          <a href="/blog/" onclick="SG.toggleMobile()" data-sg-nav="blog">
+            Blog
+            <span class="sg-sub-label">Career roadmaps and practitioner notes</span>
+          </a>
+          <a href="/gethired.html" onclick="SG.toggleMobile()" data-sg-nav="gethired">
+            GetHired
+            <span class="sg-sub-label">Free CV screener, assessment and roadmap</span>
+          </a>
+          <a href="/dare.html" onclick="SG.toggleMobile()" data-sg-nav="dare">
+            DARE Framework
+            <span class="sg-sub-label">Training design from Certified and Clueless</span>
+          </a>
+        </div>
+
+
+        <button class="sg-mob-svc-btn" id="sg-mob-about-btn" onclick="SG.toggleMobSub('sg-mob-about')" aria-expanded="false">
+          About
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+        <div class="sg-mob-svc-sub" id="sg-mob-about-sub">
+          <a href="/#about" onclick="SG.toggleMobile()" data-sg-nav="about">
+            About Sarath
+            <span class="sg-sub-label">Who I am and what I do</span>
+          </a>
+          <a href="/#experience" onclick="SG.toggleMobile()" data-sg-nav="experience">
+            Experience
+            <span class="sg-sub-label">Roles and engagements</span>
+          </a>
+          <a href="/#gallery" onclick="SG.toggleMobile()" data-sg-nav="gallery">
+            Gallery
+            <span class="sg-sub-label">From the training room</span>
+          </a>
+          <a href="/#projects" onclick="SG.toggleMobile()" data-sg-nav="projects">
+            Projects
+            <span class="sg-sub-label">Labs, tools and guides</span>
+          </a>
+          <a href="/#skills" onclick="SG.toggleMobile()" data-sg-nav="skills">
+            Skills
+            <span class="sg-sub-label">Where I work</span>
+          </a>
+          <a href="/#footprint" onclick="SG.toggleMobile()" data-sg-nav="footprint">
+            Footprint
+            <span class="sg-sub-label">Countries and clients</span>
+          </a>
+        </div>
+
+        <a href="/coaching/" class="sg-mobile-link sg-link-coach" onclick="SG.toggleMobile()" data-sg-nav="coaching" data-sg-placement="nav-mobile-menu">1:1 Mentorship</a>
         <a href="/#contact" class="sg-mobile-cta" onclick="SG.toggleMobile()">Contact Me</a>
       </div>
     </div>
@@ -660,21 +805,16 @@
       el.classList.toggle('sg-active', hp === path && hp !== '/');
     });
 
-    // Services dropdown button highlight
-    if (isServices) {
-      const btn = document.querySelector('#sg-services-dd .sg-dropdown-btn');
-      if (btn) btn.classList.add('sg-active');
-    }
-    if (isGuide) {
-      document.querySelectorAll('[data-sg-nav="guide"]').forEach(el => el.classList.add('sg-active'));
-    }
-    if (isBlog) {
-      document.querySelectorAll('[data-sg-nav="blog"]').forEach(el => el.classList.add('sg-active'));
-    }
-    if (isLabs) {
-      const btn = document.querySelector('#sg-labs-dd .sg-dropdown-btn');
-      if (btn) btn.classList.add('sg-active');
-    }
+    // Light the dropdown button that owns the current page
+    const isLearn = isGuide || isBlog || path === '/gethired' || path === '/gethired.html' || path === '/dare' || path === '/dare.html';
+    const isLabPage = isLabs || ['/pivoting', '/pandora', '/soc_splunk'].some(x => path === x || path === x + '.html');
+    const lit = { 'sg-services-dd': isServices, 'sg-labs-dd': isLabPage, 'sg-learn-dd': isLearn };
+    Object.keys(lit).forEach(id => {
+      const btn = document.querySelector('#' + id + ' .sg-dropdown-btn');
+      if (btn && lit[id]) btn.classList.add('sg-active');
+    });
+    if (isGuide) document.querySelectorAll('[data-sg-nav="guide"]').forEach(el => el.classList.add('sg-active'));
+    if (isBlog)  document.querySelectorAll('[data-sg-nav="blog"]').forEach(el => el.classList.add('sg-active'));
 
     // Mobile links
     document.querySelectorAll('#sg-mobile-menu .sg-mobile-link[href]').forEach(el => {
@@ -746,22 +886,16 @@
         if (btn) btn.setAttribute('aria-expanded', 'false');
       });
     },
-    toggleMobSvc() {
-      const btn = document.getElementById('sg-mob-svc-btn');
-      const sub = document.getElementById('sg-mob-svc-sub');
+    toggleMobSub(id) {
+      const btn = document.getElementById(id + '-btn');
+      const sub = document.getElementById(id + '-sub');
       if (!btn || !sub) return;
       const open = sub.classList.toggle('sg-open');
       btn.classList.toggle('sg-open', open);
       btn.setAttribute('aria-expanded', String(open));
     },
-    toggleMobLabs() {
-      const btn = document.getElementById('sg-mob-labs-btn');
-      const sub = document.getElementById('sg-mob-labs-sub');
-      if (!btn || !sub) return;
-      const open = sub.classList.toggle('sg-open');
-      btn.classList.toggle('sg-open', open);
-      btn.setAttribute('aria-expanded', String(open));
-    }
+    toggleMobSvc()  { this.toggleMobSub('sg-mob-svc'); },
+    toggleMobLabs() { this.toggleMobSub('sg-mob-labs'); }
   };
 
   // Keyboard: Escape closes dropdown
@@ -784,6 +918,24 @@
     document.addEventListener('DOMContentLoaded', boot);
   } else {
     boot();
+  }
+
+  /* ── Coaching CTA measurement ─────────────────────────────────────────
+     One listener for every mentorship link on the site. Any <a> carrying
+     data-sg-placement (nav, pill, footer, hero, strip, end panel, page-local
+     closers) sends a GA4 event naming where it was clicked, so placements can
+     be compared and pruned. No-op when gtag is absent (local preview). */
+  if (!window.__sgCtaTracked) {
+    window.__sgCtaTracked = true;
+    document.addEventListener('click', function (e) {
+      var a = e.target && e.target.closest ? e.target.closest('a[data-sg-placement]') : null;
+      if (!a || typeof window.gtag !== 'function') return;
+      window.gtag('event', 'coaching_cta_click', {
+        placement: a.getAttribute('data-sg-placement'),
+        page_path: location.pathname,
+        link_url: a.getAttribute('href')
+      });
+    }, true);
   }
 
 })();

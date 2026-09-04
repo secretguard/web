@@ -1,9 +1,9 @@
 /*!
  * cta-coaching.js — sarathg.me shared "1:1 mentorship" call-to-action
  *
- * Injects ONE inline CTA panel at the end of the article content on the site's
- * free technical pages (labs, guides, tutorials), pointing at /coaching/.
- * Maintained here only — never copy-pasted into a page.
+ * Renders ONE compact inline CTA strip on the site's free technical pages
+ * (labs, guides, tutorials), pointing at /coaching/. Copy and styling live here
+ * only — never copy-pasted into a page.
  *
  * Include it exactly like navbar.js / footer.js, root-relative from the page:
  *   <script src="cta-coaching.js" defer></script>      (repo root pages)
@@ -12,17 +12,18 @@
  * ── WHY INLINE, NOT STICKY ────────────────────────────────────────────────
  * A sticky bar would fight navbar.js (already position:fixed at the top), and
  * on phones a bottom bar sits exactly where the browser's own URL/tab UI lives.
- * These pages are long-form technical reads, so the honest high-intent moment is
- * the end of the article: a reader who got there worked through the whole thing.
- * Placing it in normal document flow also means it can never cover text, never
- * needs a dismiss button, and cannot cause layout shift — it is appended below
- * the fold, after parse, so nothing already on screen moves.
+ * The strip sits in normal document flow, so it can never cover text, never
+ * needs a dismiss button, and the page reserves its height inline so nothing
+ * already on screen moves when it renders.
  *
  * ── PLACEMENT RULE (uniform across every page) ────────────────────────────
- * Last child of <main>. All 13 host pages have exactly one bare <main>, and this
- * lands the panel after the article but before the page's footer, whether that
- * footer is the injected #sg-footer or a page-local <footer> (bugbounty.html,
- * offsec_medtech.html and tor.html have their own and do not load footer.js).
+ * Right after the page's opening section: the point where a reader has just
+ * decided to stay. Measured against the old end-of-article panel, which most
+ * mobile readers never reached, this is the position that gets seen. A page
+ * opts in with one of:
+ *   <div id="coaching-cta-strip" data-lead="…" data-tail="…" style="min-height:64px;margin:28px 0 36px"></div>
+ *   <main data-sg-strip-after="#selector" data-lead="…" data-tail="…">   (React-rendered pages)
+ *   <main data-sg-strip-in=".selector"    data-lead="…" data-tail="…">   (app-shell pages)
  *
  * ── COLOUR ────────────────────────────────────────────────────────────────
  * No new palette. navbar.js already paints the "1:1 Mentorship" nav link
@@ -48,151 +49,171 @@
 
   // Never on the page it points at, whatever a host page's script tags say.
   if (/^\/coaching\/?/.test(location.pathname)) return;
-  if (document.getElementById('sg-coach')) return; // double-injection guard
+  if (document.getElementById('sg-coach-css')) return; // double-injection guard
 
   var HREF = 'https://sarathg.me/coaching/';
 
   var css = ''
-    + '#sg-coach{'
+    /* Palette: the navbar's mint mentorship colour, dropped to a darker green
+       on the light theme for contrast. */
+    + '#coaching-cta-strip{'
     + '  --sgc-accent:#4FFFB0; --sgc-accent-hi:#7CFFC6; --sgc-on-accent:#062117;'
     + '  --sgc-panel:#101A17; --sgc-border:#325C4C; --sgc-bar:#4FFFB0;'
     + '  --sgc-ink:#F2F5F3; --sgc-ink-2:#B9C4BF; --sgc-ink-3:#93A29C;'
-    + '  display:block; width:100%; max-width:1180px;'
-    + '  margin:64px auto 0; padding:0 24px;'
     + '  font-family:var(--font-body, "Inter", system-ui, -apple-system, "Segoe UI", sans-serif);'
     + '  text-align:left;'
     + '}'
-    + '#sg-coach, #sg-coach *{ box-sizing:border-box; }'
+    + '#coaching-cta-strip, #coaching-cta-strip *{ box-sizing:border-box; }'
 
     /* Light mode. Same hue, dropped to a luminance that clears AA on paper. */
-    + 'html.light #sg-coach{'
+    + 'html.light #coaching-cta-strip{'
     + '  --sgc-accent:#0B6B4A; --sgc-accent-hi:#085239; --sgc-on-accent:#FFFFFF;'
     + '  --sgc-panel:#F2FAF6; --sgc-border:#A8D8C1; --sgc-bar:#0B6B4A;'
     + '  --sgc-ink:#101614; --sgc-ink-2:#41504A; --sgc-ink-3:#5C6B65;'
     + '}'
 
-    + '#sg-coach .sgc-panel{'
-    + '  background:var(--sgc-panel);'
-    + '  border:1px solid var(--sgc-border);'
-    + '  border-left:4px solid var(--sgc-bar);'
-    + '  border-radius:12px;'
-    + '  padding:30px 32px;'
-    + '  display:grid; grid-template-columns:minmax(0,1fr) auto;'
-    + '  gap:28px 40px; align-items:center;'
+    /* ── Strip: the early, one-line variant. Sits in normal flow inside the
+       page's own content column, right after the opening section, where a
+       reader has just decided to stay. Never sticky, never overlays text. ── */
+    + '#coaching-cta-strip{'
+    + '  display:block; width:100%; min-height:64px; margin:28px 0 36px;'
     + '}'
-
-    + '#sg-coach .sgc-eyebrow{'
-    + '  margin:0 0 10px; padding:0;'
-    + '  font-size:11.5px; font-weight:700; letter-spacing:0.13em; text-transform:uppercase;'
-    + '  color:var(--sgc-accent); line-height:1.2;'
+    + '#coaching-cta-strip .sgs-row{'
+    + '  display:flex; align-items:center; justify-content:space-between; gap:16px 24px;'
+    + '  min-height:64px; padding:12px 18px 12px 16px;'
+    + '  background:var(--sgc-panel); border:1px solid var(--sgc-border);'
+    + '  border-left:4px solid var(--sgc-bar); border-radius:10px;'
     + '}'
-    + '#sg-coach .sgc-h{'
-    + '  margin:0 0 10px; padding:0; border:0;'
-    + '  font-family:var(--font-display, "Inter", system-ui, -apple-system, sans-serif);'
-    + '  font-size:clamp(1.3rem, 1.1rem + 0.9vw, 1.75rem); font-weight:700;'
-    + '  line-height:1.2; letter-spacing:-0.02em; color:var(--sgc-ink);'
+    + '#coaching-cta-strip .sgs-copy{'
+    + '  display:flex; align-items:baseline; flex-wrap:wrap; gap:4px 10px; min-width:0;'
+    + '  margin:0; padding:0; font-size:15px; line-height:1.45; color:var(--sgc-ink-2);'
     + '}'
-    + '#sg-coach .sgc-p{'
-    + '  margin:0; padding:0;'
-    + '  font-size:15.5px; line-height:1.6; color:var(--sgc-ink-2); max-width:62ch;'
-    + '}'
-    + '#sg-coach .sgc-micro{'
-    + '  margin:14px 0 0; padding:0;'
-    + '  font-size:13px; line-height:1.5; color:var(--sgc-ink-3);'
-    + '}'
-
-    + '#sg-coach .sgc-act{ display:flex; flex-direction:column; align-items:stretch; gap:0; }'
-    + '#sg-coach .sgc-btn{'
-    + '  display:inline-flex; align-items:center; justify-content:center; gap:8px;'
-    + '  min-height:52px; padding:14px 28px;'
-    + '  background:var(--sgc-accent); color:var(--sgc-on-accent);'
+    + '#coaching-cta-strip .sgs-lead{ font-weight:650; color:var(--sgc-ink); }'
+    + '#coaching-cta-strip .sgs-btn{'
+    + '  flex:none; display:inline-flex; align-items:center; gap:6px;'
+    + '  min-height:38px; padding:9px 16px;'
+    + '  background:transparent; color:var(--sgc-accent);'
     + '  border:1px solid var(--sgc-accent); border-radius:100px;'
-    + '  font-family:inherit; font-size:15.5px; font-weight:650; line-height:1;'
+    + '  font-family:inherit; font-size:14px; font-weight:650; line-height:1;'
     + '  letter-spacing:-0.01em; text-decoration:none; white-space:nowrap; cursor:pointer;'
     + '}'
-    + '#sg-coach .sgc-btn:hover,#sg-coach .sgc-btn:focus-visible{'
-    + '  background:var(--sgc-accent-hi); border-color:var(--sgc-accent-hi);'
-    + '  color:var(--sgc-on-accent); text-decoration:none;'
+    + '#coaching-cta-strip .sgs-btn:hover, #coaching-cta-strip .sgs-btn:focus-visible{'
+    + '  background:var(--sgc-accent); color:var(--sgc-on-accent); text-decoration:none;'
     + '}'
-    + '#sg-coach .sgc-btn:focus-visible{'
-    + '  outline:2px solid var(--sgc-accent); outline-offset:3px;'
-    + '}'
-    + '#sg-coach .sgc-arrow{ display:inline-block; }'
-
-    /* Motion is an enhancement only, and never runs for a reader who opted out. */
+    + '#coaching-cta-strip .sgs-btn:focus-visible{ outline:2px solid var(--sgc-accent); outline-offset:3px; }'
     + '@media (prefers-reduced-motion:no-preference){'
-    + '  #sg-coach .sgc-btn{ transition:background-color .18s ease, border-color .18s ease; }'
-    + '  #sg-coach .sgc-arrow{ transition:transform .18s ease; }'
-    + '  #sg-coach .sgc-btn:hover .sgc-arrow{ transform:translateX(3px); }'
+    + '  #coaching-cta-strip .sgs-btn{ transition:background-color .18s ease, color .18s ease; }'
     + '}'
-
-    /* ── Tablet / small laptop: action drops under the copy, still left-aligned. ── */
-    + '@media (max-width:760px){'
-    + '  #sg-coach{ margin-top:52px; }'
-    + '  #sg-coach .sgc-panel{ grid-template-columns:minmax(0,1fr); gap:22px; padding:26px 24px; }'
-    + '  #sg-coach .sgc-act{ align-items:flex-start; }'
-    + '  #sg-coach .sgc-btn{ width:auto; }'
-    + '}'
-
-    /* ── Phones: the accent moves to the top edge (a 4px left rule eats width a
-         narrow screen cannot spare) and the button becomes full-width. ── */
     + '@media (max-width:560px){'
-    + '  #sg-coach{ padding:0 16px; margin-top:44px; }'
-    + '  #sg-coach .sgc-panel{'
-    + '    padding:24px 20px; border-radius:10px;'
+    + '  #coaching-cta-strip{ min-height:112px; margin:22px 0 28px; }'
+    + '  #coaching-cta-strip .sgs-row{'
+    + '    flex-direction:column; align-items:stretch; gap:12px; padding:14px 16px;'
     + '    border-left:1px solid var(--sgc-border); border-top:4px solid var(--sgc-bar);'
     + '  }'
-    + '  #sg-coach .sgc-p{ font-size:15px; }'
-    + '  #sg-coach .sgc-act{ align-items:stretch; }'
-    + '  #sg-coach .sgc-btn{ width:100%; }'
+    + '  #coaching-cta-strip .sgs-copy{ font-size:14.5px; }'
+    + '  #coaching-cta-strip .sgs-btn{ justify-content:center; width:100%; min-height:42px; }'
+    + '}'
+    + '@media (forced-colors:active){'
+    + '  #coaching-cta-strip .sgs-row{ border:1px solid CanvasText; }'
+    + '  #coaching-cta-strip .sgs-btn{ border:1px solid ButtonText; }'
     + '}'
 
-    /* Forced-colours / Windows high contrast: keep a visible boundary. */
-    + '@media (forced-colors:active){'
-    + '  #sg-coach .sgc-panel{ border:1px solid CanvasText; }'
-    + '  #sg-coach .sgc-btn{ border:1px solid ButtonText; }'
-    + '}';
+;
 
   var styleEl = document.createElement('style');
   styleEl.id = 'sg-coach-css';
   styleEl.textContent = css;
   document.head.appendChild(styleEl);
 
-  var el = document.createElement('aside');
-  el.id = 'sg-coach';
-  el.setAttribute('aria-labelledby', 'sg-coach-h');
-  el.innerHTML = ''
-    + '<div class="sgc-panel">'
-    + '  <div class="sgc-copy">'
-    + '    <p class="sgc-eyebrow">1:1 Mentorship</p>'
-    + '    <h2 class="sgc-h" id="sg-coach-h">Stuck applying this on your own?</h2>'
-    + '    <p class="sgc-p">I run 1:1 mentorship for exactly this. One learner, one plan, '
-    + '      built from a diagnosis of where you actually are. Complete beginners included.</p>'
-    + '    <p class="sgc-micro">Free intake call. Nothing gets booked or charged.</p>'
-    + '  </div>'
-    + '  <div class="sgc-act">'
-    + '    <a class="sgc-btn" href="' + HREF + '" data-cta="inline-coaching"'
-    + '       data-src="' + (location.pathname || '/').replace(/"/g, '') + '">'
-    + '      See how it works <span class="sgc-arrow" aria-hidden="true">&rarr;</span>'
-    + '    </a>'
-    + '  </div>'
-    + '</div>';
+  var SRC = (location.pathname || '/').replace(/"/g, '');
+
+  /* ── Strip ──────────────────────────────────────────────────────────────
+     A page opts in by placing an empty slot where its opening section ends:
+       <div id="coaching-cta-strip" data-lead="Building this lab alone?"
+            data-tail="I mentor people through exactly this, 1:1." style="min-height:64px"></div>
+     data-lead is the bold hook (page-specific, a few words); data-tail is the
+     plain continuation. Both fall back to the defaults below. The inline
+     min-height reserves the space before this script runs so nothing shifts. */
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+  function buildStrip(slot) {
+    var lead = slot.getAttribute('data-lead') || 'Working through this on your own?';
+    var tail = slot.getAttribute('data-tail') || 'I mentor people through exactly this, 1:1. Free intake call first.';
+    slot.setAttribute('role', 'note');
+    slot.setAttribute('aria-label', '1:1 mentorship');
+    slot.innerHTML = ''
+      + '<div class="sgs-row">'
+      + '  <p class="sgs-copy"><span class="sgs-lead">' + escapeHtml(lead) + '</span> '
+      + '    <span>' + escapeHtml(tail) + '</span></p>'
+      + '  <a class="sgs-btn" href="' + HREF + '" data-cta="strip-coaching" data-sg-placement="strip"'
+      + '     data-src="' + SRC + '">1:1 Mentorship <span aria-hidden="true">&rarr;</span></a>'
+      + '</div>';
+  }
+
+  /* Pages that re-render their article client-side (the prerendered React
+     guides) cannot keep a slot in their HTML: the framework replaces it. They
+     declare the spot on <main> instead and the strip is created once the
+     target exists:
+       <main data-sg-strip-after="#foundations" data-lead="..." data-tail="...">
+     The strip is inserted directly after that element. Polling stops after
+     eight seconds if the element never appears. */
+  function mountStripAfter(mainEl) {
+    // data-sg-strip-after: insert as the next sibling of the target.
+    // data-sg-strip-in: append as the last child of the target, for app-style
+    // pages where the target view unmounts and remounts; the strip then leaves
+    // and returns with it.
+    var after = mainEl.getAttribute('data-sg-strip-after');
+    var inside = mainEl.getAttribute('data-sg-strip-in');
+    var sel = after || inside;
+    if (!sel) return;
+    function place() {
+      if (document.getElementById('coaching-cta-strip')) return;
+      var target = document.querySelector(sel);
+      if (!target || !target.parentNode) return;
+      var slot = document.createElement('div');
+      slot.id = 'coaching-cta-strip';
+      if (mainEl.getAttribute('data-lead')) slot.setAttribute('data-lead', mainEl.getAttribute('data-lead'));
+      if (mainEl.getAttribute('data-tail')) slot.setAttribute('data-tail', mainEl.getAttribute('data-tail'));
+      if (inside && !after) target.appendChild(slot);
+      else target.parentNode.insertBefore(slot, target.nextSibling);
+      buildStrip(slot);
+    }
+    place();
+    // The framework may replace the prerendered article after this script ran
+    // (and again on later state changes). Re-place the strip whenever it has
+    // been dropped from the document. Debounced so a burst of mutations costs
+    // one check.
+    var pending = null;
+    var mo = new MutationObserver(function () {
+      if (pending) return;
+      pending = setTimeout(function () { pending = null; place(); }, 60);
+    });
+    mo.observe(mainEl, { childList: true, subtree: true });
+  }
+
+  /* Click measurement for every mentorship link, including pages that do not
+     load navbar.js (which carries the same listener). One of the two wins. */
+  if (!window.__sgCtaTracked) {
+    window.__sgCtaTracked = true;
+    document.addEventListener('click', function (e) {
+      var a = e.target && e.target.closest ? e.target.closest('a[data-sg-placement]') : null;
+      if (!a || typeof window.gtag !== 'function') return;
+      window.gtag('event', 'coaching_cta_click', {
+        placement: a.getAttribute('data-sg-placement'),
+        page_path: location.pathname,
+        link_url: a.getAttribute('href')
+      });
+    }, true);
+  }
 
   function mount() {
-    // 1. Explicit opt-in slot, if a page ever wants to choose the spot itself.
-    var slot = document.getElementById('coaching-cta-placeholder');
-    if (slot) { slot.replaceWith(el); return; }
-
-    // 2. The rule: last child of <main>, i.e. end of article, before any footer.
-    var main = document.querySelector('main');
-    if (main) { main.appendChild(el); return; }
-
-    // 3. No <main>: sit above whichever footer exists.
-    var foot = document.getElementById('sg-footer') || document.querySelector('footer');
-    if (foot && foot.parentNode) { foot.parentNode.insertBefore(el, foot); return; }
-
-    // 4. Last resort.
-    document.body.appendChild(el);
+    var strip = document.getElementById('coaching-cta-strip');
+    if (strip) { buildStrip(strip); return; }
+    var mainForStrip = document.querySelector('main[data-sg-strip-after], main[data-sg-strip-in]');
+    if (mainForStrip) mountStripAfter(mainForStrip);
   }
 
   if (document.readyState === 'loading') {

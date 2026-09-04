@@ -442,6 +442,15 @@
       .hero { padding: calc(64px + 50px) 5% 50px; }
     }
   </style>
+<style id="sg-theme">
+/* Second theme, driven by navbar.js toggling html.light. Absent class = dark, the site default. */
+html.light{
+  --bg:#f2f0ec; --bg-2:#e8e5df; --bg-card:#ffffff; --bg-card-h:#f7f5f1;
+  --border:rgba(0,0,0,.08); --border-h:rgba(0,0,0,.16);
+  --accent:#0B6B4A; --accent-dim:rgba(11,107,74,.08);
+  --t1:#1a1a1a; --t2:rgba(0,0,0,.64); --t3:rgba(0,0,0,.40);
+}
+</style>
 </head>
 <body style="padding-top:64px">
 <script src="../navbar.js" defer></script>
