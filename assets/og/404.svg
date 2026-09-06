@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="Recon came back empty.">
+  <!-- Source for 404.png. Fonts: Outfit, Inter, JetBrains Mono (self-hosted in web/assets/fonts). Re-render at 1200x630 after editing. -->
+  <defs>
+    <style>@font-face{font-family:'Outfit';font-weight:100 900;src:url('outfit-var.woff2') format('woff2');}@font-face{font-family:'Inter';font-weight:100 900;src:url('inter-var.woff2') format('woff2');}@font-face{font-family:'JetBrains Mono';font-weight:100 900;src:url('jetbrains-mono-var.woff2') format('woff2');}</style>
+    <linearGradient id="fg" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity="1"/></linearGradient>
+    <mask id="fade"><rect x="0" y="0" width="1200" height="630" fill="url(#fg)"/></mask>
+  </defs>
+  <rect width="1200" height="630" fill="#050505"/>
+  <pattern id="p" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="14" cy="14" r="1.6" fill="#ef4444"/></pattern>
+  <rect x="660" y="0" width="540" height="630" fill="url(#p)" opacity="0.28" mask="url(#fade)"/>
+  <rect x="0" y="0" width="16" height="630" fill="#ef4444"/>
+  <g class="illo" transform="translate(950,318) scale(0.92)">
+    <circle r="215" fill="#ef4444" opacity="0.07"/><circle r="215" fill="none" stroke="#2a2a2a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle r="165" fill="none" stroke="#ef4444" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><circle r="110" fill="none" stroke="#ef4444" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle r="55" fill="none" stroke="#ef4444" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><line x1="-165" y1="0" x2="165" y2="0" fill="none" stroke="#ef4444" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><line x1="0" y1="-165" x2="0" y2="165" fill="none" stroke="#ef4444" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M0,0 L0,-165 A165,165 0 0 1 143,-82 Z" fill="#ef4444" opacity="0.3"/><line x1="0" y1="0" x2="143" y2="-82" fill="none" stroke="#ef4444" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="0" y="64" text-anchor="middle" font-family="Outfit" font-weight="800" font-size="64" fill="#f5f5f5">404</text>
+  </g>
+  <text class="p" x="84" y="94" font-family="JetBrains Mono" font-weight="500" font-size="24" fill="#ef4444">sarathg.me/404</text>
+  <text class="h" x="84" y="282" font-family="Outfit" font-weight="800" font-size="54" letter-spacing="-0.02em" fill="#f5f5f5">Recon came</text>
+  <text class="h" x="84" y="340" font-family="Outfit" font-weight="800" font-size="54" letter-spacing="-0.02em" fill="#f5f5f5">back empty.</text>
+  <text class="s" x="84" y="388" font-family="Inter" font-weight="400" font-size="26" fill="#9a9a9a">No page here to exploit.</text>
+  <text class="f" x="84" y="560" font-family="Inter" font-weight="600" font-size="24" fill="#f5f5f5">Sarath G</text>
+  <text class="f" x="212" y="560" font-family="Inter" font-weight="400" font-size="24" fill="#9a9a9a">Cybersecurity consultant &amp; trainer</text>
+</svg>

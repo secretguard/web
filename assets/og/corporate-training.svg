@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="Corporate cybersecurity training">
+  <!-- Source for corporate-training.png. Fonts: Outfit, Inter, JetBrains Mono (self-hosted in web/assets/fonts). Re-render at 1200x630 after editing. -->
+  <defs>
+    <style>@font-face{font-family:'Outfit';font-weight:100 900;src:url('outfit-var.woff2') format('woff2');}@font-face{font-family:'Inter';font-weight:100 900;src:url('inter-var.woff2') format('woff2');}@font-face{font-family:'JetBrains Mono';font-weight:100 900;src:url('jetbrains-mono-var.woff2') format('woff2');}</style>
+    <linearGradient id="fg" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity="1"/></linearGradient>
+    <mask id="fade"><rect x="0" y="0" width="1200" height="630" fill="url(#fg)"/></mask>
+  </defs>
+  <rect width="1200" height="630" fill="#050505"/>
+  <pattern id="p" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="14" cy="14" r="1.6" fill="#ef4444"/></pattern>
+  <rect x="660" y="0" width="540" height="630" fill="url(#p)" opacity="0.28" mask="url(#fade)"/>
+  <rect x="0" y="0" width="16" height="630" fill="#ef4444"/>
+  <g class="illo" transform="translate(950,318) scale(0.92)">
+    <circle r="215" fill="#ef4444" opacity="0.07"/><circle r="215" fill="none" stroke="#2a2a2a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="-170" y="-170" width="340" height="200" rx="16" fill="none" stroke="#ef4444" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><line x1="0" y1="30" x2="0" y2="62" fill="none" stroke="#ef4444" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <polyline points="-130,-20 -70,-70 -20,-45 40,-110 120,-130" fill="none" stroke="#f5f5f5" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="120" cy="-130" r="9" fill="#ef4444"/>
+    <g transform="translate(-100,140) scale(1)"><circle cy="-26" r="18" fill="none" stroke="#ef4444" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><path d="M-34,34 C-34,4 -18,-4 0,-4 C18,-4 34,4 34,34" fill="none" stroke="#ef4444" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></g><g transform="translate(0,140) scale(1)"><circle cy="-26" r="18" fill="none" stroke="#f5f5f5" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><path d="M-34,34 C-34,4 -18,-4 0,-4 C18,-4 34,4 34,34" fill="none" stroke="#f5f5f5" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></g><g transform="translate(100,140) scale(1)"><circle cy="-26" r="18" fill="none" stroke="#ef4444" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><path d="M-34,34 C-34,4 -18,-4 0,-4 C18,-4 34,4 34,34" fill="none" stroke="#ef4444" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></g>
+  </g>
+  <text class="p" x="84" y="94" font-family="JetBrains Mono" font-weight="500" font-size="24" fill="#ef4444">sarathg.me/services/corporate-training</text>
+  <text class="h" x="84" y="235" font-family="Outfit" font-weight="800" font-size="54" letter-spacing="-0.02em" fill="#f5f5f5">Corporate</text>
+  <text class="h" x="84" y="293" font-family="Outfit" font-weight="800" font-size="54" letter-spacing="-0.02em" fill="#f5f5f5">cybersecurity</text>
+  <text class="h" x="84" y="351" font-family="Outfit" font-weight="800" font-size="54" letter-spacing="-0.02em" fill="#f5f5f5">training</text>
+  <text class="s" x="84" y="399" font-family="Inter" font-weight="400" font-size="26" fill="#9a9a9a">1,600+ instruction hours</text>
+  <text class="s" x="84" y="435" font-family="Inter" font-weight="400" font-size="26" fill="#9a9a9a">delivered across 10+ countries.</text>
+  <text class="f" x="84" y="560" font-family="Inter" font-weight="600" font-size="24" fill="#f5f5f5">Sarath G</text>
+  <text class="f" x="212" y="560" font-family="Inter" font-weight="400" font-size="24" fill="#9a9a9a">Cybersecurity consultant &amp; trainer</text>
+</svg>
