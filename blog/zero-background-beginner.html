@@ -153,7 +153,38 @@
         All posts
       </a>
     </nav>
-  </main>
+  
+<nav class="sg-related" aria-label="Related pages">
+<style id="sg-related-css">
+/* sg-related: plain-HTML cross-links (crawlable without JS). Dark base, html.light override, same convention as navbar.js. */
+.sg-related{max-width:900px;margin:56px auto 40px;padding:0 20px;box-sizing:border-box;font-family:Inter,-apple-system,'Segoe UI',sans-serif;line-height:1.5}
+.sg-related .sgr-box{background:#111418;border:1px solid #262b33;border-radius:16px;padding:24px 26px}
+.sg-related .sgr-title{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#8b95a1;margin:0 0 14px}
+.sg-related ul{list-style:none;margin:0;padding:0;display:grid;gap:14px 18px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.sg-related li a{display:block;color:#e6e9ee;font-weight:600;font-size:16px;text-decoration:none}
+.sg-related li a:hover{color:#4fffb0}
+.sg-related li span{display:block;color:#9aa3ad;font-size:14px;margin-top:2px}
+.sg-related .sgr-foot{margin:18px 0 0;padding-top:14px;border-top:1px solid #262b33;font-size:14px;color:#9aa3ad}
+.sg-related .sgr-foot a{color:#4fffb0;font-weight:600;text-decoration:none}
+.sg-related .sgr-foot a:hover{text-decoration:underline}
+html.light .sg-related .sgr-box{background:#f6f7f9;border-color:#d9dde3}
+html.light .sg-related .sgr-title{color:#5b6572}
+html.light .sg-related li a{color:#14171b}
+html.light .sg-related li a:hover,html.light .sg-related .sgr-foot a{color:#0b6b4a}
+html.light .sg-related li span,html.light .sg-related .sgr-foot{color:#4b5563}
+html.light .sg-related .sgr-foot{border-color:#d9dde3}
+</style>
+  <div class="sgr-box">
+    <p class="sgr-title">Keep going</p>
+    <ul>
+      <li><a href="/start.html">Cybersecurity career roadmap</a><span>Beginner, switcher, job seeker: pick your path</span></li>
+      <li><a href="/osint.html">OSINT guide 2026</a><span>Find anything online, tool by tool</span></li>
+      <li><a href="/blog/it-to-cybersecurity.html">From IT support to cybersecurity</a><span>What transfers, what you build from scratch</span></li>
+    </ul>
+    <p class="sgr-foot">Working through this for a job, not a hobby? <a href="/coaching/">1:1 mentorship</a> &middot; <a href="/blog/">Career roadmaps</a> &middot; <a href="https://labs.sarathg.me/">All labs</a></p>
+  </div>
+</nav>
+</main>
 
   <script src="../navbar.js" defer></script>
   <script src="../footer.js" defer></script>

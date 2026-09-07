@@ -12,8 +12,8 @@
     </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pivoting &amp; Tunneling Lab | sarathg.me</title>
-    <meta name="description" content="An interactive explainer plus hands-on lab guide to port forwarding, tunneling, and lateral movement — practiced on a free two-network VulnHub lab." />
+    <title>Pivoting, Tunneling &amp; Port Forwarding: Hands-On Lab | Sarath G</title>
+    <meta name="description" content="Learn pivoting, tunneling, port forwarding and lateral movement: interactive explainer, free two-network VulnHub lab walkthrough, and a command cheat sheet." />
     <link rel="canonical" href="https://sarathg.me/pivoting.html" />
     <script type="application/ld+json">
 {
@@ -21,8 +21,8 @@
   "@graph": [
     {
       "@type": "TechArticle",
-      "headline": "Pivoting & Tunneling Lab",
-      "description": "An interactive explainer plus hands-on lab guide to port forwarding, tunneling, and lateral movement — practiced on a free two-network VulnHub lab.",
+      "headline": "Pivoting, Tunneling & Port Forwarding: Hands-On Lab",
+      "description": "Learn pivoting, tunneling, port forwarding and lateral movement: interactive explainer, free two-network VulnHub lab walkthrough, and a command cheat sheet.",
       "image": "https://sarathg.me/assets/og/pivoting.png",
       "url": "https://sarathg.me/pivoting.html",
       "mainEntityOfPage": "https://sarathg.me/pivoting.html",
@@ -72,7 +72,7 @@
         {
           "@type": "ListItem",
           "position": 2,
-          "name": "Pivoting & Tunneling Lab | sarathg.me",
+          "name": "Pivoting, Tunneling & Port Forwarding: Hands-On Lab | Sarath G",
           "item": "https://sarathg.me/pivoting.html"
         }
       ]
@@ -80,10 +80,8 @@
   ]
 }
   </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.78em' x='.5em' text-anchor='middle' font-size='80' fill='%2316324f'>%E2%9C%B3</text></svg>" />
+<link rel="stylesheet" href="/assets/fonts/gf/inter-jetbrains-mono-a932b3.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.78em' x='.5em' text-anchor='middle' font-size='80' fill='%2316324f'>%E2%9C%B3</text></svg>" />
     <style>
 :root {
   --bg: #eef1f6;
@@ -387,23 +385,23 @@ html:not(.light) #root #coaching-cta-strip{
 </style>
   <!-- Social sharing (added 2026-09-04) -->
   <meta property="og:type" content="article" />
-  <meta property="og:title" content="Pivoting &amp; Tunneling Lab | sarathg.me" />
-  <meta property="og:description" content="An interactive explainer plus hands-on lab guide to port forwarding, tunneling, and lateral movement — practiced on a free two-network VulnHub lab." />
+  <meta property="og:title" content="Pivoting, Tunneling &amp; Port Forwarding: Hands-On Lab | Sarath G" />
+  <meta property="og:description" content="Learn pivoting, tunneling, port forwarding and lateral movement: interactive explainer, free two-network VulnHub lab walkthrough, and a command cheat sheet." />
   <meta property="og:url" content="https://sarathg.me/pivoting.html" />
   <meta property="og:image" content="https://sarathg.me/assets/og/pivoting.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="Pivoting, tunneling &amp; lateral movement | Sarath G" />
+  <meta property="og:image:alt" content="Pivoting, tunneling &amp; port forwarding lab | Sarath G" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Pivoting &amp; Tunneling Lab | sarathg.me" />
-  <meta name="twitter:description" content="An interactive explainer plus hands-on lab guide to port forwarding, tunneling, and lateral movement — practiced on a free two-network VulnHub lab." />
+  <meta name="twitter:title" content="Pivoting, Tunneling &amp; Port Forwarding: Hands-On Lab | Sarath G" />
+  <meta name="twitter:description" content="Learn pivoting, tunneling, port forwarding and lateral movement: interactive explainer, free two-network VulnHub lab walkthrough, and a command cheat sheet." />
   <meta name="twitter:image" content="https://sarathg.me/assets/og/pivoting.png" />
 </head>
   <body style="padding-top:64px">
     <script src="navbar.js" defer></script>
 <main data-sg-strip-in=".concepts-inner" data-lead="Working this lab on your own?" data-tail="I mentor people through pivoting and AD labs, 1:1, and mark the write-ups. Free intake call first.">
     <div id="root"><div style="font-family:-apple-system,'Segoe UI',sans-serif;background:#0a0e14;color:#e2e8f0;padding:32px 20px;max-width:860px;margin:0 auto;line-height:1.6">
-<h1 style="font-size:2rem;font-weight:800;margin:0 0 12px">Pivoting, tunneling &amp; lateral movement</h1>
+<h1 style="font-size:2rem;font-weight:800;margin:0 0 12px">Pivoting, tunneling &amp; port forwarding: a hands-on lab</h1>
 <p style="font-size:1.05rem;color:#94a3b8;margin:0 0 28px;max-width:640px">Toggle between the four modes below and watch what actually changes.</p>
 <section id="setup" style="margin-bottom:40px">
   <h2 style="font-size:1.5rem;font-weight:700;color:#9c6b12;margin:0 0 6px">Lab Setup — Two Networks, Three Machines</h2>
@@ -1376,7 +1374,7 @@ function ConceptsView({ onGoLab }) {
   return h("div", { className: "concepts-view" },
     h("div", { className: "concepts-inner" },
       h("p", { className: "concepts-eyebrow" }, "FOUR TERMS, ONE RELAY"),
-      h("h1", { className: "concepts-title" }, "Pivoting, tunneling & lateral movement"),
+      h("h1", { className: "concepts-title" }, "Pivoting, tunneling & port forwarding: a hands-on lab"),
       h("p", { className: "concepts-sub" }, "Toggle between the four modes below and watch what actually changes."),
       h("div", { className: "mode-switch" }, modes.map(m => h("button", {
         key: m.id,
@@ -1515,6 +1513,37 @@ function App() {
 
 ReactDOM.createRoot(document.getElementById("root")).render(h(App));
     </script>
+
+<nav class="sg-related" aria-label="Related pages">
+<style id="sg-related-css">
+/* sg-related: plain-HTML cross-links (crawlable without JS). Dark base, html.light override, same convention as navbar.js. */
+.sg-related{max-width:900px;margin:56px auto 40px;padding:0 20px;box-sizing:border-box;font-family:Inter,-apple-system,'Segoe UI',sans-serif;line-height:1.5}
+.sg-related .sgr-box{background:#111418;border:1px solid #262b33;border-radius:16px;padding:24px 26px}
+.sg-related .sgr-title{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#8b95a1;margin:0 0 14px}
+.sg-related ul{list-style:none;margin:0;padding:0;display:grid;gap:14px 18px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.sg-related li a{display:block;color:#e6e9ee;font-weight:600;font-size:16px;text-decoration:none}
+.sg-related li a:hover{color:#4fffb0}
+.sg-related li span{display:block;color:#9aa3ad;font-size:14px;margin-top:2px}
+.sg-related .sgr-foot{margin:18px 0 0;padding-top:14px;border-top:1px solid #262b33;font-size:14px;color:#9aa3ad}
+.sg-related .sgr-foot a{color:#4fffb0;font-weight:600;text-decoration:none}
+.sg-related .sgr-foot a:hover{text-decoration:underline}
+html.light .sg-related .sgr-box{background:#f6f7f9;border-color:#d9dde3}
+html.light .sg-related .sgr-title{color:#5b6572}
+html.light .sg-related li a{color:#14171b}
+html.light .sg-related li a:hover,html.light .sg-related .sgr-foot a{color:#0b6b4a}
+html.light .sg-related li span,html.light .sg-related .sgr-foot{color:#4b5563}
+html.light .sg-related .sgr-foot{border-color:#d9dde3}
+</style>
+  <div class="sgr-box">
+    <p class="sgr-title">Keep going</p>
+    <ul>
+      <li><a href="/wazuh.html">Wazuh SOC lab</a><span>Import the OVA, ship Windows logs, detect Kali attacks</span></li>
+      <li><a href="/shopeasy.html">API security lab (ShopEasy)</a><span>Break BOLA, JWT and auth flaws in a real app</span></li>
+      <li><a href="/blog/certified-not-capable.html">Certified but can't hack a live target?</a><span>Close the gap between the exam and the box</span></li>
+    </ul>
+    <p class="sgr-foot">Working through this for a job, not a hobby? <a href="/coaching/">1:1 mentorship</a> &middot; <a href="/blog/">Career roadmaps</a> &middot; <a href="https://labs.sarathg.me/">All labs</a></p>
+  </div>
+</nav>
 </main>
     <script src="cta-coaching.js" defer></script>
     <script src="footer.js" defer></script>

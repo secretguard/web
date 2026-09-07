@@ -12,8 +12,8 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wazuh SOC Lab: Build a Home SIEM and Detect Attacks | Sarath G</title>
-<meta name="description" content="A complete SOC home lab guide using Wazuh on VirtualBox — deploy the OVA, connect a Windows agent, run Kali attacks, and detect it all. Free, no licence.">
+<title>Wazuh SOC Lab: OVA Setup, Windows Agent, Attack Detection | Sarath G</title>
+<meta name="description" content="Free Wazuh SOC lab on VirtualBox: import the OVA, install the Windows agent, attack with Kali and detect it in the dashboard. Default logins and event IDs included.">
 <link rel="canonical" href="https://sarathg.me/wazuh.html">
 <script type="application/ld+json">
 {
@@ -21,8 +21,8 @@
   "@graph": [
     {
       "@type": "TechArticle",
-      "headline": "Wazuh SOC Lab: Build a Home SIEM and Detect Attacks",
-      "description": "A complete SOC home lab guide using Wazuh on VirtualBox — deploy the OVA, connect a Windows agent, run Kali attacks, and detect it all. Free, no licence.",
+      "headline": "Wazuh SOC Lab: OVA Setup, Windows Agent, Attack Detection",
+      "description": "Free Wazuh SOC lab on VirtualBox: import the OVA, install the Windows agent, attack with Kali and detect it in the dashboard. Default logins and event IDs included.",
       "image": "https://sarathg.me/assets/og/wazuh.png",
       "url": "https://sarathg.me/wazuh.html",
       "mainEntityOfPage": "https://sarathg.me/wazuh.html",
@@ -61,6 +61,59 @@
       }
     },
     {
+          "@type": "FAQPage",
+          "mainEntity": [
+                {
+                      "@type": "Question",
+                      "name": "What are the Wazuh OVA default credentials?",
+                      "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Two logins. The VM console (VirtualBox window) is wazuh-user / wazuh. The Wazuh dashboard at https://<VM-IP> is admin / admin. Both are documented in section 03. Change them if the VM is reachable from anything other than your own machine."
+                      }
+                },
+                {
+                      "@type": "Question",
+                      "name": "Where do I download the Wazuh OVA for VirtualBox?",
+                      "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "From the official Wazuh site: the file is wazuh-4.14.4.ova, about 4 GB. Section 02 has the direct link. Import it with VirtualBox -> File -> Import Appliance. The OVA already contains the Wazuh Manager, Indexer and Dashboard, so there is no Linux install to do."
+                      }
+                },
+                {
+                      "@type": "Question",
+                      "name": "What are the system requirements for the Wazuh VM?",
+                      "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Windows 10 or 11 (64-bit) with hardware virtualisation enabled in the BIOS, 8 GB RAM (4 GB goes to the Wazuh VM), and about 50 GB free disk. The OVA is 4 GB on download and expands to roughly 20 GB once imported."
+                      }
+                },
+                {
+                      "@type": "Question",
+                      "name": "Which Windows event IDs does this Wazuh lab detect?",
+                      "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Section 04 walks through five: 4625 failed logons from a hydra brute force, 4688 process creation for PowerShell abuse, 4698 scheduled task creation, 7045 a new service installed, and 1102 the Security log being cleared. Wazuh's built-in Windows rules alert on each of them, so you do not write any custom rules."
+                      }
+                },
+                {
+                      "@type": "Question",
+                      "name": "How does the Windows agent connect to the Wazuh VM?",
+                      "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "The agent runs as the WazuhSvc Windows service and ships Security, System and Application event logs to the VM's IP on port 1514. The dashboard is served on port 443. If nothing appears, check NET START WazuhSvc and confirm the manager IP in the agent config matches the VM IP."
+                      }
+                },
+                {
+                      "@type": "Question",
+                      "name": "Is the Wazuh SOC lab free?",
+                      "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Yes. Wazuh, VirtualBox, Kali Linux, nmap and hydra are all free and open source. No accounts, trials or licences are needed, and section 05 shows how to remove everything cleanly afterwards."
+                      }
+                }
+          ]
+    },
+    {
       "@type": "BreadcrumbList",
       "itemListElement": [
         {
@@ -72,7 +125,7 @@
         {
           "@type": "ListItem",
           "position": 2,
-          "name": "Wazuh SOC Lab: Build a Home SIEM and Detect Attacks | Sarath G",
+          "name": "Wazuh SOC Lab: OVA Setup, Windows Agent, Attack Detection | Sarath G",
           "item": "https://sarathg.me/wazuh.html"
         }
       ]
@@ -80,7 +133,7 @@
   ]
 }
   </script>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Fraunces:ital,wght@0,300;0,600;0,700;1,300;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/fonts/gf/fraunces-ibm-plex-mono-plus-jakarta-sans-7a6348.css">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
@@ -215,6 +268,9 @@ tr:nth-child(even) td { background:rgba(255,255,255,.015); }
 .part-label::after { content:''; flex:1; height:1px; background:var(--border); }
 .footer { border-top:1px solid var(--border); padding:36px 40px; text-align:center; font-family:var(--mono); font-size:11px; color:var(--text3); letter-spacing:.04em; }
 @media(max-width:640px) { .wrap,.content{padding-left:20px;padding-right:20px;} .tool-row{grid-template-columns:1fr;} .arch-cols{flex-direction:column;} .arch-conn{flex-direction:row;} }
+.faq-item { border-top:1px solid var(--border); padding:22px 0 8px; }
+.faq-item h3 { font-family:var(--serif); font-size:20px; font-weight:600; color:var(--text); letter-spacing:-.01em; line-height:1.3; margin-bottom:10px; }
+.faq-item code { font-family:var(--mono); font-size:13.5px; color:var(--blue); background:rgba(91,156,246,.1); padding:2px 6px; border-radius:5px; }
 </style>
 <style id="sg-theme">
 /* Second theme, driven by navbar.js toggling html.light. Absent class = dark, the site default. */
@@ -228,16 +284,16 @@ html.light .nav{background:rgba(245,247,250,.95)}
 </style>
   <!-- Social sharing (added 2026-09-04) -->
   <meta property="og:type" content="article" />
-  <meta property="og:title" content="Wazuh SOC Lab: Build a Home SIEM and Detect Attacks | Sarath G" />
-  <meta property="og:description" content="A complete SOC home lab guide using Wazuh on VirtualBox — deploy the OVA, connect a Windows agent, run Kali attacks, and detect it all. Free, no licence." />
+  <meta property="og:title" content="Wazuh SOC Lab: OVA Setup, Windows Agent, Attack Detection | Sarath G" />
+  <meta property="og:description" content="Free Wazuh SOC lab on VirtualBox: import the OVA, install the Windows agent, attack with Kali and detect it in the dashboard. Default logins and event IDs included." />
   <meta property="og:url" content="https://sarathg.me/wazuh.html" />
   <meta property="og:image" content="https://sarathg.me/assets/og/wazuh.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:alt" content="Wazuh SOC home lab | Sarath G" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Wazuh SOC Lab: Build a Home SIEM and Detect Attacks | Sarath G" />
-  <meta name="twitter:description" content="A complete SOC home lab guide using Wazuh on VirtualBox — deploy the OVA, connect a Windows agent, run Kali attacks, and detect it all. Free, no licence." />
+  <meta name="twitter:title" content="Wazuh SOC Lab: OVA Setup, Windows Agent, Attack Detection | Sarath G" />
+  <meta name="twitter:description" content="Free Wazuh SOC lab on VirtualBox: import the OVA, install the Windows agent, attack with Kali and detect it in the dashboard. Default logins and event IDs included." />
   <meta name="twitter:image" content="https://sarathg.me/assets/og/wazuh.png" />
 </head>
 <body>
@@ -247,7 +303,7 @@ html.light .nav{background:rgba(245,247,250,.95)}
 <div class="hero">
   <div class="wrap">
     <div class="hero-eyebrow">Defensive Security Lab</div>
-    <h1 class="hero-title">Security Operations<br><em>Center</em></h1>
+    <h1 class="hero-title">Wazuh SOC Lab<br><em>on VirtualBox</em></h1>
     <p class="hero-desc">Wazuh runs inside a pre-built virtual machine (OVA) on VirtualBox. A Windows agent ships Security Event Logs to it automatically. Kali (WSL2) is the attacker. You detect everything in the Wazuh dashboard — free, open source, no licence required.</p>
     <div class="hero-tags">
       <span class="hero-tag ht-g">🛡️ Wazuh OVA — VirtualBox</span>
@@ -259,11 +315,12 @@ html.light .nav{background:rgba(245,247,250,.95)}
 
 <nav class="nav">
   <div class="nav-inner">
-    <button class="nav-btn on" onclick="gotoSec(this,'s1')">01 · Lab Overview</button>
-    <button class="nav-btn"    onclick="gotoSec(this,'s2')">02 · Required Tools</button>
+    <button class="nav-btn on" onclick="gotoSec(this,'s1')">01 · Overview</button>
+    <button class="nav-btn"    onclick="gotoSec(this,'s2')">02 · Downloads</button>
     <button class="nav-btn"    onclick="gotoSec(this,'s3')">03 · Installation</button>
     <button class="nav-btn"    onclick="gotoSec(this,'s4')">04 · Attack &amp; Detect</button>
     <button class="nav-btn"    onclick="gotoSec(this,'s5')">05 · Uninstall</button>
+    <button class="nav-btn"    onclick="gotoSec(this,'s6')">06 · FAQ</button>
   </div>
 </nav>
 
@@ -272,7 +329,7 @@ html.light .nav{background:rgba(245,247,250,.95)}
 <!-- ═══════════════════════ S1 ═══════════════════════ -->
 <div class="sec" id="s1">
   <div class="sec-eyebrow">Section 01</div>
-  <h2 class="sec-title"><span class="sec-num">01</span> Lab Overview</h2>
+  <h2 class="sec-title"><span class="sec-num">01</span> Wazuh SOC lab overview</h2>
   <div class="sec-divider"></div>
 
   <p>The Wazuh server runs inside a <strong>pre-built virtual machine (OVA)</strong> on VirtualBox — no Linux setup, no installation commands, just import and start. A Wazuh Agent installed on Windows automatically ships Security Event Logs to it. Kali (WSL2) runs attacks against Windows. You detect everything in the Wazuh web dashboard.</p>
@@ -343,7 +400,7 @@ html.light .nav{background:rgba(245,247,250,.95)}
 <!-- ═══════════════════════ S2 ═══════════════════════ -->
 <div class="sec" id="s2">
   <div class="sec-eyebrow">Section 02</div>
-  <h2 class="sec-title"><span class="sec-num">02</span> Required Tools</h2>
+  <h2 class="sec-title"><span class="sec-num">02</span> Wazuh OVA, VirtualBox and agent downloads</h2>
   <div class="sec-divider"></div>
 
   <p>Everything is <strong>free</strong>. No accounts or licences required.</p>
@@ -394,7 +451,7 @@ html.light .nav{background:rgba(245,247,250,.95)}
 <!-- ═══════════════════════ S3 ═══════════════════════ -->
 <div class="sec" id="s3">
   <div class="sec-eyebrow">Section 03</div>
-  <h2 class="sec-title"><span class="sec-num">03</span> Installation Instructions</h2>
+  <h2 class="sec-title"><span class="sec-num">03</span> Install the Wazuh OVA and connect the Windows agent</h2>
   <div class="sec-divider"></div>
 
   <div class="part-label" style="color:var(--green)">Part A — Wazuh Server (VirtualBox OVA)</div>
@@ -543,7 +600,7 @@ msiexec.exe /i wazuh-agent-4.9.2-1.msi /q `
 <!-- ═══════════════════════ S4 ═══════════════════════ -->
 <div class="sec" id="s4">
   <div class="sec-eyebrow">Section 04</div>
-  <h2 class="sec-title"><span class="sec-num">04</span> Attack & Detect</h2>
+  <h2 class="sec-title"><span class="sec-num">04</span> Attack with Kali, detect in the Wazuh dashboard</h2>
   <div class="sec-divider"></div>
 
   <p>This lab simulates real attacker behaviour instead of brute force noise. Each exercise represents a stage of an attack lifecycle.</p>
@@ -626,7 +683,7 @@ net localgroup administrators backdoor /add</pre></div>
 <!-- ═══════════════════════ S5 ═══════════════════════ -->
 <div class="sec" id="s5">
   <div class="sec-eyebrow">Section 05</div>
-  <h2 class="sec-title"><span class="sec-num">05</span> Complete Uninstall</h2>
+  <h2 class="sec-title"><span class="sec-num">05</span> Uninstall the Wazuh agent and VM</h2>
   <div class="sec-divider"></div>
 
   <p>Run through these steps after your test run to get back to a clean slate. Once done, the machine will be in exactly the same state as before — ready to redo the lab in class.</p>
@@ -721,7 +778,70 @@ sudo apt remove -y nmap hydra && sudo apt autoremove -y</pre>
 
 </div><!-- end s5 -->
 
+<!-- ═══════════════════════ S6 ═══════════════════════ -->
+<div class="sec faq" id="s6">
+  <div class="sec-eyebrow">Section 06</div>
+  <h2 class="sec-title"><span class="sec-num">06</span> Wazuh lab FAQ</h2>
+  <div class="sec-divider"></div>
+  <p>The questions people search for most before and during this lab. Every answer points back to the section that covers it in full.</p>
+  <div class="faq-item">
+    <h3>What are the Wazuh OVA default credentials?</h3>
+    <p>Two logins. The VM console (VirtualBox window) is <code>wazuh-user</code> / <code>wazuh</code>. The Wazuh dashboard at <code>https://&lt;VM-IP&gt;</code> is <code>admin</code> / <code>admin</code>. Both are documented in section 03. Change them if the VM is reachable from anything other than your own machine.</p>
+  </div>
+  <div class="faq-item">
+    <h3>Where do I download the Wazuh OVA for VirtualBox?</h3>
+    <p>From the official Wazuh site: the file is <code>wazuh-4.14.4.ova</code>, about 4 GB. Section 02 has the direct link. Import it with VirtualBox &rarr; File &rarr; Import Appliance. The OVA already contains the Wazuh Manager, Indexer and Dashboard, so there is no Linux install to do.</p>
+  </div>
+  <div class="faq-item">
+    <h3>What are the system requirements for the Wazuh VM?</h3>
+    <p>Windows 10 or 11 (64-bit) with hardware virtualisation enabled in the BIOS, 8 GB RAM (4 GB goes to the Wazuh VM), and about 50 GB free disk. The OVA is 4 GB on download and expands to roughly 20 GB once imported.</p>
+  </div>
+  <div class="faq-item">
+    <h3>Which Windows event IDs does this Wazuh lab detect?</h3>
+    <p>Section 04 walks through five: <strong>4625</strong> failed logons from a hydra brute force, <strong>4688</strong> process creation for PowerShell abuse, <strong>4698</strong> scheduled task creation, <strong>7045</strong> a new service installed, and <strong>1102</strong> the Security log being cleared. Wazuh's built-in Windows rules alert on each of them, so you do not write any custom rules.</p>
+  </div>
+  <div class="faq-item">
+    <h3>How does the Windows agent connect to the Wazuh VM?</h3>
+    <p>The agent runs as the <code>WazuhSvc</code> Windows service and ships Security, System and Application event logs to the VM's IP on port 1514. The dashboard is served on port 443. If nothing appears, check <code>NET START WazuhSvc</code> and confirm the manager IP in the agent config matches the VM IP.</p>
+  </div>
+  <div class="faq-item">
+    <h3>Is the Wazuh SOC lab free?</h3>
+    <p>Yes. Wazuh, VirtualBox, Kali Linux, nmap and hydra are all free and open source. No accounts, trials or licences are needed, and section 05 shows how to remove everything cleanly afterwards.</p>
+  </div>
+</div><!-- end s6 -->
+
 </div><!-- end content -->
+
+<nav class="sg-related" aria-label="Related pages">
+<style id="sg-related-css">
+/* sg-related: plain-HTML cross-links (crawlable without JS). Dark base, html.light override, same convention as navbar.js. */
+.sg-related{max-width:900px;margin:56px auto 40px;padding:0 20px;box-sizing:border-box;font-family:Inter,-apple-system,'Segoe UI',sans-serif;line-height:1.5}
+.sg-related .sgr-box{background:#111418;border:1px solid #262b33;border-radius:16px;padding:24px 26px}
+.sg-related .sgr-title{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#8b95a1;margin:0 0 14px}
+.sg-related ul{list-style:none;margin:0;padding:0;display:grid;gap:14px 18px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.sg-related li a{display:block;color:#e6e9ee;font-weight:600;font-size:16px;text-decoration:none}
+.sg-related li a:hover{color:#4fffb0}
+.sg-related li span{display:block;color:#9aa3ad;font-size:14px;margin-top:2px}
+.sg-related .sgr-foot{margin:18px 0 0;padding-top:14px;border-top:1px solid #262b33;font-size:14px;color:#9aa3ad}
+.sg-related .sgr-foot a{color:#4fffb0;font-weight:600;text-decoration:none}
+.sg-related .sgr-foot a:hover{text-decoration:underline}
+html.light .sg-related .sgr-box{background:#f6f7f9;border-color:#d9dde3}
+html.light .sg-related .sgr-title{color:#5b6572}
+html.light .sg-related li a{color:#14171b}
+html.light .sg-related li a:hover,html.light .sg-related .sgr-foot a{color:#0b6b4a}
+html.light .sg-related li span,html.light .sg-related .sgr-foot{color:#4b5563}
+html.light .sg-related .sgr-foot{border-color:#d9dde3}
+</style>
+  <div class="sgr-box">
+    <p class="sgr-title">Keep going</p>
+    <ul>
+      <li><a href="/soc_splunk.html">Splunk for SOC analysts</a><span>Same detections, the other SIEM you will meet at work</span></li>
+      <li><a href="/pivoting.html">Pivoting & port forwarding lab</a><span>Two networks, three machines, one route through</span></li>
+      <li><a href="/blog/soc-grc-to-offensive.html">SOC analyst to pentester</a><span>Moving into offensive security, step by step</span></li>
+    </ul>
+    <p class="sgr-foot">Working through this for a job, not a hobby? <a href="/coaching/">1:1 mentorship</a> &middot; <a href="/blog/">Career roadmaps</a> &middot; <a href="https://labs.sarathg.me/">All labs</a></p>
+  </div>
+</nav>
 </main>
 <script src="cta-coaching.js" defer></script>
 <script src="footer.js" defer></script>
@@ -740,7 +860,7 @@ function gotoSec(btn, id) {
   btn.classList.add('on');
   document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
-const ids = ['s1','s2','s3','s4','s5'];
+const ids = ['s1','s2','s3','s4','s5','s6'];
 const btns = document.querySelectorAll('.nav-btn');
 window.addEventListener('scroll', () => {
   let cur = 's1';
