@@ -203,11 +203,40 @@
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
-
+
+
 
   <url>
     <loc>https://blockchain.sarathg.me/</loc>
     <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://sarathg.me/wazuh-event-ids.html</loc>
+    <lastmod>2026-09-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://sarathg.me/wazuh-log-analysis.html</loc>
+    <lastmod>2026-09-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://sarathg.me/osint-tools.html</loc>
+    <lastmod>2026-09-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://sarathg.me/pivoting-tunneling-port-forwarding.html</loc>
+    <lastmod>2026-09-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -225,8 +254,11 @@
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
-
-
-
+
+
+
+
+
+
 
 </urlset>

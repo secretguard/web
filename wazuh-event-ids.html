@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ML4GP9590F"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-ML4GP9590F');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wazuh Windows Event ID Reference: What Fires and Why | Sarath G</title>
+<meta name="description" content="Windows Security event IDs mapped to the Wazuh rules that fire on them: rule ID, alert level and meaning. Logons, account changes, services, log clearing.">
+<link rel="canonical" href="https://sarathg.me/wazuh-event-ids.html">
+<meta name="author" content="Sarath G">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "TechArticle",
+      "headline": "Wazuh Windows Event ID Reference: What Fires and Why",
+      "description": "Windows Security event IDs mapped to the Wazuh rules that detect them, with rule ID and alert level.",
+      "image": "https://sarathg.me/assets/og/wazuh-event-ids.png",
+      "url": "https://sarathg.me/wazuh-event-ids.html",
+      "mainEntityOfPage": "https://sarathg.me/wazuh-event-ids.html",
+      "datePublished": "2026-09-08",
+      "dateModified": "2026-09-08",
+      "author": {
+        "@id": "https://sarathg.me/#sarath"
+      },
+      "publisher": {
+        "@id": "https://sarathg.me/#org"
+      },
+      "about": [
+        {
+          "@type": "Thing",
+          "name": "Wazuh"
+        },
+        {
+          "@type": "Thing",
+          "name": "Windows Security Event Log"
+        },
+        {
+          "@type": "Thing",
+          "name": "SIEM"
+        }
+      ]
+    },
+    {
+      "@type": "Person",
+      "@id": "https://sarathg.me/#sarath",
+      "name": "Sarath G",
+      "jobTitle": "Application Security Consultant & International Cybersecurity Trainer",
+      "url": "https://sarathg.me/",
+      "sameAs": [
+        "https://www.linkedin.com/in/sarathcybersec/",
+        "https://github.com/secretguard",
+        "https://sarathg.medium.com/",
+        "https://youtube.com/@i_sarathg",
+        "https://www.instagram.com/i.sarathg/"
+      ]
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://sarathg.me/#org",
+      "name": "Sarath G",
+      "url": "https://sarathg.me/",
+      "logo": "https://sarathg.me/assets/og-image.jpg",
+      "founder": {
+        "@id": "https://sarathg.me/#sarath"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is the win.system.eventID field in Wazuh?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It is the decoded Windows event ID inside a Wazuh alert. In the dashboard you query it as data.win.system.eventID, for example data.win.system.eventID: \"4625\" for failed logons. Wazuh rules match on win.system.eventID in the ruleset XML."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which Windows event IDs should I monitor first?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Start with the high-signal ones: 4625 failed logon, 4740 account lockout, 4720 account created, 4732 added to a local admin group, 4698 scheduled task created, 7045 new service, 1102 log cleared, and 4104 PowerShell script block. They map to the loudest built-in Wazuh rules."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why does Wazuh not alert on event 4688 by default?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Process creation auditing is off in Windows by default and produces very high volume, so the base ruleset does not ship a dedicated 4688 alert. Enable \"Audit Process Creation\", turn on command-line logging, and either hunt on the event or deploy Sysmon Event 1 for richer process telemetry."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What do Wazuh rule levels mean?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A number from 0 to 15. 0 is logged but never alerted, 3 to 4 is low, 5 to 8 is medium, 9 to 12 is high, and 12 to 15 is critical. Wazuh records alerts from level 3 up and triggers integrations from level 12 up by default."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I change the alert level for an event?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Write a local rule in local_rules.xml that uses &lt;if_sid&gt; to inherit the built-in rule and sets a new level. For example, raise scheduled-task creation from 4 to 10 in your lab so it stands out. Restart the manager and the change is live."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do these event IDs need Sysmon installed?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Every Security-channel event here (4624, 4625, 4720, 7045, 1102 and the rest) comes from the built-in Windows Security log that the Wazuh agent reads automatically. Sysmon and PowerShell script-block logging are optional add-ons that give deeper execution detail."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://sarathg.me/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Wazuh Windows Event ID Reference: What Fires and Why | Sarath G",
+          "item": "https://sarathg.me/wazuh-event-ids.html"
+        }
+      ]
+    }
+  ]
+}
+</script>
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Wazuh Windows Event ID Reference: What Fires and Why | Sarath G" />
+<meta property="og:description" content="Windows Security event IDs mapped to the Wazuh rules that fire on them: rule ID, alert level and meaning. Logons, account changes, services, log clearing." />
+<meta property="og:url" content="https://sarathg.me/wazuh-event-ids.html" />
+<meta property="og:image" content="https://sarathg.me/assets/og/wazuh-event-ids.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Wazuh Windows event ID reference | Sarath G" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Wazuh Windows Event ID Reference: What Fires and Why | Sarath G" />
+<meta name="twitter:description" content="Windows Security event IDs mapped to the Wazuh rules that fire on them: rule ID, alert level and meaning. Logons, account changes, services, log clearing." />
+<meta name="twitter:image" content="https://sarathg.me/assets/og/wazuh-event-ids.png" />
+<link rel="stylesheet" href="/assets/fonts/gf/fraunces-ibm-plex-mono-plus-jakarta-sans-7a6348.css">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:#0e1117; --surface:#141920; --surface2:#1a2230;
+  --border:#222d3d; --border2:#2a3a50;
+  --blue:#5b9cf6; --green:#42d97a; --amber:#f5b942;
+  --red:#f47068; --teal:#3ecfcf; --purple:#a78bfa;
+  --text:#e2ecf8; --text2:#7d98b8; --text3:#3f5470;
+  --mono:'IBM Plex Mono',monospace; --serif:'Fraunces',serif; --sans:'Plus Jakarta Sans',sans-serif;
+}
+body { font-family:var(--sans); background:var(--bg); color:var(--text); line-height:1.75; font-size:16px; }
+
+.hero { background:var(--surface); border-bottom:1px solid var(--border); padding:80px 0 64px; position:relative; overflow:hidden; }
+.hero::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 55% 70% at 0% 50%,rgba(91,156,246,.09) 0%,transparent 65%),radial-gradient(ellipse 35% 50% at 100% 20%,rgba(66,217,122,.06) 0%,transparent 55%); pointer-events:none; }
+.wrap { max-width:900px; margin:0 auto; padding:0 40px; position:relative; z-index:1; }
+.hero-eyebrow { font-family:var(--mono); font-size:12px; font-weight:500; color:var(--blue); letter-spacing:.1em; text-transform:uppercase; margin-bottom:22px; display:flex; align-items:center; gap:10px; }
+.hero-eyebrow::before { content:''; width:24px; height:1px; background:var(--blue); }
+h1.hero-title { font-family:var(--serif); font-size:clamp(38px,6vw,62px); font-weight:700; line-height:1.08; color:var(--text); margin-bottom:20px; letter-spacing:-.02em; }
+h1.hero-title em { font-style:italic; color:var(--blue); font-weight:300; }
+.hero-desc { font-size:17px; color:var(--text2); max-width:580px; line-height:1.7; margin-bottom:36px; }
+.hero-tags { display:flex; gap:10px; flex-wrap:wrap; }
+.hero-tag { font-family:var(--mono); font-size:11px; font-weight:500; padding:5px 14px; border-radius:6px; display:flex; align-items:center; gap:7px; }
+.ht-b { background:rgba(91,156,246,.1); color:var(--blue); border:1px solid rgba(91,156,246,.2); }
+.ht-o { background:rgba(245,185,66,.1); color:var(--amber); border:1px solid rgba(245,185,66,.2); }
+.ht-g { background:rgba(66,217,122,.1); color:var(--green); border:1px solid rgba(66,217,122,.2); }
+.ht-r { background:rgba(244,112,104,.1); color:var(--red); border:1px solid rgba(244,112,104,.2); }
+
+.nav { position:sticky; top:64px; z-index:200; background:rgba(14,17,23,.95); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); }
+.nav-inner { max-width:900px; margin:0 auto; padding:0 40px; display:flex; overflow-x:auto; scrollbar-width:none; gap:2px; }
+.nav-inner::-webkit-scrollbar { display:none; }
+.nav-btn { font-family:var(--mono); font-size:11px; font-weight:600; color:var(--text3); padding:15px 18px; cursor:pointer; white-space:nowrap; user-select:none; border:none; border-bottom:2px solid transparent; background:none; transition:color .15s,border-color .15s; letter-spacing:.04em; }
+.nav-btn:hover { color:var(--text2); }
+.nav-btn.on { color:var(--blue); border-bottom-color:var(--blue); }
+
+.content { max-width:900px; margin:0 auto; padding:64px 40px 100px; }
+.sec { margin-bottom:88px; scroll-margin-top:64px; }
+.sec-eyebrow { font-family:var(--mono); font-size:11px; font-weight:600; color:var(--text3); letter-spacing:.14em; text-transform:uppercase; margin-bottom:10px; }
+h2.sec-title { font-family:var(--serif); font-size:34px; font-weight:700; color:var(--text); letter-spacing:-.02em; line-height:1.15; margin-bottom:8px; display:flex; align-items:center; gap:16px; }
+.sec-num { font-family:var(--mono); font-size:13px; font-weight:600; color:var(--blue); background:rgba(91,156,246,.1); border:1px solid rgba(91,156,246,.2); width:36px; height:36px; border-radius:10px; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
+.sec-divider { height:1px; background:var(--border); margin:20px 0 32px; }
+p { color:var(--text2); margin-bottom:14px; font-size:15.5px; }
+p strong { color:var(--text); font-weight:600; }
+ul { padding-left:22px; color:var(--text2); margin-bottom:16px; font-size:15.5px; }
+ul li { margin-bottom:7px; }
+ul li::marker { color:var(--blue); }
+
+/* ARCH */
+.arch { background:var(--surface); border:1px solid var(--border2); border-radius:16px; padding:32px; margin:24px 0; }
+.arch-cols { display:flex; gap:16px; align-items:stretch; flex-wrap:wrap; margin-bottom:20px; }
+.arch-machine { flex:1; min-width:200px; background:var(--surface2); border-radius:12px; padding:20px; text-align:center; }
+.arch-machine.hi-b { border:2px solid rgba(91,156,246,.35); }
+.arch-machine.hi-g { border:2px solid rgba(66,217,122,.35); }
+.arch-machine.hi-r { border:2px solid rgba(244,112,104,.35); }
+.arch-machine .ico { font-size:32px; margin-bottom:10px; display:block; }
+.arch-machine .nm { font-family:var(--serif); font-size:16px; font-weight:700; color:var(--text); margin-bottom:4px; }
+.arch-machine .sub { font-family:var(--mono); font-size:10px; color:var(--text3); line-height:1.6; }
+.arch-conn { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; padding:0 4px; flex-shrink:0; }
+.arch-conn .arr { font-size:20px; color:var(--text3); }
+.arch-conn .lbl { font-family:var(--mono); font-size:9px; color:var(--text3); white-space:nowrap; }
+.arch-flow { border-top:1px solid var(--border); padding-top:20px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:center; }
+.afl { font-family:var(--mono); font-size:11px; font-weight:600; padding:5px 12px; border-radius:6px; white-space:nowrap; }
+.arr-sm { font-size:14px; color:var(--text3); }
+
+/* TOOLS */
+.tools-grid { display:flex; flex-direction:column; gap:12px; margin:24px 0; }
+.tool-row { display:grid; grid-template-columns:200px 1fr auto; gap:20px; align-items:center; background:var(--surface); border:1px solid var(--border2); border-radius:12px; padding:18px 22px; }
+.tool-name { font-weight:700; color:var(--text); font-size:15px; }
+.tool-name small { display:block; font-family:var(--mono); font-size:10px; color:var(--text3); font-weight:400; margin-top:3px; }
+.tool-desc { font-size:14px; color:var(--text2); line-height:1.6; }
+.tool-badge { font-family:var(--mono); font-size:10px; font-weight:600; padding:4px 11px; border-radius:6px; white-space:nowrap; }
+.tb-vb { background:rgba(167,139,250,.1); color:var(--purple); border:1px solid rgba(167,139,250,.25); }
+.tb-w  { background:rgba(66,217,122,.1);  color:var(--green);  border:1px solid rgba(66,217,122,.25); }
+.tb-wa { background:rgba(91,156,246,.1);  color:var(--blue);   border:1px solid rgba(91,156,246,.25); }
+.tb-k  { background:rgba(244,112,104,.1); color:var(--red);    border:1px solid rgba(244,112,104,.25); }
+
+/* STEPS */
+.step { margin:36px 0; }
+.step-hd { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+.step-n { font-family:var(--mono); font-size:11px; font-weight:700; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.sn-b { background:rgba(91,156,246,.15); color:var(--blue); border:1px solid rgba(91,156,246,.3); }
+.sn-g { background:rgba(66,217,122,.15); color:var(--green); border:1px solid rgba(66,217,122,.3); }
+.sn-r { background:rgba(244,112,104,.15); color:var(--red); border:1px solid rgba(244,112,104,.3); }
+.step-title { font-family:var(--sans); font-weight:700; color:var(--text); font-size:16.5px; }
+
+/* CODE BLOCKS */
+.cb { border-radius:12px; overflow:hidden; margin:14px 0; border:1px solid var(--border2); }
+.cb-top { display:flex; align-items:center; justify-content:space-between; padding:10px 16px; background:var(--surface2); border-bottom:1px solid var(--border); }
+.cb-lang { font-family:var(--mono); font-size:10px; font-weight:600; display:flex; align-items:center; gap:8px; letter-spacing:.04em; color:var(--text2); }
+.dot { width:7px; height:7px; border-radius:50%; }
+.d-ps    { background:#a78bfa; }
+.d-kali  { background:#f47068; }
+.d-wazuh { background:#42d97a; }
+.d-url   { background:#5b9cf6; }
+.d-vm    { background:#f5b942; }
+.cp-btn { font-family:var(--mono); font-size:10px; font-weight:600; background:none; border:1px solid var(--border2); color:var(--text3); padding:4px 12px; border-radius:6px; cursor:pointer; transition:all .15s; }
+.cp-btn:hover { background:var(--border); color:var(--text2); }
+.cp-btn.ok { color:var(--green); border-color:rgba(66,217,122,.4); }
+pre { background:#070c12; font-family:var(--mono); font-size:13px; line-height:1.9; padding:20px 22px; overflow-x:auto; color:var(--text); }
+.cm { color:var(--text3); font-style:italic; }
+
+/* NOTES */
+.note { display:flex; gap:14px; padding:16px 18px; border-radius:10px; margin:16px 0; border-left:3px solid; }
+.note-icon { font-size:16px; flex-shrink:0; margin-top:2px; }
+.note-body { flex:1; }
+.note-title { font-size:13px; font-weight:700; margin-bottom:4px; }
+.note p { font-size:13.5px; margin:0; line-height:1.65; }
+.note p+p { margin-top:6px; }
+.n-info { background:rgba(91,156,246,.07); border-color:var(--blue); } .n-info .note-title { color:var(--blue); }
+.n-ok   { background:rgba(66,217,122,.07); border-color:var(--green); } .n-ok .note-title   { color:var(--green); }
+.n-warn { background:rgba(245,185,66,.07); border-color:var(--amber); } .n-warn .note-title { color:var(--amber); }
+.n-crit { background:rgba(244,112,104,.07); border-color:var(--red); }  .n-crit .note-title { color:var(--red); }
+
+/* EXERCISES */
+.ex { background:var(--surface); border:1px solid var(--border2); border-radius:16px; margin:24px 0; overflow:hidden; }
+.ex-hd { background:var(--surface2); border-bottom:1px solid var(--border); padding:18px 24px; display:flex; align-items:center; gap:14px; }
+.ex-tag { font-family:var(--mono); font-size:11px; font-weight:700; padding:4px 11px; border-radius:6px; background:rgba(91,156,246,.1); color:var(--blue); border:1px solid rgba(91,156,246,.25); }
+.ex-name { font-family:var(--serif); font-size:18px; font-weight:700; color:var(--text); letter-spacing:-.01em; }
+.ex-body { padding:26px 24px; }
+.obj-badge { display:inline-flex; align-items:center; font-family:var(--mono); font-size:10px; font-weight:600; color:var(--amber); background:rgba(245,185,66,.08); border:1px solid rgba(245,185,66,.2); padding:4px 11px; border-radius:6px; margin-bottom:16px; }
+.phase-tag { display:inline-block; font-family:var(--mono); font-size:10px; font-weight:700; padding:4px 11px; border-radius:6px; margin:16px 0 10px; letter-spacing:.04em; }
+.ph-atk { background:rgba(244,112,104,.1); color:var(--red); border:1px solid rgba(244,112,104,.25); }
+.ph-det { background:rgba(91,156,246,.1); color:var(--blue); border:1px solid rgba(91,156,246,.25); }
+.ph-alr { background:rgba(66,217,122,.1); color:var(--green); border:1px solid rgba(66,217,122,.25); }
+
+code { font-family:var(--mono); font-size:12px; background:rgba(91,156,246,.1); color:var(--blue); padding:2px 6px; border-radius:4px; }
+table { width:100%; border-collapse:collapse; font-size:14px; margin:18px 0; }
+th { background:var(--surface2); color:var(--text); font-size:11px; text-transform:uppercase; letter-spacing:.05em; font-weight:700; padding:11px 16px; border:1px solid var(--border2); text-align:left; }
+td { padding:11px 16px; border:1px solid var(--border2); color:var(--text2); vertical-align:top; }
+tr:nth-child(even) td { background:rgba(255,255,255,.015); }
+.eid { font-family:var(--mono); color:var(--teal); font-weight:600; font-size:12px; }
+.part-label { font-family:var(--mono); font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; display:flex; align-items:center; gap:14px; margin:52px 0 20px; }
+.part-label::after { content:''; flex:1; height:1px; background:var(--border); }
+.footer { border-top:1px solid var(--border); padding:36px 40px; text-align:center; font-family:var(--mono); font-size:11px; color:var(--text3); letter-spacing:.04em; }
+@media(max-width:640px) { .wrap,.content{padding-left:20px;padding-right:20px;} .tool-row{grid-template-columns:1fr;} .arch-cols{flex-direction:column;} .arch-conn{flex-direction:row;} }
+.faq-item { border-top:1px solid var(--border); padding:22px 0 8px; }
+.faq-item h3 { font-family:var(--serif); font-size:20px; font-weight:600; color:var(--text); letter-spacing:-.01em; line-height:1.3; margin-bottom:10px; }
+.faq-item code { font-family:var(--mono); font-size:13.5px; color:var(--blue); background:rgba(91,156,246,.1); padding:2px 6px; border-radius:5px; }
+</style>
+<style id="sg-theme">
+/* Second theme, driven by navbar.js toggling html.light. Absent class = dark, the site default. */
+html.light{
+  --bg:#f5f7fa; --surface:#ffffff; --surface2:#eef2f7;
+  --border:#d5dde8; --border2:#bfcad9;
+  --blue:#2f6fd6; --green:#1f9d55; --amber:#b7791f; --red:#d0453c; --teal:#1c9a9a; --purple:#7c5ccf;
+  --text:#101828; --text2:#4a5c78; --text3:#8593a8;
+}
+html.light .nav{background:rgba(245,247,250,.95)}
+</style>
+</head>
+<body>
+<script src="navbar.js" defer></script>
+
+<main>
+<div class="hero">
+  <div class="wrap">
+    <div class="hero-eyebrow">Wazuh Reference</div>
+    <h1 class="hero-title">Wazuh Windows<br><em>event ID reference</em></h1>
+    <p class="hero-desc">Every Windows Security event ID that matters, mapped to the Wazuh rule that fires, its alert level and what it means. A working reference for the SOC home lab.</p>
+    <div class="hero-tags">
+      <span class="hero-tag ht-g">🛡️ 40+ event IDs</span>
+      <span class="hero-tag ht-b">📡 Built-in Wazuh rules</span>
+      <span class="hero-tag ht-o">🎚️ Alert levels explained</span>
+    </div>
+  </div>
+</div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <button class="nav-btn on" onclick="gotoSec(this,'s1')">01 · How it maps</button>
+    <button class="nav-btn" onclick="gotoSec(this,'s2')">02 · Logons</button>
+    <button class="nav-btn" onclick="gotoSec(this,'s3')">03 · Accounts</button>
+    <button class="nav-btn" onclick="gotoSec(this,'s4')">04 · Services & logs</button>
+    <button class="nav-btn" onclick="gotoSec(this,'s5')">05 · PowerShell & Sysmon</button>
+    <button class="nav-btn" onclick="gotoSec(this,'s6')">06 · FAQ</button>
+  </div>
+</nav>
+
+<div class="content">
+
+<div class="sec" id="s1">
+  <div class="sec-eyebrow">Section 01</div>
+  <h2 class="sec-title"><span class="sec-num">01</span> How Wazuh turns a Windows event into an alert</h2>
+  <div class="sec-divider"></div>
+  <p>Wazuh does not detect a Windows event by its ID directly. The Windows agent ships each event from a <strong>channel</strong> (Security, System, Application, PowerShell, Sysmon), Wazuh decodes it, and then a chain of rules matches on the <code>win.system.eventID</code> field. Every rule has an <strong>ID</strong> and an <strong>alert level</strong> from 0 to 15. This page maps the Windows Security event IDs you meet most often to the built-in Wazuh rule that fires, so you can tell at a glance what will alert and how loudly.</p>
+  <p>This is a companion to the <a href="/wazuh.html">Wazuh SOC home lab</a>, where you generate these events with Kali and watch them appear. Rule IDs and levels below are from the Wazuh 4.x default ruleset.</p>
+  <div class="note n-info">
+    <div class="note-icon">🎚️</div>
+    <div class="note-body"><div class="note-title">How Wazuh alert levels work</div>
+      <p><strong>0</strong> logged but never alerted (grouping or noise rules). <strong>3&ndash;4</strong> low, informational. <strong>5&ndash;8</strong> medium, worth a look. <strong>9&ndash;12</strong> high. <strong>12&ndash;15</strong> critical. By default Wazuh writes alerts at level 3 and above, and escalates integrations (email, Slack) at level 12 and above. You raise or lower any of these with a local rule.</p>
+    </div>
+  </div>
+  <div class="note n-info">
+    <div class="note-icon">🔎</div>
+    <div class="note-body"><div class="note-title">Find any event in the dashboard</div>
+      <p>Whether or not a dedicated rule exists, every collected event is searchable. In <strong>Threat Hunting &rarr; Events</strong> (or Discover) filter on <code>data.win.system.eventID: "4625"</code>. See the <a href="/wazuh-log-analysis.html">Wazuh log analysis walkthrough</a> for the query syntax.</p>
+    </div>
+  </div>
+</div>
+<div class="sec" id="s2">
+  <div class="sec-eyebrow">Section 02</div>
+  <h2 class="sec-title"><span class="sec-num">02</span> Authentication and logon events</h2>
+  <div class="sec-divider"></div>
+  <p>The events you generate first in any SOC lab. A hydra brute force against the Windows host produces a wall of <span class="eid">4625</span>, which Wazuh rolls up into a single high-level alert.</p>
+<div style="overflow-x:auto"><table>
+    <tr><th>Event ID</th><th>What it means in Windows</th><th>Wazuh rule</th><th>Level</th><th>Notes</th></tr>
+    <tr><td><span class="eid">4624</span></td><td>An account was successfully logged on</td><td><code>60106</code></td><td>3</td><td>Logon type matters. Type 3 network, type 10 RDP, type 5 service. Rules 60200/60232 handle IIS and noise.</td></tr>
+    <tr><td><span class="eid">4625</span></td><td>An account failed to log on</td><td><code>60105</code>, <code>60122</code></td><td>5</td><td>Bad password or unknown user. Repeated 4625 rolls up into rule <code>60204</code> (multiple logon failures) at level 10.</td></tr>
+    <tr><td><span class="eid">4634</span></td><td>An account was logged off</td><td><code>60137</code></td><td>3</td><td>Pairs with 4624 to measure session length.</td></tr>
+    <tr><td><span class="eid">4648</span></td><td>Logon using explicit credentials (runas)</td><td>&mdash;</td><td>&mdash;</td><td>No dedicated rule. A strong lateral-movement signal. Search it directly and write a local rule if you care.</td></tr>
+    <tr><td><span class="eid">4672</span></td><td>Special privileges assigned to new logon</td><td>&mdash;</td><td>&mdash;</td><td>Marks an admin logon. Covered by WEF baseline rule <code>67028</code> if you deploy that ruleset.</td></tr>
+    <tr><td><span class="eid">4673</span></td><td>A privileged service was called</td><td><code>60107</code></td><td>4</td><td>Repeated failures roll up into <code>60203</code> at level 10.</td></tr>
+    <tr><td><span class="eid">4768</span></td><td>A Kerberos TGT was requested</td><td>&mdash;</td><td>&mdash;</td><td>On a domain controller. Baseline for Kerberoasting and AS-REP hunting; no default alert.</td></tr>
+    <tr><td><span class="eid">4769</span></td><td>A Kerberos service ticket was requested</td><td><code>60106</code>, <code>60131</code></td><td>3&ndash;5</td><td>Rule <code>60131</code> flags DC logon failure. Bursts of 4769 for many SPNs suggest Kerberoasting.</td></tr>
+    <tr><td><span class="eid">4771</span></td><td>Kerberos pre-authentication failed</td><td>&mdash;</td><td>&mdash;</td><td>The domain equivalent of 4625. No default rule; add one for password-spray detection.</td></tr>
+    <tr><td><span class="eid">4776</span></td><td>NTLM credential validation</td><td>&mdash;</td><td>&mdash;</td><td>On the authenticating server. Useful for pass-the-hash hunting.</td></tr>
+    <tr><td><span class="eid">4778</span> / <span class="eid">4779</span></td><td>Session reconnected / disconnected</td><td><code>60108</code></td><td>3</td><td>RDP and Fast User Switching sessions.</td></tr>
+  </table></div>
+</div>
+<div class="sec" id="s3">
+  <div class="sec-eyebrow">Section 03</div>
+  <h2 class="sec-title"><span class="sec-num">03</span> Account and group management</h2>
+  <div class="sec-divider"></div>
+  <p>Persistence and privilege escalation live here. Creating a user, then adding it to Administrators, is two events and two rules.</p>
+<div style="overflow-x:auto"><table>
+    <tr><th>Event ID</th><th>What it means in Windows</th><th>Wazuh rule</th><th>Level</th><th>Notes</th></tr>
+    <tr><td><span class="eid">4720</span></td><td>A user account was created</td><td><code>60109</code></td><td>8</td><td>High level because new accounts are a common persistence move.</td></tr>
+    <tr><td><span class="eid">4722</span></td><td>A user account was enabled</td><td><code>60109</code></td><td>8</td><td>Same rule as account creation.</td></tr>
+    <tr><td><span class="eid">4725</span></td><td>A user account was disabled</td><td><code>60111</code></td><td>8</td><td></td></tr>
+    <tr><td><span class="eid">4726</span></td><td>A user account was deleted</td><td><code>60111</code></td><td>8</td><td></td></tr>
+    <tr><td><span class="eid">4738</span></td><td>A user account was changed</td><td><code>60110</code></td><td>8</td><td>Covers attribute changes such as password-never-expires.</td></tr>
+    <tr><td><span class="eid">4740</span></td><td>A user account was locked out</td><td><code>60115</code></td><td>9</td><td>Often the visible result of a brute force or spray.</td></tr>
+    <tr><td><span class="eid">4767</span></td><td>A user account was unlocked</td><td><code>60133</code></td><td>5</td><td></td></tr>
+    <tr><td><span class="eid">4728</span></td><td>Member added to a global security group</td><td><code>60113</code>, <code>60141</code></td><td>5</td><td>Watch Domain Admins and Enterprise Admins here.</td></tr>
+    <tr><td><span class="eid">4732</span></td><td>Member added to a local security group</td><td><code>60113</code>, <code>60144</code></td><td>5</td><td>Local Administrators additions are a classic privilege grab.</td></tr>
+    <tr><td><span class="eid">4756</span></td><td>Member added to a universal security group</td><td><code>60113</code>, <code>60151</code></td><td>5</td><td></td></tr>
+    <tr><td><span class="eid">4735</span></td><td>A local security group was changed</td><td><code>60113</code>, <code>60147</code></td><td>5</td><td></td></tr>
+    <tr><td><span class="eid">4719</span></td><td>System audit policy was changed</td><td><code>60112</code></td><td>8</td><td>Attackers disable auditing to go dark. Treat any change as suspicious.</td></tr>
+  </table></div>
+</div>
+<div class="sec" id="s4">
+  <div class="sec-eyebrow">Section 04</div>
+  <h2 class="sec-title"><span class="sec-num">04</span> Process, service and log-clearing events</h2>
+  <div class="sec-divider"></div>
+  <p>Execution and anti-forensics. The scheduled-task and service events are what the lab's Kali attacks trigger.</p>
+<div style="overflow-x:auto"><table>
+    <tr><th>Event ID</th><th>What it means in Windows</th><th>Wazuh rule</th><th>Level</th><th>Notes</th></tr>
+    <tr><td><span class="eid">4688</span></td><td>A new process was created</td><td>&mdash;</td><td>&mdash;</td><td>No dedicated base rule. Enable "Audit Process Creation" plus command-line logging, then hunt on it, or use Sysmon Event 1 for richer data. WEF baseline rule <code>67027</code> labels it.</td></tr>
+    <tr><td><span class="eid">4689</span></td><td>A process exited</td><td>&mdash;</td><td>&mdash;</td><td>Pairs with 4688 to measure process lifetime.</td></tr>
+    <tr><td><span class="eid">7045</span></td><td>A new service was installed</td><td><code>61138</code></td><td>5</td><td>Rule <code>92650</code> escalates to level 12 when the service binary runs from the Windows root, a PsExec / admin-share signature.</td></tr>
+    <tr><td><span class="eid">7040</span></td><td>Service start type was changed</td><td><code>61104</code></td><td>3</td><td>e.g. a defence service flipped to Disabled.</td></tr>
+    <tr><td><span class="eid">7034</span> / <span class="eid">7036</span></td><td>Service crashed / changed state</td><td>&mdash;</td><td>&mdash;</td><td>Handled as generic System events. Repeated crashes roll up via <code>61110</code>.</td></tr>
+    <tr><td><span class="eid">1102</span></td><td>The Security audit log was cleared</td><td><code>60117</code></td><td>9</td><td>A near-certain anti-forensics move. Alert on this every time.</td></tr>
+    <tr><td><span class="eid">104</span></td><td>An event log was cleared (System)</td><td>&mdash;</td><td>&mdash;</td><td>The System-channel sibling of 1102. Add a local rule to match its parity.</td></tr>
+    <tr><td><span class="eid">5140</span></td><td>A network share was accessed</td><td><code>67017</code></td><td>3</td><td>From the WEF baseline ruleset. 5145 gives per-file detail.</td></tr>
+    <tr><td><span class="eid">5142</span> / <span class="eid">5144</span></td><td>A network share was created / deleted</td><td><code>67025</code>, <code>67026</code></td><td>3</td><td>Also from the WEF baseline ruleset.</td></tr>
+  </table></div>
+  <div class="note n-warn"><div class="note-icon">📅</div><div class="note-body"><div class="note-title">Scheduled tasks</div><p><span class="eid">4698</span> (a scheduled task was created) fires Wazuh rule <code>60228</code> at level 4, a common persistence technique. <span class="eid">4699</span> logs deletion. On newer builds the Task Scheduler Operational channel (events 106, 140, 141) carries the same information and is picked up by WEF baseline rules <code>67014</code>&ndash;<code>67016</code>.</p></div></div>
+</div>
+<div class="sec" id="s5">
+  <div class="sec-eyebrow">Section 05</div>
+  <h2 class="sec-title"><span class="sec-num">05</span> PowerShell and Sysmon events</h2>
+  <div class="sec-divider"></div>
+  <p>The base Windows channels tell you <em>what</em> happened. PowerShell script-block logging and Sysmon tell you <em>how</em>. Enabling both turns a quiet lab into a realistic one, and Wazuh ships hundreds of rules for them out of the box.</p>
+<div style="overflow-x:auto"><table>
+    <tr><th>Event ID</th><th>Source channel</th><th>Wazuh rule(s)</th><th>Level</th><th>What Wazuh flags</th></tr>
+    <tr><td><span class="eid">4104</span></td><td>PowerShell/Operational (script block logging)</td><td><code>91803</code>&ndash;<code>91846</code></td><td>3&ndash;14</td><td>Base64 decoding <code>91809</code> L10, screen capture <code>91803</code> L14, remote Invoke-Command <code>91823</code> L14, plus dozens of discovery and collection patterns.</td></tr>
+    <tr><td><span class="eid">4103</span></td><td>PowerShell/Operational (module logging)</td><td>via <code>91802</code></td><td>0+</td><td>Pipeline execution detail. Feeds the same script-block rule group.</td></tr>
+    <tr><td><span class="eid">1</span></td><td>Sysmon (process creation)</td><td><code>92000</code>&ndash;<code>92081</code></td><td>4&ndash;</td><td>The richest execution telemetry: parent/child, hashes, command line. Script interpreters spawning processes flagged at <code>92000</code>.</td></tr>
+    <tr><td><span class="eid">3</span></td><td>Sysmon (network connection)</td><td><code>92101</code>&ndash;<code>92110</code></td><td>0&ndash;</td><td>PowerShell making TCP connections <code>92101</code>, a beaconing signal.</td></tr>
+    <tr><td><span class="eid">11</span></td><td>Sysmon (file created)</td><td><code>92200</code>&ndash;<code>92227</code></td><td>6&ndash;</td><td>Scripts and executables dropped into Temp or user folders <code>92200</code>.</td></tr>
+  </table></div>
+</div>
+<div class="sec faq" id="s6">
+  <div class="sec-eyebrow">Section 06</div>
+  <h2 class="sec-title"><span class="sec-num">06</span> Wazuh event ID FAQ</h2>
+  <div class="sec-divider"></div>
+  <div class="faq-item">
+    <h3>What is the win.system.eventID field in Wazuh?</h3>
+    <p>It is the decoded Windows event ID inside a Wazuh alert. In the dashboard you query it as <code>data.win.system.eventID</code>, for example <code>data.win.system.eventID: "4625"</code> for failed logons. Wazuh rules match on <code>win.system.eventID</code> in the ruleset XML.</p>
+  </div>
+  <div class="faq-item">
+    <h3>Which Windows event IDs should I monitor first?</h3>
+    <p>Start with the high-signal ones: <span class="eid">4625</span> failed logon, <span class="eid">4740</span> account lockout, <span class="eid">4720</span> account created, <span class="eid">4732</span> added to a local admin group, <span class="eid">4698</span> scheduled task created, <span class="eid">7045</span> new service, <span class="eid">1102</span> log cleared, and <span class="eid">4104</span> PowerShell script block. They map to the loudest built-in Wazuh rules.</p>
+  </div>
+  <div class="faq-item">
+    <h3>Why does Wazuh not alert on event 4688 by default?</h3>
+    <p>Process creation auditing is off in Windows by default and produces very high volume, so the base ruleset does not ship a dedicated 4688 alert. Enable "Audit Process Creation", turn on command-line logging, and either hunt on the event or deploy Sysmon Event 1 for richer process telemetry.</p>
+  </div>
+  <div class="faq-item">
+    <h3>What do Wazuh rule levels mean?</h3>
+    <p>A number from 0 to 15. 0 is logged but never alerted, 3 to 4 is low, 5 to 8 is medium, 9 to 12 is high, and 12 to 15 is critical. Wazuh records alerts from level 3 up and triggers integrations from level 12 up by default.</p>
+  </div>
+  <div class="faq-item">
+    <h3>How do I change the alert level for an event?</h3>
+    <p>Write a local rule in <code>local_rules.xml</code> that uses <code>&lt;if_sid&gt;</code> to inherit the built-in rule and sets a new <code>level</code>. For example, raise scheduled-task creation from 4 to 10 in your lab so it stands out. Restart the manager and the change is live.</p>
+  </div>
+  <div class="faq-item">
+    <h3>Do these event IDs need Sysmon installed?</h3>
+    <p>No. Every Security-channel event here (4624, 4625, 4720, 7045, 1102 and the rest) comes from the built-in Windows Security log that the Wazuh agent reads automatically. Sysmon and PowerShell script-block logging are optional add-ons that give deeper execution detail.</p>
+  </div>
+</div><!-- end faq -->
+
+</div><!-- end content -->
+
+<nav class="sg-related" aria-label="Related pages">
+<style id="sg-related-css">
+.sg-related{max-width:900px;margin:56px auto 40px;padding:0 20px;box-sizing:border-box;font-family:Inter,-apple-system,'Segoe UI',sans-serif;line-height:1.5}
+.sg-related .sgr-box{background:#111418;border:1px solid #262b33;border-radius:16px;padding:24px 26px}
+.sg-related .sgr-title{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#8b95a1;margin:0 0 14px}
+.sg-related ul{list-style:none;margin:0;padding:0;display:grid;gap:14px 18px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.sg-related li a{display:block;color:#e6e9ee;font-weight:600;font-size:16px;text-decoration:none}
+.sg-related li a:hover{color:#4fffb0}
+.sg-related li span{display:block;color:#9aa3ad;font-size:14px;margin-top:2px}
+.sg-related .sgr-foot{margin:18px 0 0;padding-top:14px;border-top:1px solid #262b33;font-size:14px;color:#9aa3ad}
+.sg-related .sgr-foot a{color:#4fffb0;font-weight:600;text-decoration:none}
+.sg-related .sgr-foot a:hover{text-decoration:underline}
+html.light .sg-related .sgr-box{background:#f6f7f9;border-color:#d9dde3}
+html.light .sg-related .sgr-title{color:#5b6572}
+html.light .sg-related li a{color:#14171b}
+html.light .sg-related li a:hover,html.light .sg-related .sgr-foot a{color:#0b6b4a}
+html.light .sg-related li span,html.light .sg-related .sgr-foot{color:#4b5563}
+html.light .sg-related .sgr-foot{border-color:#d9dde3}
+</style>
+  <div class="sgr-box">
+    <p class="sgr-title">Keep going</p>
+    <ul>
+      <li><a href="/wazuh.html">Wazuh SOC home lab</a><span>Build the lab that generates these events</span></li>
+      <li><a href="/wazuh-log-analysis.html">Wazuh log analysis walkthrough</a><span>Query and filter these events in the dashboard</span></li>
+      <li><a href="/blog/soc-grc-to-offensive.html">SOC analyst to pentester</a><span>Where detection work leads next</span></li>
+    </ul>
+    <p class="sgr-foot">Learning this for a job, not a hobby? <a href="/coaching/">1:1 mentorship</a> &middot; <a href="/blog/">Career roadmaps</a> &middot; <a href="https://labs.sarathg.me/">All labs</a></p>
+  </div>
+</nav>
+
+</main>
+<script src="cta-coaching.js" defer></script>
+<script src="footer.js" defer></script>
+
+<script>
+function cp(btn) {
+  const pre = btn.closest('.cb').querySelector('pre');
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    btn.textContent = '✅ Copied'; btn.classList.add('ok');
+    setTimeout(() => { btn.textContent = '📋 Copy'; btn.classList.remove('ok'); }, 2000);
+  });
+}
+    const secIds = ["s1", "s2", "s3", "s4", "s5", "s6"];
+function gotoSec(btn, id) {
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+const _btns = document.querySelectorAll('.nav-btn');
+window.addEventListener('scroll', () => {
+  let cur = secIds[0];
+  secIds.forEach(id => { const el = document.getElementById(id); if (el && window.scrollY >= el.offsetTop - 80) cur = id; });
+  _btns.forEach((b, i) => b.classList.toggle('on', secIds[i] === cur));
+}, { passive: true });
+</script>
+</body>
+</html>

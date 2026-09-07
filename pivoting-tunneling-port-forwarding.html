@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ML4GP9590F"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-ML4GP9590F');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pivoting, Tunneling &amp; Port Forwarding: Techniques + Lab | Sarath G</title>
+<meta name="description" content="Pivoting, tunneling and port forwarding explained with a working command for each: SSH -L/-R/-D, proxychains, socat, chisel, netsh. Plus a free hands-on lab.">
+<link rel="canonical" href="https://sarathg.me/pivoting-tunneling-port-forwarding.html">
+<meta name="author" content="Sarath G">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "TechArticle",
+      "headline": "Pivoting, Tunneling & Port Forwarding: Techniques and Lab",
+      "description": "The pivoting techniques with a working command for each, plus a free hands-on lab and HTB module prep.",
+      "image": "https://sarathg.me/assets/og/pivoting.png",
+      "url": "https://sarathg.me/pivoting-tunneling-port-forwarding.html",
+      "mainEntityOfPage": "https://sarathg.me/pivoting-tunneling-port-forwarding.html",
+      "datePublished": "2026-09-08",
+      "dateModified": "2026-09-08",
+      "author": {
+        "@id": "https://sarathg.me/#sarath"
+      },
+      "publisher": {
+        "@id": "https://sarathg.me/#org"
+      },
+      "about": [
+        {
+          "@type": "Thing",
+          "name": "Pivoting"
+        },
+        {
+          "@type": "Thing",
+          "name": "SSH tunneling"
+        },
+        {
+          "@type": "Thing",
+          "name": "Port forwarding"
+        },
+        {
+          "@type": "Thing",
+          "name": "Penetration testing"
+        }
+      ]
+    },
+    {
+      "@type": "Person",
+      "@id": "https://sarathg.me/#sarath",
+      "name": "Sarath G",
+      "jobTitle": "Application Security Consultant & International Cybersecurity Trainer",
+      "url": "https://sarathg.me/",
+      "sameAs": [
+        "https://www.linkedin.com/in/sarathcybersec/",
+        "https://github.com/secretguard",
+        "https://sarathg.medium.com/",
+        "https://youtube.com/@i_sarathg",
+        "https://www.instagram.com/i.sarathg/"
+      ]
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://sarathg.me/#org",
+      "name": "Sarath G",
+      "url": "https://sarathg.me/",
+      "logo": "https://sarathg.me/assets/og-image.jpg",
+      "founder": {
+        "@id": "https://sarathg.me/#sarath"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is the difference between port forwarding, tunneling and pivoting?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Port forwarding moves a single port from one host to another. Tunneling wraps that traffic inside another protocol, usually SSH, to cross a boundary. Pivoting is the objective: using a compromised host to reach a network you cannot route to directly. You use forwarding and tunneling to achieve a pivot."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I set up a SOCKS proxy for pivoting?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Run ssh -D 1080 user@pivot to open a dynamic forward, add socks5 127.0.0.1 1080 to /etc/proxychains4.conf, then prefix your tools with proxychains, for example proxychains nmap -sT -Pn 10.0.0.5. When you only have outbound web access, use chisel in reverse-SOCKS mode instead."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What tools does the HTB pivoting module cover?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The core set is SSH local, remote and dynamic forwarding, socat relays, proxychains, chisel, sshuttle and ligolo-ng on Linux, and netsh portproxy plus plink on Windows. This guide walks through each with a working command."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I practise pivoting for free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. The interactive pivoting lab uses a free two-network VulnHub setup and walks a full foothold-then-pivot chain across three machines, so you build a real route by hand rather than only reading commands."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why use chisel instead of SSH for a pivot?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "When the compromised host has no SSH server, or the firewall only allows outbound HTTP, SSH forwarding will not connect. Chisel tunnels a SOCKS proxy over an HTTP connection the host initiates outbound to you, which slips through those constraints."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is this a walkthrough with the skills assessment answers?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. It teaches the techniques the assessment expects you to apply and gives you a method and cheat sheet, but not copy-paste answers. Working the target yourself is the entire point, and it is what makes the skill transfer to real engagements."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://sarathg.me/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Pivoting, Tunneling & Port Forwarding: Techniques + Lab | Sarath G",
+          "item": "https://sarathg.me/pivoting-tunneling-port-forwarding.html"
+        }
+      ]
+    }
+  ]
+}
+</script>
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Pivoting, Tunneling &amp; Port Forwarding: Techniques + Lab | Sarath G" />
+<meta property="og:description" content="Pivoting, tunneling and port forwarding explained with a working command for each: SSH -L/-R/-D, proxychains, socat, chisel, netsh. Plus a free hands-on lab." />
+<meta property="og:url" content="https://sarathg.me/pivoting-tunneling-port-forwarding.html" />
+<meta property="og:image" content="https://sarathg.me/assets/og/pivoting.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Pivoting, tunneling and port forwarding | Sarath G" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Pivoting, Tunneling &amp; Port Forwarding: Techniques + Lab | Sarath G" />
+<meta name="twitter:description" content="Pivoting, tunneling and port forwarding explained with a working command for each: SSH -L/-R/-D, proxychains, socat, chisel, netsh. Plus a free hands-on lab." />
+<meta name="twitter:image" content="https://sarathg.me/assets/og/pivoting.png" />
+<link rel="stylesheet" href="/assets/fonts/gf/fraunces-ibm-plex-mono-plus-jakarta-sans-7a6348.css">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:#0e1117; --surface:#141920; --surface2:#1a2230;
+  --border:#222d3d; --border2:#2a3a50;
+  --blue:#5b9cf6; --green:#42d97a; --amber:#f5b942;
+  --red:#f47068; --teal:#3ecfcf; --purple:#a78bfa;
+  --text:#e2ecf8; --text2:#7d98b8; --text3:#3f5470;
+  --mono:'IBM Plex Mono',monospace; --serif:'Fraunces',serif; --sans:'Plus Jakarta Sans',sans-serif;
+}
+body { font-family:var(--sans); background:var(--bg); color:var(--text); line-height:1.75; font-size:16px; }
+
+.hero { background:var(--surface); border-bottom:1px solid var(--border); padding:80px 0 64px; position:relative; overflow:hidden; }
+.hero::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 55% 70% at 0% 50%,rgba(91,156,246,.09) 0%,transparent 65%),radial-gradient(ellipse 35% 50% at 100% 20%,rgba(66,217,122,.06) 0%,transparent 55%); pointer-events:none; }
+.wrap { max-width:900px; margin:0 auto; padding:0 40px; position:relative; z-index:1; }
+.hero-eyebrow { font-family:var(--mono); font-size:12px; font-weight:500; color:var(--blue); letter-spacing:.1em; text-transform:uppercase; margin-bottom:22px; display:flex; align-items:center; gap:10px; }
+.hero-eyebrow::before { content:''; width:24px; height:1px; background:var(--blue); }
+h1.hero-title { font-family:var(--serif); font-size:clamp(38px,6vw,62px); font-weight:700; line-height:1.08; color:var(--text); margin-bottom:20px; letter-spacing:-.02em; }
+h1.hero-title em { font-style:italic; color:var(--blue); font-weight:300; }
+.hero-desc { font-size:17px; color:var(--text2); max-width:580px; line-height:1.7; margin-bottom:36px; }
+.hero-tags { display:flex; gap:10px; flex-wrap:wrap; }
+.hero-tag { font-family:var(--mono); font-size:11px; font-weight:500; padding:5px 14px; border-radius:6px; display:flex; align-items:center; gap:7px; }
+.ht-b { background:rgba(91,156,246,.1); color:var(--blue); border:1px solid rgba(91,156,246,.2); }
+.ht-o { background:rgba(245,185,66,.1); color:var(--amber); border:1px solid rgba(245,185,66,.2); }
+.ht-g { background:rgba(66,217,122,.1); color:var(--green); border:1px solid rgba(66,217,122,.2); }
+.ht-r { background:rgba(244,112,104,.1); color:var(--red); border:1px solid rgba(244,112,104,.2); }
+
+.nav { position:sticky; top:64px; z-index:200; background:rgba(14,17,23,.95); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); }
+.nav-inner { max-width:900px; margin:0 auto; padding:0 40px; display:flex; overflow-x:auto; scrollbar-width:none; gap:2px; }
+.nav-inner::-webkit-scrollbar { display:none; }
+.nav-btn { font-family:var(--mono); font-size:11px; font-weight:600; color:var(--text3); padding:15px 18px; cursor:pointer; white-space:nowrap; user-select:none; border:none; border-bottom:2px solid transparent; background:none; transition:color .15s,border-color .15s; letter-spacing:.04em; }
+.nav-btn:hover { color:var(--text2); }
+.nav-btn.on { color:var(--blue); border-bottom-color:var(--blue); }
+
+.content { max-width:900px; margin:0 auto; padding:64px 40px 100px; }
+.sec { margin-bottom:88px; scroll-margin-top:64px; }
+.sec-eyebrow { font-family:var(--mono); font-size:11px; font-weight:600; color:var(--text3); letter-spacing:.14em; text-transform:uppercase; margin-bottom:10px; }
+h2.sec-title { font-family:var(--serif); font-size:34px; font-weight:700; color:var(--text); letter-spacing:-.02em; line-height:1.15; margin-bottom:8px; display:flex; align-items:center; gap:16px; }
+.sec-num { font-family:var(--mono); font-size:13px; font-weight:600; color:var(--blue); background:rgba(91,156,246,.1); border:1px solid rgba(91,156,246,.2); width:36px; height:36px; border-radius:10px; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
+.sec-divider { height:1px; background:var(--border); margin:20px 0 32px; }
+p { color:var(--text2); margin-bottom:14px; font-size:15.5px; }
+p strong { color:var(--text); font-weight:600; }
+ul { padding-left:22px; color:var(--text2); margin-bottom:16px; font-size:15.5px; }
+ul li { margin-bottom:7px; }
+ul li::marker { color:var(--blue); }
+
+/* ARCH */
+.arch { background:var(--surface); border:1px solid var(--border2); border-radius:16px; padding:32px; margin:24px 0; }
+.arch-cols { display:flex; gap:16px; align-items:stretch; flex-wrap:wrap; margin-bottom:20px; }
+.arch-machine { flex:1; min-width:200px; background:var(--surface2); border-radius:12px; padding:20px; text-align:center; }
+.arch-machine.hi-b { border:2px solid rgba(91,156,246,.35); }
+.arch-machine.hi-g { border:2px solid rgba(66,217,122,.35); }
+.arch-machine.hi-r { border:2px solid rgba(244,112,104,.35); }
+.arch-machine .ico { font-size:32px; margin-bottom:10px; display:block; }
+.arch-machine .nm { font-family:var(--serif); font-size:16px; font-weight:700; color:var(--text); margin-bottom:4px; }
+.arch-machine .sub { font-family:var(--mono); font-size:10px; color:var(--text3); line-height:1.6; }
+.arch-conn { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; padding:0 4px; flex-shrink:0; }
+.arch-conn .arr { font-size:20px; color:var(--text3); }
+.arch-conn .lbl { font-family:var(--mono); font-size:9px; color:var(--text3); white-space:nowrap; }
+.arch-flow { border-top:1px solid var(--border); padding-top:20px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:center; }
+.afl { font-family:var(--mono); font-size:11px; font-weight:600; padding:5px 12px; border-radius:6px; white-space:nowrap; }
+.arr-sm { font-size:14px; color:var(--text3); }
+
+/* TOOLS */
+.tools-grid { display:flex; flex-direction:column; gap:12px; margin:24px 0; }
+.tool-row { display:grid; grid-template-columns:200px 1fr auto; gap:20px; align-items:center; background:var(--surface); border:1px solid var(--border2); border-radius:12px; padding:18px 22px; }
+.tool-name { font-weight:700; color:var(--text); font-size:15px; }
+.tool-name small { display:block; font-family:var(--mono); font-size:10px; color:var(--text3); font-weight:400; margin-top:3px; }
+.tool-desc { font-size:14px; color:var(--text2); line-height:1.6; }
+.tool-badge { font-family:var(--mono); font-size:10px; font-weight:600; padding:4px 11px; border-radius:6px; white-space:nowrap; }
+.tb-vb { background:rgba(167,139,250,.1); color:var(--purple); border:1px solid rgba(167,139,250,.25); }
+.tb-w  { background:rgba(66,217,122,.1);  color:var(--green);  border:1px solid rgba(66,217,122,.25); }
+.tb-wa { background:rgba(91,156,246,.1);  color:var(--blue);   border:1px solid rgba(91,156,246,.25); }
+.tb-k  { background:rgba(244,112,104,.1); color:var(--red);    border:1px solid rgba(244,112,104,.25); }
+
+/* STEPS */
+.step { margin:36px 0; }
+.step-hd { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+.step-n { font-family:var(--mono); font-size:11px; font-weight:700; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.sn-b { background:rgba(91,156,246,.15); color:var(--blue); border:1px solid rgba(91,156,246,.3); }
+.sn-g { background:rgba(66,217,122,.15); color:var(--green); border:1px solid rgba(66,217,122,.3); }
+.sn-r { background:rgba(244,112,104,.15); color:var(--red); border:1px solid rgba(244,112,104,.3); }
+.step-title { font-family:var(--sans); font-weight:700; color:var(--text); font-size:16.5px; }
+
+/* CODE BLOCKS */
+.cb { border-radius:12px; overflow:hidden; margin:14px 0; border:1px solid var(--border2); }
+.cb-top { display:flex; align-items:center; justify-content:space-between; padding:10px 16px; background:var(--surface2); border-bottom:1px solid var(--border); }
+.cb-lang { font-family:var(--mono); font-size:10px; font-weight:600; display:flex; align-items:center; gap:8px; letter-spacing:.04em; color:var(--text2); }
+.dot { width:7px; height:7px; border-radius:50%; }
+.d-ps    { background:#a78bfa; }
+.d-kali  { background:#f47068; }
+.d-wazuh { background:#42d97a; }
+.d-url   { background:#5b9cf6; }
+.d-vm    { background:#f5b942; }
+.cp-btn { font-family:var(--mono); font-size:10px; font-weight:600; background:none; border:1px solid var(--border2); color:var(--text3); padding:4px 12px; border-radius:6px; cursor:pointer; transition:all .15s; }
+.cp-btn:hover { background:var(--border); color:var(--text2); }
+.cp-btn.ok { color:var(--green); border-color:rgba(66,217,122,.4); }
+pre { background:#070c12; font-family:var(--mono); font-size:13px; line-height:1.9; padding:20px 22px; overflow-x:auto; color:var(--text); }
+.cm { color:var(--text3); font-style:italic; }
+
+/* NOTES */
+.note { display:flex; gap:14px; padding:16px 18px; border-radius:10px; margin:16px 0; border-left:3px solid; }
+.note-icon { font-size:16px; flex-shrink:0; margin-top:2px; }
+.note-body { flex:1; }
+.note-title { font-size:13px; font-weight:700; margin-bottom:4px; }
+.note p { font-size:13.5px; margin:0; line-height:1.65; }
+.note p+p { margin-top:6px; }
+.n-info { background:rgba(91,156,246,.07); border-color:var(--blue); } .n-info .note-title { color:var(--blue); }
+.n-ok   { background:rgba(66,217,122,.07); border-color:var(--green); } .n-ok .note-title   { color:var(--green); }
+.n-warn { background:rgba(245,185,66,.07); border-color:var(--amber); } .n-warn .note-title { color:var(--amber); }
+.n-crit { background:rgba(244,112,104,.07); border-color:var(--red); }  .n-crit .note-title { color:var(--red); }
+
+/* EXERCISES */
+.ex { background:var(--surface); border:1px solid var(--border2); border-radius:16px; margin:24px 0; overflow:hidden; }
+.ex-hd { background:var(--surface2); border-bottom:1px solid var(--border); padding:18px 24px; display:flex; align-items:center; gap:14px; }
+.ex-tag { font-family:var(--mono); font-size:11px; font-weight:700; padding:4px 11px; border-radius:6px; background:rgba(91,156,246,.1); color:var(--blue); border:1px solid rgba(91,156,246,.25); }
+.ex-name { font-family:var(--serif); font-size:18px; font-weight:700; color:var(--text); letter-spacing:-.01em; }
+.ex-body { padding:26px 24px; }
+.obj-badge { display:inline-flex; align-items:center; font-family:var(--mono); font-size:10px; font-weight:600; color:var(--amber); background:rgba(245,185,66,.08); border:1px solid rgba(245,185,66,.2); padding:4px 11px; border-radius:6px; margin-bottom:16px; }
+.phase-tag { display:inline-block; font-family:var(--mono); font-size:10px; font-weight:700; padding:4px 11px; border-radius:6px; margin:16px 0 10px; letter-spacing:.04em; }
+.ph-atk { background:rgba(244,112,104,.1); color:var(--red); border:1px solid rgba(244,112,104,.25); }
+.ph-det { background:rgba(91,156,246,.1); color:var(--blue); border:1px solid rgba(91,156,246,.25); }
+.ph-alr { background:rgba(66,217,122,.1); color:var(--green); border:1px solid rgba(66,217,122,.25); }
+
+code { font-family:var(--mono); font-size:12px; background:rgba(91,156,246,.1); color:var(--blue); padding:2px 6px; border-radius:4px; }
+table { width:100%; border-collapse:collapse; font-size:14px; margin:18px 0; }
+th { background:var(--surface2); color:var(--text); font-size:11px; text-transform:uppercase; letter-spacing:.05em; font-weight:700; padding:11px 16px; border:1px solid var(--border2); text-align:left; }
+td { padding:11px 16px; border:1px solid var(--border2); color:var(--text2); vertical-align:top; }
+tr:nth-child(even) td { background:rgba(255,255,255,.015); }
+.eid { font-family:var(--mono); color:var(--teal); font-weight:600; font-size:12px; }
+.part-label { font-family:var(--mono); font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; display:flex; align-items:center; gap:14px; margin:52px 0 20px; }
+.part-label::after { content:''; flex:1; height:1px; background:var(--border); }
+.footer { border-top:1px solid var(--border); padding:36px 40px; text-align:center; font-family:var(--mono); font-size:11px; color:var(--text3); letter-spacing:.04em; }
+@media(max-width:640px) { .wrap,.content{padding-left:20px;padding-right:20px;} .tool-row{grid-template-columns:1fr;} .arch-cols{flex-direction:column;} .arch-conn{flex-direction:row;} }
+.faq-item { border-top:1px solid var(--border); padding:22px 0 8px; }
+.faq-item h3 { font-family:var(--serif); font-size:20px; font-weight:600; color:var(--text); letter-spacing:-.01em; line-height:1.3; margin-bottom:10px; }
+.faq-item code { font-family:var(--mono); font-size:13.5px; color:var(--blue); background:rgba(91,156,246,.1); padding:2px 6px; border-radius:5px; }
+</style>
+<style id="sg-theme">
+/* Second theme, driven by navbar.js toggling html.light. Absent class = dark, the site default. */
+html.light{
+  --bg:#f5f7fa; --surface:#ffffff; --surface2:#eef2f7;
+  --border:#d5dde8; --border2:#bfcad9;
+  --blue:#2f6fd6; --green:#1f9d55; --amber:#b7791f; --red:#d0453c; --teal:#1c9a9a; --purple:#7c5ccf;
+  --text:#101828; --text2:#4a5c78; --text3:#8593a8;
+}
+html.light .nav{background:rgba(245,247,250,.95)}
+</style>
+</head>
+<body>
+<script src="navbar.js" defer></script>
+
+<main>
+<div class="hero">
+  <div class="wrap">
+    <div class="hero-eyebrow">Offensive Security</div>
+    <h1 class="hero-title">Pivoting, tunneling<br><em>&amp; port forwarding</em></h1>
+    <p class="hero-desc">The three ideas untangled, then eight techniques with one working command each, the way the HTB module tests them. Then prove it on a free lab.</p>
+    <div class="hero-tags">
+      <span class="hero-tag ht-r">🔀 8 techniques</span>
+      <span class="hero-tag ht-b">⌨️ Copy-paste commands</span>
+      <span class="hero-tag ht-g">🧪 Free hands-on lab</span>
+    </div>
+  </div>
+</div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <button class="nav-btn on" onclick="gotoSec(this,'s1')">01 · The three ideas</button>
+    <button class="nav-btn" onclick="gotoSec(this,'s2')">02 · Techniques</button>
+    <button class="nav-btn" onclick="gotoSec(this,'s3')">03 · Worked pivot</button>
+    <button class="nav-btn" onclick="gotoSec(this,'s4')">04 · Skills assessment</button>
+    <button class="nav-btn" onclick="gotoSec(this,'s5')">05 · Cheat sheet</button>
+    <button class="nav-btn" onclick="gotoSec(this,'s6')">06 · FAQ</button>
+  </div>
+</nav>
+
+<div class="content">
+
+<div class="sec" id="s1">
+  <div class="sec-eyebrow">Section 01</div>
+  <h2 class="sec-title"><span class="sec-num">01</span> Port forwarding vs tunneling vs pivoting</h2>
+  <div class="sec-divider"></div>
+  <p>Three words that get used interchangeably and mean different things. Getting them straight is most of the battle, and it is exactly what the HTB Academy module "Pivoting, Tunneling, and Port Forwarding" and its skills assessment test.</p>
+  <ul>
+    <li><strong>Port forwarding</strong> moves one specific port from A to B. A single door.</li>
+    <li><strong>Tunneling</strong> wraps that traffic inside another protocol, usually SSH, so it crosses a boundary or hides in plain sight.</li>
+    <li><strong>Pivoting</strong> is the goal: using a machine you have already compromised as a stepping stone to reach a network you could not touch directly.</li>
+  </ul>
+  <p>The reason you need any of this is the <strong>dual-homed host</strong>: a compromised box with a second network card into a subnet your attacking machine cannot route to. Your job is to borrow that box's access.</p>
+  <div class="note n-info"><div class="note-icon">🧪</div><div class="note-body"><div class="note-title">This is the theory. The lab is where it sticks.</div>
+    <p>Read this to understand the techniques, then work them on the free two-network <a href="/pivoting.html">interactive pivoting lab</a>, which walks a real foothold-then-pivot chain across three machines. Theory plus one honest lab beats ten walkthroughs you only read.</p></div></div>
+  <div class="note n-warn"><div class="note-icon">🎓</div><div class="note-body"><div class="note-title">On the skills assessment</div>
+    <p>This page teaches the techniques the assessment expects you to apply; it is not a copy-paste answer key. HTB's value is that you solve it yourself. Use the method and cheat sheet below, then reason through your own target.</p></div></div>
+</div>
+<div class="sec" id="s2">
+  <div class="sec-eyebrow">Section 02</div>
+  <h2 class="sec-title"><span class="sec-num">02</span> The eight techniques, one command each</h2>
+  <div class="sec-divider"></div>
+  <p>Eight techniques cover essentially every pivot you will meet. Each is one command once you understand what it does.</p>
+<div style="overflow-x:auto"><table>
+    <tr><th>Technique</th><th>Tool</th><th>When you reach for it</th></tr>
+    <tr><td>Local port forward</td><td><code>ssh -L</code></td><td>Pull one port from the far side back to your machine.</td></tr>
+    <tr><td>Remote port forward</td><td><code>ssh -R</code></td><td>Push a listener from the target back to you, when it can reach you but you cannot reach it.</td></tr>
+    <tr><td>Dynamic forward (SOCKS)</td><td><code>ssh -D</code> + proxychains</td><td>Route many tools into a whole subnet through one proxy.</td></tr>
+    <tr><td>Relay</td><td><code>socat</code></td><td>Forward a port when you have a shell but no SSH, on Linux.</td></tr>
+    <tr><td>Reverse SOCKS over HTTP</td><td><code>chisel</code></td><td>Pivot when only outbound web traffic is allowed, or through a firewall.</td></tr>
+    <tr><td>Tunnel appliance</td><td><code>ligolo-ng</code></td><td>A clean userland interface to the target subnet, no proxychains needed.</td></tr>
+    <tr><td>Transparent VPN-like pivot</td><td><code>sshuttle</code></td><td>Route a subnet over SSH without touching proxychains at all.</td></tr>
+    <tr><td>Windows port proxy</td><td><code>netsh</code> / <code>plink.exe</code></td><td>The same moves when your pivot is Windows, not Linux.</td></tr>
+  </table></div>
+  <div class="part-label" style="color:var(--blue)">The three SSH forwarding modes</div>
+  <div class="cb">
+    <div class="cb-top"><span class="cb-lang"><span class="dot d-url"></span>Local (-L): bring their port 80 to your localhost:8080</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+    <pre>ssh -L 8080:10.0.0.5:80 user@pivot
+# now browse http://127.0.0.1:8080 -> reaches 10.0.0.5:80 through the pivot</pre>
+  </div>
+  <div class="cb">
+    <div class="cb-top"><span class="cb-lang"><span class="dot d-url"></span>Remote (-R): open a port on the pivot that comes back to you</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+    <pre>ssh -R 4444:127.0.0.1:4444 user@pivot
+# a callback to pivot:4444 lands on your local 4444 (catch a reverse shell)</pre>
+  </div>
+  <div class="cb">
+    <div class="cb-top"><span class="cb-lang"><span class="dot d-url"></span>Dynamic (-D): turn the whole SSH session into a SOCKS proxy</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+    <pre>ssh -D 1080 user@pivot
+# add to /etc/proxychains4.conf:  socks5 127.0.0.1 1080
+proxychains nmap -sT -Pn 10.0.0.5
+proxychains firefox http://10.0.0.5</pre>
+  </div>
+  <div class="part-label" style="color:var(--green)">No SSH? Relay with socat</div>
+  <div class="cb">
+    <div class="cb-top"><span class="cb-lang"><span class="dot d-kali"></span>socat relay on a compromised Linux host</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+    <pre>socat TCP-LISTEN:8080,fork,reuseaddr TCP:10.0.0.5:80 &
+# anything hitting pivot:8080 is forwarded to 10.0.0.5:80</pre>
+  </div>
+  <div class="part-label" style="color:var(--amber)">Firewalled? Reverse SOCKS with chisel</div>
+  <div class="cb">
+    <div class="cb-top"><span class="cb-lang"><span class="dot d-kali"></span>chisel: server on your box, client on the target</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+    <pre># on your attacking machine
+./chisel server -p 8000 --reverse
+# on the compromised host (outbound only)
+./chisel client 10.10.14.1:8000 R:socks
+# then proxychains through 127.0.0.1:1080 as usual</pre>
+  </div>
+  <div class="part-label" style="color:var(--purple)">Windows pivot: netsh and plink</div>
+  <div class="cb">
+    <div class="cb-top"><span class="cb-lang"><span class="dot d-ps"></span>Windows built-in port proxy + plink reverse tunnel</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+    <pre>netsh interface portproxy add v4tov4 listenport=8080 connectaddress=10.0.0.5 connectport=80
+plink.exe -R 4444:127.0.0.1:4444 user@10.10.14.1</pre>
+  </div>
+</div>
+<div class="sec" id="s3">
+  <div class="sec-eyebrow">Section 03</div>
+  <h2 class="sec-title"><span class="sec-num">03</span> A worked pivot on a free lab</h2>
+  <div class="sec-divider"></div>
+  <p>Reading commands teaches you nothing until you run them against something that pushes back. The <a href="/pivoting.html">interactive pivoting lab</a> gives you a free VulnHub setup: two host-only networks, three machines, and a route you have to build yourself. The pattern it drills is the one every pivot follows:</p>
+  <ol>
+    <li><strong>Foothold.</strong> Compromise the dual-homed host on the network you can reach.</li>
+    <li><strong>Discover.</strong> Find its second interface and the subnet behind it (<code>ip a</code>, <code>arp -a</code>, a ping sweep).</li>
+    <li><strong>Build the pivot.</strong> Stand up a forward, a SOCKS proxy or a relay through the foothold.</li>
+    <li><strong>Reach and exploit.</strong> Run your tools through the pivot against the hidden machine.</li>
+    <li><strong>Repeat.</strong> Each new host may open another network. The technique does not change, only the depth.</li>
+  </ol>
+  <p>Do that once by hand and the HTB module stops being abstract.</p>
+</div>
+<div class="sec" id="s4">
+  <div class="sec-eyebrow">Section 04</div>
+  <h2 class="sec-title"><span class="sec-num">04</span> How to approach the skills assessment</h2>
+  <div class="sec-divider"></div>
+  <p>When you sit the skills assessment, work it like a real engagement, not a quiz:</p>
+  <ul>
+    <li><strong>Map before you tunnel.</strong> Enumerate every interface and route on each host you own. You cannot pivot to a network you have not found.</li>
+    <li><strong>Pick the simplest tool that works.</strong> If a single <code>-L</code> reaches the target, do not build a SOCKS chain. Complexity is where mistakes hide.</li>
+    <li><strong>Match the tool to the constraint.</strong> Outbound-only host, use chisel. No SSH, use socat. Windows box, use netsh or plink. The constraint chooses the technique.</li>
+    <li><strong>Keep a route diagram.</strong> Two hops in, it is easy to lose track of which port on which host maps where. Write it down.</li>
+    <li><strong>Verify each hop</strong> before you move on: can you actually reach the next machine through the tunnel you just built?</li>
+  </ul>
+  <div class="note n-ok"><div class="note-icon">✅</div><div class="note-body"><div class="note-title">If you get stuck</div>
+    <p>Stuck is the point of the exercise. Re-check your route table, confirm the proxy is listening, and test connectivity one hop at a time. If you want a practitioner to review your approach and unstick you, that is exactly what the <a href="/coaching/">1:1 mentorship</a> is for.</p></div></div>
+</div>
+<div class="sec" id="s5">
+  <div class="sec-eyebrow">Section 05</div>
+  <h2 class="sec-title"><span class="sec-num">05</span> SSH forwarding cheat sheet</h2>
+  <div class="sec-divider"></div>
+  <p>The one table worth memorising. Everything else is a variation on these three.</p>
+<div style="overflow-x:auto"><table>
+    <tr><th>Flag</th><th>Name</th><th>Direction</th><th>Example</th></tr>
+    <tr><td><code>-L</code></td><td>Local forward</td><td>Your machine &rarr; a destination reachable from the far end</td><td><code>ssh -L 8080:neuro:80 user@pivot</code></td></tr>
+    <tr><td><code>-R</code></td><td>Remote forward</td><td>Far end &rarr; back to something on your machine</td><td><code>ssh -R 4444:127.0.0.1:4444 user@pivot</code></td></tr>
+    <tr><td><code>-D</code></td><td>Dynamic forward</td><td>Whole connection becomes a SOCKS proxy</td><td><code>ssh -D 1080 user@pivot</code></td></tr>
+  </table></div>
+  <p>For the full command set, the interactive lab has a click-to-explain <a href="/pivoting.html#reference">cheat sheet</a> covering socat, chisel and the tunneling variants.</p>
+</div>
+<div class="sec faq" id="s6">
+  <div class="sec-eyebrow">Section 06</div>
+  <h2 class="sec-title"><span class="sec-num">06</span> Pivoting FAQ</h2>
+  <div class="sec-divider"></div>
+  <div class="faq-item">
+    <h3>What is the difference between port forwarding, tunneling and pivoting?</h3>
+    <p>Port forwarding moves a single port from one host to another. Tunneling wraps that traffic inside another protocol, usually SSH, to cross a boundary. Pivoting is the objective: using a compromised host to reach a network you cannot route to directly. You use forwarding and tunneling to achieve a pivot.</p>
+  </div>
+  <div class="faq-item">
+    <h3>How do I set up a SOCKS proxy for pivoting?</h3>
+    <p>Run <code>ssh -D 1080 user@pivot</code> to open a dynamic forward, add <code>socks5 127.0.0.1 1080</code> to <code>/etc/proxychains4.conf</code>, then prefix your tools with proxychains, for example <code>proxychains nmap -sT -Pn 10.0.0.5</code>. When you only have outbound web access, use chisel in reverse-SOCKS mode instead.</p>
+  </div>
+  <div class="faq-item">
+    <h3>What tools does the HTB pivoting module cover?</h3>
+    <p>The core set is SSH local, remote and dynamic forwarding, socat relays, proxychains, chisel, sshuttle and ligolo-ng on Linux, and netsh portproxy plus plink on Windows. This guide walks through each with a working command.</p>
+  </div>
+  <div class="faq-item">
+    <h3>Can I practise pivoting for free?</h3>
+    <p>Yes. The <a href="/pivoting.html">interactive pivoting lab</a> uses a free two-network VulnHub setup and walks a full foothold-then-pivot chain across three machines, so you build a real route by hand rather than only reading commands.</p>
+  </div>
+  <div class="faq-item">
+    <h3>Why use chisel instead of SSH for a pivot?</h3>
+    <p>When the compromised host has no SSH server, or the firewall only allows outbound HTTP, SSH forwarding will not connect. Chisel tunnels a SOCKS proxy over an HTTP connection the host initiates outbound to you, which slips through those constraints.</p>
+  </div>
+  <div class="faq-item">
+    <h3>Is this a walkthrough with the skills assessment answers?</h3>
+    <p>No. It teaches the techniques the assessment expects you to apply and gives you a method and cheat sheet, but not copy-paste answers. Working the target yourself is the entire point, and it is what makes the skill transfer to real engagements.</p>
+  </div>
+</div><!-- end faq -->
+
+</div><!-- end content -->
+
+<nav class="sg-related" aria-label="Related pages">
+<style id="sg-related-css">
+.sg-related{max-width:900px;margin:56px auto 40px;padding:0 20px;box-sizing:border-box;font-family:Inter,-apple-system,'Segoe UI',sans-serif;line-height:1.5}
+.sg-related .sgr-box{background:#111418;border:1px solid #262b33;border-radius:16px;padding:24px 26px}
+.sg-related .sgr-title{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#8b95a1;margin:0 0 14px}
+.sg-related ul{list-style:none;margin:0;padding:0;display:grid;gap:14px 18px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.sg-related li a{display:block;color:#e6e9ee;font-weight:600;font-size:16px;text-decoration:none}
+.sg-related li a:hover{color:#4fffb0}
+.sg-related li span{display:block;color:#9aa3ad;font-size:14px;margin-top:2px}
+.sg-related .sgr-foot{margin:18px 0 0;padding-top:14px;border-top:1px solid #262b33;font-size:14px;color:#9aa3ad}
+.sg-related .sgr-foot a{color:#4fffb0;font-weight:600;text-decoration:none}
+.sg-related .sgr-foot a:hover{text-decoration:underline}
+html.light .sg-related .sgr-box{background:#f6f7f9;border-color:#d9dde3}
+html.light .sg-related .sgr-title{color:#5b6572}
+html.light .sg-related li a{color:#14171b}
+html.light .sg-related li a:hover,html.light .sg-related .sgr-foot a{color:#0b6b4a}
+html.light .sg-related li span,html.light .sg-related .sgr-foot{color:#4b5563}
+html.light .sg-related .sgr-foot{border-color:#d9dde3}
+</style>
+  <div class="sgr-box">
+    <p class="sgr-title">Keep going</p>
+    <ul>
+      <li><a href="/pivoting.html">Interactive pivoting lab</a><span>Build a real two-network pivot by hand</span></li>
+      <li><a href="/blog/soc-grc-to-offensive.html">SOC analyst to pentester</a><span>The career path this skill sits on</span></li>
+      <li><a href="/offsec_medtech.html">Active Directory attack lab</a><span>Pivoting inside a full AD compromise</span></li>
+    </ul>
+    <p class="sgr-foot">Learning this for a job, not a hobby? <a href="/coaching/">1:1 mentorship</a> &middot; <a href="/blog/">Career roadmaps</a> &middot; <a href="https://labs.sarathg.me/">All labs</a></p>
+  </div>
+</nav>
+
+</main>
+<script src="cta-coaching.js" defer></script>
+<script src="footer.js" defer></script>
+
+<script>
+function cp(btn) {
+  const pre = btn.closest('.cb').querySelector('pre');
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    btn.textContent = '✅ Copied'; btn.classList.add('ok');
+    setTimeout(() => { btn.textContent = '📋 Copy'; btn.classList.remove('ok'); }, 2000);
+  });
+}
+    const secIds = ["s1", "s2", "s3", "s4", "s5", "s6"];
+function gotoSec(btn, id) {
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+const _btns = document.querySelectorAll('.nav-btn');
+window.addEventListener('scroll', () => {
+  let cur = secIds[0];
+  secIds.forEach(id => { const el = document.getElementById(id); if (el && window.scrollY >= el.offsetTop - 80) cur = id; });
+  _btns.forEach((b, i) => b.classList.toggle('on', secIds[i] === cur));
+}, { passive: true });
+</script>
+</body>
+</html>
