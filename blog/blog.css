@@ -56,7 +56,10 @@
   --font-body:        'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono:        'JetBrains Mono', ui-monospace, monospace;
 
-  --measure:          34rem;   /* ~68 characters at the body size below */
+  /* Fluid reading column: grows with the viewport so a wide monitor is not
+     mostly empty margin, but capped near ~78 characters so lines never get
+     long enough to hurt readability. On phones it falls back to 92vw. */
+  --measure:          min(92vw, calc(38rem + 12vw), 54rem);
   --transition:       0.3s cubic-bezier(0.4,0,0.2,1);
 }
 
@@ -97,7 +100,10 @@ body {
   background: var(--bg-page);
   color: var(--t-prose);
   font-family: var(--font-body);
-  font-size: 1.0625rem;
+  /* Fluid body type: ~17px on a laptop, easing up toward ~21px on a large
+     external monitor so the reading column has presence instead of looking
+     like a thin tube. Paired with the fluid --measure above. */
+  font-size: clamp(1.0625rem, 0.98rem + 0.34vw, 1.32rem);
   line-height: 1.75;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
