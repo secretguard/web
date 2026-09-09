@@ -21,6 +21,15 @@
 
 export const POSTS = [
   {
+    slug: "how-to-pass-cpent",
+    title:
+      "How to Pass CPENT: The Drills, the 24-Hour Plan, and the Report Habit That Gets You the Cert",
+    description:
+      "A drill-focused guide to passing the EC-Council CPENT exam: range-by-range practice with real tools, a 24-hour time plan, and the report habit that converts skill into a score.",
+    date: "2026-09-10",
+    readingMinutes: 10,
+  },
+  {
     slug: "zero-background-beginner",
     title: "Zero IT Background, Want Into Cybersecurity? The Real First 90 Days",
     description:

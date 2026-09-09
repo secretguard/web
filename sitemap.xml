@@ -71,6 +71,12 @@
 
   <!-- ── BLOG POSTS ── -->
   <url>
+    <loc>https://sarathg.me/blog/how-to-pass-cpent.html</loc>
+    <lastmod>2026-09-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://sarathg.me/blog/zero-background-beginner.html</loc>
     <lastmod>2026-08-30</lastmod>
     <changefreq>monthly</changefreq>

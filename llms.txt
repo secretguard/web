@@ -20,6 +20,7 @@
 
 ## Free guides and labs
 - [CPENT exam cheat sheet](https://sarathg.me/cpent-cheatsheet)
+- [How to pass CPENT (exam prep guide)](https://sarathg.me/blog/how-to-pass-cpent.html)
 - [OSINT Guide, 2026 edition](https://sarathg.me/osint.html)
 - [ShopEasy API security lab](https://sarathg.me/shopeasy.html)
 - [Wazuh SOC lab](https://sarathg.me/wazuh.html)
