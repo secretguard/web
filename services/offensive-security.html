@@ -221,7 +221,8 @@
     .trusted-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; gap: 2.5rem; flex-wrap: wrap; }
     .trusted-lbl { font-family: var(--mono); font-size: .62rem; color: var(--t3); letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; flex-shrink: 0; }
     .logo-row { display: flex; align-items: center; gap: 1.75rem; flex-wrap: wrap; }
-    .logo-row img { height: 36px; width: auto; object-fit: contain; }
+    .logo-row img { height: 36px; width: auto; object-fit: contain; filter: grayscale(1) invert(1) contrast(1.15) brightness(1.1); opacity: .8; }
+    html.light .logo-row img { filter: none; opacity: 1; }
 
     /* ── SECTION ── */
     section { padding: 90px 5%; }
@@ -461,15 +462,15 @@ html.light{
   <div class="trusted-inner">
     <span class="trusted-lbl">Trusted by organisations across</span>
     <div class="logo-row">
-      <img src="/assets/logos/cbn.jpg" width="200" height="200"              alt="Central Bank of Nigeria" loading="lazy" />
+      <img src="/assets/logos/cbn.png" width="200" height="200"              alt="Central Bank of Nigeria" loading="lazy" />
       <img src="/assets/logos/siemens.png" width="200" height="200"          alt="Siemens Healthineers" loading="lazy" />
-      <img src="/assets/logos/samsung.jpg" width="200" height="200"          alt="Samsung R&D" loading="lazy" />
-      <img src="/assets/logos/navy.jpg" width="200" height="200"             alt="Indian Navy" loading="lazy" />
-      <img src="/assets/logos/anm.jpg" width="200" height="200"              alt="ANM Timor-Leste" loading="lazy" />
+      <img src="/assets/logos/samsung.png" width="200" height="200"          alt="Samsung R&D" loading="lazy" />
+      <img src="/assets/logos/navy.png" width="200" height="200"             alt="Indian Navy" loading="lazy" />
+      <img src="/assets/logos/anm.png" width="200" height="200"              alt="ANM Timor-Leste" loading="lazy" />
       <img src="/assets/logos/bia.png" width="200" height="200"              alt="Brunei Investment Agency" loading="lazy" />
-      <img src="/assets/logos/bank-of-tanzania.jpg" width="200" height="200" alt="Bank of Tanzania" loading="lazy" />
-      <img src="/assets/logos/african-union.jpg" width="200" height="200"    alt="African Union" loading="lazy" />
-      <img src="/assets/logos/ashghal.jpg" width="200" height="200"          alt="Ashghal Qatar" loading="lazy" />
+      <img src="/assets/logos/bank-of-tanzania.png" width="200" height="200" alt="Bank of Tanzania" loading="lazy" />
+      <img src="/assets/logos/african-union.png" width="200" height="200"    alt="African Union" loading="lazy" />
+      <img src="/assets/logos/ashghal.png" width="200" height="200"          alt="Ashghal Qatar" loading="lazy" />
     </div>
   </div>
 </div>

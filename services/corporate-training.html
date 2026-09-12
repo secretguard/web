@@ -249,9 +249,8 @@
       letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; flex-shrink: 0;
     }
     .logo-row { display: flex; align-items: center; gap: 1.75rem; flex-wrap: wrap; }
-    .logo-row img {
-      height: 36px; width: auto; object-fit: contain;
-    }
+    .logo-row img { height: 36px; width: auto; object-fit: contain; filter: grayscale(1) invert(1) contrast(1.15) brightness(1.1); opacity: .8; }
+    html.light .logo-row img { filter: none; opacity: 1; }
 
     /* ── SHARED SECTION LAYOUT ───────────────── */
     section { padding: 90px 5%; }
@@ -642,25 +641,25 @@ html.light{
   <div class="trusted-inner">
     <span class="trusted-lbl">Delivered training for</span>
     <div class="logo-row">
-      <img src="/assets/logos/cbn.jpg" width="200" height="200"              alt="Central Bank of Nigeria" loading="lazy" />
-      <img src="/assets/logos/bank-of-tanzania.jpg" width="200" height="200" alt="Bank of Tanzania" loading="lazy" />
-      <img src="/assets/logos/abk.jpg" width="200" height="200"              alt="Al Ahli Bank" loading="lazy" />
-      <img src="/assets/logos/samsung.jpg" width="200" height="200"          alt="Samsung R&D" loading="lazy" />
+      <img src="/assets/logos/cbn.png" width="200" height="200"              alt="Central Bank of Nigeria" loading="lazy" />
+      <img src="/assets/logos/bank-of-tanzania.png" width="200" height="200" alt="Bank of Tanzania" loading="lazy" />
+      <img src="/assets/logos/abk.png" width="200" height="200"              alt="Al Ahli Bank" loading="lazy" />
+      <img src="/assets/logos/samsung.png" width="200" height="200"          alt="Samsung R&D" loading="lazy" />
       <img src="/assets/logos/siemens.png" width="200" height="200"          alt="Siemens Healthineers" loading="lazy" />
-      <img src="/assets/logos/navy.jpg" width="200" height="200"             alt="Indian Navy" loading="lazy" />
+      <img src="/assets/logos/navy.png" width="200" height="200"             alt="Indian Navy" loading="lazy" />
       <img src="/assets/logos/bia.png" width="200" height="200"              alt="Brunei Investment Agency" loading="lazy" />
-      <img src="/assets/logos/african-union.jpg" width="200" height="200"    alt="African Union" loading="lazy" />
-      <img src="/assets/logos/ashghal.jpg" width="200" height="200"          alt="Ashghal Qatar" loading="lazy" />
-      <img src="/assets/logos/anm.jpg" width="200" height="200"              alt="ANM Timor-Leste" loading="lazy" />
-      <img src="/assets/logos/iit.jpg" width="200" height="200"              alt="IIT Madras" loading="lazy" />
-      <img src="/assets/logos/canara-bank.jpg" width="200" height="200"      alt="Canara Bank" loading="lazy" />
-      <img src="/assets/logos/bank-of-baroda.jpg" width="200" height="200"   alt="Bank of Baroda" loading="lazy" />
-      <img src="/assets/logos/oil-india.jpg" width="200" height="200"        alt="Oil India" loading="lazy" />
-      <img src="/assets/logos/vit.jpg" width="200" height="200"              alt="VIT" loading="lazy" />
-      <img src="/assets/logos/ust.jpg" width="200" height="200"              alt="UST" loading="lazy" />
-      <img src="/assets/logos/mumi.jpg" width="200" height="200"             alt="Mutanda Mining" loading="lazy" />
-      <img src="/assets/logos/bakkavor.jpg" width="200" height="200"         alt="Bakkavor" loading="lazy" />
-      <img src="/assets/logos/ewura.jpg" width="200" height="200"            alt="EWURA" loading="lazy" />
+      <img src="/assets/logos/african-union.png" width="200" height="200"    alt="African Union" loading="lazy" />
+      <img src="/assets/logos/ashghal.png" width="200" height="200"          alt="Ashghal Qatar" loading="lazy" />
+      <img src="/assets/logos/anm.png" width="200" height="200"              alt="ANM Timor-Leste" loading="lazy" />
+      <img src="/assets/logos/iit.png" width="200" height="200"              alt="IIT Madras" loading="lazy" />
+      <img src="/assets/logos/canara-bank.png" width="200" height="200"      alt="Canara Bank" loading="lazy" />
+      <img src="/assets/logos/bank-of-baroda.png" width="200" height="200"   alt="Bank of Baroda" loading="lazy" />
+      <img src="/assets/logos/oil-india.png" width="200" height="200"        alt="Oil India" loading="lazy" />
+      <img src="/assets/logos/vit.png" width="200" height="200"              alt="VIT" loading="lazy" />
+      <img src="/assets/logos/ust.png" width="200" height="200"              alt="UST" loading="lazy" />
+      <img src="/assets/logos/mumi.png" width="200" height="200"             alt="Mutanda Mining" loading="lazy" />
+      <img src="/assets/logos/bakkavor.png" width="200" height="200"         alt="Bakkavor" loading="lazy" />
+      <img src="/assets/logos/ewura.png" width="200" height="200"            alt="EWURA" loading="lazy" />
     </div>
   </div>
 </div>
@@ -837,7 +836,7 @@ html.light{
       <article class="client-card rv">
         <div class="cc-head">
           <div class="cc-logo">
-            <img src="/assets/logos/cbn.jpg" width="200" height="200" alt="Central Bank of Nigeria" loading="lazy" />
+            <img src="/assets/logos/cbn.png" width="200" height="200" alt="Central Bank of Nigeria" loading="lazy" />
           </div>
           <div class="cc-right">
             <span class="badge b-bank">Central Banking</span>
@@ -856,7 +855,7 @@ html.light{
       <article class="client-card rv">
         <div class="cc-head">
           <div class="cc-logo">
-            <img src="/assets/logos/bank-of-tanzania.jpg" width="200" height="200" alt="Bank of Tanzania" loading="lazy" />
+            <img src="/assets/logos/bank-of-tanzania.png" width="200" height="200" alt="Bank of Tanzania" loading="lazy" />
           </div>
           <div class="cc-right">
             <span class="badge b-bank">Central Banking</span>
@@ -875,7 +874,7 @@ html.light{
       <article class="client-card rv">
         <div class="cc-head">
           <div class="cc-logo">
-            <img src="/assets/logos/abk.jpg" width="200" height="200" alt="Al Ahli Bank Kuwait" loading="lazy" />
+            <img src="/assets/logos/abk.png" width="200" height="200" alt="Al Ahli Bank Kuwait" loading="lazy" />
           </div>
           <div class="cc-right">
             <span class="badge b-bank">Banking</span>
@@ -894,8 +893,8 @@ html.light{
       <article class="client-card rv">
         <div class="cc-head">
           <div class="cc-logo" style="gap:.6rem">
-            <img src="/assets/logos/canara-bank.jpg" width="200" height="200" alt="Canara Bank" style="height:18px" loading="lazy" />
-            <img src="/assets/logos/bank-of-baroda.jpg" width="200" height="200" alt="Bank of Baroda" style="height:18px" loading="lazy" />
+            <img src="/assets/logos/canara-bank.png" width="200" height="200" alt="Canara Bank" style="height:18px" loading="lazy" />
+            <img src="/assets/logos/bank-of-baroda.png" width="200" height="200" alt="Bank of Baroda" style="height:18px" loading="lazy" />
           </div>
           <div class="cc-right">
             <span class="badge b-bank">Public Sector Banking</span>
@@ -933,7 +932,7 @@ html.light{
       <article class="client-card rv">
         <div class="cc-head">
           <div class="cc-logo">
-            <img src="/assets/logos/samsung.jpg" width="200" height="200" alt="Samsung R&D" loading="lazy" />
+            <img src="/assets/logos/samsung.png" width="200" height="200" alt="Samsung R&D" loading="lazy" />
           </div>
           <div class="cc-right">
             <span class="badge b-tech">Technology R&amp;D</span>
@@ -971,7 +970,7 @@ html.light{
       <article class="client-card rv">
         <div class="cc-head">
           <div class="cc-logo">
-            <img src="/assets/logos/navy.jpg" width="200" height="200" alt="Indian Navy" loading="lazy" />
+            <img src="/assets/logos/navy.png" width="200" height="200" alt="Indian Navy" loading="lazy" />
           </div>
           <div class="cc-right">
             <span class="badge b-def">Defence</span>
@@ -990,7 +989,7 @@ html.light{
       <article class="client-card rv">
         <div class="cc-head">
           <div class="cc-logo">
-            <img src="/assets/logos/african-union.jpg" width="200" height="200" alt="African Union" loading="lazy" />
+            <img src="/assets/logos/african-union.png" width="200" height="200" alt="African Union" loading="lazy" />
           </div>
           <div class="cc-right">
             <span class="badge b-gov">Intergovernmental</span>
@@ -1009,7 +1008,7 @@ html.light{
       <article class="client-card rv">
         <div class="cc-head">
           <div class="cc-logo">
-            <img src="/assets/logos/ashghal.jpg" width="200" height="200" alt="Ashghal — Public Works Authority Qatar" loading="lazy" />
+            <img src="/assets/logos/ashghal.png" width="200" height="200" alt="Ashghal — Public Works Authority Qatar" loading="lazy" />
           </div>
           <div class="cc-right">
             <span class="badge b-gov">Government</span>
@@ -1028,7 +1027,7 @@ html.light{
       <article class="client-card rv">
         <div class="cc-head">
           <div class="cc-logo">
-            <img src="/assets/logos/anm.jpg" width="200" height="200" alt="ANM Timor-Leste" loading="lazy" />
+            <img src="/assets/logos/anm.png" width="200" height="200" alt="ANM Timor-Leste" loading="lazy" />
           </div>
           <div class="cc-right">
             <span class="badge b-gov">Monetary Authority</span>
@@ -1047,7 +1046,7 @@ html.light{
       <article class="client-card rv">
         <div class="cc-head">
           <div class="cc-logo">
-            <img src="/assets/logos/oil-india.jpg" width="200" height="200" alt="Oil India" loading="lazy" />
+            <img src="/assets/logos/oil-india.png" width="200" height="200" alt="Oil India" loading="lazy" />
           </div>
           <div class="cc-right">
             <span class="badge b-nrg">Energy</span>
@@ -1066,7 +1065,7 @@ html.light{
       <article class="client-card rv">
         <div class="cc-head">
           <div class="cc-logo">
-            <img src="/assets/logos/iit.jpg" width="200" height="200" alt="IIT Madras" loading="lazy" />
+            <img src="/assets/logos/iit.png" width="200" height="200" alt="IIT Madras" loading="lazy" />
           </div>
           <div class="cc-right">
             <span class="badge b-acad">Academia</span>
@@ -1085,7 +1084,7 @@ html.light{
       <article class="client-card rv">
         <div class="cc-head">
           <div class="cc-logo">
-            <img src="/assets/logos/vit.jpg" width="200" height="200" alt="VIT University" loading="lazy" />
+            <img src="/assets/logos/vit.png" width="200" height="200" alt="VIT University" loading="lazy" />
           </div>
           <div class="cc-right">
             <span class="badge b-acad">Academia</span>
@@ -1104,7 +1103,7 @@ html.light{
       <article class="client-card rv">
         <div class="cc-head">
           <div class="cc-logo">
-            <img src="/assets/logos/ust.jpg" width="200" height="200" alt="UST" loading="lazy" />
+            <img src="/assets/logos/ust.png" width="200" height="200" alt="UST" loading="lazy" />
           </div>
           <div class="cc-right">
             <span class="badge b-ent">Enterprise Technology</span>
@@ -1123,7 +1122,7 @@ html.light{
       <article class="client-card rv">
         <div class="cc-head">
           <div class="cc-logo">
-            <img src="/assets/logos/cbn.jpg" width="200" height="200" alt="Corporate Training Dubai UAE" style="opacity:0;height:1px" loading="lazy" />
+            <img src="/assets/logos/cbn.png" width="200" height="200" alt="Corporate Training Dubai UAE" style="opacity:0;height:1px" loading="lazy" />
             <span style="font-family:var(--mono);font-size:.75rem;font-weight:600;color:var(--t2);letter-spacing:.04em">UAE · Gulf Region</span>
           </div>
           <div class="cc-right">

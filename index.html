@@ -423,20 +423,25 @@
       font-weight: 500;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.7);
-      opacity: 0;
-      transform: translateY(4px);
-      transition: opacity 0.35s cubic-bezier(0.25,0.46,0.45,0.94),
-                  transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94);
+      color: rgba(255,255,255,0.45);
+      transition: color 0.35s cubic-bezier(0.25,0.46,0.45,0.94);
       pointer-events: none;
       padding: 0 4px;
+      white-space: nowrap;
     }
-    /* Show on proximity OR direct hover */
+    @media (max-width: 639px) {
+      /* Phone cells are too narrow for the longest names; wrap instead of clipping */
+      .logo-label { white-space: normal; line-height: 1.25; bottom: 6px; }
+      .logo-sector { display: none; }
+      .logo-cell { padding-bottom: 1.9rem; }
+    }
+    /* Name is always visible; it brightens on proximity OR direct hover */
     .logo-cell.proximity-active .logo-label,
     .logo-cell:hover .logo-label {
-      opacity: 1;
-      transform: translateY(0);
+      color: rgba(255,255,255,0.9);
     }
+    /* Reserve room under the logo for the static name */
+    .logo-cell { padding-bottom: 1.15rem; }
 
     /* ── Logo sector tag (hover-only) ── */
     .logo-sector {
@@ -462,34 +467,44 @@
       transform: translateY(0);
     }
     /* Light mode: dark text so it reads on light background */
-    html.light .logo-label { color: rgba(0,0,0,0.55); }
+    html.light .logo-label { color: rgba(0,0,0,0.5); }
+    html.light .logo-cell.proximity-active .logo-label,
+    html.light .logo-cell:hover .logo-label { color: rgba(0,0,0,0.85); }
 
-    /* ── Logo cells (client grid) ── */
+    /* ── Logo cells (client grid) ──
+       Logos are transparent PNGs with true brand colours baked in; no filter is
+       ever allowed to recolour them. Rest state is greyscale in both themes.
+       Hover/proximity shows the untouched colour logo. In the dark theme the
+       colour logo sits on a small white plate so dark wordmarks stay legible. ── */
     .logo-cell img {
-      filter: grayscale(1);
-      opacity: 0.6;
-      transition: filter 0.5s cubic-bezier(0.25,0.46,0.45,0.94),
-                  opacity 0.5s cubic-bezier(0.25,0.46,0.45,0.94),
-                  transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
+      filter: grayscale(1) invert(1) contrast(1.15) brightness(1.1);
+      opacity: 0.55;
+      padding: 0.35rem;
+      box-sizing: content-box;
+      border-radius: 0.5rem;
+      background: transparent;
+      transition: filter 0.4s cubic-bezier(0.25,0.46,0.45,0.94),
+                  opacity 0.4s cubic-bezier(0.25,0.46,0.45,0.94),
+                  transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94),
+                  background-color 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
       will-change: filter, opacity, transform;
     }
     .logo-cell.proximity-active img,
     .logo-cell:hover img {
-      filter: grayscale(0);
+      filter: none;
       opacity: 1;
-      transform: scale(1.1);
-    }
-
-    /* ── Light mode logo fix: multiply blend removes dark image backgrounds ── */
-    html.light .logo-cell {
-      background: #ffffff !important;
+      transform: translateY(-4px) scale(1.06);
+      background: #ffffff;
     }
     html.light .logo-cell img {
-      mix-blend-mode: multiply;
+      filter: grayscale(1);
+      opacity: 0.6;
     }
     html.light .logo-cell.proximity-active img,
     html.light .logo-cell:hover img {
-      mix-blend-mode: normal;
+      filter: none;
+      opacity: 1;
+      background: transparent;
     }
 
     /* ── Light mode cert fix ── */
@@ -784,6 +799,43 @@
         <div class="text-center px-4 fade-in-scroll">
           <div class="text-3xl sm:text-4xl md:text-5xl font-display font-bold t-primary mb-1 counter" data-target="10">0</div>
           <div class="text-[10px] sm:text-xs font-mono t-muted uppercase tracking-widest mt-1">Certifications</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- CLIENTS -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <section id="clients" class="py-14 sm:py-16 md:py-20 bg-page border-b b-subtle relative">
+    <div class="container mx-auto px-4 sm:px-6 max-w-7xl">
+      <div class="text-center max-w-2xl mx-auto mb-8 sm:mb-10 fade-in-scroll">
+        <div class="section-eyebrow justify-center">Trusted by</div>
+        <h2 class="text-2xl sm:text-3xl md:text-4xl font-display font-bold t-primary">Industry Leaders</h2>
+      </div>
+      <div class="relative max-w-6xl mx-auto">
+        <div class="[mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_80%)] pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:calc(100%/3)_160px] md:bg-[size:calc(100%/4)_180px] lg:bg-[size:calc(100%/6)_200px]"></div>
+        <div class="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-10 items-center justify-items-center opacity-80 hover:opacity-100 transition-opacity">
+          <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[152px] sm:h-[152px] md:h-[176px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/african-union.png" width="200" height="200" alt="African Union" class="h-12 sm:h-16 md:h-20 w-auto object-contain" loading="lazy"><span class="logo-label">African Union</span><span class="logo-sector">Government</span></div>
+          <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[152px] sm:h-[152px] md:h-[176px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/abk.png" width="200" height="200" alt="Al Ahli Bank" class="h-12 sm:h-16 md:h-20 w-auto object-contain" loading="lazy"><span class="logo-label">Al Ahli Bank</span><span class="logo-sector">Banking</span></div>
+          <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[152px] sm:h-[152px] md:h-[176px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/ashghal.png" width="200" height="200" alt="Ashghal" class="h-12 sm:h-16 md:h-20 w-auto object-contain" loading="lazy"><span class="logo-label">Ashghal</span><span class="logo-sector">Government</span></div>
+          <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[152px] sm:h-[152px] md:h-[176px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/cbn.png" width="200" height="200" alt="Central Bank of Nigeria" class="h-12 sm:h-16 md:h-20 w-auto object-contain" loading="lazy"><span class="logo-label">CBN Nigeria</span><span class="logo-sector">Central Banking</span></div>
+          <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[152px] sm:h-[152px] md:h-[176px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/navy.png" width="200" height="200" alt="Indian Navy" class="h-12 sm:h-16 md:h-20 w-auto object-contain" loading="lazy"><span class="logo-label">Indian Navy</span><span class="logo-sector">Defence</span></div>
+          <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[152px] sm:h-[152px] md:h-[176px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/samsung.png" width="200" height="200" alt="Samsung" class="h-12 sm:h-16 md:h-20 w-auto object-contain" loading="lazy"><span class="logo-label">Samsung</span><span class="logo-sector">Technology</span></div>
+          <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[152px] sm:h-[152px] md:h-[176px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/bank-of-tanzania.png" width="200" height="200" alt="Bank of Tanzania" class="h-12 sm:h-16 md:h-20 w-auto object-contain" loading="lazy"><span class="logo-label">Bank of Tanzania</span><span class="logo-sector">Banking</span></div>
+          <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[152px] sm:h-[152px] md:h-[176px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/iit.png" width="200" height="200" alt="IIT Madras" class="h-12 sm:h-16 md:h-20 w-auto object-contain" loading="lazy"><span class="logo-label">IIT Madras</span><span class="logo-sector">Academia</span></div>
+          <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[152px] sm:h-[152px] md:h-[176px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/ust.png" width="200" height="200" alt="UST" class="h-12 sm:h-16 md:h-20 w-auto object-contain" loading="lazy"><span class="logo-label">UST</span><span class="logo-sector">Enterprise</span></div>
+          <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[152px] sm:h-[152px] md:h-[176px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/oil-india.png" width="200" height="200" alt="Oil India" class="h-12 sm:h-16 md:h-20 w-auto object-contain" loading="lazy"><span class="logo-label">Oil India</span><span class="logo-sector">Energy</span></div>
+          <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[152px] sm:h-[152px] md:h-[176px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/bank-of-baroda.png" width="200" height="200" alt="Bank of Baroda" class="h-12 sm:h-16 md:h-20 w-auto object-contain" loading="lazy"><span class="logo-label">Bank of Baroda</span><span class="logo-sector">Banking</span></div>
+          <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[152px] sm:h-[152px] md:h-[176px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/vit.png" width="200" height="200" alt="VIT" class="h-12 sm:h-16 md:h-20 w-auto object-contain" loading="lazy"><span class="logo-label">VIT</span><span class="logo-sector">Academia</span></div>
+          <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[152px] sm:h-[152px] md:h-[176px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/anm.png" width="200" height="200" alt="ANM" class="h-12 sm:h-16 md:h-20 w-auto object-contain" loading="lazy"><span class="logo-label">ANM</span><span class="logo-sector">Government</span></div>
+          <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[152px] sm:h-[152px] md:h-[176px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/bnctl.png" width="200" height="200" alt="BNCTL — Banco Nacional de Comércio de Timor-Leste" class="h-12 sm:h-16 md:h-20 w-auto object-contain" loading="lazy"><span class="logo-label">BNCTL</span><span class="logo-sector">Banking</span></div>
+          <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[152px] sm:h-[152px] md:h-[176px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/bakkavor.png" width="200" height="200" alt="Bakkavor" class="h-12 sm:h-16 md:h-20 w-auto object-contain" loading="lazy"><span class="logo-label">Bakkavor</span><span class="logo-sector">Enterprise</span></div>
+          <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[152px] sm:h-[152px] md:h-[176px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/bia.png" width="200" height="200" alt="Brunei Investment Agency" class="h-12 sm:h-16 md:h-20 w-auto object-contain" loading="lazy"><span class="logo-label">Brunei Inv. Agency</span><span class="logo-sector">Sovereign Finance</span></div>
+          <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[152px] sm:h-[152px] md:h-[176px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/canara-bank.png" width="200" height="200" alt="Canara Bank" class="h-12 sm:h-16 md:h-20 w-auto object-contain" loading="lazy"><span class="logo-label">Canara Bank</span><span class="logo-sector">Banking</span></div>
+          <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[152px] sm:h-[152px] md:h-[176px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/ewura.png" width="200" height="200" alt="EWURA" class="h-12 sm:h-16 md:h-20 w-auto object-contain" loading="lazy"><span class="logo-label">EWURA</span><span class="logo-sector">Government</span></div>
+          <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[152px] sm:h-[152px] md:h-[176px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/mumi.png" width="200" height="200" alt="Mutanda Mining" class="h-12 sm:h-16 md:h-20 w-auto object-contain" loading="lazy"><span class="logo-label">Mutanda Mining</span><span class="logo-sector">Mining</span></div>
+          <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[152px] sm:h-[152px] md:h-[176px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/siemens.png" width="200" height="200" alt="Siemens Healthineers" class="h-12 sm:h-16 md:h-20 w-auto object-contain" loading="lazy"><span class="logo-label">Siemens</span><span class="logo-sector">Healthcare</span></div>
         </div>
       </div>
     </div>
@@ -1542,7 +1594,7 @@
         <div id="world-map" class="w-full h-full"></div>
       </div>
 
-      <div class="flex flex-wrap justify-center gap-2 mt-6 sm:mt-8 font-mono text-xs t-muted mb-16 sm:mb-20 fade-in-scroll">
+      <div class="flex flex-wrap justify-center gap-2 mt-6 sm:mt-8 font-mono text-xs t-muted fade-in-scroll">
         <span class="country-pill">INDIA</span>
         <span class="country-pill">QATAR</span>
         <span class="country-pill">KUWAIT</span>
@@ -1556,36 +1608,6 @@
         <span class="country-pill">THAILAND</span>
         <span class="country-pill">NIGERIA</span>
         <span class="country-pill">MALAYSIA</span>
-      </div>
-
-      <!-- Clients -->
-      <div class="border-t b-card pt-14 sm:pt-16">
-        <h3 class="text-lg sm:text-xl font-display font-medium t-secondary text-center mb-10 sm:mb-12 fade-in-scroll">Trusted By Industry Leaders</h3>
-        <div class="relative max-w-6xl mx-auto">
-          <div class="[mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_80%)] pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:calc(100%/3)_160px] md:bg-[size:calc(100%/4)_180px] lg:bg-[size:calc(100%/6)_200px]"></div>
-          <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 items-center justify-items-center opacity-80 hover:opacity-100 transition-opacity">
-            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/african-union.jpg" width="200" height="200" alt="African Union" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">African Union</span><span class="logo-sector">Government</span></div>
-            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/abk.jpg" width="200" height="200" alt="Al Ahli Bank" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">Al Ahli Bank</span><span class="logo-sector">Banking</span></div>
-            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/ashghal.jpg" width="200" height="200" alt="Ashghal" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">Ashghal</span><span class="logo-sector">Government</span></div>
-            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/cbn.jpg" width="200" height="200" alt="Central Bank of Nigeria" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">CBN Nigeria</span><span class="logo-sector">Central Banking</span></div>
-            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/navy.jpg" width="200" height="200" alt="Indian Navy" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">Indian Navy</span><span class="logo-sector">Defence</span></div>
-            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/samsung.jpg" width="200" height="200" alt="Samsung" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">Samsung</span><span class="logo-sector">Technology</span></div>
-            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/bank-of-tanzania.jpg" width="200" height="200" alt="Bank of Tanzania" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">Bank of Tanzania</span><span class="logo-sector">Banking</span></div>
-            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/iit.jpg" width="200" height="200" alt="IIT Madras" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">IIT Madras</span><span class="logo-sector">Academia</span></div>
-            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/ust.jpg" width="200" height="200" alt="UST" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">UST</span><span class="logo-sector">Enterprise</span></div>
-            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/oil-india.jpg" width="200" height="200" alt="Oil India" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">Oil India</span><span class="logo-sector">Energy</span></div>
-            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/bank-of-baroda.jpg" width="200" height="200" alt="Bank of Baroda" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">Bank of Baroda</span><span class="logo-sector">Banking</span></div>
-            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/vit.jpg" width="200" height="200" alt="VIT" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">VIT</span><span class="logo-sector">Academia</span></div>
-            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/anm.jpg" width="200" height="200" alt="ANM" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">ANM</span><span class="logo-sector">Government</span></div>
-            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/bnctl.png" width="200" height="200" alt="BNCTL — Banco Nacional de Comércio de Timor-Leste" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">BNCTL</span><span class="logo-sector">Banking</span></div>
-            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/bakkavor.jpg" width="200" height="200" alt="Bakkavor" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">Bakkavor</span><span class="logo-sector">Enterprise</span></div>
-            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/bia.png" width="200" height="200" alt="Brunei Investment Agency" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">Brunei Inv. Agency</span><span class="logo-sector">Sovereign Finance</span></div>
-            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/canara-bank.jpg" width="200" height="200" alt="Canara Bank" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">Canara Bank</span><span class="logo-sector">Banking</span></div>
-            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/ewura.jpg" width="200" height="200" alt="EWURA" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">EWURA</span><span class="logo-sector">Government</span></div>
-            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/mumi.jpg" width="200" height="200" alt="Mutanda Mining" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">Mutanda Mining</span><span class="logo-sector">Mining</span></div>
-            <div class="logo-cell group flex flex-col justify-center items-center text-center w-full h-[120px] sm:h-[160px] md:h-[180px] lg:h-[200px] border b-subtle -mt-[1px] -ml-[1px] relative"><img src="assets/logos/siemens.png" width="200" height="200" alt="Siemens Healthineers" class="h-10 sm:h-16 md:h-20 w-auto object-contain grayscale group-hover:grayscale-0 transition-all opacity-60 group-hover:opacity-100 group-hover:scale-110" loading="lazy"><span class="logo-label">Siemens</span><span class="logo-sector">Healthcare</span></div>
-          </div>
-        </div>
       </div>
     </div>
   </section>

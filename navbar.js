@@ -576,7 +576,7 @@
             </a>
             <a href="/#footprint" class="sg-drop-item" role="menuitem" data-sg-nav="footprint">
               <span class="sg-drop-item-title">Footprint</span>
-              <span class="sg-drop-item-desc">Countries and clients</span>
+              <span class="sg-drop-item-desc">Countries delivered onsite</span>
             </a>
           </div>
         </div>
@@ -746,7 +746,7 @@
           </a>
           <a href="/#footprint" onclick="SG.toggleMobile()" data-sg-nav="footprint">
             Footprint
-            <span class="sg-sub-label">Countries and clients</span>
+            <span class="sg-sub-label">Countries delivered onsite</span>
           </a>
         </div>
 
