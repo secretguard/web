@@ -29,7 +29,8 @@
     { label: 'Labs',      href: 'https://labs.sarathg.me' },
     { label: 'Blog',      href: '/blog/' },
     { label: 'Cybersec Guide', href: '/start.html' },
-    { label: '1:1 Mentorship', href: '/coaching/', placement: 'footer-site' }
+    { label: '1:1 Mentorship', href: '/coaching/', placement: 'footer-site' },
+    { label: '12-week programme', href: '/programme/' }
   ];
 
   var ICONS = {
@@ -122,7 +123,7 @@
     + '</div>'
     + '<div class="sgf-bottom">'
     + '  <span>© ' + year + ' Sarath G. All rights reserved.</span>'
-    + '  <a href="/">sarathg.me</a>'
+    + '  <span><a href="/privacy/">Privacy</a> · <a href="/">sarathg.me</a></span>'
     + '</div>';
 
   var footer = document.createElement('footer');

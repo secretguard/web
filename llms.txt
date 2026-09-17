@@ -17,6 +17,7 @@
 - [GRC Advisory](https://sarathg.me/services/grc-advisory.html)
 - [Corporate Training](https://sarathg.me/services/corporate-training.html)
 - [1:1 Coaching](https://sarathg.me/coaching/)
+- [12-week Web Application Security Practitioner programme](https://sarathg.me/programme/)
 
 ## Free guides and labs
 - [CPENT exam cheat sheet](https://sarathg.me/cpent-cheatsheet)
