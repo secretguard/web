@@ -634,8 +634,8 @@
   three things plainly and spends the rest of its length on evidence of what the 12 weeks
   contain. No placement, salary or guarantee language anywhere; "Evidence, not a promise" is
   the line the whole page answers to.
-  LINKS: Apply → Folio's public application form (URL is a placeholder until the Folio
-  session reports the final route — search for APPLY_URL). Readiness check → the Meet ad
+  LINKS: Apply → Folio's public inquiry form (/apply, live 2026-09-18; ?source tags the lead
+  as coming from this page). Readiness check → the Meet ad
   landing mode with a referral UTM so GA4 on meet.sarathg.me can see this page as a source.
 -->
 <script src="../navbar.js" defer></script>
@@ -649,7 +649,7 @@
       <h1 id="h1" class="rise">12 weeks, one-to-one, until you can test a real application.</h1>
       <p class="subhead rise">By week 12 you can test a web application end to end against the OWASP Top 10 and common API flaws, and write a report a security team would accept. You leave with three graded lab reports, a competency record and a verifiable certificate. Evidence, not a promise.</p>
       <div class="actions rise">
-        <a class="btn" data-cta="hero-apply" href="https://folio.sarathg.me/apply" target="_blank" rel="noopener">Apply for the programme</a>
+        <a class="btn" data-cta="hero-apply" href="https://folio.sarathg.me/apply?source=web-programme" target="_blank" rel="noopener">Apply for the programme</a>
         <a class="btn-2" data-cta="hero-call" href="https://meet.sarathg.me/?type=job-readiness-check&amp;focus=1&amp;utm_source=sarathg.me&amp;utm_medium=referral&amp;utm_campaign=programme-page" target="_blank" rel="noopener">Book a Job Readiness Check, ₹499</a>
       </div>
       <p class="micro rise">Next intake: October 2026. A handful of seats — every hour is taught by me, so it stays small.</p>
@@ -817,9 +817,9 @@
       </div>
       <ul class="ruled flush">
         <li>Booked a paid session with me in the last 30 days? It's credited against your first payment, up to ₹999.</li>
-        <li>7-day full refund if you decide in the first week it isn't for you.</li>
-        <li>48-hour cancellation rule for individual sessions; sessions reschedule with notice.</li>
-        <li>The full enrolment agreement and refund policy come with your sign-up link.</li>
+        <li>15-day cooling-off: ask within 15 days of your first payment and the unused portion is refunded, no reason needed.</li>
+        <li>48-hour cancellation rule for individual sessions; with less notice the session counts as delivered.</li>
+        <li>The full terms are public: <a class="lnk" href="https://folio.sarathg.me/enrolment-agreement" target="_blank" rel="noopener">enrolment agreement</a> and <a class="lnk" href="https://folio.sarathg.me/refund-policy" target="_blank" rel="noopener">refund policy</a>.</li>
       </ul>
     </div>
   </div>
@@ -849,7 +849,7 @@
         </div>
       </div>
       <div class="actions after">
-        <a class="btn" data-cta="start-apply" href="https://folio.sarathg.me/apply" target="_blank" rel="noopener">Apply for the programme</a>
+        <a class="btn" data-cta="start-apply" href="https://folio.sarathg.me/apply?source=web-programme" target="_blank" rel="noopener">Apply for the programme</a>
         <a class="btn-2" data-cta="start-call" href="https://meet.sarathg.me/?type=job-readiness-check&amp;focus=1&amp;utm_source=sarathg.me&amp;utm_medium=referral&amp;utm_campaign=programme-page" target="_blank" rel="noopener">Book a Job Readiness Check, ₹499</a>
       </div>
     </div>
@@ -902,7 +902,7 @@
     </div>
     <div>
       <div class="actions">
-        <a class="btn" data-cta="final-apply" href="https://folio.sarathg.me/apply" target="_blank" rel="noopener">Apply for the programme</a>
+        <a class="btn" data-cta="final-apply" href="https://folio.sarathg.me/apply?source=web-programme" target="_blank" rel="noopener">Apply for the programme</a>
         <a class="btn-2" data-cta="final-call" href="https://meet.sarathg.me/?type=job-readiness-check&amp;focus=1&amp;utm_source=sarathg.me&amp;utm_medium=referral&amp;utm_campaign=programme-page" target="_blank" rel="noopener">Book a Job Readiness Check, ₹499</a>
       </div>
       <p class="micro">Not sure which door? The readiness check costs ₹499 and it comes off your first payment if you enrol within 7 days.</p>
@@ -916,10 +916,9 @@
    the only always-visible action should be the one this page exists to drive, so the
    href and label are re-pointed at the application once navbar.js has injected its
    markup. Progressive: if this never runs, the button still works, it just points at
-   /#contact. APPLY_URL is the single place to change when Folio reports the final route
-   — the three in-page buttons above carry the same literal href. */
+   /#contact. APPLY_URL matches the three in-page buttons above. */
 (function () {
-  var APPLY_URL = 'https://folio.sarathg.me/apply';
+  var APPLY_URL = 'https://folio.sarathg.me/apply?source=web-programme';
   var tries = 0;
   function point() {
     var done = 0;
