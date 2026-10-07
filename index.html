@@ -1646,6 +1646,10 @@
             <label class="text-xs font-mono t-muted px-1 uppercase tracking-wider">Message</label>
             <textarea name="message" rows="4" required class="theme-input" placeholder="How can I help you?"></textarea>
           </div>
+          <!-- Honeypot: invisible to people and screen readers; bots fill it. -->
+          <div aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden">
+            <label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+          </div>
           <button type="submit" id="submit-btn" class="w-full py-3.5 sm:py-4 bg-red-900/80 hover:bg-red-800 border border-red-500/20 text-white rounded-xl font-semibold text-sm sm:text-base transition-all shadow-lg shadow-red-900/20 hover:shadow-red-900/40 hover:scale-[1.02]">
             Send Message
           </button>
@@ -1875,6 +1879,9 @@
     // ── Contact form ──
     const form = document.getElementById('contact-form');
     const statusDiv = document.getElementById('form-status');
+    // Messages go to Atlas (atlas.sarathg.me), which creates a Docket lead;
+    // the Apps Script sheet remains as a fallback if Atlas is unreachable.
+    const ATLAS_URL = 'https://atlas.sarathg.me/api/inquiry';
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyzeqIiP7mi4ZdSisV7705YO2ENxnBEY9ylg780eYKYCVXW6m7JPCFMkmg6KWyEfC4sZQ/exec';
 
     form.addEventListener('submit', async (e) => {
@@ -1883,14 +1890,41 @@
       btn.innerHTML = '<span class="opacity-70">Sending…</span>';
       btn.disabled = true;
       const data = Object.fromEntries(new FormData(form).entries());
+      const showError = (msg) => {
+        statusDiv.textContent = '✗ ' + msg;
+        statusDiv.className = 'text-center text-sm mt-3 text-red-400 block';
+      };
       try {
-        await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+        // Primary: Atlas, which files the message as a lead in Docket.
+        let sent = false;
+        try {
+          const res = await fetch(ATLAS_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ...data, page: location.href })
+          });
+          if (res.status === 400) {
+            // A validation problem the visitor can fix; say what it is.
+            const body = await res.json().catch(() => ({}));
+            showError(body.message || 'Please check the form and try again.');
+            return;
+          }
+          sent = res.ok;
+        } catch { /* network failure: fall through to the fallback */ }
+        // Fallback: the original Apps Script sheet (no-cors, so unconfirmable).
+        if (!sent) {
+          const { website, ...plain } = data;
+          if (website) sent = true; // honeypot: pretend success, send nothing
+          else {
+            await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(plain) });
+            sent = true;
+          }
+        }
         statusDiv.textContent = '✓ Message sent successfully!';
         statusDiv.className = 'text-center text-sm mt-3 text-green-400 block';
         form.reset();
       } catch {
-        statusDiv.textContent = '✗ Error sending. Please email directly.';
-        statusDiv.className = 'text-center text-sm mt-3 text-red-400 block';
+        showError('Error sending. Please email directly.');
       } finally {
         btn.innerHTML = 'Send Message';
         btn.disabled = false;
